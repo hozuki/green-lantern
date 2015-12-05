@@ -340,36 +340,24 @@ export class Graphics implements ICopyable<Graphics> {
 
     update():void {
         if (this._isDirty) {
-             var i:number;
-             for (i = 0; i < this._strokeRenderers.length; i++) {
-             this._strokeRenderers[i].update();
-             }
-             for (i = 0; i < this._fillRenderers.length; i++) {
-             this._fillRenderers[i].update();
-             }
-            /*
-            var i:number;
             var j = 0, fillLen = this._fillRenderers.length;
-            for (i = 0; i < this._strokeRenderers.length; ++i) {
+            for (var i = 0; i < this._strokeRenderers.length; ++i) {
                 if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
                     this._fillRenderers[j].update();
                     j++;
                 }
                 this._strokeRenderers[i].update();
             }
-            */
         }
         this._isDirty = false;
     }
 
     render(renderer:WebGLRenderer, target:RenderTarget2D, clearOutput:boolean):void {
-        var i:number;
-        var j = 0;
-        var fillLen = this._fillRenderers.length;
+        var j = 0, fillLen = this._fillRenderers.length;
         if (clearOutput) {
             target.clear();
         }
-        for (i = 0; i < this._strokeRenderers.length; ++i) {
+        for (var i = 0; i < this._strokeRenderers.length; ++i) {
             if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
                 this._fillRenderers[j].render(renderer, target);
                 j++;
