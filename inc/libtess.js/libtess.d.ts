@@ -40,7 +40,7 @@ declare module "libtess" {
         GL_TRIANGLE_FAN:number;
     };
 
-    export class GluTesselator {
+    class GluTesselator {
 
         public constructor();
 
