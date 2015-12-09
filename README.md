@@ -47,13 +47,17 @@ in the `build` directory:
 <script type="text/javascript" src="build/GLantern-browser.min.js"></script>
 ```
 
-In environments that support Node.js, like NW.js or Electron, you can also use the `import` syntax:
+In environments that support Node.js, like NW.js or Electron, you can also use the `require` syntax:
 
 ```html
 <script type="text/javascript">
     var GLantern = require("glantern");
     // OR
     global.GLantern = require("glantern");
+    // OR
+    window.GLantern = require("glantern");
+    // OR (not suggested, but still works as <script> is in global scope by default)
+    this.GLantern = require("glantern");
 </script>
 ```
 
@@ -87,12 +91,6 @@ var Display = Object.create({
         lantern.stage.addChild(s);
         s.alpha = alpha;
         return s;
-    },
-    "createGlowFilter": function (a, b, c, d, e, f, g) {
-        return new GLantern.flash.filters.GlowFilter(lantern.renderer.shaderManager, a, b, c, d, e, f, g);
-    },
-    "createBlurFilter": function (a, b) {
-        return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
     }
 });
 g = Display.createShape(1);
@@ -105,18 +103,13 @@ Style #2
 
 ```javascript
 GLantern.injectToGlobal(this);
+// And now GLantern members ("packages") are injected to the global scope.
 var Display = Object.create({
     "createShape": function (alpha) {
         var s = new flash.display.Shape(lantern.stage, lantern.stage);
         lantern.stage.addChild(s);
         s.alpha = alpha;
         return s;
-    },
-    "createGlowFilter": function (a, b, c, d, e, f, g) {
-        return new flash.filters.GlowFilter(lantern.renderer.shaderManager, a, b, c, d, e, f, g);
-    },
-    "createBlurFilter": function (a, b) {
-        return new flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
     }
 });
 g = Display.createShape(1);
