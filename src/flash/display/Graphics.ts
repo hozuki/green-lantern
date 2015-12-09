@@ -45,11 +45,11 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     beginFill(color:number, alpha:number = 1.0):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this.endFill();
         }
-        if (!this._isInFill) {
-            this._isInFill = true;
+        if (!this._isFilling) {
+            this._isFilling = true;
             this._currentStrokeRenderer = this.__createStrokeRendererWithCurrentSettings();
             this._strokeRenderers.push(this._currentStrokeRenderer);
             this._currentFillRenderer = new SolidFillRenderer(this, this._currentX, this._currentY, color, alpha);
@@ -93,7 +93,7 @@ export class Graphics implements ICopyable<Graphics> {
         this._currentFillRenderer = null;
         this._currentStrokeRenderer = this.__createStrokeRendererWithCurrentSettings();
         this._strokeRenderers.push(this._currentStrokeRenderer);
-        this._isInFill = false;
+        this._isFilling = false;
     }
 
     copyFrom(sourceGraphics:Graphics) {
@@ -101,7 +101,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.curveTo(controlX, controlY, anchorX, anchorY);
         }
         this._currentStrokeRenderer.curveTo(controlX, controlY, anchorX, anchorY);
@@ -110,7 +110,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     drawCircle(x:number, y:number, radius:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.drawCircle(x, y, radius);
         }
         this._currentStrokeRenderer.drawCircle(x, y, radius);
@@ -120,7 +120,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     drawEllipse(x:number, y:number, width:number, height:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.drawEllipse(x, y, width, height);
         }
         this._currentStrokeRenderer.drawEllipse(x, y, width, height);
@@ -146,7 +146,7 @@ export class Graphics implements ICopyable<Graphics> {
         }
         var commandLength = commands.length;
         var j = 0;
-        var isInFill = this._isInFill;
+        var isInFill = this._isFilling;
         var sr = this._currentStrokeRenderer;
         var fr = this._currentFillRenderer;
         var newX:number, newY:number;
@@ -219,7 +219,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     drawRect(x:number, y:number, width:number, height:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.drawRect(x, y, width, height);
         }
         this._currentStrokeRenderer.drawRect(x, y, width, height);
@@ -281,8 +281,8 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     endFill():void {
-        if (this._isInFill) {
-            this._isInFill = false;
+        if (this._isFilling) {
+            this._isFilling = false;
             this._currentFillRenderer.endIndex = this._strokeRenderers.length - 1;
             this._currentFillRenderer.closePath();
             this._currentStrokeRenderer.closePath();
@@ -320,7 +320,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     lineTo(x:number, y:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.lineTo(x, y);
         }
         this._currentStrokeRenderer.lineTo(x, y);
@@ -329,7 +329,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     moveTo(x:number, y:number):void {
-        if (this._isInFill) {
+        if (this._isFilling) {
             this._currentFillRenderer.moveTo(x, y);
         }
         this._currentStrokeRenderer.moveTo(x, y);
@@ -370,8 +370,8 @@ export class Graphics implements ICopyable<Graphics> {
         return this._renderer;
     }
 
-    get isInFill():boolean {
-        return this._isInFill;
+    get isFilling():boolean {
+        return this._isFilling;
     }
 
     private __createStrokeRendererWithCurrentSettings():StrokeRendererBase {
@@ -402,7 +402,7 @@ export class Graphics implements ICopyable<Graphics> {
     }
 
     private _displayObject:DisplayObject = null;
-    private _isInFill:boolean = false;
+    private _isFilling:boolean = false;
     private _renderer:WebGLRenderer = null;
     private _isDirty:boolean = true;
 

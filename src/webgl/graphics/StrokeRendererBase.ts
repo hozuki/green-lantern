@@ -15,7 +15,7 @@ export class StrokeRendererBase extends GraphicsDataRendererBase implements IStr
 
     moveTo(x:number, y:number):void {
         // This action seems weird...
-        if (this._graphics.isInFill) {
+        if (this._graphics.isFilling) {
             this.closePath();
         }
         this._currentX = x;
