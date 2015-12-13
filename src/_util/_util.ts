@@ -55,7 +55,7 @@ export class _util {
      * @returns {String} The generated string, with valid placeholders replaced by values matched.
      */
     static formatString(format:string, ...replaceWithArray:any[]):string {
-        var replaceWithArrayIsNull = replaceWithArray !== undefined && replaceWithArray !== null;
+        var replaceWithArrayIsNull = _util.isUndefinedOrNull(replaceWithArray);
         var replaceWithArrayLength = replaceWithArrayIsNull ? -1 : replaceWithArray.length;
 
         function __stringFormatter(matched:string):string {
