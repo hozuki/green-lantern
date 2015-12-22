@@ -1,7 +1,7 @@
 {
   "name": "glantern",
   "version": "0.1.0",
-  "description": "A render engine based on WebGL, using a Flash-like API.",
+  "description": "A graphics library based on WebGL, providing a subset of Flash-like API.",
   "main": "build/node/index.js",
   "scripts": {
     "test": "echo Testing is not enabled yet."
