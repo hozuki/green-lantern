@@ -16,6 +16,12 @@ clone it into your computer:
 $ git clone https://github.com/Hozuki/GLantern.git /preferred/cloning/destination
 ```
 
+You may install it as a NPM package as an alternative:
+
+```bash
+$ npm install glantern --save
+```
+
 ## Building from the Source
 
 Make sure you have Node.js and NPM installed. The rest is quite simple:
