@@ -61,7 +61,7 @@ export class Blur2Shader extends BufferedShader {
 
         u = new UniformCache();
         u.name = "uBlurDirection";
-        u.type = WebGLDataType.U2FV;
+        u.type = WebGLDataType.U2F;
         u.value = [1.0, 0.0];
         uniforms.set(u.name, u);
     }
