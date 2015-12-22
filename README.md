@@ -1,7 +1,10 @@
 # GLantern
 
 GLantern is a graphics library based on WebGL, providing a subset of
-[Flash](http://www.adobe.com/software/flash/about/)-like API.
+[Flash](http://www.adobe.com/software/flash/about/)-like API. Sound support will be added in the
+future.
+
+![Visual test: Madoka group](res/images/visual-test-madoka-group.jpg)
 
 ## Acquiring the Source
 
@@ -52,12 +55,6 @@ In environments that support Node.js, like NW.js or Electron, you can also use t
 ```html
 <script type="text/javascript">
     var GLantern = require("glantern");
-    // OR
-    global.GLantern = require("glantern");
-    // OR
-    window.GLantern = require("glantern");
-    // OR (not suggested, but still works as <script> is in global scope by default)
-    this.GLantern = require("glantern");
 </script>
 ```
 
@@ -71,7 +68,7 @@ to inject the "packages" to the global scope.
 
 Either the first or the second style is accepted:
 
-Common Code
+**Common code, used in both Style #1 and Style #2**
 
 ```javascript
 var lantern = new GLantern.GLantern();
@@ -82,7 +79,7 @@ window.addEventListener("unload", function () {
 });
 ```
 
-Style #1
+**Style #1**
 
 ```javascript
 var Display = Object.create({
@@ -99,7 +96,7 @@ g.graphics.drawRect(0, 0, 540, 383);
 g.graphics.endFill();
 ```
 
-Style #2
+**Style #2**
 
 ```javascript
 GLantern.injectToGlobal(this);
