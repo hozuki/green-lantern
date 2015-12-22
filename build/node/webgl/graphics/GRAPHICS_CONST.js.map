@@ -1,0 +1,1 @@
+{"version":3,"sources":["webgl/graphics/GRAPHICS_CONST.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEU,sBAAc,GAAG,EAAE,CAAC;AAEpB,aAAK,GAAG,CAAC,CAAC","file":"webgl/graphics/GRAPHICS_CONST.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/20.\r\n */\r\n\r\nexport const CURVE_ACCURACY = 20;\r\n\r\nexport const STD_Z = 0;\r\n"],"sourceRoot":"/source/"}
