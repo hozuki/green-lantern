@@ -124,8 +124,8 @@ export class Graphics implements ICopyable<Graphics> {
             this._currentFillRenderer.drawEllipse(x, y, width, height);
         }
         this._currentStrokeRenderer.drawEllipse(x, y, width, height);
-        this.__updateCurrentPoint(x, y);
-        this.__updateLastPathStartPoint(x + width, y);
+        this.__updateCurrentPoint(x + width, y + height / 2);
+        this.__updateLastPathStartPoint(x + width, y + height / 2);
         this._isDirty = true;
     }
 

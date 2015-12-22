@@ -92,11 +92,12 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
     }
 
     drawEllipse(x:number, y:number, width:number, height:number):void {
-        this.moveTo(x - width, y);
+        this.moveTo(x, y + height / 2);
         if (this._w > 0) {
             this._isDirty = true;
             var thetaNext:number;
             var thetaBegin:number;
+            var centerX = x + width / 2, centerY = y + height / 2;
             var x2:number, y2:number;
             var halfPi = Math.PI / 2;
             thetaBegin = Math.PI;
@@ -105,17 +106,17 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
             for (var k = 0; k < 4; k++) {
                 for (var i = 1; i <= CURVE_ACCURACY; i++) {
                     thetaNext = thetaBegin - i / CURVE_ACCURACY * halfPi;
-                    x2 = x + width * Math.cos(thetaNext);
-                    y2 = y + height * Math.sin(thetaNext);
+                    x2 = centerX + width / 2 * Math.cos(thetaNext);
+                    y2 = centerY + height / 2 * Math.sin(thetaNext);
                     this.lineTo(x2, y2);
                 }
                 thetaBegin -= halfPi;
             }
         }
         this._currentX = x + width;
-        this._currentY = y;
+        this._currentY = y + height / 2;
         this._lastPathStartX = x + width;
-        this._lastPathStartY = y;
+        this._lastPathStartY = y + height / 2;
     }
 
     drawRect(x:number, y:number, width:number, height:number):void {
@@ -142,7 +143,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                     this._vertices.push(vertices[i]);
                 }
                 for (var i = 0; i < 4; i++) {
-                    this._colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
+                    this._colors.push(this._r, this._g, this._b, this._a);
                 }
                 this._indices.push(cur, cur + 1, cur + 2, cur + 1, cur + 2, cur + 3);
                 this._hasDrawnAnything = true;
