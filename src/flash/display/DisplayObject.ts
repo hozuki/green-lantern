@@ -243,9 +243,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     render(renderer:WebGLRenderer):void {
-        this.__preprocess(renderer);
-        this.__render(renderer);
-        this.__processFilters(renderer);
+        if (this.visible) {
+            this.__preprocess(renderer);
+            this.__render(renderer);
+            this.__processFilters(renderer);
+        }
     }
 
     get outputRenderTarget():RenderTarget2D {
@@ -265,7 +267,14 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    // Override this function to select the proper shader.
+    /**
+     * Override this function to select the proper shader.
+     * @param shaderManager {ShaderManager} The shader manager.
+     * @example
+     * protected __selectShader(shaderManager: ShaderManager): void {
+     * &nbsp;&nbsp;shaderManager.selectShader(ShaderID.PRIMITIVE);
+     * }
+     */
     protected abstract __selectShader(shaderManager:ShaderManager):void;
 
     protected __preprocess(renderer:WebGLRenderer):void {

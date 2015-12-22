@@ -12,7 +12,7 @@ import {_util} from "../_util/_util";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 
-export class RenderHelper {
+export abstract class RenderHelper {
 
     static renderPrimitives(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer, clearOutput:boolean):void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
@@ -44,7 +44,7 @@ export class RenderHelper {
     }
 
     static copyTargetContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void {
-        RenderHelper.bufferedRender(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r:WebGLRenderer):void => {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r:WebGLRenderer):void => {
             var shader = <ReplicateShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
             shader.setFlipY(flipY);
@@ -55,8 +55,8 @@ export class RenderHelper {
         });
     }
 
-    static bufferedRender(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, shaderID:number,
-                            clearOutput:boolean, shaderInit:(r:WebGLRenderer) => void):void {
+    static renderBuffered(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, shaderID:number,
+                          clearOutput:boolean, shaderInit:(r:WebGLRenderer) => void):void {
         if (!__checkRenderTargets(source, destination)) {
             return;
         }
@@ -69,29 +69,34 @@ export class RenderHelper {
         shader.setTexture(source.texture);
         shader.syncUniforms();
 
-        var vertexPositions = [
-            0, source.fitHeight, 0,
-            source.fitWidth, source.fitHeight, 0,
-            0, 0, 0,
-            source.fitWidth, 0, 0
-        ];
         if (RenderHelper._glVertexPositionBuffer === null) {
+            var vertexPositions = [
+                0, source.fitHeight, 0,
+                source.fitWidth, source.fitHeight, 0,
+                0, 0, 0,
+                source.fitWidth, 0, 0
+            ];
             RenderHelper._glVertexPositionBuffer = PackedArrayBuffer.create(glc, vertexPositions, gl.FLOAT, gl.ARRAY_BUFFER);
         }
 
         var attributeLocation:number;
 
-        var glVertexPositionBuffer = RenderHelper._glVertexPositionBuffer;
-        glVertexPositionBuffer.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
-        glc.vertexAttribPointer(attributeLocation, 3, glVertexPositionBuffer.elementGLType, false, glVertexPositionBuffer.elementSize * 3, 0);
-        glc.enableVertexAttribArray(attributeLocation);
+        if (attributeLocation >= 0) {
+            var glVertexPositionBuffer = RenderHelper._glVertexPositionBuffer;
+            glVertexPositionBuffer.syncBufferData();
+            glc.vertexAttribPointer(attributeLocation, 3, glVertexPositionBuffer.elementGLType, false, glVertexPositionBuffer.elementSize * 3, 0);
+            glc.enableVertexAttribArray(attributeLocation);
+        }
 
-        var textureCoords = RenderTarget2D.textureCoords;
-        textureCoords.syncBufferData();
+        // Some shaders, e.g. the blur-2 shader, has no texture coordinates.
         attributeLocation = shader.getAttributeLocation("aTextureCoord");
-        glc.vertexAttribPointer(attributeLocation, 2, textureCoords.elementGLType, false, textureCoords.elementSize * 2, 0);
-        glc.enableVertexAttribArray(attributeLocation);
+        if (attributeLocation >= 0) {
+            var textureCoords = RenderTarget2D.textureCoords;
+            textureCoords.syncBufferData();
+            glc.vertexAttribPointer(attributeLocation, 2, textureCoords.elementGLType, false, textureCoords.elementSize * 2, 0);
+            glc.enableVertexAttribArray(attributeLocation);
+        }
 
         var textureIndices = RenderTarget2D.textureIndices;
         textureIndices.syncBufferData();

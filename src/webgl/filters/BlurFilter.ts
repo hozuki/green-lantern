@@ -76,7 +76,7 @@ export class BlurFilter extends FilterBase {
         this._tempTarget = this._filterManager.renderer.createRenderTarget();
     }
 
-    protected __cleanup():void {
+    protected __dispose():void {
         this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();

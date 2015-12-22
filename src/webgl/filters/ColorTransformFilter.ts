@@ -7,6 +7,8 @@ import {RenderTarget2D} from "../RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";
+import {RenderHelper} from "../RenderHelper";
+import {ShaderID} from "../ShaderID";
 
 export class ColorTransformFilter extends FilterBase {
 
@@ -15,25 +17,21 @@ export class ColorTransformFilter extends FilterBase {
     }
 
     setColorMatrix(r4c5:number[]):void {
-        if (this._colorTransformShader !== null) {
-            this._colorTransformShader.setColorMatrix(r4c5);
-        }
+        this._colorMatrix = r4c5.slice();
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
+        RenderHelper.renderBuffered(renderer, input, output, ShaderID.COLOR_TRANSFORM, clearOutput, (renderer:WebGLRenderer):void => {
+            var shader = <ColorTransformShader>renderer.shaderManager.currentShader;
+            shader.setColorMatrix(this._colorMatrix);
+        });
     }
 
-    protected __initialize():void {
-        this._colorTransformShader = new ColorTransformShader(this._filterManager.renderer.shaderManager);
-    }
-
-    protected __cleanup():void {
-        if (this._colorTransformShader !== null) {
-            this._colorTransformShader.dispose();
-            this._colorTransformShader = null;
-        }
-    }
-
-    private _colorTransformShader:ColorTransformShader = null;
+    private _colorMatrix:number[] = [
+        1, 0, 0, 0, 0,
+        0, 1, 0, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 0, 1, 0
+    ];
 
 }

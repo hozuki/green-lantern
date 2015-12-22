@@ -26,9 +26,6 @@ export class BlurYFilter extends FilterBase {
             v = 1;
         }
         this._strength = v;
-        if (this._blurYShader !== null) {
-            this._blurYShader.setStrength(v);
-        }
     }
 
     get pass():number {
@@ -41,27 +38,31 @@ export class BlurYFilter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        RenderHelper.bufferedRender(renderer, input, output, ShaderID.BLUR_Y, clearOutput, (renderer:WebGLRenderer):void => {
-            var shader = <BlurYShader>renderer.shaderManager.currentShader;
-            shader.setStrength(this.strength);
-        });
-    }
-
-    protected __initialize():void {
-        this._blurYShader = new BlurYShader(this._filterManager.renderer.shaderManager);
-        this._blurYShader = new BlurYShader(this._filterManager.renderer.shaderManager);
-        this._blurYShader.setStrength(this._strength);
-    }
-
-    protected __cleanup():void {
-        if (this._blurYShader !== null) {
-            this._blurYShader.dispose();
-            this._blurYShader = null;
+        var t1 = input, t2 = this._tempTarget;
+        var t:RenderTarget2D;
+        for (var i = 0; i < this.pass * 9; ++i) {
+            RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_Y, true, (renderer:WebGLRenderer):void => {
+                var shader = <BlurYShader>renderer.shaderManager.currentShader;
+                shader.setStrength(this.strength);
+            });
+            t = t1;
+            t1 = t2;
+            t2 = t;
         }
+        renderer.copyRenderTargetContent(t1, output, clearOutput);
+    }
+
+    __initialize():void {
+        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+    }
+
+    __dispose():void {
+        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this._tempTarget = null;
     }
 
     private _strength:number = 5;
     private _pass:number = 1;
-    private _blurYShader:BlurYShader = null;
+    private _tempTarget:RenderTarget2D = null;
 
 }

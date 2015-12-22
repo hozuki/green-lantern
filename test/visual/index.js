@@ -29,3 +29,5 @@ function injectAndExecute(fileName) {
 }
 
 injectAndExecute("test-scripts/raw-madoka-group.js");
+//injectAndExecute("test-scripts/shapes-and-interaction.js");
+//injectAndExecute("test-scripts/tt-test-case-2.js");

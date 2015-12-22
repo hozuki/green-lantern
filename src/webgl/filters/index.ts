@@ -7,3 +7,4 @@ export * from "./BlurXFilter";
 export * from "./BlurYFilter";
 export * from "./ColorTransformFilter";
 export * from "./GlowFilter";
+export * from "./Blur2Filter";

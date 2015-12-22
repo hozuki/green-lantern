@@ -33,6 +33,7 @@ interface VertexShadersObject {
     primitive?:string;
     replicate?:string;
     fxaa?:string;
+    blur2?:string;
 }
 
 var Values:VertexShadersObject = {};
@@ -61,6 +62,10 @@ export abstract class VertexShaders {
 
     static get fxaa():string {
         return Values.fxaa;
+    }
+
+    static get blur2():string {
+        return Values.blur2;
     }
 
 }
@@ -213,5 +218,22 @@ Values.fxaa = [
     "   vResolution = uResolution;",
     "   ",
     "   texcoords(aTextureCoord * uResolution, uResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);",
+    "}"
+].join("\n");
+
+Values.blur2 = [
+    "precision mediump float;",
+    "",
+    "attribute vec3 aVertexPosition;",
+    "attribute vec2 aTextureCoord;",
+    "",
+    "uniform mat4 uProjectionMatrix;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "void main()",
+    "{",
+    "    gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);",
+    "    vTextureCoord = aTextureCoord;",
     "}"
 ].join("\n");

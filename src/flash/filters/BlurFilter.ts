@@ -4,10 +4,14 @@
 
 import {BitmapFilter} from "./BitmapFilter";
 import {BlurFilter as WebGLBlurFilter} from "../../webgl/filters/BlurFilter";
+import {Blur2Filter as WebGLBlur2Filter} from "../../webgl/filters/Blur2Filter";
 import {BitmapFilterQuality} from "./BitmapFilterQuality";
 import {FilterManager} from "../../webgl/FilterManager";
 
-export class BlurFilter extends WebGLBlurFilter implements BitmapFilter {
+/**
+ * Derive from {@link BlurFilter} for better performance, or {@link Blur2Filter} for better quality.
+ */
+export class BlurFilter extends WebGLBlur2Filter implements BitmapFilter {
 
     constructor(filterManager:FilterManager, blurX:number = 4.0, blurY:number = 4.0, quality:number = BitmapFilterQuality.LOW) {
         super(filterManager);

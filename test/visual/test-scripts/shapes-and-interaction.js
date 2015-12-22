@@ -1,3 +1,5 @@
+GLantern.injectToGlobal(window);
+
 var s = new flash.display.Shape(lantern.stage, lantern.stage);
 lantern.stage.addChild(s);
 var g = s.graphics;

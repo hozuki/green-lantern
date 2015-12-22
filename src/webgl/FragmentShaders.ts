@@ -30,6 +30,7 @@ interface FragmentShadersObject {
     primitive?:string;
     colorTransform?:string;
     fxaa?:string;
+    blur2?:string;
 }
 
 var Values:FragmentShadersObject = {};
@@ -54,6 +55,10 @@ export abstract class FragmentShaders {
 
     static get fxaa():string {
         return Values.fxaa;
+    }
+
+    static get blur2():string {
+        return Values.blur2;
     }
 
 }
@@ -82,13 +87,13 @@ Values.blur = [
     "{",
     "   gl_FragColor = vec4(0.0);",
     "   ",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 0])*0.004431848411938341;",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 1])*0.05399096651318985;",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 2])*0.2419707245191454;",
-    "   gl_FragColor += texture2D(uSampler, vTextureCoord     )*0.3989422804014327;",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 3])*0.2419707245191454;",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 4])*0.05399096651318985;",
-    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[ 5])*0.004431848411938341;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[0]) * 0.004431848411938341;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[1]) * 0.05399096651318985;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[2]) * 0.2419707245191454;",
+    "   gl_FragColor += texture2D(uSampler, vTextureCoord    ) * 0.3989422804014327;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[3]) * 0.2419707245191454;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[4]) * 0.05399096651318985;",
+    "   gl_FragColor += texture2D(uSampler, vBlurTexCoords[5]) * 0.004431848411938341;",
     "}"
 ].join("\n");
 
@@ -216,5 +221,34 @@ Values.fxaa = [
     "",
     "void main() {",
     "    gl_FragColor = fxaa(uSampler, vTextureCoord * vResolution, vResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);",
+    "}"
+].join("\n");
+
+Values.blur2 = [
+    "precision lowp float;",
+    "",
+    "uniform sampler2D uSampler;",
+    "",
+    "uniform float uResolution;",
+    "uniform float uStrength;",
+    "uniform vec2 uBlurDirection;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "float offset[3];",
+    "float weight[3];",
+    "",
+    "void main()",
+    "{",
+    "    offset[0] = 0.0; offset[1] = 1.3846153846; offset[2] = 3.2307692308;",
+    "    weight[0] = 0.2270270270; weight[1] = 0.3162162162; weight[2] = 0.0702702703;",
+    "    gl_FragColor = texture2D(uSampler, vec2(vTextureCoord)) * weight[0];",
+    "    float xDir = uBlurDirection.x / sqrt(uBlurDirection.x * uBlurDirection.x + uBlurDirection.y * uBlurDirection.y);",
+    "    float yDir = uBlurDirection.y / sqrt(uBlurDirection.x * uBlurDirection.x + uBlurDirection.y * uBlurDirection.y);",
+    "    for (int i = 1; i < 3; i++)",
+    "    {",
+    "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) + vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
+    "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) - vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
+    "    }",
     "}"
 ].join("\n");

@@ -9,6 +9,7 @@ import {WebGLRenderer} from "../WebGLRenderer";
 import {_util} from "../../_util/_util";
 import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";
+import {Blur2Filter} from "./Blur2Filter";
 
 export class GlowFilter extends FilterBase {
 
@@ -57,17 +58,21 @@ export class GlowFilter extends FilterBase {
     }
 
     setColorMatrix(r4c5:number[]):void {
-        this._colorMatrix = r4c5.slice();
         if (this._colorTransformFilter !== null) {
             this._colorTransformFilter.setColorMatrix(r4c5);
         }
+        this._colorMatrix = r4c5.slice();
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
+        renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
+        this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
+        renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
     }
 
     protected __initialize():void {
-        this._blurFilter = new BlurFilter(this._filterManager);
+        this._blurFilter = new Blur2Filter(this._filterManager);
         this._colorTransformFilter = new ColorTransformFilter(this._filterManager);
         this._blurFilter.initialize();
         this._colorTransformFilter.initialize();
@@ -75,12 +80,17 @@ export class GlowFilter extends FilterBase {
         this._blurFilter.strengthY = this.strengthY;
         this._blurFilter.pass = this.pass;
         this._colorTransformFilter.setColorMatrix(this._colorMatrix);
+        this._tempOriginalTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempColorTransformedTarget = this._filterManager.renderer.createRenderTarget();
     }
 
-    protected __cleanup():void {
+    protected __dispose():void {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
+        this._filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
+        this._filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
+        this._tempOriginalTarget = this._tempColorTransformedTarget = null;
     }
 
     private _strengthX:number = 5;
@@ -89,9 +99,17 @@ export class GlowFilter extends FilterBase {
     private _colorMatrix:number[] = [
         1, 0, 0, 0, 0,
         0, 1, 0, 0, 0,
-        0, 0, 1, 0, 0
+        0, 0, 1, 0, 0,
+        0, 0, 0, 1, 0
     ];
-    private _blurFilter:BlurFilter = null;
+    /**
+     * Use {@link BlurFilter} for better performance, or {@link Blur2Filter} for better quality.
+     * @type {RenderTarget2D}
+     * @private
+     */
+    private _blurFilter:Blur2Filter = null;
     private _colorTransformFilter:ColorTransformFilter = null;
+    private _tempOriginalTarget:RenderTarget2D = null;
+    private _tempColorTransformedTarget:RenderTarget2D = null;
 
 }

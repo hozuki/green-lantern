@@ -9,3 +9,4 @@ export * from "./ColorTransformShader";
 export * from "./FxaaShader";
 export * from "./PrimitiveShader";
 export * from "./ReplicateShader";
+export * from "./Blur2Shader";

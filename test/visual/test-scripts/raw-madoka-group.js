@@ -11,6 +11,10 @@ var Display = Object.create({
     },
     "createBlurFilter": function (a, b) {
         return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
+        //var filter = new GLantern.webgl.filters.Blur2Filter(lantern.renderer.shaderManager);
+        //filter.strengthX = a;
+        //filter.strengthY = b;
+        //return filter;
     }
 });
 
@@ -32,8 +36,10 @@ var Display = Object.create({
     g.graphics.drawEllipse(10, 16, 560, 380);
     g.graphics.endFill();
     //g.filters = [Display.createGlowFilter(0xFFFFFF, 0.5, 50, 50, 2, 6, false, false), Display.createBlurFilter(160, 160)];
+    g.filters = [Display.createGlowFilter(0xFFFFFF, 0.5, 50, 50, 2, 6, false, false), Display.createBlurFilter(2, 2)]; // for a better recognition
+    //g.filters = [Display.createGlowFilter(0xFF00FF, 0.5, 10, 10, 2, 6, false, false)];
     //g.filters = [Display.createBlurFilter(160, 160)];
-    //g.filters = [Display.createBlurFilter(5, 5)];
+    //g.filters = [Display.createBlurFilter(50, 50)];
 
     g = Display.createShape(0.2);
     g.graphics.beginFill(0x996600);

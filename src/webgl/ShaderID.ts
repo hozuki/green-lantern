@@ -2,30 +2,34 @@
  * Created by MIC on 2015/11/18.
  */
 
-export class ShaderID {
+export abstract class ShaderID {
 
-    static get PRIMITIVE() {
+    static get PRIMITIVE():number {
         return 0;
     }
 
-    static get BLUR_X() {
+    static get BLUR_X():number {
         return 1;
     }
 
-    static get BLUR_Y() {
+    static get BLUR_Y():number {
         return 2;
     }
 
-    static get REPLICATE() {
+    static get REPLICATE():number {
         return 3;
     }
 
-    static get COLOR_TRANSFORM() {
+    static get COLOR_TRANSFORM():number {
         return 4;
     }
 
-    static get FXAA() {
+    static get FXAA():number {
         return 5;
+    }
+
+    static get BLUR2():number {
+        return 6;
     }
 
 }

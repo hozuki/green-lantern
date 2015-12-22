@@ -26,9 +26,6 @@ export class BlurXFilter extends FilterBase {
             v = 1;
         }
         this._strength = v;
-        if (this._blurXShader !== null) {
-            this._blurXShader.setStrength(v);
-        }
     }
 
     get pass():number {
@@ -41,26 +38,31 @@ export class BlurXFilter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        RenderHelper.bufferedRender(renderer, input, output, ShaderID.BLUR_X, clearOutput, (renderer:WebGLRenderer):void => {
-            var shader = <BlurXShader>renderer.shaderManager.currentShader;
-            shader.setStrength(this.strength);
-        });
-    }
-
-    protected __initialize():void {
-        this._blurXShader = new BlurXShader(this._filterManager.renderer.shaderManager);
-        this._blurXShader.setStrength(this._strength);
-    }
-
-    protected __cleanup():void {
-        if (this._blurXShader !== null) {
-            this._blurXShader.dispose();
-            this._blurXShader = null;
+        var t1 = input, t2 = this._tempTarget;
+        var t:RenderTarget2D;
+        for (var i = 0; i < this.pass * 9; ++i) {
+            RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_X, true, (renderer:WebGLRenderer):void => {
+                var shader = <BlurXShader>renderer.shaderManager.currentShader;
+                shader.setStrength(this.strength);
+            });
+            t = t1;
+            t1 = t2;
+            t2 = t;
         }
+        renderer.copyRenderTargetContent(t1, output, clearOutput);
+    }
+
+    __initialize():void {
+        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+    }
+
+    __dispose():void {
+        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this._tempTarget = null;
     }
 
     private _strength:number = 5;
     private _pass:number = 1;
-    private _blurXShader:BlurXShader = null;
+    private _tempTarget:RenderTarget2D = null;
 
 }
