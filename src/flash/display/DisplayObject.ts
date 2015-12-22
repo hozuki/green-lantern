@@ -30,7 +30,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._transform = new Transform();
         if (root !== null) {
             this._rawRenderTarget = root.worldRenderer.createRenderTarget();
+            this._renderTargetWithAlpha = root.worldRenderer.createRenderTarget();
         }
+        this._isRoot = root === null;
     }
 
     get alpha():number {
@@ -61,7 +63,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     dispose():void {
-        console.warn("Calling DisplayObject.dispose().");
+        this._root.worldRenderer.releaseRenderTarget(this._renderTargetWithAlpha);
+        this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
+        this.filters = [];
     }
 
     enabled:boolean = true;
@@ -88,10 +92,10 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         if (hasFiltersBefore !== hasFiltersNow) {
             // Update filtered RenderTarget2D state.
             if (hasFiltersBefore) {
-                this._appliedRenderTarget.dispose();
-                this._appliedRenderTarget = null;
+                this._filteredRenderTarget.dispose();
+                this._filteredRenderTarget = null;
             } else if (hasFiltersNow) {
-                this._appliedRenderTarget = this._root.worldRenderer.createRenderTarget();
+                this._filteredRenderTarget = this._root.worldRenderer.createRenderTarget();
             }
         }
     }
@@ -243,29 +247,22 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     render(renderer:WebGLRenderer):void {
-        if (this.visible) {
+        if (this.visible && this.alpha > 0) {
             this.__preprocess(renderer);
             this.__render(renderer);
-            this.__processFilters(renderer);
+            this.__postprocess(renderer);
+        } else {
+            this.outputRenderTarget.clear();
         }
     }
 
     get outputRenderTarget():RenderTarget2D {
-        return this.__shouldProcessFilters() ? this._appliedRenderTarget : this._rawRenderTarget;
+        return this.__shouldProcessFilters() ? this._filteredRenderTarget : this._rawRenderTarget;
     }
 
     protected abstract __update():void;
 
     protected abstract __render(renderer:WebGLRenderer):void;
-
-    protected __processFilters(renderer:WebGLRenderer):void {
-        if (this.__shouldProcessFilters()) {
-            var filterManager = renderer.filterManager;
-            filterManager.pushFilterGroup(this.filters);
-            filterManager.processFilters(renderer, this._rawRenderTarget, this._appliedRenderTarget, true);
-            filterManager.popFilterGroup();
-        }
-    }
 
     /**
      * Override this function to select the proper shader.
@@ -289,6 +286,15 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         });
         manager.currentShader.syncUniforms();
         renderer.setBlendMode(this.blendMode);
+    }
+
+    protected __postprocess(renderer:WebGLRenderer):void {
+        if (this.__shouldProcessFilters()) {
+            var filterManager = renderer.filterManager;
+            filterManager.pushFilterGroup(this.filters);
+            filterManager.processFilters(renderer, this._rawRenderTarget, this._filteredRenderTarget, true);
+            filterManager.popFilterGroup();
+        }
     }
 
     private __shouldProcessFilters():boolean {
@@ -316,6 +322,8 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected _filters:BitmapFilter[] = null;
     protected _transform:Transform = null;
     protected _rawRenderTarget:RenderTarget2D = null;
-    private _appliedRenderTarget:RenderTarget2D = null;
+    private _filteredRenderTarget:RenderTarget2D = null;
+    private _renderTargetWithAlpha:RenderTarget2D = null;
+    private _isRoot:boolean = false;
 
 }

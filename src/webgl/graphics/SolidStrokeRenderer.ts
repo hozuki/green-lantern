@@ -143,7 +143,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                     this._vertices.push(vertices[i]);
                 }
                 for (var i = 0; i < 4; i++) {
-                    this._colors.push(this._r, this._g, this._b, this._a);
+                    this._colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
                 }
                 this._indices.push(cur, cur + 1, cur + 2, cur + 1, cur + 2, cur + 3);
                 this._hasDrawnAnything = true;

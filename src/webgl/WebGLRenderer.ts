@@ -230,6 +230,7 @@ export class WebGLRenderer implements IDisposable {
         if (this._isInitialized) {
             return;
         }
+        this._isInitialized = true;
         this._options = _util.deepClone(options);
 
         var canvas:HTMLCanvasElement = window.document.createElement("canvas");
@@ -248,9 +249,7 @@ export class WebGLRenderer implements IDisposable {
         glc.disable(gl.DEPTH_TEST);
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
-        glc.blendEquation(gl.FUNC_ADD);
-        //glc.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        glc.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        this.setBlendMode(BlendMode.NORMAL);
 
         /*
          if (options.antialias) {
@@ -275,8 +274,6 @@ export class WebGLRenderer implements IDisposable {
         this.setRenderTarget(null);
 
         this.__initializeTessellator();
-        this._isInitialized = true;
-
     }
 
     /**
@@ -335,7 +332,7 @@ export class WebGLRenderer implements IDisposable {
     };
 
     private _currentRenderTarget:RenderTarget2D = null;
-    private _currentBlendMode:string = BlendMode.NORMAL;
+    private _currentBlendMode:string = null;
     private _inputTarget:RenderTarget2D = null;
     private _screenTarget:RenderTarget2D = null;
     private _filterManager:FilterManager = null;

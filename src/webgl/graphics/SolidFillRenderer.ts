@@ -202,7 +202,7 @@ export class SolidFillRenderer extends FillRendererBase {
             }
             j = 0;
             for (var i = 0; i < vertices.length; i += 3) {
-                colors.push(this._r, this._g, this._b, this._a);
+                colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
                 indices.push(j);
                 j++;
             }

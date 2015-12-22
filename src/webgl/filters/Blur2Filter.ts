@@ -50,10 +50,12 @@ export class Blur2Filter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
+        var passCoeff = 9;
+
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
         var t1 = input, t2 = this._tempTarget;
         var t:RenderTarget2D;
-        for (var i = 0; i < this.pass * 9; ++i) {
+        for (var i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR2, true, (renderer:WebGLRenderer):void => {
                 var shader = <Blur2Shader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strengthX);
@@ -64,7 +66,7 @@ export class Blur2Filter extends FilterBase {
             t1 = t2;
             t2 = t;
         }
-        for (var i = 0; i < this.pass * 9; ++i) {
+        for (var i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR2, true, (renderer:WebGLRenderer):void => {
                 var shader = <Blur2Shader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strengthY);
