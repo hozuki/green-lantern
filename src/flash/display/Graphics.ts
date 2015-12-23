@@ -26,8 +26,9 @@ import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
 import {IWebGLElement} from "../../webgl/IWebGLElement";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
+import {IDisposable} from "../../IDisposable";
 
-export class Graphics implements ICopyable<Graphics> {
+export class Graphics implements ICopyable<Graphics>, IDisposable {
 
     constructor(attachTo:DisplayObject, renderer:WebGLRenderer) {
         this._displayObject = attachTo;
@@ -364,6 +365,13 @@ export class Graphics implements ICopyable<Graphics> {
             }
             this._strokeRenderers[i].render(renderer, target);
         }
+    }
+
+    dispose():void {
+        this.clear();
+        this._strokeRenderers.pop();
+        this._currentStrokeRenderer.dispose();
+        this._currentStrokeRenderer = null;
     }
 
     get renderer():WebGLRenderer {

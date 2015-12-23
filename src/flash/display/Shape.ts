@@ -17,6 +17,12 @@ export class Shape extends DisplayObject {
         this._graphics = new Graphics(this, root.worldRenderer);
     }
 
+    dispose():void {
+        super.dispose();
+        this._graphics.dispose();
+        this._graphics = null;
+    }
+
     get graphics():Graphics {
         return this._graphics;
     }
