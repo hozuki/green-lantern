@@ -30,7 +30,6 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._transform = new Transform();
         if (root !== null) {
             this._rawRenderTarget = root.worldRenderer.createRenderTarget();
-            this._renderTargetWithAlpha = root.worldRenderer.createRenderTarget();
         }
         this._isRoot = root === null;
     }
@@ -63,7 +62,6 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     dispose():void {
-        this._root.worldRenderer.releaseRenderTarget(this._renderTargetWithAlpha);
         this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     }
@@ -323,7 +321,6 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected _transform:Transform = null;
     protected _rawRenderTarget:RenderTarget2D = null;
     private _filteredRenderTarget:RenderTarget2D = null;
-    private _renderTargetWithAlpha:RenderTarget2D = null;
     private _isRoot:boolean = false;
 
 }
