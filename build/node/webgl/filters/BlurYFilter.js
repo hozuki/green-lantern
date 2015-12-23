@@ -46,10 +46,10 @@ var BlurYFilter = (function (_super) {
         var _this = this;
         var t1 = input, t2 = this._tempTarget;
         var t;
-        for (var i = 0; i < this.pass * 9; ++i) {
+        for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_Y, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
-                shader.setStrength(_this.strength);
+                shader.setStrength(_this.strength / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));
             });
             t = t1;
             t1 = t2;

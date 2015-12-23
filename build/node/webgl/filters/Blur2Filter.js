@@ -15,8 +15,8 @@ var Blur2Filter = (function (_super) {
     function Blur2Filter(manager) {
         _super.call(this, manager);
         this._tempTarget = null;
-        this._strengthX = 1;
-        this._strengthY = 1;
+        this._strengthX = 5;
+        this._strengthY = 5;
         this._pass = 1;
         this._tempTarget = manager.renderer.createRenderTarget();
     }
@@ -59,14 +59,14 @@ var Blur2Filter = (function (_super) {
     });
     Blur2Filter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
-        var passCoeff = 9;
+        var passCoeff = 5;
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
         var t1 = input, t2 = this._tempTarget;
         var t;
         for (var i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR2, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
-                shader.setStrength(_this.strengthX);
+                shader.setStrength(_this.strengthX / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));
                 shader.setResolution(input.fitWidth);
                 shader.setBlurDirection([1.0, 0.0]);
             });
@@ -77,7 +77,7 @@ var Blur2Filter = (function (_super) {
         for (var i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR2, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
-                shader.setStrength(_this.strengthY);
+                shader.setStrength(_this.strengthY / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));
                 shader.setResolution(input.fitHeight);
                 shader.setBlurDirection([0.0, 1.0]);
             });

@@ -10,12 +10,12 @@ var Display = Object.create({
         return new GLantern.flash.filters.GlowFilter(lantern.renderer.shaderManager, a, b, c, d, e, f, g);
     },
     "createBlurFilter": function (a, b) {
-        //return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
-        var filter = new GLantern.webgl.filters.Blur2Filter(lantern.renderer.shaderManager);
+        return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
+        //var filter = new GLantern.webgl.filters.Blur2Filter(lantern.renderer.shaderManager);
         //var filter = new GLantern.webgl.filters.BlurFilter(lantern.renderer.shaderManager);
-        filter.strengthX = a;
-        filter.strengthY = b;
-        return filter;
+        //filter.strengthX = a;
+        //filter.strengthY = b;
+        //return filter;
     }
 });
 
@@ -37,7 +37,7 @@ var Display = Object.create({
     g.graphics.drawEllipse(10, 16, 560, 380);
     g.graphics.endFill();
     //g.filters = [Display.createGlowFilter(0xFFFFFF, 0.5, 50, 50, 2, 6, false, false), Display.createBlurFilter(160, 160)];
-    g.filters = [Display.createGlowFilter(0xFFFFFF, 0.5, 50, 50, 2, 6, false, false), Display.createBlurFilter(20, 20)]; // for a better visual effect
+    g.filters = [Display.createGlowFilter(0xFFFFFF, 0.5, 50, 50, 2, 6, false, false), Display.createBlurFilter(160, 160)]; // for a better visual effect
     //g.filters = [Display.createGlowFilter(0xFF00FF, 0.5, 10, 10, 2, 6, false, false)];
     //g.filters = [Display.createBlurFilter(160, 160)];
     //g.filters = [Display.createBlurFilter(50, 50)];

@@ -40,10 +40,10 @@ export class BlurYFilter extends FilterBase {
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
         var t1 = input, t2 = this._tempTarget;
         var t:RenderTarget2D;
-        for (var i = 0; i < this.pass * 9; ++i) {
+        for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_Y, true, (renderer:WebGLRenderer):void => {
                 var shader = <BlurYShader>renderer.shaderManager.currentShader;
-                shader.setStrength(this.strength);
+                shader.setStrength(this.strength / 4 / this.pass / (t1.fitWidth / t1.originalWidth));
             });
             t = t1;
             t1 = t2;
