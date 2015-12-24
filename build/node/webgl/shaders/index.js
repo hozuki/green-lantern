@@ -12,5 +12,6 @@ __export(require("./FxaaShader"));
 __export(require("./PrimitiveShader"));
 __export(require("./ReplicateShader"));
 __export(require("./Blur2Shader"));
+__export(require("./CopyImageShader"));
 
 //# sourceMappingURL=index.js.map

@@ -155,6 +155,43 @@ export class RenderTarget2D implements IDisposable {
     }
 
     /**
+     * Update the content of this {@link RenderTarget2D} if the source is a {@link HTMLCanvasElement},
+     * {@link HTMLImageElement}, {@link HTMLVideoElement}, or {@link ImageData}. This operation will retrieve
+     * current image (a snapshot if it is a dynamic canvas or image sequence) and draw it on this
+     * {@link RenderTarget2D}.
+     */
+    updateImageContent():void {
+        var image = this._image;
+        if (this._texture === null || image === null) {
+            return;
+        }
+        var glc = this._glc;
+        glc.bindTexture(gl.TEXTURE_2D, this._texture);
+        glc.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
+        glc.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    /**
+     * Update image size to fit the whole scene.
+     */
+    updateImageSize():void {
+        var image = this._image;
+        if (this._texture === null || image === null) {
+            return;
+        }
+        // TODO: Maybe this operation should not be done on each update call.
+        // Find a way to optimize, for example, freeze the size when created, or implement a draw call
+        // flexible enough to handle all sort of sizes.
+        try {
+            image.width = _util.power2Roundup(image.width);
+            image.height = _util.power2Roundup(image.height);
+        } catch (ex) {
+        }
+        this._originalWidth = this._fitWidth = image.width;
+        this._originalHeight = this._fitHeight = image.height;
+    }
+
+    /**
      * Initializes the {@link RenderTarget2D}.
      * @param glc {WebGLRenderingContext} The {@link WebGLRenderingContext} used to manipulate the {@link RenderTarget2D}.
      * @param width {Number} The new width, in pixels.
@@ -247,7 +284,10 @@ export class RenderTarget2D implements IDisposable {
             glc.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         }
         if (image !== null) {
-            glc.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+            // We flip the whole image vertically during the last stage, drawing to the screen.
+            // So there is no need to flip the images here - all the contents in child RenderTarget2Ds
+            // are vertically mirrored, and they will be transformed in one at last.
+            //glc.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
             if (texture !== null) {
                 glc.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
             }

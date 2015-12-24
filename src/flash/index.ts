@@ -6,5 +6,6 @@ import * as display from "./display/index";
 import * as events from "./events/index";
 import * as geom from "./geom/index";
 import * as filters from "./filters/index";
+import * as text from "./text/index";
 
-export {display, events, geom, filters};
+export {display, events, geom, filters, text};

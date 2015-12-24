@@ -32,6 +32,12 @@ export class WebGLRenderer implements IDisposable {
         this.__initialize(width, height, options);
     }
 
+    clear():void {
+        if (this._screenTarget !== null) {
+            this._screenTarget.clear();
+        }
+    }
+
     /**
      * Disposes the {@link WebGLRenderer} and related resources.
      */
@@ -234,6 +240,7 @@ export class WebGLRenderer implements IDisposable {
         this._options = _util.deepClone(options);
 
         var canvas:HTMLCanvasElement = window.document.createElement("canvas");
+        canvas.className = "glantern-view";
         canvas.width = width;
         canvas.height = height;
 

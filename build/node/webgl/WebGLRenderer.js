@@ -34,6 +34,11 @@ var WebGLRenderer = (function () {
         this._isInitialized = false;
         this.__initialize(width, height, options);
     }
+    WebGLRenderer.prototype.clear = function () {
+        if (this._screenTarget !== null) {
+            this._screenTarget.clear();
+        }
+    };
     /**
      * Disposes the {@link WebGLRenderer} and related resources.
      */
@@ -254,6 +259,7 @@ var WebGLRenderer = (function () {
         this._isInitialized = true;
         this._options = _util_1._util.deepClone(options);
         var canvas = window.document.createElement("canvas");
+        canvas.className = "glantern-view";
         canvas.width = width;
         canvas.height = height;
         var attributes = Object.create(null);

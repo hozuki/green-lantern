@@ -44,6 +44,9 @@ var GLantern = (function () {
         }
         this._isRunning = false;
     };
+    GLantern.prototype.clear = function () {
+        this._renderer.clear();
+    };
     GLantern.prototype.runOneFrame = function () {
         if (!this._isInitialized) {
             return;
@@ -86,7 +89,7 @@ exports.GLantern = GLantern;
 
 
 
-},{"./_util/_util":5,"./flash/display/Stage":27,"./webgl/WebGLRenderer":66}],2:[function(require,module,exports){
+},{"./_util/_util":5,"./flash/display/Stage":27,"./webgl/WebGLRenderer":77}],2:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -378,6 +381,27 @@ var _util = (function () {
     _util.cancelAnimationFrame = function (handle) {
         window.cancelAnimationFrame(handle);
     };
+    _util.colorToCssSharp = function (color) {
+        color |= 0;
+        return "#" + _util.padLeft(color.toString(16), 6, "0");
+    };
+    _util.colorToCssRgba = function (color) {
+        color |= 0;
+        var a = (color >> 24) & 0xff;
+        var r = (color >> 16) & 0xff;
+        var g = (color >> 8) & 0xff;
+        var b = color & 0xff;
+        return "rgba(" + [r, g, b, a].join(",") + ")";
+    };
+    _util.padLeft = function (str, targetLength, padWith) {
+        while (str.length < targetLength) {
+            str = padWith + str;
+        }
+        if (str.length > targetLength) {
+            str = str.substring(str.length - targetLength, str.length - 1);
+        }
+        return str;
+    };
     return _util;
 })();
 exports._util = _util;
@@ -418,7 +442,7 @@ __export(require("./NotImplementedError"));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./index":52}],8:[function(require,module,exports){
+},{"./index":63}],8:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -716,7 +740,6 @@ var DisplayObject = (function (_super) {
         this._transform = null;
         this._rawRenderTarget = null;
         this._filteredRenderTarget = null;
-        this._renderTargetWithAlpha = null;
         this._isRoot = false;
         this._root = root;
         this._stage = root;
@@ -725,7 +748,6 @@ var DisplayObject = (function (_super) {
         this._transform = new Transform_1.Transform();
         if (root !== null) {
             this._rawRenderTarget = root.worldRenderer.createRenderTarget();
-            this._renderTargetWithAlpha = root.worldRenderer.createRenderTarget();
         }
         this._isRoot = root === null;
     }
@@ -761,7 +783,7 @@ var DisplayObject = (function (_super) {
         configurable: true
     });
     DisplayObject.prototype.dispose = function () {
-        this._root.worldRenderer.releaseRenderTarget(this._renderTargetWithAlpha);
+        _super.prototype.dispose.call(this);
         this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     };
@@ -996,9 +1018,9 @@ var DisplayObject = (function (_super) {
         var _this = this;
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
-        this._transform.matrix3D.setTransformTo(this.x, this.y, this.z);
+        this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
         manager.currentShader.changeValue("uTransformMatrix", function (u) {
-            u.value = _this._transform.matrix3D.toArray();
+            u.value = _this.transform.matrix3D.toArray();
         });
         manager.currentShader.changeValue("uAlpha", function (u) {
             u.value = _this.alpha;
@@ -1203,7 +1225,7 @@ exports.DisplayObjectContainer = DisplayObjectContainer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../webgl/ShaderID":61,"./InteractiveObject":20}],16:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../webgl/ShaderID":72,"./InteractiveObject":20}],16:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -1597,6 +1619,12 @@ var Graphics = (function () {
             this._strokeRenderers[i].render(renderer, target);
         }
     };
+    Graphics.prototype.dispose = function () {
+        this.clear();
+        this._strokeRenderers.pop();
+        this._currentStrokeRenderer.dispose();
+        this._currentStrokeRenderer = null;
+    };
     Object.defineProperty(Graphics.prototype, "renderer", {
         get: function () {
             return this._renderer;
@@ -1692,7 +1720,7 @@ function __checkPathCommands(commands, data) {
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/graphics/BrushType":75,"../../webgl/graphics/SolidFillRenderer":79,"../../webgl/graphics/SolidStrokeRenderer":80,"./GraphicsPathCommand":18,"./GraphicsPathWinding":19,"./InterpolationMethod":21,"./LineScaleMode":23,"./SpreadMethod":26,"./TriangleCulling":32}],18:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/graphics/BrushType":86,"../../webgl/graphics/SolidFillRenderer":90,"../../webgl/graphics/SolidStrokeRenderer":91,"./GraphicsPathCommand":18,"./GraphicsPathWinding":19,"./InterpolationMethod":21,"./LineScaleMode":23,"./SpreadMethod":26,"./TriangleCulling":32}],18:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -1942,6 +1970,11 @@ var Shape = (function (_super) {
         this._graphics = null;
         this._graphics = new Graphics_1.Graphics(this, root.worldRenderer);
     }
+    Shape.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        this._graphics.dispose();
+        this._graphics = null;
+    };
     Object.defineProperty(Shape.prototype, "graphics", {
         get: function () {
             return this._graphics;
@@ -1964,7 +1997,7 @@ exports.Shape = Shape;
 
 
 
-},{"../../webgl/ShaderID":61,"./DisplayObject":14,"./Graphics":17}],26:[function(require,module,exports){
+},{"../../webgl/ShaderID":72,"./DisplayObject":14,"./Graphics":17}],26:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -2465,6 +2498,14 @@ var EventDispatcher = (function () {
     EventDispatcher.prototype.willTrigger = function (type) {
         return this.hasEventListener(type) && this._listeners.get(type).length > 0;
     };
+    EventDispatcher.prototype.dispose = function () {
+        this._listeners.forEach(function (listeners) {
+            while (listeners.length > 0) {
+                listeners.pop();
+            }
+        });
+        this._listeners.clear();
+    };
     return EventDispatcher;
 })();
 exports.EventDispatcher = EventDispatcher;
@@ -2631,7 +2672,7 @@ exports.BlurFilter = BlurFilter;
 
 
 
-},{"../../webgl/filters/Blur2Filter":68,"./BitmapFilterQuality":37}],39:[function(require,module,exports){
+},{"../../webgl/filters/Blur2Filter":79,"./BitmapFilterQuality":37}],39:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -2750,7 +2791,7 @@ exports.GlowFilter = GlowFilter;
 
 
 
-},{"../../_util/_util":5,"../../webgl/filters/GlowFilter":73,"./BitmapFilterQuality":37}],40:[function(require,module,exports){
+},{"../../_util/_util":5,"../../webgl/filters/GlowFilter":84,"./BitmapFilterQuality":37}],40:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -4104,10 +4145,1057 @@ var geom = require("./geom/index");
 exports.geom = geom;
 var filters = require("./filters/index");
 exports.filters = filters;
+var text = require("./text/index");
+exports.text = text;
 
 
 
-},{"./display/index":33,"./events/index":36,"./filters/index":40,"./geom/index":50}],52:[function(require,module,exports){
+},{"./display/index":33,"./events/index":36,"./filters/index":40,"./geom/index":50,"./text/index":62}],52:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var AntiAliasType = (function () {
+    function AntiAliasType() {
+    }
+    Object.defineProperty(AntiAliasType, "ADVANCED", {
+        get: function () {
+            return "advanced";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AntiAliasType, "NORMAL", {
+        get: function () {
+            return "normal";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return AntiAliasType;
+})();
+exports.AntiAliasType = AntiAliasType;
+
+
+
+},{}],53:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var GridFitType = (function () {
+    function GridFitType() {
+    }
+    Object.defineProperty(GridFitType, "NONE", {
+        get: function () {
+            return "none";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GridFitType, "PIXEL", {
+        get: function () {
+            return "pixel";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GridFitType, "SUBPIXEL", {
+        get: function () {
+            return "subpixel";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return GridFitType;
+})();
+exports.GridFitType = GridFitType;
+
+
+
+},{}],54:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var NotImplementedError_1 = require("../../_util/NotImplementedError");
+var EventDispatcher_1 = require("../events/EventDispatcher");
+var StyleSheet = (function (_super) {
+    __extends(StyleSheet, _super);
+    function StyleSheet() {
+        _super.call(this);
+        throw new NotImplementedError_1.NotImplementedError();
+    }
+    StyleSheet.prototype.clear = function () {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    StyleSheet.prototype.getStyle = function (styleName) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    StyleSheet.prototype.parseCSS = function (cssText) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    StyleSheet.prototype.setStyle = function (styleName, styleObject) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    StyleSheet.prototype.transform = function (formatObject) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    StyleSheet.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    Object.defineProperty(StyleSheet.prototype, "styleNames", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return StyleSheet;
+})(EventDispatcher_1.EventDispatcher);
+exports.StyleSheet = StyleSheet;
+
+
+
+},{"../../_util/NotImplementedError":4,"../events/EventDispatcher":34}],55:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var InteractiveObject_1 = require("../display/InteractiveObject");
+var AntiAliasType_1 = require("./AntiAliasType");
+var TextFieldAutoSize_1 = require("./TextFieldAutoSize");
+var TextFormat_1 = require("./TextFormat");
+var GridFitType_1 = require("./GridFitType");
+var NotImplementedError_1 = require("../../_util/NotImplementedError");
+var TextInteractionMode_1 = require("./TextInteractionMode");
+var TextFieldType_1 = require("./TextFieldType");
+var ShaderID_1 = require("../../webgl/ShaderID");
+var RenderHelper_1 = require("../../webgl/RenderHelper");
+var _util_1 = require("../../_util/_util");
+var TextField = (function (_super) {
+    __extends(TextField, _super);
+    function TextField(root, parent) {
+        _super.call(this, root, parent);
+        this.alwaysShowSelection = false;
+        this.antiAliasType = AntiAliasType_1.AntiAliasType.NORMAL;
+        this.autoSize = TextFieldAutoSize_1.TextFieldAutoSize.NONE;
+        this.condenseWhite = false;
+        this.displayAsPassword = false;
+        this.embedFonts = false;
+        this.gridFitType = GridFitType_1.GridFitType.PIXEL;
+        this.htmlText = null;
+        this.maxChars = 0;
+        this.mouseWheelEnabled = true;
+        this.multiline = true;
+        this.restrict = null;
+        this.scrollH = 0;
+        this.scrollV = 1;
+        this.selectable = true;
+        this.sharpness = 0;
+        this.styleSheet = null;
+        this.textInteractionMode = TextInteractionMode_1.TextInteractionMode.NORMAL;
+        this.type = TextFieldType_1.TextFieldType.DYNAMIC;
+        this.useRichTextClipboard = false;
+        this.wordWrap = false;
+        this._textFormatChangedHandler = null;
+        this._defaultTextFormat = null;
+        this._isContentChanged = true;
+        this._canvasTarget = null;
+        this._canvas = null;
+        this._context2D = null;
+        this._text = null;
+        this._background = false;
+        this._backgroundColor = 0xffffff;
+        this._border = false;
+        this._borderColor = 0x000000;
+        this._textColor = 0x000000;
+        this._thickness = 0;
+        if (root !== null) {
+            this._canvasTarget = this.__createCanvasTarget(root.worldRenderer);
+        }
+        this._textFormatChangedHandler = this.__textFormatChanged.bind(this);
+        this.defaultTextFormat = new TextFormat_1.TextFormat();
+    }
+    TextField.prototype.appendText = function (newText) {
+        this.text += newText;
+    };
+    Object.defineProperty(TextField.prototype, "background", {
+        get: function () {
+            return this._background;
+        },
+        set: function (v) {
+            var b = v !== this._background;
+            if (b) {
+                this._background = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "backgroundColor", {
+        get: function () {
+            return this._backgroundColor;
+        },
+        set: function (v) {
+            var b = v !== this._backgroundColor;
+            if (b) {
+                this._backgroundColor = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "border", {
+        get: function () {
+            return this._border;
+        },
+        set: function (v) {
+            var b = v !== this._border;
+            if (b) {
+                this._border = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "borderColor", {
+        get: function () {
+            return this._borderColor;
+        },
+        set: function (v) {
+            var b = v !== this._borderColor;
+            if (b) {
+                this._borderColor = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "bottomScrollV", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "caretIndex", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "defaultTextFormat", {
+        get: function () {
+            return this._defaultTextFormat;
+        },
+        set: function (v) {
+            if (this._defaultTextFormat !== null) {
+                this._defaultTextFormat.removeEventListener(TextFormat_1.TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
+            }
+            this._defaultTextFormat = !_util_1._util.isUndefinedOrNull(v) ? v : new TextFormat_1.TextFormat();
+            this._defaultTextFormat.addEventListener(TextFormat_1.TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TextField.prototype.getCharBoundaries = function () {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getCharIndexAtPoint = function (x, y) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getFirstCharInParagraph = function (charIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getImageReference = function (id) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineIndexAtPoint = function (x, y) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineIndexOfChar = function (charIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineLength = function (lineIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineMetrics = function (lineIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineOffset = function (lineIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getLineText = function (lineIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getParagraphLength = function (charIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.getTextFormat = function (beginIndex, endIndex) {
+        if (beginIndex === void 0) { beginIndex = -1; }
+        if (endIndex === void 0) { endIndex = -1; }
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.isFontCompatible = function (fontName, fontStyle) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.replaceSelectedText = function (value) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.replaceText = function (beginIndex, endIndex, newText) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.setSelection = function (beginIndex, endIndex) {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TextField.prototype.setTextFormat = function (format, beginIndex, endIndex) {
+        if (beginIndex === void 0) { beginIndex = -1; }
+        if (endIndex === void 0) { endIndex = -1; }
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    Object.defineProperty(TextField.prototype, "length", {
+        get: function () {
+            return !_util_1._util.isUndefinedOrNull(this.text) ? this.text.length : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "maxScrollH", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "maxScrollV", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "numLines", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "selectionBeginIndex", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "selectionEndIndex", {
+        get: function () {
+            throw new NotImplementedError_1.NotImplementedError();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "text", {
+        get: function () {
+            return this._text;
+        },
+        set: function (v) {
+            var b = this._text !== v;
+            if (b) {
+                this._text = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "textColor", {
+        get: function () {
+            return this.defaultTextFormat.color;
+        },
+        set: function (v) {
+            this.defaultTextFormat.color = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "textHeight", {
+        get: function () {
+            // TODO: This only works under single line circumstances.
+            return this.defaultTextFormat.size * 1.5;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "textWidth", {
+        get: function () {
+            // TODO: This only works under single line circumstances.
+            var metrics = this._context2D.measureText(this.text);
+            return metrics.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "thickness", {
+        get: function () {
+            return this._thickness;
+        },
+        set: function (v) {
+            var b = this._thickness !== v;
+            if (b) {
+                this._thickness = v;
+                this._isContentChanged = true;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TextField.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        // TODO: WARNING: HACK!
+        var renderer = this.root.worldRenderer;
+        renderer.releaseRenderTarget(this._canvasTarget);
+        this._canvasTarget = null;
+        this._canvas = null;
+        this._context2D = null;
+    };
+    TextField.prototype.__update = function () {
+        if (!this._isContentChanged) {
+            return;
+        }
+        //var canvas = this._canvas;
+        //var context = this._context2D;
+        //context.font = this.__getStyleString();
+        //var metrics:TextMetrics = context.measureText(this.text);
+        //canvas.height = this.defaultTextFormat.size * 1.15;
+        //canvas.width = metrics.width;
+        this._canvasTarget.updateImageSize();
+        this.__updateCanvasTextStyle(this._context2D);
+        this.__drawTextElements(this._context2D);
+        this._isContentChanged = false;
+    };
+    TextField.prototype.__render = function (renderer) {
+        if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
+            this._canvasTarget.updateImageContent();
+            RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, this._rawRenderTarget, false, false, this.transform.matrix3D, this.alpha, true);
+        }
+        else {
+            this._rawRenderTarget.clear();
+        }
+    };
+    TextField.prototype.__selectShader = function (shaderManager) {
+        shaderManager.selectShader(ShaderID_1.ShaderID.COPY_IMAGE);
+    };
+    TextField.prototype.__createCanvasTarget = function (renderer) {
+        if (this._canvas === null) {
+            var canvas = window.document.createElement("canvas");
+            canvas.width = renderer.view.width;
+            canvas.height = renderer.view.height;
+            this._canvas = canvas;
+            this._context2D = canvas.getContext("2d");
+        }
+        return renderer.createRenderTarget(this._canvas);
+    };
+    TextField.prototype.__updateCanvasTextStyle = function (context2D) {
+        var fontStyles = [];
+        if (this.defaultTextFormat.bold) {
+            fontStyles.push("bold");
+        }
+        if (this.defaultTextFormat.italic) {
+            fontStyles.push("italic");
+        }
+        fontStyles.push(this.defaultTextFormat.size.toString() + "pt");
+        fontStyles.push("\"" + this.defaultTextFormat.font + "\"");
+        context2D.font = fontStyles.join(" ");
+    };
+    TextField.prototype.__drawTextElements = function (context2D) {
+        context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        if (this.background) {
+            context2D.fillStyle = _util_1._util.colorToCssSharp(this.backgroundColor);
+            context2D.fillRect(0, 0, this.textWidth, this.textHeight);
+        }
+        context2D.fillStyle = _util_1._util.colorToCssSharp(this.textColor);
+        context2D.fillText(this.text, 0, this.textHeight * 0.75);
+        if (this.thickness > 0) {
+            context2D.lineWidth = this.thickness;
+            context2D.strokeStyle = _util_1._util.colorToCssSharp(this.textColor);
+            context2D.strokeText(this.text, 0, this.textHeight * 0.75);
+        }
+        if (this.border) {
+            context2D.lineWidth = 1;
+            context2D.strokeStyle = _util_1._util.colorToCssSharp(this.borderColor);
+            context2D.strokeRect(1, 1, this.textWidth - 1, this.textHeight - 1);
+        }
+    };
+    TextField.prototype.__textFormatChanged = function () {
+        this._isContentChanged = true;
+    };
+    return TextField;
+})(InteractiveObject_1.InteractiveObject);
+exports.TextField = TextField;
+
+
+
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/RenderHelper":69,"../../webgl/ShaderID":72,"../display/InteractiveObject":20,"./AntiAliasType":52,"./GridFitType":53,"./TextFieldAutoSize":56,"./TextFieldType":57,"./TextFormat":58,"./TextInteractionMode":60}],56:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var TextFieldAutoSize = (function () {
+    function TextFieldAutoSize() {
+    }
+    Object.defineProperty(TextFieldAutoSize, "CENTER", {
+        get: function () {
+            return "center";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFieldAutoSize, "LEFT", {
+        get: function () {
+            return "left";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFieldAutoSize, "NONE", {
+        get: function () {
+            return "none";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFieldAutoSize, "RIGHT", {
+        get: function () {
+            return "right";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TextFieldAutoSize;
+})();
+exports.TextFieldAutoSize = TextFieldAutoSize;
+
+
+
+},{}],57:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var TextFieldType = (function () {
+    function TextFieldType() {
+    }
+    Object.defineProperty(TextFieldType, "DYNAMIC", {
+        get: function () {
+            return "dynamic";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFieldType, "INPUT", {
+        get: function () {
+            return "input";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TextFieldType;
+})();
+exports.TextFieldType = TextFieldType;
+
+
+
+},{}],58:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var os = require("os");
+var TextFormatAlign_1 = require("./TextFormatAlign");
+var EventDispatcher_1 = require("../events/EventDispatcher");
+var _util_1 = require("../../_util/_util");
+var FlashEvent_1 = require("../events/FlashEvent");
+var TextFormat = (function (_super) {
+    __extends(TextFormat, _super);
+    function TextFormat(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading) {
+        if (font === void 0) { font = null; }
+        if (size === void 0) { size = 12; }
+        if (color === void 0) { color = 0x000000; }
+        if (bold === void 0) { bold = false; }
+        if (italic === void 0) { italic = false; }
+        if (underline === void 0) { underline = false; }
+        if (url === void 0) { url = null; }
+        if (target === void 0) { target = null; }
+        if (align === void 0) { align = TextFormatAlign_1.TextFormatAlign.LEFT; }
+        if (leftMargin === void 0) { leftMargin = 0; }
+        if (rightMargin === void 0) { rightMargin = 0; }
+        if (indent === void 0) { indent = 0; }
+        if (leading === void 0) { leading = 0; }
+        _super.call(this);
+        this._align = TextFormatAlign_1.TextFormatAlign.LEFT;
+        this._blockIndent = 0;
+        this._bold = false;
+        this._bullet = false;
+        this._color = 0x000000;
+        this._font = null;
+        this._indent = 0;
+        this._italic = false;
+        this._kerning = false;
+        this._leading = 0;
+        this._leftMargin = 0;
+        this._letterSpacing = 0;
+        this._rightMargin = 0;
+        this._size = 12;
+        this._tabStops = [];
+        this._target = null;
+        this._underline = false;
+        this._url = null;
+        if (font === null) {
+            this.font = os.type().toLowerCase().indexOf("osx") >= 0 ? "Times" : "Times New Roman";
+        }
+        else {
+            this.font = font;
+        }
+        this.size = size;
+        this.color = color;
+        this.bold = bold;
+        this.italic = italic;
+        this.underline = underline;
+        this.url = url;
+        this.target = target;
+        this.align = align;
+        this.leftMargin = leftMargin;
+        this.rightMargin = rightMargin;
+        this.indent = indent;
+        this.leading = leading;
+    }
+    Object.defineProperty(TextFormat, "TEXT_FORMAT_CHANGE", {
+        get: function () {
+            return "textFormatChange";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "align", {
+        get: function () {
+            return this._align;
+        },
+        set: function (v) {
+            var b = this._align !== v;
+            if (b) {
+                this._align = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "blockIndent", {
+        get: function () {
+            return this._blockIndent;
+        },
+        set: function (v) {
+            var b = this._blockIndent !== v;
+            if (b) {
+                this._blockIndent = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "bold", {
+        get: function () {
+            return this._bold;
+        },
+        set: function (v) {
+            var b = this._bold !== v;
+            if (b) {
+                this._bold = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "bullet", {
+        get: function () {
+            return this._bullet;
+        },
+        set: function (v) {
+            var b = this._bullet !== v;
+            if (b) {
+                this._bullet = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (v) {
+            var b = this._color !== v;
+            if (b) {
+                this._color = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "font", {
+        get: function () {
+            return this._font;
+        },
+        set: function (v) {
+            var b = this._font !== v;
+            if (b) {
+                this._font = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "indent", {
+        get: function () {
+            return this._indent;
+        },
+        set: function (v) {
+            var b = this._indent !== v;
+            if (b) {
+                this._indent = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "italic", {
+        get: function () {
+            return this._italic;
+        },
+        set: function (v) {
+            var b = this._italic !== v;
+            if (b) {
+                this._italic = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "kerning", {
+        get: function () {
+            return this._kerning;
+        },
+        set: function (v) {
+            var b = this._kerning !== v;
+            if (b) {
+                this._kerning = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "leading", {
+        get: function () {
+            return this._indent;
+        },
+        set: function (v) {
+            var b = this._leading !== v;
+            if (b) {
+                this._leading = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "leftMargin", {
+        get: function () {
+            return this._leftMargin;
+        },
+        set: function (v) {
+            var b = this._leftMargin !== v;
+            if (b) {
+                this._leftMargin = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "letterSpacing", {
+        get: function () {
+            return this._letterSpacing;
+        },
+        set: function (v) {
+            var b = this._letterSpacing !== v;
+            if (b) {
+                this._letterSpacing = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "rightMargin", {
+        get: function () {
+            return this._rightMargin;
+        },
+        set: function (v) {
+            var b = this._rightMargin !== v;
+            if (b) {
+                this._rightMargin = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "size", {
+        get: function () {
+            return this._size;
+        },
+        set: function (v) {
+            var b = this._size !== v;
+            if (b) {
+                this._size = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "tabStops", {
+        get: function () {
+            return this._tabStops;
+        },
+        set: function (v) {
+            if (_util_1._util.isUndefinedOrNull(v)) {
+                v = [];
+            }
+            var b = false;
+            if (!b) {
+                b = this._tabStops.length !== v.length;
+            }
+            if (!b) {
+                for (var i = 0; i < v.length; ++i) {
+                    if (this._tabStops[i] !== v[i]) {
+                        b = true;
+                        break;
+                    }
+                }
+            }
+            if (b) {
+                this._tabStops = v.slice();
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "target", {
+        get: function () {
+            return this._target;
+        },
+        set: function (v) {
+            var b = this._target !== v;
+            if (b) {
+                this._target = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "underline", {
+        get: function () {
+            return this._underline;
+        },
+        set: function (v) {
+            var b = this._underline !== v;
+            if (b) {
+                this._underline = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormat.prototype, "url", {
+        get: function () {
+            return this._url;
+        },
+        set: function (v) {
+            var b = this._url !== v;
+            if (b) {
+                this._url = v;
+                this.__raiseChange();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TextFormat.prototype.__raiseChange = function () {
+        var ev = FlashEvent_1.FlashEvent.create(TextFormat.TEXT_FORMAT_CHANGE);
+        this.dispatchEvent(ev);
+    };
+    return TextFormat;
+})(EventDispatcher_1.EventDispatcher);
+exports.TextFormat = TextFormat;
+
+
+
+},{"../../_util/_util":5,"../events/EventDispatcher":34,"../events/FlashEvent":35,"./TextFormatAlign":59,"os":105}],59:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var TextFormatAlign = (function () {
+    function TextFormatAlign() {
+    }
+    Object.defineProperty(TextFormatAlign, "CENTER", {
+        get: function () {
+            return "center";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormatAlign, "END", {
+        get: function () {
+            return "end";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormatAlign, "JUSTIFY", {
+        get: function () {
+            return "justify";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormatAlign, "LEFT", {
+        get: function () {
+            return "left";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormatAlign, "RIGHT", {
+        get: function () {
+            return "right";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextFormatAlign, "START", {
+        get: function () {
+            return "start";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TextFormatAlign;
+})();
+exports.TextFormatAlign = TextFormatAlign;
+
+
+
+},{}],60:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var TextInteractionMode = (function () {
+    function TextInteractionMode() {
+    }
+    Object.defineProperty(TextInteractionMode, "NORMAL", {
+        get: function () {
+            return "normal";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextInteractionMode, "SELECTION", {
+        get: function () {
+            return "selection";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TextInteractionMode;
+})();
+exports.TextInteractionMode = TextInteractionMode;
+
+
+
+},{}],61:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var TextLineMetrics = (function () {
+    function TextLineMetrics(x, width, height, ascent, descent, leading) {
+        this.ascent = 0;
+        this.descent = 0;
+        this.height = 0;
+        this.leading = 0;
+        this.width = 0;
+        this.x = 0;
+        this.x = x;
+        this.width = width;
+        this.height = height;
+        this.ascent = ascent;
+        this.descent = descent;
+        this.leading = leading;
+    }
+    return TextLineMetrics;
+})();
+exports.TextLineMetrics = TextLineMetrics;
+
+
+
+},{}],62:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+__export(require("./AntiAliasType"));
+__export(require("./GridFitType"));
+__export(require("./StyleSheet"));
+__export(require("./TextField"));
+__export(require("./TextFieldAutoSize"));
+__export(require("./TextFieldType"));
+__export(require("./TextFormat"));
+__export(require("./TextFormatAlign"));
+__export(require("./TextInteractionMode"));
+__export(require("./TextLineMetrics"));
+
+
+
+},{"./AntiAliasType":52,"./GridFitType":53,"./StyleSheet":54,"./TextField":55,"./TextFieldAutoSize":56,"./TextFieldType":57,"./TextFormat":58,"./TextFormatAlign":59,"./TextInteractionMode":60,"./TextLineMetrics":61}],63:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -4128,7 +5216,7 @@ exports.injectToGlobal = injectToGlobal;
 
 
 
-},{"./GLantern":1,"./_util/index":6,"./flash/index":51,"./webgl/index":82}],53:[function(require,module,exports){
+},{"./GLantern":1,"./_util/index":6,"./flash/index":51,"./webgl/index":93}],64:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4144,7 +5232,7 @@ exports.AttributeCache = AttributeCache;
 
 
 
-},{}],54:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4191,7 +5279,7 @@ exports.FilterBase = FilterBase;
 
 
 
-},{}],55:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -4275,7 +5363,7 @@ exports.FilterManager = FilterManager;
 
 
 
-},{}],56:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4321,6 +5409,13 @@ var FragmentShaders = (function () {
     Object.defineProperty(FragmentShaders, "blur2", {
         get: function () {
             return Values.blur2;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FragmentShaders, "copyImage", {
+        get: function () {
+            return Values.copyImage;
         },
         enumerable: true,
         configurable: true
@@ -4512,10 +5607,22 @@ Values.blur2 = [
     "    }",
     "}"
 ].join("\n");
+Values.copyImage = [
+    "precision mediump float;",
+    "",
+    "uniform sampler2D uSampler;",
+    "uniform float uAlpha;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "void main() {",
+    "    gl_FragColor = texture2D(uSampler, vTextureCoord) * uAlpha;",
+    "}"
+].join("\n");
 
 
 
-},{}],57:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4634,7 +5741,7 @@ exports.PackedArrayBuffer = PackedArrayBuffer;
 
 
 
-},{"../_util/_util":5}],58:[function(require,module,exports){
+},{"../_util/_util":5}],69:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4677,6 +5784,26 @@ var RenderHelper = (function () {
                 shader.setOriginalSize([destination.originalWidth, destination.originalHeight]);
                 shader.setFitSize([destination.fitWidth, destination.fitHeight]);
             }
+        });
+    };
+    RenderHelper.copyImageContent = function (renderer, source, destination, flipX, flipY, transform, alpha, clearOutput) {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID_1.ShaderID.COPY_IMAGE, clearOutput, function (r) {
+            var shader = r.shaderManager.currentShader;
+            shader.setFlipX(flipX);
+            shader.setFlipY(flipY);
+            shader.setAlpha(alpha);
+            shader.setTransform(transform);
+            if (flipX || flipY) {
+                shader.setOriginalSize([destination.originalWidth, destination.originalHeight]);
+                shader.setFitSize([destination.fitWidth, destination.fitHeight]);
+            }
+        });
+    };
+    RenderHelper.renderImage = function (renderer, source, destination, clearOutput) {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID_1.ShaderID.COPY_IMAGE, clearOutput, function (r) {
+            var shader = r.shaderManager.currentShader;
+            shader.setFlipX(false);
+            shader.setFlipY(false);
         });
     };
     RenderHelper.renderBuffered = function (renderer, source, destination, shaderID, clearOutput, shaderInit) {
@@ -4754,7 +5881,7 @@ function __checkRenderTargets(source, destination) {
 
 
 
-},{"../_util/_util":5,"./PackedArrayBuffer":57,"./RenderTarget2D":59,"./ShaderID":61}],59:[function(require,module,exports){
+},{"../_util/_util":5,"./PackedArrayBuffer":68,"./RenderTarget2D":70,"./ShaderID":72}],70:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -4935,6 +6062,42 @@ var RenderTarget2D = (function () {
         this.__resize(newWidth, newHeight, true);
     };
     /**
+     * Update the content of this {@link RenderTarget2D} if the source is a {@link HTMLCanvasElement},
+     * {@link HTMLImageElement}, {@link HTMLVideoElement}, or {@link ImageData}. This operation will retrieve
+     * current image (a snapshot if it is a dynamic canvas or image sequence) and draw it on this
+     * {@link RenderTarget2D}.
+     */
+    RenderTarget2D.prototype.updateImageContent = function () {
+        var image = this._image;
+        if (this._texture === null || image === null) {
+            return;
+        }
+        var glc = this._glc;
+        glc.bindTexture(gl.TEXTURE_2D, this._texture);
+        glc.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        glc.bindTexture(gl.TEXTURE_2D, null);
+    };
+    /**
+     * Update image size to fit the whole scene.
+     */
+    RenderTarget2D.prototype.updateImageSize = function () {
+        var image = this._image;
+        if (this._texture === null || image === null) {
+            return;
+        }
+        // TODO: Maybe this operation should not be done on each update call.
+        // Find a way to optimize, for example, freeze the size when created, or implement a draw call
+        // flexible enough to handle all sort of sizes.
+        try {
+            image.width = _util_1._util.power2Roundup(image.width);
+            image.height = _util_1._util.power2Roundup(image.height);
+        }
+        catch (ex) {
+        }
+        this._originalWidth = this._fitWidth = image.width;
+        this._originalHeight = this._fitHeight = image.height;
+    };
+    /**
      * Initializes the {@link RenderTarget2D}.
      * @param glc {WebGLRenderingContext} The {@link WebGLRenderingContext} used to manipulate the {@link RenderTarget2D}.
      * @param width {Number} The new width, in pixels.
@@ -5022,7 +6185,10 @@ var RenderTarget2D = (function () {
             glc.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         }
         if (image !== null) {
-            glc.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+            // We flip the whole image vertically during the last stage, drawing to the screen.
+            // So there is no need to flip the images here - all the contents in child RenderTarget2Ds
+            // are vertically mirrored, and they will be transformed in one at last.
+            //glc.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
             if (texture !== null) {
                 glc.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
             }
@@ -5068,7 +6234,7 @@ function initStaticFields(glc) {
 
 
 
-},{"../_util/_util":5,"./PackedArrayBuffer":57}],60:[function(require,module,exports){
+},{"../_util/_util":5,"./PackedArrayBuffer":68}],71:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -5368,7 +6534,7 @@ function createShaderFromSource(glc, source, type) {
 
 
 
-},{"../_util/_util":5,"./FragmentShaders":56,"./VertexShaders":64,"./WebGLDataType":65}],61:[function(require,module,exports){
+},{"../_util/_util":5,"./FragmentShaders":67,"./VertexShaders":75,"./WebGLDataType":76}],72:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -5424,13 +6590,20 @@ var ShaderID = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ShaderID, "COPY_IMAGE", {
+        get: function () {
+            return 7;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ShaderID;
 })();
 exports.ShaderID = ShaderID;
 
 
 
-},{}],62:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -5441,6 +6614,7 @@ var ReplicateShader_1 = require("./shaders/ReplicateShader");
 var ColorTransformShader_1 = require("./shaders/ColorTransformShader");
 var FxaaShader_1 = require("./shaders/FxaaShader");
 var Blur2Shader_1 = require("./shaders/Blur2Shader");
+var CopyImageShader_1 = require("./shaders/CopyImageShader");
 var ShaderManager = (function () {
     function ShaderManager(renderer) {
         this._renderer = null;
@@ -5521,6 +6695,7 @@ var ShaderManager = (function () {
         shaderList.push(new ColorTransformShader_1.ColorTransformShader(this));
         shaderList.push(new FxaaShader_1.FxaaShader(this));
         shaderList.push(new Blur2Shader_1.Blur2Shader(this));
+        shaderList.push(new CopyImageShader_1.CopyImageShader(this));
     };
     return ShaderManager;
 })();
@@ -5528,7 +6703,7 @@ exports.ShaderManager = ShaderManager;
 
 
 
-},{"./shaders/Blur2Shader":83,"./shaders/BlurXShader":84,"./shaders/BlurYShader":85,"./shaders/ColorTransformShader":87,"./shaders/FxaaShader":88,"./shaders/PrimitiveShader":89,"./shaders/ReplicateShader":90}],63:[function(require,module,exports){
+},{"./shaders/Blur2Shader":94,"./shaders/BlurXShader":95,"./shaders/BlurYShader":96,"./shaders/ColorTransformShader":98,"./shaders/CopyImageShader":99,"./shaders/FxaaShader":100,"./shaders/PrimitiveShader":101,"./shaders/ReplicateShader":102}],74:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -5549,7 +6724,7 @@ exports.UniformCache = UniformCache;
 
 
 
-},{"./WebGLDataType":65}],64:[function(require,module,exports){
+},{"./WebGLDataType":76}],75:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -5602,6 +6777,13 @@ var VertexShaders = (function () {
     Object.defineProperty(VertexShaders, "blur2", {
         get: function () {
             return Values.blur2;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VertexShaders, "copyImage", {
+        get: function () {
+            return Values.copyImage;
         },
         enumerable: true,
         configurable: true
@@ -5770,10 +6952,38 @@ Values.blur2 = [
     "    vTextureCoord = aTextureCoord;",
     "}"
 ].join("\n");
+Values.copyImage = [
+    "attribute vec3 aVertexPosition;",
+    "attribute vec2 aTextureCoord;",
+    "",
+    "uniform mat4 uProjectionMatrix;",
+    "uniform mat4 uTransformMatrix;",
+    "uniform vec2 uOriginalSize;",
+    "uniform vec2 uFitSize;",
+    "uniform bool uFlipX;",
+    "uniform bool uFlipY;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "void main() {",
+    "    vec3 newVertexPostion = aVertexPosition;",
+    "    vec2 newTextureCoord = aTextureCoord;",
+    "    if (uFlipX) {",
+    "        newTextureCoord.x = 1.0 - newTextureCoord.x;",
+    "        newVertexPostion.x -= (uFitSize - uOriginalSize).x;",
+    "    }",
+    "    if (uFlipY) {",
+    "        newTextureCoord.y = 1.0 - newTextureCoord.y;",
+    "        newVertexPostion.y -= (uFitSize - uOriginalSize).y;",
+    "    }",
+    "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
+    "    vTextureCoord = newTextureCoord;",
+    "}"
+].join("\n");
 
 
 
-},{}],65:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -5810,7 +7020,7 @@ var WebGLDataType = exports.WebGLDataType;
 
 
 
-},{}],66:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -5847,6 +7057,11 @@ var WebGLRenderer = (function () {
         this._isInitialized = false;
         this.__initialize(width, height, options);
     }
+    WebGLRenderer.prototype.clear = function () {
+        if (this._screenTarget !== null) {
+            this._screenTarget.clear();
+        }
+    };
     /**
      * Disposes the {@link WebGLRenderer} and related resources.
      */
@@ -6067,6 +7282,7 @@ var WebGLRenderer = (function () {
         this._isInitialized = true;
         this._options = _util_1._util.deepClone(options);
         var canvas = window.document.createElement("canvas");
+        canvas.className = "glantern-view";
         canvas.width = width;
         canvas.height = height;
         var attributes = Object.create(null);
@@ -6169,7 +7385,7 @@ BMS[BlendMode_1.BlendMode.SUBTRACT] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 
 
 
-},{"../_util/_util":5,"../flash/display/BlendMode":10,"./FilterManager":55,"./RenderHelper":58,"./RenderTarget2D":59,"./ShaderManager":62,"./WebGLUtils":67,"libtess":92}],67:[function(require,module,exports){
+},{"../_util/_util":5,"../flash/display/BlendMode":10,"./FilterManager":66,"./RenderHelper":69,"./RenderTarget2D":70,"./ShaderManager":73,"./WebGLUtils":78,"libtess":104}],78:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/13.
  */
@@ -6232,7 +7448,7 @@ var OTHER_PROBLEM = '' +
 
 
 
-},{}],68:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/22.
  */
@@ -6335,7 +7551,7 @@ exports.Blur2Filter = Blur2Filter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":54,"../RenderHelper":58,"../ShaderID":61}],69:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":65,"../RenderHelper":69,"../ShaderID":72}],80:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6436,7 +7652,7 @@ exports.BlurFilter = BlurFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":54,"./BlurXFilter":70,"./BlurYFilter":71}],70:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":65,"./BlurXFilter":81,"./BlurYFilter":82}],81:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6509,7 +7725,7 @@ exports.BlurXFilter = BlurXFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":54,"../RenderHelper":58,"../ShaderID":61}],71:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":65,"../RenderHelper":69,"../ShaderID":72}],82:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6582,7 +7798,7 @@ exports.BlurYFilter = BlurYFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":54,"../RenderHelper":58,"../ShaderID":61}],72:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":65,"../RenderHelper":69,"../ShaderID":72}],83:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6621,7 +7837,7 @@ exports.ColorTransformFilter = ColorTransformFilter;
 
 
 
-},{"../FilterBase":54,"../RenderHelper":58,"../ShaderID":61}],73:[function(require,module,exports){
+},{"../FilterBase":65,"../RenderHelper":69,"../ShaderID":72}],84:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6741,7 +7957,7 @@ exports.GlowFilter = GlowFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":54,"./Blur2Filter":68,"./ColorTransformFilter":72}],74:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":65,"./Blur2Filter":79,"./ColorTransformFilter":83}],85:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -6757,7 +7973,7 @@ __export(require("./Blur2Filter"));
 
 
 
-},{"./Blur2Filter":68,"./BlurFilter":69,"./BlurXFilter":70,"./BlurYFilter":71,"./ColorTransformFilter":72,"./GlowFilter":73}],75:[function(require,module,exports){
+},{"./Blur2Filter":79,"./BlurFilter":80,"./BlurXFilter":81,"./BlurYFilter":82,"./ColorTransformFilter":83,"./GlowFilter":84}],86:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -6771,7 +7987,7 @@ var BrushType = exports.BrushType;
 
 
 
-},{}],76:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -6852,7 +8068,7 @@ exports.FillRendererBase = FillRendererBase;
 
 
 
-},{"./GraphicsDataRendererBase":78}],77:[function(require,module,exports){
+},{"./GraphicsDataRendererBase":89}],88:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -6861,7 +8077,7 @@ exports.STD_Z = 0;
 
 
 
-},{}],78:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -6976,7 +8192,7 @@ exports.GraphicsDataRendererBase = GraphicsDataRendererBase;
 
 
 
-},{"../../_util/NotImplementedError":4,"../PackedArrayBuffer":57}],79:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../PackedArrayBuffer":68}],90:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -7196,7 +8412,7 @@ exports.SolidFillRenderer = SolidFillRenderer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":58,"./FillRendererBase":76,"./GRAPHICS_CONST":77,"libtess":92}],80:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":69,"./FillRendererBase":87,"./GRAPHICS_CONST":88,"libtess":104}],91:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -7363,7 +8579,7 @@ exports.SolidStrokeRenderer = SolidStrokeRenderer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":58,"./GRAPHICS_CONST":77,"./StrokeRendererBase":81}],81:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":69,"./GRAPHICS_CONST":88,"./StrokeRendererBase":92}],92:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -7462,7 +8678,7 @@ exports.StrokeRendererBase = StrokeRendererBase;
 
 
 
-},{"./GraphicsDataRendererBase":78}],82:[function(require,module,exports){
+},{"./GraphicsDataRendererBase":89}],93:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -7491,7 +8707,7 @@ exports.shaders = shaders;
 
 
 
-},{"./AttributeCache":53,"./FilterBase":54,"./FilterManager":55,"./FragmentShaders":56,"./PackedArrayBuffer":57,"./RenderHelper":58,"./RenderTarget2D":59,"./ShaderBase":60,"./ShaderID":61,"./ShaderManager":62,"./UniformCache":63,"./VertexShaders":64,"./WebGLDataType":65,"./WebGLRenderer":66,"./WebGLUtils":67,"./filters/index":74,"./shaders/index":91}],83:[function(require,module,exports){
+},{"./AttributeCache":64,"./FilterBase":65,"./FilterManager":66,"./FragmentShaders":67,"./PackedArrayBuffer":68,"./RenderHelper":69,"./RenderTarget2D":70,"./ShaderBase":71,"./ShaderID":72,"./ShaderManager":73,"./UniformCache":74,"./VertexShaders":75,"./WebGLDataType":76,"./WebGLRenderer":77,"./WebGLUtils":78,"./filters/index":85,"./shaders/index":103}],94:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/22.
  */
@@ -7556,7 +8772,7 @@ exports.Blur2Shader = Blur2Shader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],84:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],95:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7602,7 +8818,7 @@ exports.BlurXShader = BlurXShader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],85:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],96:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7648,7 +8864,7 @@ exports.BlurYShader = BlurYShader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],86:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],97:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7701,7 +8917,7 @@ exports.BufferedShader = BufferedShader;
 
 
 
-},{"../../flash/geom/Matrix3D":43,"../FragmentShaders":56,"../ShaderBase":60,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65}],87:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":43,"../FragmentShaders":67,"../ShaderBase":71,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76}],98:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7751,7 +8967,91 @@ exports.ColorTransformShader = ColorTransformShader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],88:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],99:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/12/23.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var UniformCache_1 = require("../UniformCache");
+var VertexShaders_1 = require("../VertexShaders");
+var FragmentShaders_1 = require("../FragmentShaders");
+var BufferedShader_1 = require("./BufferedShader");
+var WebGLDataType_1 = require("../WebGLDataType");
+var Matrix3D_1 = require("../../flash/geom/Matrix3D");
+var CopyImageShader = (function (_super) {
+    __extends(CopyImageShader, _super);
+    function CopyImageShader(manager) {
+        _super.call(this, manager, CopyImageShader.VERTEX_SOURCE, CopyImageShader.FRAGMENT_SOURCE);
+    }
+    CopyImageShader.prototype.setFlipX = function (flip) {
+        this._uniforms.get("uFlipX").value = flip;
+    };
+    CopyImageShader.prototype.setFlipY = function (flip) {
+        this._uniforms.get("uFlipY").value = flip;
+    };
+    CopyImageShader.prototype.setOriginalSize = function (xy) {
+        this._uniforms.get("uOriginalSize").value = xy.slice();
+    };
+    CopyImageShader.prototype.setFitSize = function (xy) {
+        this._uniforms.get("uFitSize").value = xy.slice();
+    };
+    CopyImageShader.prototype.setAlpha = function (alpha) {
+        this._uniforms.get("uAlpha").value = alpha;
+    };
+    CopyImageShader.prototype.setTransform = function (matrix) {
+        this._uniforms.get("uTransformMatrix").value = matrix.toArray();
+    };
+    CopyImageShader.prototype.__localInit = function (manager, uniforms, attributes) {
+        _super.prototype.__localInit.call(this, manager, uniforms, attributes);
+        var u;
+        var transformMatrix = new Matrix3D_1.Matrix3D();
+        transformMatrix.identity();
+        u = new UniformCache_1.UniformCache();
+        u.name = "uFlipX";
+        u.type = WebGLDataType_1.WebGLDataType.UBool;
+        u.value = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uFlipY";
+        u.type = WebGLDataType_1.WebGLDataType.UBool;
+        u.value = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uOriginalSize";
+        u.type = WebGLDataType_1.WebGLDataType.U2F;
+        u.value = [0, 0];
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uFitSize";
+        u.type = WebGLDataType_1.WebGLDataType.U2F;
+        u.value = [0, 0];
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uTransformMatrix";
+        u.type = WebGLDataType_1.WebGLDataType.UMat4;
+        u.value = transformMatrix.toArray();
+        u.transpose = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uAlpha";
+        u.type = WebGLDataType_1.WebGLDataType.U1F;
+        u.value = 1;
+        uniforms.set(u.name, u);
+    };
+    CopyImageShader.SHADER_CLASS_NAME = "CopyImageShader";
+    CopyImageShader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.copyImage;
+    CopyImageShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.replicate;
+    return CopyImageShader;
+})(BufferedShader_1.BufferedShader);
+exports.CopyImageShader = CopyImageShader;
+
+
+
+},{"../../flash/geom/Matrix3D":43,"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],100:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7791,7 +9091,7 @@ exports.FxaaShader = FxaaShader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],89:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],101:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7852,7 +9152,7 @@ exports.PrimitiveShader = PrimitiveShader;
 
 
 
-},{"../../flash/geom/Matrix3D":43,"../FragmentShaders":56,"../ShaderBase":60,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65}],90:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":43,"../FragmentShaders":67,"../ShaderBase":71,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76}],102:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7916,7 +9216,7 @@ exports.ReplicateShader = ReplicateShader;
 
 
 
-},{"../FragmentShaders":56,"../UniformCache":63,"../VertexShaders":64,"../WebGLDataType":65,"./BufferedShader":86}],91:[function(require,module,exports){
+},{"../FragmentShaders":67,"../UniformCache":74,"../VertexShaders":75,"../WebGLDataType":76,"./BufferedShader":97}],103:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -7931,10 +9231,11 @@ __export(require("./FxaaShader"));
 __export(require("./PrimitiveShader"));
 __export(require("./ReplicateShader"));
 __export(require("./Blur2Shader"));
+__export(require("./CopyImageShader"));
 
 
 
-},{"./Blur2Shader":83,"./BlurXShader":84,"./BlurYShader":85,"./BufferedShader":86,"./ColorTransformShader":87,"./FxaaShader":88,"./PrimitiveShader":89,"./ReplicateShader":90}],92:[function(require,module,exports){
+},{"./Blur2Shader":94,"./BlurXShader":95,"./BlurYShader":96,"./BufferedShader":97,"./ColorTransformShader":98,"./CopyImageShader":99,"./FxaaShader":100,"./PrimitiveShader":101,"./ReplicateShader":102}],104:[function(require,module,exports){
 /*
 
  Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.
@@ -7993,6 +9294,53 @@ function Fa(a){if(0===a.a)return Ka(a.b);var b=a.c[a.d[a.a-1]];if(0!==a.b.a&&u(G
 function W(a,b){for(var c=a.d,d=a.e,e=a.c,f=b,g=c[f];;){var h=f<<1;h<a.a&&u(d[c[h+1]],d[c[h]])&&(h+=1);var k=c[h];if(h>a.a||u(d[g],d[k])){c[f]=g;e[g]=f;break}c[f]=k;e[k]=f;f=h}}function va(a,b){for(var c=a.d,d=a.e,e=a.c,f=b,g=c[f];;){var h=f>>1,k=c[h];if(0===h||u(d[k],d[g])){c[f]=g;e[g]=f;break}c[f]=k;e[k]=f;f=h}};function ma(){this.e=this.a=null;this.f=0;this.c=this.b=this.h=this.d=!1}function S(a){return a.e.c.b}function R(a){return a.e.a.b};this.libtess={GluTesselator:X,windingRule:{GLU_TESS_WINDING_ODD:100130,GLU_TESS_WINDING_NONZERO:100131,GLU_TESS_WINDING_POSITIVE:100132,GLU_TESS_WINDING_NEGATIVE:100133,GLU_TESS_WINDING_ABS_GEQ_TWO:100134},primitiveType:{GL_LINE_LOOP:2,GL_TRIANGLES:4,GL_TRIANGLE_STRIP:5,GL_TRIANGLE_FAN:6},errorType:{GLU_TESS_MISSING_BEGIN_POLYGON:100151,GLU_TESS_MISSING_END_POLYGON:100153,GLU_TESS_MISSING_BEGIN_CONTOUR:100152,GLU_TESS_MISSING_END_CONTOUR:100154,GLU_TESS_COORD_TOO_LARGE:100155,GLU_TESS_NEED_COMBINE_CALLBACK:100156},
 gluEnum:{GLU_TESS_MESH:100112,GLU_TESS_TOLERANCE:100142,GLU_TESS_WINDING_RULE:100140,GLU_TESS_BOUNDARY_ONLY:100141,GLU_INVALID_ENUM:100900,GLU_INVALID_VALUE:100901,GLU_TESS_BEGIN:100100,GLU_TESS_VERTEX:100101,GLU_TESS_END:100102,GLU_TESS_ERROR:100103,GLU_TESS_EDGE_FLAG:100104,GLU_TESS_COMBINE:100105,GLU_TESS_BEGIN_DATA:100106,GLU_TESS_VERTEX_DATA:100107,GLU_TESS_END_DATA:100108,GLU_TESS_ERROR_DATA:100109,GLU_TESS_EDGE_FLAG_DATA:100110,GLU_TESS_COMBINE_DATA:100111}};X.prototype.gluDeleteTess=X.prototype.x;
 X.prototype.gluTessProperty=X.prototype.B;X.prototype.gluGetTessProperty=X.prototype.y;X.prototype.gluTessNormal=X.prototype.A;X.prototype.gluTessCallback=X.prototype.z;X.prototype.gluTessVertex=X.prototype.C;X.prototype.gluTessBeginPolygon=X.prototype.u;X.prototype.gluTessBeginContour=X.prototype.t;X.prototype.gluTessEndContour=X.prototype.v;X.prototype.gluTessEndPolygon=X.prototype.w; if (typeof module !== 'undefined') { module.exports = this.libtess; }
+
+},{}],105:[function(require,module,exports){
+exports.endianness = function () { return 'LE' };
+
+exports.hostname = function () {
+    if (typeof location !== 'undefined') {
+        return location.hostname
+    }
+    else return '';
+};
+
+exports.loadavg = function () { return [] };
+
+exports.uptime = function () { return 0 };
+
+exports.freemem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.totalmem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.cpus = function () { return [] };
+
+exports.type = function () { return 'Browser' };
+
+exports.release = function () {
+    if (typeof navigator !== 'undefined') {
+        return navigator.appVersion;
+    }
+    return '';
+};
+
+exports.networkInterfaces
+= exports.getNetworkInterfaces
+= function () { return {} };
+
+exports.arch = function () { return 'javascript' };
+
+exports.platform = function () { return 'browser' };
+
+exports.tmpdir = exports.tmpDir = function () {
+    return '/tmp';
+};
+
+exports.EOL = '\n';
 
 },{}]},{},[7])
 

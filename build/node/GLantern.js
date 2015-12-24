@@ -43,6 +43,9 @@ var GLantern = (function () {
         }
         this._isRunning = false;
     };
+    GLantern.prototype.clear = function () {
+        this._renderer.clear();
+    };
     GLantern.prototype.runOneFrame = function () {
         if (!this._isInitialized) {
             return;

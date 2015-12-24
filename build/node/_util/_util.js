@@ -190,6 +190,27 @@ var _util = (function () {
     _util.cancelAnimationFrame = function (handle) {
         window.cancelAnimationFrame(handle);
     };
+    _util.colorToCssSharp = function (color) {
+        color |= 0;
+        return "#" + _util.padLeft(color.toString(16), 6, "0");
+    };
+    _util.colorToCssRgba = function (color) {
+        color |= 0;
+        var a = (color >> 24) & 0xff;
+        var r = (color >> 16) & 0xff;
+        var g = (color >> 8) & 0xff;
+        var b = color & 0xff;
+        return "rgba(" + [r, g, b, a].join(",") + ")";
+    };
+    _util.padLeft = function (str, targetLength, padWith) {
+        while (str.length < targetLength) {
+            str = padWith + str;
+        }
+        if (str.length > targetLength) {
+            str = str.substring(str.length - targetLength, str.length - 1);
+        }
+        return str;
+    };
     return _util;
 })();
 exports._util = _util;

@@ -47,6 +47,10 @@ export class GLantern {
         this._isRunning = false;
     }
 
+    clear():void {
+        this._renderer.clear();
+    }
+
     runOneFrame():void {
         if (!this._isInitialized) {
             return;

@@ -32,4 +32,8 @@ export abstract class ShaderID {
         return 6;
     }
 
+    static get COPY_IMAGE():number {
+        return 7;
+    }
+
 }

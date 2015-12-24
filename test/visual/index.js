@@ -7,27 +7,69 @@
  */
 var lantern = new GLantern.GLantern();
 lantern.initialize(682, 438);
-document.body.appendChild(lantern.view);
+(function (selector) {
+    var elem = document.querySelector(selector);
+    elem.appendChild(lantern.view);
+})("#glantern-container");
 
 window.addEventListener("unload", function () {
     lantern.uninitialize();
 });
 
-//GLantern.injectToGlobal(window);
+(function initList() {
+    var testCases = {
+        "Madoka": "raw-madoka-group.js",
+        "Shapes and Interaction": "shapes-and-interaction.js",
+        "TT Test Case #2": "tt-test-case-2.js",
+        "Simple Text": "draw-text.js"
+    };
 
-/**
- * Execute a single script by injecting the script into the window.
- * @param fileName {String} Full JavaScript file name.
- */
-function injectAndExecute(fileName) {
+    var caseListElem = document.querySelector("#test-case-selector");
+
+    function onClick(ev) {
+        /**
+         * @type {HTMLAnchorElement}
+         */
+        var aElem = this;
+        var e;
+        e = document.querySelector("#test-case-selector-container");
+        e.style.display = "none";
+        e = document.querySelector("#test-case-desc");
+        e.textContent = aElem.name;
+        e = document.querySelector("#glantern-container");
+        e.style.display = "block";
+        injectAndExecute(aElem.name);
+    }
+
+    for (var caseName in testCases) {
+        if (testCases.hasOwnProperty(caseName)) {
+            /**
+             * @type {HTMLLIElement}
+             */
+            var liElem = document.createElement("li");
+            /**
+             * @type {HTMLAnchorElement}
+             */
+            var aElem = document.createElement("a");
+            aElem.textContent = caseName;
+            aElem.href = "javascript:;";
+            aElem.name = "test-scripts/" + testCases[caseName];
+            aElem.onclick = onClick.bind(aElem);
+            liElem.appendChild(aElem);
+            caseListElem.appendChild(liElem);
+        }
+    }
+
     /**
-     * @type {HTMLScriptElement}
+     * Execute a single script by injecting the script into the window.
+     * @param fileName {String} Full JavaScript file name.
      */
-    var script = document.createElement("script");
-    script.src = fileName;
-    document.body.appendChild(script);
-}
-
-injectAndExecute("test-scripts/raw-madoka-group.js");
-//injectAndExecute("test-scripts/shapes-and-interaction.js");
-//injectAndExecute("test-scripts/tt-test-case-2.js");
+    function injectAndExecute(fileName) {
+        /**
+         * @type {HTMLScriptElement}
+         */
+        var script = document.createElement("script");
+        script.src = fileName;
+        document.body.appendChild(script);
+    }
+})();

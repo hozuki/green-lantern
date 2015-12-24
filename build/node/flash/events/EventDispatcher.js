@@ -55,6 +55,14 @@ var EventDispatcher = (function () {
     EventDispatcher.prototype.willTrigger = function (type) {
         return this.hasEventListener(type) && this._listeners.get(type).length > 0;
     };
+    EventDispatcher.prototype.dispose = function () {
+        this._listeners.forEach(function (listeners) {
+            while (listeners.length > 0) {
+                listeners.pop();
+            }
+        });
+        this._listeners.clear();
+    };
     return EventDispatcher;
 })();
 exports.EventDispatcher = EventDispatcher;

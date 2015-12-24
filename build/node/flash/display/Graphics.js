@@ -364,6 +364,12 @@ var Graphics = (function () {
             this._strokeRenderers[i].render(renderer, target);
         }
     };
+    Graphics.prototype.dispose = function () {
+        this.clear();
+        this._strokeRenderers.pop();
+        this._currentStrokeRenderer.dispose();
+        this._currentStrokeRenderer = null;
+    };
     Object.defineProperty(Graphics.prototype, "renderer", {
         get: function () {
             return this._renderer;

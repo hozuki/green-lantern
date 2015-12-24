@@ -15,6 +15,7 @@ import {AttributeCache} from "./AttributeCache";
 import {IDisposable} from "../IDisposable";
 import {ShaderID} from "./ShaderID";
 import {Blur2Shader} from "./shaders/Blur2Shader";
+import {CopyImageShader} from "./shaders/CopyImageShader";
 
 export class ShaderManager implements IDisposable {
 
@@ -89,6 +90,7 @@ export class ShaderManager implements IDisposable {
         shaderList.push(new ColorTransformShader(this));
         shaderList.push(new FxaaShader(this));
         shaderList.push(new Blur2Shader(this));
+        shaderList.push(new CopyImageShader(this));
     }
 
     private _renderer:WebGLRenderer = null;

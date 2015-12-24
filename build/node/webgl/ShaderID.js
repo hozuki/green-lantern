@@ -53,6 +53,13 @@ var ShaderID = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ShaderID, "COPY_IMAGE", {
+        get: function () {
+            return 7;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ShaderID;
 })();
 exports.ShaderID = ShaderID;

@@ -9,6 +9,8 @@ import {ReplicateShader} from "./shaders/ReplicateShader";
 import {ShaderID} from "./ShaderID";
 import {BufferedShader} from "./shaders/BufferedShader";
 import {_util} from "../_util/_util";
+import {Matrix3D} from "../flash/geom/Matrix3D";
+import {CopyImageShader} from "./shaders/CopyImageShader";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 
@@ -52,6 +54,28 @@ export abstract class RenderHelper {
                 shader.setOriginalSize([destination.originalWidth, destination.originalHeight]);
                 shader.setFitSize([destination.fitWidth, destination.fitHeight]);
             }
+        });
+    }
+
+    static copyImageContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, transform:Matrix3D, alpha:number, clearOutput:boolean):void {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r:WebGLRenderer):void => {
+            var shader = <CopyImageShader>r.shaderManager.currentShader;
+            shader.setFlipX(flipX);
+            shader.setFlipY(flipY);
+            shader.setAlpha(alpha);
+            shader.setTransform(transform);
+            if (flipX || flipY) {
+                shader.setOriginalSize([destination.originalWidth, destination.originalHeight]);
+                shader.setFitSize([destination.fitWidth, destination.fitHeight]);
+            }
+        });
+    }
+
+    static renderImage(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, clearOutput:boolean):void {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r:WebGLRenderer):void => {
+            var shader = <CopyImageShader>r.shaderManager.currentShader;
+            shader.setFlipX(false);
+            shader.setFlipY(false);
         });
     }
 

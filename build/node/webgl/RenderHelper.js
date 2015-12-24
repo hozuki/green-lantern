@@ -42,6 +42,26 @@ var RenderHelper = (function () {
             }
         });
     };
+    RenderHelper.copyImageContent = function (renderer, source, destination, flipX, flipY, transform, alpha, clearOutput) {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID_1.ShaderID.COPY_IMAGE, clearOutput, function (r) {
+            var shader = r.shaderManager.currentShader;
+            shader.setFlipX(flipX);
+            shader.setFlipY(flipY);
+            shader.setAlpha(alpha);
+            shader.setTransform(transform);
+            if (flipX || flipY) {
+                shader.setOriginalSize([destination.originalWidth, destination.originalHeight]);
+                shader.setFitSize([destination.fitWidth, destination.fitHeight]);
+            }
+        });
+    };
+    RenderHelper.renderImage = function (renderer, source, destination, clearOutput) {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID_1.ShaderID.COPY_IMAGE, clearOutput, function (r) {
+            var shader = r.shaderManager.currentShader;
+            shader.setFlipX(false);
+            shader.setFlipY(false);
+        });
+    };
     RenderHelper.renderBuffered = function (renderer, source, destination, shaderID, clearOutput, shaderInit) {
         if (!__checkRenderTargets(source, destination)) {
             return;

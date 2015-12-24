@@ -194,4 +194,28 @@ export class _util {
         window.cancelAnimationFrame(handle);
     }
 
+    static colorToCssSharp(color:number):string {
+        color |= 0;
+        return "#" + _util.padLeft(color.toString(16), 6, "0");
+    }
+
+    static colorToCssRgba(color:number):string {
+        color |= 0;
+        var a = (color >> 24) & 0xff;
+        var r = (color >> 16) & 0xff;
+        var g = (color >> 8) & 0xff;
+        var b = color & 0xff;
+        return "rgba(" + [r, g, b, a].join(",") + ")";
+    }
+
+    static padLeft(str:string, targetLength:number, padWith:string):string {
+        while (str.length < targetLength) {
+            str = padWith + str;
+        }
+        if (str.length > targetLength) {
+            str = str.substring(str.length - targetLength, str.length - 1);
+        }
+        return str;
+    }
+
 }

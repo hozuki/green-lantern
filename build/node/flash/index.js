@@ -9,5 +9,7 @@ var geom = require("./geom/index");
 exports.geom = geom;
 var filters = require("./filters/index");
 exports.filters = filters;
+var text = require("./text/index");
+exports.text = text;
 
 //# sourceMappingURL=index.js.map

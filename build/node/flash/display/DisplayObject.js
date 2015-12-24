@@ -41,7 +41,6 @@ var DisplayObject = (function (_super) {
         this._transform = null;
         this._rawRenderTarget = null;
         this._filteredRenderTarget = null;
-        this._renderTargetWithAlpha = null;
         this._isRoot = false;
         this._root = root;
         this._stage = root;
@@ -50,7 +49,6 @@ var DisplayObject = (function (_super) {
         this._transform = new Transform_1.Transform();
         if (root !== null) {
             this._rawRenderTarget = root.worldRenderer.createRenderTarget();
-            this._renderTargetWithAlpha = root.worldRenderer.createRenderTarget();
         }
         this._isRoot = root === null;
     }
@@ -86,7 +84,7 @@ var DisplayObject = (function (_super) {
         configurable: true
     });
     DisplayObject.prototype.dispose = function () {
-        this._root.worldRenderer.releaseRenderTarget(this._renderTargetWithAlpha);
+        _super.prototype.dispose.call(this);
         this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     };
@@ -321,9 +319,9 @@ var DisplayObject = (function (_super) {
         var _this = this;
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
-        this._transform.matrix3D.setTransformTo(this.x, this.y, this.z);
+        this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
         manager.currentShader.changeValue("uTransformMatrix", function (u) {
-            u.value = _this._transform.matrix3D.toArray();
+            u.value = _this.transform.matrix3D.toArray();
         });
         manager.currentShader.changeValue("uAlpha", function (u) {
             u.value = _this.alpha;

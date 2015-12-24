@@ -31,6 +31,7 @@ interface FragmentShadersObject {
     colorTransform?:string;
     fxaa?:string;
     blur2?:string;
+    copyImage?:string;
 }
 
 var Values:FragmentShadersObject = {};
@@ -59,6 +60,10 @@ export abstract class FragmentShaders {
 
     static get blur2():string {
         return Values.blur2;
+    }
+
+    static get copyImage():string {
+        return Values.copyImage;
     }
 
 }
@@ -250,5 +255,18 @@ Values.blur2 = [
     "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) + vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
     "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) - vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
     "    }",
+    "}"
+].join("\n");
+
+Values.copyImage = [
+    "precision mediump float;",
+    "",
+    "uniform sampler2D uSampler;",
+    "uniform float uAlpha;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "void main() {",
+    "    gl_FragColor = texture2D(uSampler, vTextureCoord) * uAlpha;",
     "}"
 ].join("\n");

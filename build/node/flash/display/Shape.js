@@ -16,6 +16,11 @@ var Shape = (function (_super) {
         this._graphics = null;
         this._graphics = new Graphics_1.Graphics(this, root.worldRenderer);
     }
+    Shape.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        this._graphics.dispose();
+        this._graphics = null;
+    };
     Object.defineProperty(Shape.prototype, "graphics", {
         get: function () {
             return this._graphics;

@@ -4,6 +4,7 @@
 
 import {_util} from "../../_util/_util";
 import {IDisposable} from "../../IDisposable";
+import {listeners} from "cluster";
 
 export abstract class EventDispatcher implements IDisposable {
 
@@ -59,7 +60,14 @@ export abstract class EventDispatcher implements IDisposable {
         return this.hasEventListener(type) && this._listeners.get(type).length > 0;
     }
 
-    abstract dispose():void;
+    dispose():void {
+        this._listeners.forEach((listeners:Function[]):void => {
+            while (listeners.length > 0) {
+                listeners.pop();
+            }
+        });
+        this._listeners.clear();
+    }
 
     private _listeners:Map<string, Function[]> = null;
 

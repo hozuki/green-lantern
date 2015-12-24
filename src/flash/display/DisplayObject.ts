@@ -62,6 +62,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     dispose():void {
+        super.dispose();
         this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     }
@@ -275,9 +276,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected __preprocess(renderer:WebGLRenderer):void {
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
-        this._transform.matrix3D.setTransformTo(this.x, this.y, this.z);
+        this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
         manager.currentShader.changeValue("uTransformMatrix", (u:UniformCache):void => {
-            u.value = this._transform.matrix3D.toArray();
+            u.value = this.transform.matrix3D.toArray();
         });
         manager.currentShader.changeValue("uAlpha", (u:UniformCache):void => {
             u.value = this.alpha;

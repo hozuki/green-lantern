@@ -47,6 +47,13 @@ var FragmentShaders = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(FragmentShaders, "copyImage", {
+        get: function () {
+            return Values.copyImage;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return FragmentShaders;
 })();
 exports.FragmentShaders = FragmentShaders;
@@ -232,6 +239,18 @@ Values.blur2 = [
     "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) + vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
     "        gl_FragColor += texture2D(uSampler, (vec2(vTextureCoord) - vec2(offset[i] * xDir, offset[i] * yDir) * uStrength / uResolution)) * weight[i];",
     "    }",
+    "}"
+].join("\n");
+Values.copyImage = [
+    "precision mediump float;",
+    "",
+    "uniform sampler2D uSampler;",
+    "uniform float uAlpha;",
+    "",
+    "varying vec2 vTextureCoord;",
+    "",
+    "void main() {",
+    "    gl_FragColor = texture2D(uSampler, vTextureCoord) * uAlpha;",
     "}"
 ].join("\n");
 
