@@ -4,7 +4,7 @@ GLantern is a graphics library based on WebGL, providing a subset of
 [Flash](http://www.adobe.com/software/flash/about/)-like API. Sound support will be added in the
 future.
 
-![Visual test: Madoka group](res/images/visual-test-madoka-group.jpg)
+Screenshots of test cases can be found in [here](res/images).
 
 ## Acquiring the Source
 
