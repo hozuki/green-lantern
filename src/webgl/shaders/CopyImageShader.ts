@@ -43,7 +43,7 @@ export class CopyImageShader extends BufferedShader {
 
     static SHADER_CLASS_NAME:string = "CopyImageShader";
     static FRAGMENT_SOURCE:string = FragmentShaders.copyImage;
-    static VERTEX_SOURCE:string = VertexShaders.replicate;
+    static VERTEX_SOURCE:string = VertexShaders.copyImage;
 
     protected __localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
         super.__localInit(manager, uniforms, attributes);

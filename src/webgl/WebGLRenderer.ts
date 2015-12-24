@@ -32,6 +32,9 @@ export class WebGLRenderer implements IDisposable {
         this.__initialize(width, height, options);
     }
 
+    /**
+     * Clear the screen.
+     */
     clear():void {
         if (this._screenTarget !== null) {
             this._screenTarget.clear();

@@ -7057,6 +7057,9 @@ var WebGLRenderer = (function () {
         this._isInitialized = false;
         this.__initialize(width, height, options);
     }
+    /**
+     * Clear the screen.
+     */
     WebGLRenderer.prototype.clear = function () {
         if (this._screenTarget !== null) {
             this._screenTarget.clear();
@@ -9044,7 +9047,7 @@ var CopyImageShader = (function (_super) {
     };
     CopyImageShader.SHADER_CLASS_NAME = "CopyImageShader";
     CopyImageShader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.copyImage;
-    CopyImageShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.replicate;
+    CopyImageShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.copyImage;
     return CopyImageShader;
 })(BufferedShader_1.BufferedShader);
 exports.CopyImageShader = CopyImageShader;

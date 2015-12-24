@@ -34,6 +34,9 @@ var WebGLRenderer = (function () {
         this._isInitialized = false;
         this.__initialize(width, height, options);
     }
+    /**
+     * Clear the screen.
+     */
     WebGLRenderer.prototype.clear = function () {
         if (this._screenTarget !== null) {
             this._screenTarget.clear();
