@@ -66,6 +66,7 @@ export class FilterManager implements IDisposable {
             var filterGroup:IBitmapFilter[] = this._filterGroups[this._filterGroups.length - 1];
             var filter:IBitmapFilter;
             var t1 = input, t2 = this._tempTarget;
+            t2.clear();
             var t:RenderTarget2D;
             for (var i = 0; i < filterGroup.length; i++) {
                 filter = filterGroup[i];

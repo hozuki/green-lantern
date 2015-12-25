@@ -39,6 +39,7 @@ export class BlurXFilter extends FilterBase {
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
         var t1 = input, t2 = this._tempTarget;
+        t2.clear();
         var t:RenderTarget2D;
         for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_X, true, (renderer:WebGLRenderer):void => {

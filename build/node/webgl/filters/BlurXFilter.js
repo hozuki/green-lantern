@@ -45,6 +45,7 @@ var BlurXFilter = (function (_super) {
     BlurXFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
         var t1 = input, t2 = this._tempTarget;
+        t2.clear();
         var t;
         for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_X, true, function (renderer) {

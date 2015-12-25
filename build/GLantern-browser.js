@@ -5344,6 +5344,7 @@ var FilterManager = (function () {
             var filterGroup = this._filterGroups[this._filterGroups.length - 1];
             var filter;
             var t1 = input, t2 = this._tempTarget;
+            t2.clear();
             var t;
             for (var i = 0; i < filterGroup.length; i++) {
                 filter = filterGroup[i];
@@ -7516,6 +7517,7 @@ var Blur2Filter = (function (_super) {
         var passCoeff = 5;
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
         var t1 = input, t2 = this._tempTarget;
+        t2.clear();
         var t;
         for (var i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR2, true, function (renderer) {
@@ -7703,6 +7705,7 @@ var BlurXFilter = (function (_super) {
     BlurXFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
         var t1 = input, t2 = this._tempTarget;
+        t2.clear();
         var t;
         for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_X, true, function (renderer) {
@@ -7776,6 +7779,7 @@ var BlurYFilter = (function (_super) {
     BlurYFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
         var t1 = input, t2 = this._tempTarget;
+        t2.clear();
         var t;
         for (var i = 0; i < this.pass * 5; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_Y, true, function (renderer) {

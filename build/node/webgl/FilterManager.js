@@ -62,6 +62,7 @@ var FilterManager = (function () {
             var filterGroup = this._filterGroups[this._filterGroups.length - 1];
             var filter;
             var t1 = input, t2 = this._tempTarget;
+            t2.clear();
             var t;
             for (var i = 0; i < filterGroup.length; i++) {
                 filter = filterGroup[i];
