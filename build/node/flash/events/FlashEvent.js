@@ -2,7 +2,9 @@
  * Created by MIC on 2015/11/21.
  */
 var FlashEvent = (function () {
-    function FlashEvent() {
+    function FlashEvent(type, bubbles, cancelable) {
+        if (bubbles === void 0) { bubbles = false; }
+        if (cancelable === void 0) { cancelable = false; }
         this.bubbles = false;
         this.cancelBubble = false;
         this.cancelable = false;
@@ -18,6 +20,9 @@ var FlashEvent = (function () {
         this.AT_TARGET = 2;
         this.BUBBLING_PHASE = 0;
         this.CAPTURING_PHASE = 1;
+        this.type = type;
+        this.bubbles = bubbles;
+        this.cancelable = cancelable;
     }
     FlashEvent.prototype.initEvent = function (eventTypeArg, canBubbleArg, cancelableArg) {
     };
@@ -28,8 +33,7 @@ var FlashEvent = (function () {
     FlashEvent.prototype.stopPropagation = function () {
     };
     FlashEvent.create = function (type) {
-        var ev = new FlashEvent();
-        ev.type = type;
+        var ev = new FlashEvent(type, false, false);
         ev.timeStamp = Date.now();
         return ev;
     };

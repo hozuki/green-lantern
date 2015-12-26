@@ -21,7 +21,10 @@ export class FlashEvent implements Event {
     BUBBLING_PHASE:number = 0;
     CAPTURING_PHASE:number = 1;
 
-    constructor() {
+    constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
+        this.type = type;
+        this.bubbles = bubbles;
+        this.cancelable = cancelable;
     }
 
     initEvent(eventTypeArg:string, canBubbleArg:boolean, cancelableArg:boolean):void {
@@ -37,8 +40,7 @@ export class FlashEvent implements Event {
     }
 
     static create(type:string):FlashEvent {
-        var ev = new FlashEvent();
-        ev.type = type;
+        var ev = new FlashEvent(type, false, false);
         ev.timeStamp = Date.now();
         return ev;
     }
