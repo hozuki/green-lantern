@@ -1,6 +1,6 @@
 {
   "name": "glantern",
-  "version": "0.2.0-alpha",
+  "version": "0.3.0-alpha",
   "description": "A graphics library based on WebGL, providing a subset of Flash-like API.",
   "main": "build/node/index.js",
   "scripts": {
