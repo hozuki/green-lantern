@@ -2,7 +2,7 @@
  * Created by MIC on 2015/10/1.
  */
 
-declare module "libtess" {
+declare module libtess {
 
     var gluEnum:{
         GLU_TESS_BEGIN:number;
@@ -40,7 +40,7 @@ declare module "libtess" {
         GL_TRIANGLE_FAN:number;
     };
 
-    class GluTesselator {
+    export class GluTesselator {
 
         public constructor();
 
@@ -54,9 +54,9 @@ declare module "libtess" {
 
         public gluTessCallback(which:number, fn:Function):void;
 
-        public gluTessVertex(coords:number[], data:number[]):void;
+        public gluTessVertex(coords:Array<number>, data:Array<number>):void;
 
-        public gluTessBeginPolygon(data:number[][]):void;
+        public gluTessBeginPolygon(data:Array<Array<number>>):void;
 
         public gluTessBeginContour():void;
 
@@ -65,5 +65,11 @@ declare module "libtess" {
         public gluTessEndPolygon():void;
 
     }
+
+}
+
+declare module "libtess" {
+
+    export = libtess;
 
 }

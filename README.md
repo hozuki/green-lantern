@@ -141,6 +141,7 @@ Not `GL_ENUM` but `GLenum`, weird, isn't it?
 Using `module`s is a good approach on playing with TypeScript. But `modules` are designed to be
 in one big file and I can't use them as C# namespaces, so I have to place them all in the root
 scope, and `require()` them when needed. To generate a `.d.ts` definition, please do it yourself.
+Currently a hand-written definition can be found at [`build/glantern.d.ts`](bulid/glantern.d.ts).
 
 I had tried the syntax shown below:
 

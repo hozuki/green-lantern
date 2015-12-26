@@ -9,7 +9,7 @@ import {NotImplementedError} from "../../_util/NotImplementedError";
 
 export class Canvas extends DisplayObjectContainer {
 
-    public constructor(root:Stage, parent:DisplayObjectContainer) {
+    constructor(root:Stage, parent:DisplayObjectContainer) {
         super(root, parent);
     }
 
