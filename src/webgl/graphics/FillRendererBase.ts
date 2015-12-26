@@ -6,7 +6,7 @@ import {GraphicsDataRendererBase} from "./GraphicsDataRendererBase";
 import {IFillDataRenderer} from "./IFillDataRenderer";
 import {Graphics} from "../../flash/display/Graphics";
 
-export class FillRendererBase extends GraphicsDataRendererBase implements IFillDataRenderer {
+export abstract class FillRendererBase extends GraphicsDataRendererBase implements IFillDataRenderer {
 
     constructor(graphics:Graphics, currentX:number, currentY:number) {
         super(graphics, currentX, currentY, currentX, currentY);

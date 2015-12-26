@@ -21,7 +21,7 @@ export class ColorTransform {
 
     color:number = 0;
 
-    get alphaMultiplier() {
+    get alphaMultiplier():number {
         return this._alphaMultiplier;
     }
 
@@ -29,7 +29,7 @@ export class ColorTransform {
         this._alphaMultiplier = v;
     }
 
-    get alphaOffset() {
+    get alphaOffset():number {
         return this._alphaOffset;
     }
 
@@ -37,7 +37,7 @@ export class ColorTransform {
         this._alphaOffset = _util.limitInto(v, -1, 1);
     }
 
-    get redMultiplier() {
+    get redMultiplier():number {
         return this._redMultiplier;
     }
 
@@ -45,7 +45,7 @@ export class ColorTransform {
         this._redMultiplier = v;
     }
 
-    get redOffset() {
+    get redOffset():number {
         return this._redOffset;
     }
 
@@ -53,7 +53,7 @@ export class ColorTransform {
         this._redOffset = _util.limitInto(v, -1, 1);
     }
 
-    get greenMultiplier() {
+    get greenMultiplier():number {
         return this._greenMultiplier;
     }
 
@@ -61,7 +61,7 @@ export class ColorTransform {
         this._greenMultiplier = v;
     }
 
-    get greenOffset() {
+    get greenOffset():number {
         return this._greenOffset;
     }
 
@@ -69,7 +69,7 @@ export class ColorTransform {
         this._greenOffset = _util.limitInto(v, -1, 1);
     }
 
-    get blueMultiplier() {
+    get blueMultiplier():number {
         return this._blueMultiplier;
     }
 
@@ -77,7 +77,7 @@ export class ColorTransform {
         this._blueMultiplier = v;
     }
 
-    get blueOffset() {
+    get blueOffset():number {
         return this._blueOffset;
     }
 

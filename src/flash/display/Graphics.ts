@@ -58,7 +58,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>,
+    beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[],
                       matrix:Matrix = null, spreadMethod:string = SpreadMethod.PAD,
                       interpolationMethod:string = InterpolationMethod.RGB, focalPointRatio:number = 0):void {
         throw new NotImplementedError();
@@ -97,7 +97,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isFilling = false;
     }
 
-    copyFrom(sourceGraphics:Graphics) {
+    copyFrom(sourceGraphics:Graphics):void {
         throw new NotImplementedError();
     }
 
@@ -141,7 +141,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
      * @param winding
      * @param checkCommands Bulletproof
      */
-    drawPath(commands:Array<number>, data:Array<number>, winding:string = GraphicsPathWinding.EVEN_ODD, checkCommands:boolean = true):void {
+    drawPath(commands:number[], data:number[], winding:string = GraphicsPathWinding.EVEN_ODD, checkCommands:boolean = true):void {
         if (checkCommands && !__checkPathCommands(commands, data)) {
             return;
         }
@@ -236,7 +236,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         throw new NotImplementedError();
     }
 
-    drawTriangles(vectors:Array<number>, indices:Array<number> = null, uvtData:Array<number> = null, culling:string = TriangleCulling.NONE):void {
+    drawTriangles(vectors:number[], indices:number[] = null, uvtData:number[] = null, culling:string = TriangleCulling.NONE):void {
         // jabbany, mostly
         if (indices === null) {
             indices = [];
@@ -296,7 +296,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         throw new NotImplementedError();
     }
 
-    lineGradientStyle(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>,
+    lineGradientStyle(type:string, colors:number[], alphas:number[], ratios:number[],
                       matrix:Matrix = null, spreadMethod:string = SpreadMethod.PAD,
                       interpolationMethod:string = InterpolationMethod.RGB, focalPointRatio:number = 0):void {
         throw new NotImplementedError();

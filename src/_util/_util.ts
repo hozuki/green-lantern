@@ -7,7 +7,7 @@ var $global = global || <any>window;
 /**
  * The class providing utility functions.
  */
-export class _util {
+export abstract class _util {
 
     /**
      * Check whether a value is {@link undefined} or {@link null}.

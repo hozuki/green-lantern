@@ -12,7 +12,7 @@ import {DisplayObject} from "../display/DisplayObject";
 
 export class Transform {
 
-    public constructor() {
+    constructor() {
         this.matrix = new Matrix();
         this.matrix3D = new Matrix3D();
         this.colorTransform = new ColorTransform();

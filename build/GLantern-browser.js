@@ -2053,7 +2053,7 @@ var Stage = (function (_super) {
     function Stage(renderer) {
         _super.call(this, null, null);
         this.align = StageAlign_1.StageAlign.TOP_LEFT;
-        this.color = 0;
+        this.color = 0x000000;
         this.colorCorrection = ColorCorrection_1.ColorCorrection.DEFAULT;
         this.displayState = StageDisplayState_1.StageDisplayState.NORMAL;
         this.focus = null;
@@ -3974,6 +3974,10 @@ var Vector3D = (function () {
         if (y === void 0) { y = 0; }
         if (z === void 0) { z = 0; }
         if (w === void 0) { w = 0; }
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -5263,15 +5267,15 @@ var FilterBase = (function () {
             this.__dispose();
         }
     };
-    FilterBase.prototype.__initialize = function () {
-    };
-    FilterBase.prototype.__dispose = function () {
-    };
     FilterBase.prototype.dispose = function () {
         this.__dispose();
     };
     FilterBase.prototype.initialize = function () {
         this.__initialize();
+    };
+    FilterBase.prototype.__initialize = function () {
+    };
+    FilterBase.prototype.__dispose = function () {
     };
     return FilterBase;
 })();
@@ -7393,6 +7397,36 @@ BMS[BlendMode_1.BlendMode.SUBTRACT] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 /**
  * Created by MIC on 2015/11/13.
  */
+/*
+ * Copyright 2010, Google Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var WebGLUtils = (function () {
     function WebGLUtils() {
@@ -8436,7 +8470,6 @@ var RenderHelper_1 = require("../RenderHelper");
 var SolidStrokeRenderer = (function (_super) {
     __extends(SolidStrokeRenderer, _super);
     function SolidStrokeRenderer(graphics, lastPathStartX, lastPathStartY, currentX, currentY, lineWidth, color, alpha) {
-        if (alpha === void 0) { alpha = 1.0; }
         _super.call(this, graphics, lastPathStartX, lastPathStartY, currentX, currentY);
         this._r = 0;
         this._g = 0;

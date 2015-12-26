@@ -28,15 +28,15 @@ var FilterBase = (function () {
             this.__dispose();
         }
     };
-    FilterBase.prototype.__initialize = function () {
-    };
-    FilterBase.prototype.__dispose = function () {
-    };
     FilterBase.prototype.dispose = function () {
         this.__dispose();
     };
     FilterBase.prototype.initialize = function () {
         this.__initialize();
+    };
+    FilterBase.prototype.__initialize = function () {
+    };
+    FilterBase.prototype.__dispose = function () {
     };
     return FilterBase;
 })();

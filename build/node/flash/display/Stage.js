@@ -19,7 +19,7 @@ var Stage = (function (_super) {
     function Stage(renderer) {
         _super.call(this, null, null);
         this.align = StageAlign_1.StageAlign.TOP_LEFT;
-        this.color = 0;
+        this.color = 0x000000;
         this.colorCorrection = ColorCorrection_1.ColorCorrection.DEFAULT;
         this.displayState = StageDisplayState_1.StageDisplayState.NORMAL;
         this.focus = null;

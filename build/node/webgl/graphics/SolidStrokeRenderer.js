@@ -14,7 +14,6 @@ var RenderHelper_1 = require("../RenderHelper");
 var SolidStrokeRenderer = (function (_super) {
     __extends(SolidStrokeRenderer, _super);
     function SolidStrokeRenderer(graphics, lastPathStartX, lastPathStartY, currentX, currentY, lineWidth, color, alpha) {
-        if (alpha === void 0) { alpha = 1.0; }
         _super.call(this, graphics, lastPathStartX, lastPathStartY, currentX, currentY);
         this._r = 0;
         this._g = 0;

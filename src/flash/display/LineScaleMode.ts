@@ -4,19 +4,19 @@
 
 export abstract class LineScaleMode {
 
-    public static get HORIZONTAL():string {
+    static get HORIZONTAL():string {
         return "horizontal";
     }
 
-    public static get NONE():string {
+    static get NONE():string {
         return "none";
     }
 
-    public static get NORMAL():string {
+    static get NORMAL():string {
         return "normal";
     }
 
-    public static get VERTICAL():string {
+    static get VERTICAL():string {
         return "vertical";
     }
 

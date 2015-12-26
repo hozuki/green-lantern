@@ -158,7 +158,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         ]);
     }
 
-    setTo(aa:number, ba:number, ca:number, da:number, txa:number, tya:number) {
+    setTo(aa:number, ba:number, ca:number, da:number, txa:number, tya:number):void {
         this._data = [aa, ca, txa, ba, da, tya, 0, 0, 1];
     }
 

@@ -31,10 +31,10 @@ export class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3D> {
         return new Vector3D(0, 0, 0);
     }
 
-    public w:number;
-    public x:number;
-    public y:number;
-    public z:number;
+    w:number = 0;
+    x:number = 0;
+    y:number = 0;
+    z:number = 0;
 
     get length():number {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);

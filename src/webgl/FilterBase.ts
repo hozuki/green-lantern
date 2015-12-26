@@ -38,18 +38,18 @@ export abstract class FilterBase implements IBitmapFilter {
         }
     }
 
-    protected __initialize():void {
-    }
-
-    protected __dispose():void {
-    }
-
     dispose():void {
         this.__dispose();
     }
 
     initialize():void {
         this.__initialize();
+    }
+
+    protected __initialize():void {
+    }
+
+    protected __dispose():void {
     }
 
     protected _filterManager:FilterManager = null;

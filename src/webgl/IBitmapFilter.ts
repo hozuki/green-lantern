@@ -11,6 +11,6 @@ export interface IBitmapFilter extends IDisposable {
     initialize():void;
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void;
     notifyAdded():void;
-    notifyRemoved():void
+    notifyRemoved():void;
 
 }

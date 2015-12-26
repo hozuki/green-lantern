@@ -229,6 +229,16 @@ export class WebGLRenderer implements IDisposable {
     }
 
     /**
+     * The default {@link RendererOptions} for instantiating a {@link WebGLRenderer}.
+     * @type {RendererOptions}
+     */
+    static DEFAULT_OPTIONS:RendererOptions = {
+        antialias: false,
+        depth: false,
+        transparent: true
+    };
+
+    /**
      * Initializes the newly created {@link WebGLRenderer}.
      * @param width {Number} The width, in pixels.
      * @param height {Number} The height, in pixels.
@@ -330,16 +340,6 @@ export class WebGLRenderer implements IDisposable {
      */
     private onContextRestored(ev:Event):void {
     }
-
-    /**
-     * The default {@link RendererOptions} for instantiating a {@link WebGLRenderer}.
-     * @type {RendererOptions}
-     */
-    static DEFAULT_OPTIONS:RendererOptions = {
-        antialias: false,
-        depth: false,
-        transparent: true
-    };
 
     private _currentRenderTarget:RenderTarget2D = null;
     private _currentBlendMode:string = null;

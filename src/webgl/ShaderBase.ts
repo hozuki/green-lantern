@@ -88,6 +88,10 @@ export class ShaderBase implements IDisposable {
         return this._fragmentSource;
     }
 
+    static SHADER_CLASS_NAME:string = "ShaderBase";
+    static FRAGMENT_SOURCE:string = FragmentShaders.buffered;
+    static VERTEX_SOURCE:string = VertexShaders.buffered;
+
     private __initialize(glc:WebGLRenderingContext, vertexSource:string, fragmentSource:string):void {
         this._glc = glc;
 
@@ -271,10 +275,6 @@ export class ShaderBase implements IDisposable {
 
     protected __localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
     }
-
-    static SHADER_CLASS_NAME:string = "ShaderBase";
-    static FRAGMENT_SOURCE:string = FragmentShaders.buffered;
-    static VERTEX_SOURCE:string = VertexShaders.buffered;
 
     protected _shaderManager:ShaderManager = null;
     protected _vertexSource:string = null;

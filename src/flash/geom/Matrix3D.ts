@@ -298,7 +298,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
-    public setOrthographicProjection(left:number, right:number, top:number, bottom:number, near:number, far:number):void {
+    setOrthographicProjection(left:number, right:number, top:number, bottom:number, near:number, far:number):void {
         if (left === right || top === bottom || near === far) {
             throw new ArgumentError("Null frustum");
         }

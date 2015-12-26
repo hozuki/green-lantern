@@ -42,7 +42,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._alpha = _util.limitInto(v, 0, 1);
     }
 
-    public blendMode:string = BlendMode.NORMAL;
+    blendMode:string = BlendMode.NORMAL;
 
     get cacheAsBitmap():boolean {
         throw new NotImplementedError();

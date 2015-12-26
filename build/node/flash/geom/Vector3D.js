@@ -8,6 +8,10 @@ var Vector3D = (function () {
         if (y === void 0) { y = 0; }
         if (z === void 0) { z = 0; }
         if (w === void 0) { w = 0; }
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
         this.x = x;
         this.y = y;
         this.z = z;

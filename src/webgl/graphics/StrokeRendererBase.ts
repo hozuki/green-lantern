@@ -6,7 +6,7 @@ import {GraphicsDataRendererBase} from "./GraphicsDataRendererBase";
 import {Graphics} from "../../flash/display/Graphics";
 import {IStrokeDataRenderer} from "./IStrokeDataRenderer";
 
-export class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
+export abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
 
     constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);

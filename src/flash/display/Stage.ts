@@ -16,7 +16,7 @@ import {DisplayObjectContainer} from "./DisplayObjectContainer";
 
 export class Stage extends DisplayObjectContainer {
 
-    public constructor(renderer:WebGLRenderer) {
+    constructor(renderer:WebGLRenderer) {
         super(null, null);
         this._root = this;
         this._worldRenderer = renderer;
@@ -24,91 +24,91 @@ export class Stage extends DisplayObjectContainer {
         this.resize(renderer.view.width, renderer.view.height);
     }
 
-    public align:string = StageAlign.TOP_LEFT;
+    align:string = StageAlign.TOP_LEFT;
 
-    public get allowFullScreen():boolean {
+    get allowFullScreen():boolean {
         return this._allowFullScreen;
     }
 
-    public get allowFullScreenInteractive():boolean {
+    get allowFullScreenInteractive():boolean {
         return this._allowFullScreenInteractive;
     }
 
-    public color:number = 0;
-    public colorCorrection:string = ColorCorrection.DEFAULT;
+    color:number = 0x000000;
+    colorCorrection:string = ColorCorrection.DEFAULT;
 
-    public get colorCorrectionSupport():string {
+    get colorCorrectionSupport():string {
         return this._colorCorrectionSupport;
     }
 
-    public displayState:string = StageDisplayState.NORMAL;
-    public focus:InteractiveObject = null;
-    public frameRate:number = 60;
+    displayState:string = StageDisplayState.NORMAL;
+    focus:InteractiveObject = null;
+    frameRate:number = 60;
 
-    public get fullScreenHeight():number {
+    get fullScreenHeight():number {
         return screen.height;
     }
 
-    public fullScreenSourceRect:Rectangle = null;
+    fullScreenSourceRect:Rectangle = null;
 
-    public get fullScreenWidth():number {
+    get fullScreenWidth():number {
         return screen.width;
     }
 
-    public mouseChildren:boolean = true;
-    public quality:string = StageQuality.HIGH;
-    public scaleMode:string = StageScaleMode.NO_SCALE;
-    public showDefaultContextMenu:boolean = true;
+    mouseChildren:boolean = true;
+    quality:string = StageQuality.HIGH;
+    scaleMode:string = StageScaleMode.NO_SCALE;
+    showDefaultContextMenu:boolean = true;
 
-    public get softKeyboardRect():Rectangle {
+    get softKeyboardRect():Rectangle {
         throw new NotImplementedError();
     }
 
-    public get stageHeight():number {
+    get stageHeight():number {
         throw new NotImplementedError();
     }
 
-    public set stageHeight(v:number) {
+    set stageHeight(v:number) {
         throw new NotImplementedError();
     }
 
-    public get stageWidth():number {
+    get stageWidth():number {
         throw new NotImplementedError();
     }
 
-    public set stageWidth(v:number) {
+    set stageWidth(v:number) {
         throw new NotImplementedError();
     }
 
-    public tabChildren:boolean = true;
+    tabChildren:boolean = true;
 
-    public get x():number {
+    get x():number {
         return 0;
     }
 
-    public get y():number {
+    get y():number {
         return 0;
     }
 
-    public invalidate():void {
+    invalidate():void {
         throw new NotImplementedError();
     }
 
-    public isFocusInaccessible():boolean {
+    isFocusInaccessible():boolean {
         throw new NotImplementedError();
     }
 
-    public get worldRenderer():WebGLRenderer {
+    get worldRenderer():WebGLRenderer {
         return this._worldRenderer;
     }
 
-    public resize(width:number, height:number):void {
+    resize(width:number, height:number):void {
         this._width = width;
         this._height = height;
         // TODO: Fully implement this
     }
 
-    public render(renderer:WebGLRenderer):void {
+    render(renderer:WebGLRenderer):void {
         super.render(renderer);
         // Copy it to the screen target.
         //throw new NotImplementedError();
