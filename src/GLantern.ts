@@ -6,6 +6,7 @@ import {WebGLRenderer} from "./webgl/WebGLRenderer";
 import {Stage} from "./flash/display/Stage";
 import {RendererOptions} from "./webgl/RendererOptions";
 import {_util} from "./_util/_util";
+import {FlashEvent} from "./flash/events/FlashEvent";
 
 export class GLantern {
 
@@ -55,6 +56,10 @@ export class GLantern {
         if (!this._isInitialized) {
             return;
         }
+        this._stage.dispatchEvent(FlashEvent.create(FlashEvent.ENTER_FRAME));
+        if (this._attachedUpdateFunction !== null && this._attachedUpdateFunction instanceof Function) {
+            this._attachedUpdateFunction();
+        }
         this._stage.update();
         this._stage.render(this._renderer);
         this._renderer.present();
@@ -72,6 +77,10 @@ export class GLantern {
         return this._isInitialized ? this._renderer.view : null;
     }
 
+    attachUpdateFunction(func:() => void):void {
+        this._attachedUpdateFunction = func;
+    }
+
     private __mainLoop(time:number):void {
         if (!this._isRunning || !this._isInitialized) {
             return;
@@ -84,5 +93,6 @@ export class GLantern {
     private _renderer:WebGLRenderer = null;
     private _stage:Stage = null;
     private _isInitialized:boolean = false;
+    private _attachedUpdateFunction:() => void = null;
 
 }

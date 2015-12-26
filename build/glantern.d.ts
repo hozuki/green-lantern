@@ -1638,6 +1638,8 @@ declare module "glantern" {
 
         runOneFrame():void;
 
+        attachUpdateFunction(func:() => void):void;
+
         stage:flash.display.Stage;
         renderer:webgl.WebGLRenderer;
         view:HTMLCanvasElement;
