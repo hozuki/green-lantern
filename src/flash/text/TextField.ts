@@ -240,12 +240,48 @@ export class TextField extends InteractiveObject {
     }
 
     set textColor(v:number) {
+        var b = this.defaultTextFormat.color !== v;
         this.defaultTextFormat.color = v;
+        if (b && !this.customOutlineEnabled) {
+            this.textOutlineColor = v;
+        }
     }
+
+    /**
+     * Non-standard extension.
+     * @returns {Number}
+     */
+    get textOutlineColor():number {
+        return this._textOutlineColor;
+    }
+
+    /**
+     * Non-standard extension.
+     * @param v {Number}
+     */
+    set textOutlineColor(v:number) {
+        var b = this._textOutlineColor !== v;
+        if (b) {
+            this._textOutlineColor = v;
+            this._isContentChanged = true;
+        }
+    }
+
+    /**
+     * When set to true, outline color will not change when setting {@link textColor}, enabling drawing a
+     * colorful outline. The default value is false.
+     * Non-standard extension.
+     * @type {Boolean}
+     */
+    customOutlineEnabled:boolean = false;
 
     get textHeight():number {
         // TODO: This only works under single line circumstances.
-        return this.defaultTextFormat.size * 1.5;
+        var height = this.defaultTextFormat.size * 1.5;
+        if (this.thickness > 0) {
+            height += this.thickness * 2;
+        }
+        return height;
     }
 
     textInteractionMode:string = TextInteractionMode.NORMAL;
@@ -253,7 +289,11 @@ export class TextField extends InteractiveObject {
     get textWidth():number {
         // TODO: This only works under single line circumstances.
         var metrics:TextMetrics = this._context2D.measureText(this.text);
-        return metrics.width;
+        var width = metrics.width;
+        if (this.thickness > 0) {
+            width += this.thickness * 2;
+        }
+        return width;
     }
 
     get thickness():number {
@@ -337,22 +377,25 @@ export class TextField extends InteractiveObject {
     }
 
     protected __drawTextElements(context2D:CanvasRenderingContext2D):void {
+        var baseX = this.thickness;
+        var baseY = this.thickness;
+        var borderThickness = 1;
         context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
         if (this.background) {
             context2D.fillStyle = _util.colorToCssSharp(this.backgroundColor);
-            context2D.fillRect(0, 0, this.textWidth, this.textHeight);
+            context2D.fillRect(0, 0, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
         context2D.fillStyle = _util.colorToCssSharp(this.textColor);
-        context2D.fillText(this.text, 0, this.textHeight * 0.75);
+        context2D.fillText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
         if (this.thickness > 0) {
             context2D.lineWidth = this.thickness;
-            context2D.strokeStyle = _util.colorToCssSharp(this.textColor);
-            context2D.strokeText(this.text, 0, this.textHeight * 0.75);
+            context2D.strokeStyle = _util.colorToCssSharp(this.textOutlineColor);
+            context2D.strokeText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
         }
         if (this.border) {
             context2D.lineWidth = 1;
             context2D.strokeStyle = _util.colorToCssSharp(this.borderColor);
-            context2D.strokeRect(1, 1, this.textWidth - 1, this.textHeight - 1);
+            context2D.strokeRect(borderThickness, borderThickness, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
     }
 
@@ -372,6 +415,7 @@ export class TextField extends InteractiveObject {
     protected _border:boolean = false;
     protected _borderColor:number = 0x000000;
     protected _textColor:number = 0x000000;
+    protected _textOutlineColor:number = 0x000000;
     protected _thickness:number = 0;
 
 }

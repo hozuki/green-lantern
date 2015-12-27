@@ -21,6 +21,9 @@ t.background = true;
 t.backgroundColor = 0xffffff;
 t.border = true;
 t.borderColor = 0xff0000;
+t.thickness = 1;
+t.customOutlineEnabled = true;
+t.textOutlineColor = 0x550055;
 
 lantern.runOneFrame();
 

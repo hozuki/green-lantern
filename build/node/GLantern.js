@@ -4,12 +4,14 @@
 var WebGLRenderer_1 = require("./webgl/WebGLRenderer");
 var Stage_1 = require("./flash/display/Stage");
 var _util_1 = require("./_util/_util");
+var FlashEvent_1 = require("./flash/events/FlashEvent");
 var GLantern = (function () {
     function GLantern() {
         this._isRunning = false;
         this._renderer = null;
         this._stage = null;
         this._isInitialized = false;
+        this._attachedUpdateFunction = null;
     }
     GLantern.prototype.initialize = function (width, height, options) {
         if (options === void 0) { options = WebGLRenderer_1.WebGLRenderer.DEFAULT_OPTIONS; }
@@ -50,6 +52,10 @@ var GLantern = (function () {
         if (!this._isInitialized) {
             return;
         }
+        this._stage.dispatchEvent(FlashEvent_1.FlashEvent.create(FlashEvent_1.FlashEvent.ENTER_FRAME));
+        if (this._attachedUpdateFunction !== null && this._attachedUpdateFunction instanceof Function) {
+            this._attachedUpdateFunction();
+        }
         this._stage.update();
         this._stage.render(this._renderer);
         this._renderer.present();
@@ -75,6 +81,9 @@ var GLantern = (function () {
         enumerable: true,
         configurable: true
     });
+    GLantern.prototype.attachUpdateFunction = function (func) {
+        this._attachedUpdateFunction = func;
+    };
     GLantern.prototype.__mainLoop = function (time) {
         if (!this._isRunning || !this._isInitialized) {
             return;

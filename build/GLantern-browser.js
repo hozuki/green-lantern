@@ -5,12 +5,14 @@
 var WebGLRenderer_1 = require("./webgl/WebGLRenderer");
 var Stage_1 = require("./flash/display/Stage");
 var _util_1 = require("./_util/_util");
+var FlashEvent_1 = require("./flash/events/FlashEvent");
 var GLantern = (function () {
     function GLantern() {
         this._isRunning = false;
         this._renderer = null;
         this._stage = null;
         this._isInitialized = false;
+        this._attachedUpdateFunction = null;
     }
     GLantern.prototype.initialize = function (width, height, options) {
         if (options === void 0) { options = WebGLRenderer_1.WebGLRenderer.DEFAULT_OPTIONS; }
@@ -51,6 +53,10 @@ var GLantern = (function () {
         if (!this._isInitialized) {
             return;
         }
+        this._stage.dispatchEvent(FlashEvent_1.FlashEvent.create(FlashEvent_1.FlashEvent.ENTER_FRAME));
+        if (this._attachedUpdateFunction !== null && this._attachedUpdateFunction instanceof Function) {
+            this._attachedUpdateFunction();
+        }
         this._stage.update();
         this._stage.render(this._renderer);
         this._renderer.present();
@@ -76,6 +82,9 @@ var GLantern = (function () {
         enumerable: true,
         configurable: true
     });
+    GLantern.prototype.attachUpdateFunction = function (func) {
+        this._attachedUpdateFunction = func;
+    };
     GLantern.prototype.__mainLoop = function (time) {
         if (!this._isRunning || !this._isInitialized) {
             return;
@@ -89,7 +98,7 @@ exports.GLantern = GLantern;
 
 
 
-},{"./_util/_util":5,"./flash/display/Stage":45,"./webgl/WebGLRenderer":98}],2:[function(require,module,exports){
+},{"./_util/_util":5,"./flash/display/Stage":45,"./flash/events/FlashEvent":53,"./webgl/WebGLRenderer":98}],2:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4894,6 +4903,13 @@ var TextField = (function (_super) {
         this.selectable = true;
         this.sharpness = 0;
         this.styleSheet = null;
+        /**
+         * When set to true, outline color will not change when setting {@link textColor}, enabling drawing a
+         * colorful outline. The default value is false.
+         * Non-standard extension.
+         * @type {Boolean}
+         */
+        this.customOutlineEnabled = false;
         this.textInteractionMode = TextInteractionMode_1.TextInteractionMode.NORMAL;
         this.type = TextFieldType_1.TextFieldType.DYNAMIC;
         this.useRichTextClipboard = false;
@@ -4910,6 +4926,7 @@ var TextField = (function (_super) {
         this._border = false;
         this._borderColor = 0x000000;
         this._textColor = 0x000000;
+        this._textOutlineColor = 0x000000;
         this._thickness = 0;
         if (root !== null) {
             this._canvasTarget = this.__createCanvasTarget(root.worldRenderer);
@@ -5120,7 +5137,33 @@ var TextField = (function (_super) {
             return this.defaultTextFormat.color;
         },
         set: function (v) {
+            var b = this.defaultTextFormat.color !== v;
             this.defaultTextFormat.color = v;
+            if (b && !this.customOutlineEnabled) {
+                this.textOutlineColor = v;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextField.prototype, "textOutlineColor", {
+        /**
+         * Non-standard extension.
+         * @returns {Number}
+         */
+        get: function () {
+            return this._textOutlineColor;
+        },
+        /**
+         * Non-standard extension.
+         * @param v {Number}
+         */
+        set: function (v) {
+            var b = this._textOutlineColor !== v;
+            if (b) {
+                this._textOutlineColor = v;
+                this._isContentChanged = true;
+            }
         },
         enumerable: true,
         configurable: true
@@ -5128,7 +5171,11 @@ var TextField = (function (_super) {
     Object.defineProperty(TextField.prototype, "textHeight", {
         get: function () {
             // TODO: This only works under single line circumstances.
-            return this.defaultTextFormat.size * 1.5;
+            var height = this.defaultTextFormat.size * 1.5;
+            if (this.thickness > 0) {
+                height += this.thickness * 2;
+            }
+            return height;
         },
         enumerable: true,
         configurable: true
@@ -5137,7 +5184,11 @@ var TextField = (function (_super) {
         get: function () {
             // TODO: This only works under single line circumstances.
             var metrics = this._context2D.measureText(this.text);
-            return metrics.width;
+            var width = metrics.width;
+            if (this.thickness > 0) {
+                width += this.thickness * 2;
+            }
+            return width;
         },
         enumerable: true,
         configurable: true
@@ -5215,22 +5266,25 @@ var TextField = (function (_super) {
         context2D.font = fontStyles.join(" ");
     };
     TextField.prototype.__drawTextElements = function (context2D) {
+        var baseX = this.thickness;
+        var baseY = this.thickness;
+        var borderThickness = 1;
         context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
         if (this.background) {
             context2D.fillStyle = _util_1._util.colorToCssSharp(this.backgroundColor);
-            context2D.fillRect(0, 0, this.textWidth, this.textHeight);
+            context2D.fillRect(0, 0, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
         context2D.fillStyle = _util_1._util.colorToCssSharp(this.textColor);
-        context2D.fillText(this.text, 0, this.textHeight * 0.75);
+        context2D.fillText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
         if (this.thickness > 0) {
             context2D.lineWidth = this.thickness;
-            context2D.strokeStyle = _util_1._util.colorToCssSharp(this.textColor);
-            context2D.strokeText(this.text, 0, this.textHeight * 0.75);
+            context2D.strokeStyle = _util_1._util.colorToCssSharp(this.textOutlineColor);
+            context2D.strokeText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
         }
         if (this.border) {
             context2D.lineWidth = 1;
             context2D.strokeStyle = _util_1._util.colorToCssSharp(this.borderColor);
-            context2D.strokeRect(1, 1, this.textWidth - 1, this.textHeight - 1);
+            context2D.strokeRect(borderThickness, borderThickness, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
     };
     TextField.prototype.__textFormatChanged = function () {
