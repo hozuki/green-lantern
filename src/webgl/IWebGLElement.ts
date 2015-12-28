@@ -4,8 +4,11 @@
 
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLRenderer} from "./WebGLRenderer";
+import {IDisposable} from "../IDisposable";
 
-export interface IWebGLElement {
+export interface IWebGLElement extends IDisposable {
+
     update():void;
     render(renderer:WebGLRenderer):void;
+
 }
