@@ -7,8 +7,9 @@ import {Stage} from "./flash/display/Stage";
 import {RendererOptions} from "./webgl/RendererOptions";
 import {_util} from "./_util/_util";
 import {FlashEvent} from "./flash/events/FlashEvent";
+import {IDisposable} from "./IDisposable";
 
-export class GLantern {
+export class GLantern implements IDisposable {
 
     constructor() {
     }
@@ -22,7 +23,7 @@ export class GLantern {
         this._isInitialized = true;
     }
 
-    uninitialize():void {
+    dispose():void {
         if (!this._isInitialized) {
             return;
         }
