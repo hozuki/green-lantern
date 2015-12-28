@@ -1,3 +1,4 @@
+import {TextLineMetrics} from "../src/flash/text/TextLineMetrics";
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -842,6 +843,196 @@ declare module "glantern" {
         }
 
         module text {
+
+            class TextLineMetrics {
+
+                constructor(x:number, width:number, height:number, ascent:number, descent:number, leading:number);
+
+                ascent:number;
+                descent:number;
+                height:number;
+                leading:number;
+                width:number;
+                x:number;
+
+            }
+
+            class TextFormat extends events.EventDispatcher {
+
+                constructor(font?:string, size?:number, color?:number, bold?:boolean, italic?:boolean,
+                            underline?:boolean, url?:string, target?:string, align?:string,
+                            leftMargin?:number, rightMargin?:number, indent?:number, leading?:number);
+
+                static TEXT_FORMAT_CHANGE:string;
+
+                align:string;
+                bold:boolean;
+                color:number;
+                font:string;
+                indent:number;
+                italic:boolean;
+                leading:number;
+                leftMargin:number;
+                rightMargin:number;
+                size:number;
+                target:string;
+                underline:boolean;
+                url:string;
+
+            }
+
+            class StyleSheet extends events.EventDispatcher {
+
+                constructor();
+
+                clear():void;
+
+                getStyle(styleName:string):any;
+
+                parseCSS(cssText:string):void;
+
+                setStyle(styleName:string, styleObject:any):void;
+
+                transform(formatObject:any):TextFormat;
+
+                styleNames:string[];
+
+            }
+
+            class TextField extends display.InteractiveObject {
+
+                constructor(root:display.Stage, parent:display.DisplayObjectContainer);
+
+                appendText(newText:string):void;
+
+                alwaysShowSelection:boolean;
+                antiAliasType:string;
+                autoSize:string;
+                background:boolean;
+                backgroundColor:number;
+                border:boolean;
+                borderColor:number;
+                bottomScrollV:number;
+                caretIndex:number;
+                condenseWhite:boolean;
+                defaultTextFormat:TextFormat;
+                displayAsPassword:boolean;
+                embedFonts:boolean;
+
+                getCharBoundaries():geom.Rectangle;
+
+                getCharIndexAtPoint(x:number, y:number):number;
+
+                getFirstCharInParagraph(charIndex:number):number;
+
+                getImageReference(id:string):display.DisplayObject;
+
+                getLineIndexAtPoint(x:number, y:number):number;
+
+                getLineIndexOfChar(charIndex:number):number;
+
+                getLineLength(lineIndex:number):number;
+
+                getLineMetrics(lineIndex:number):TextLineMetrics;
+
+                getLineOffset(lineIndex:number):number;
+
+                getLineText(lineIndex:number):string;
+
+                getParagraphLength(charIndex:number):number;
+
+                getTextFormat(beginIndex?:number, endIndex?:number):TextFormat;
+
+                isFontCompatible(fontName:string, fontStyle:number):boolean;
+
+                replaceSelectedText(value:string):void;
+
+                replaceText(beginIndex:number, endIndex:number, newText:string):void;
+
+                setSelection(beginIndex:number, endIndex:number):void;
+
+                setTextFormat(format:TextFormat, beginIndex?:number, endIndex?:number):void;
+
+                gridFitType:string;
+                htmlText:string;
+                length:number;
+                maxChars:number;
+                maxScrollH:number;
+                maxScrollV:number;
+                mouseWheelEnabled:boolean;
+                multiline:boolean;
+                numLines:number;
+                restrict:string;
+                scrollH:number;
+                scrollV:number;
+                selectable:boolean;
+                selectionBeginIndex:number;
+                selectionEndIndex:number;
+                sharpness:number;
+                styleSheet:StyleSheet;
+                text:string;
+                textColor:number;
+                textOutlineColor:number;
+                customOutlineEnabled:boolean;
+                textHeight:number;
+                textInteractionMode:string;
+                textWidth:number;
+                thickness:number;
+                type:string;
+                useRichTextClipboard:boolean;
+                wordWrap:boolean;
+
+            }
+
+            abstract class AntiAliasType {
+
+                static ADVANCED:string;
+                static NORMAL:string;
+
+            }
+
+            abstract class GridFitType {
+
+                static NONE:string;
+                static PIXEL:string;
+                static SUBPIXEL:string;
+
+            }
+
+
+            abstract class TextFieldAutoSize {
+
+                static CENTER:string;
+                static LEFT:string;
+                static NONE:string;
+                static RIGHT:string;
+
+            }
+
+            abstract class TextFieldType {
+
+                static DYNAMIC:string;
+                static INPUT:string;
+
+            }
+
+            abstract class TextFormatAlign {
+
+                static CENTER:string;
+                static END:string;
+                static JUSTIFY:string;
+                static LEFT:string;
+                static RIGHT:string;
+                static START:string;
+
+            }
+
+            abstract class TextInteractionMode {
+
+                static NORMAL:string;
+                static SELECTION:string;
+
+            }
 
         }
 
