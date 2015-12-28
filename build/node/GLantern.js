@@ -22,7 +22,7 @@ var GLantern = (function () {
         this._stage = new Stage_1.Stage(this._renderer);
         this._isInitialized = true;
     };
-    GLantern.prototype.uninitialize = function () {
+    GLantern.prototype.dispose = function () {
         if (!this._isInitialized) {
             return;
         }

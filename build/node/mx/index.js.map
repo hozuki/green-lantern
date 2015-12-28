@@ -1,0 +1,1 @@
+{"version":3,"sources":["mx/index.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,IAAY,UAAU,WAAM,oBAAoB,CAAC,CAAA;AAEzC,kBAAU;AAAE","file":"mx/index.js","sourcesContent":["/**\r\n * Created by MIC on 2015/12/26.\r\n */\r\n\r\nimport * as containers from \"./containers/index\";\r\n\r\nexport {containers};\r\n"],"sourceRoot":"/source/"}
