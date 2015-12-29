@@ -90,10 +90,10 @@ export class GLantern implements IDisposable {
         _util.requestAnimationFrame(this.__mainLoop.bind(this));
     }
 
-    private _isRunning:boolean = false;
-    private _renderer:WebGLRenderer = null;
-    private _stage:Stage = null;
-    private _isInitialized:boolean = false;
-    private _attachedUpdateFunction:() => void = null;
+    protected _isRunning:boolean = false;
+    protected _renderer:WebGLRenderer = null;
+    protected _stage:Stage = null;
+    protected _isInitialized:boolean = false;
+    protected _attachedUpdateFunction:() => void = null;
 
 }
