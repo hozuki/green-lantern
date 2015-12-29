@@ -13,7 +13,7 @@ lantern.initialize(682, 438);
 })("#glantern-container");
 
 window.addEventListener("unload", function () {
-    lantern.uninitialize();
+    lantern.dispose();
 });
 
 (function initList() {
