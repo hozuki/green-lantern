@@ -75,13 +75,15 @@ var PackedArrayBuffer = (function () {
         this._isDirty = true;
     };
     PackedArrayBuffer.prototype.syncBufferData = function () {
-        var T = this._arrayType;
         if (this._isDirty) {
+            var T = this._arrayType;
             this._typedArray = new T(this._array);
             this._isDirty = false;
         }
         this._glc.bindBuffer(this._bufferType, this._webglBuffer);
-        this._glc.bufferData(this._bufferType, this._typedArray, gl.STATIC_DRAW);
+        // DANGER! In complex scenes, bufferData() transfers large amount of data.
+        // Improper optimization does harm on performance.
+        this._glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
     };
     PackedArrayBuffer.prototype.dispose = function () {
         this._glc.deleteBuffer(this._webglBuffer);

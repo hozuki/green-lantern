@@ -251,7 +251,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
             this.__render(renderer);
             this.__postprocess(renderer);
         } else {
-            this.outputRenderTarget.clear();
+            //this.outputRenderTarget.clear();
         }
     }
 

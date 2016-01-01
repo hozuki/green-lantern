@@ -305,7 +305,6 @@ var DisplayObject = (function (_super) {
             this.__postprocess(renderer);
         }
         else {
-            this.outputRenderTarget.clear();
         }
     };
     Object.defineProperty(DisplayObject.prototype, "outputRenderTarget", {

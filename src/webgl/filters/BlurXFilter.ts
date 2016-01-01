@@ -38,10 +38,12 @@ export class BlurXFilter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
         var t1 = input, t2 = this._tempTarget;
         t2.clear();
         var t:RenderTarget2D;
-        for (var i = 0; i < this.pass * 5; ++i) {
+        for (var i = 0; i < passCoeff * this.pass; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_X, true, (renderer:WebGLRenderer):void => {
                 var shader = <BlurXShader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strength / 4 / this.pass / (t1.fitWidth / t1.originalWidth));

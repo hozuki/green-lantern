@@ -24,7 +24,6 @@ export abstract class RenderHelper {
         var attributeLocation:number;
 
         renderTo.activate();
-        shader.select();
 
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");

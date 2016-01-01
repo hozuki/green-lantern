@@ -1,10 +1,10 @@
 {
   "name": "glantern",
-  "version": "0.3.0-alpha",
+  "version": "0.3.1-alpha",
   "description": "A graphics library based on WebGL, providing a subset of Flash-like API.",
   "main": "build/node/index.js",
   "scripts": {
-    "test": "echo Testing is not enabled yet."
+    "test": "echo Tests are not written yet. && exit 1"
   },
   "repository": {
     "type": "git",

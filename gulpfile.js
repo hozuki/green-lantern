@@ -51,3 +51,12 @@ gulp.task("build-browserify", ["build-compile"], function () {
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("build"));
 });
+
+gulp.task("build-generate-definition", function () {
+    "use strict";
+    return gulp
+        .src(["inc/**/*.ts", "tools/gendef/**/*.ts"])
+        .pipe(ts(tsConfig))
+        .js
+        .pipe(gulp.dest("tools/gendef"))
+});

@@ -15,7 +15,6 @@ var RenderHelper = (function () {
         var glc = renderer.context;
         var attributeLocation;
         renderTo.activate();
-        shader.select();
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);

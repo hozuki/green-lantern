@@ -50,7 +50,8 @@ export class Blur2Filter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        var passCoeff = 5;
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
 
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
         var t1 = input, t2 = this._tempTarget;

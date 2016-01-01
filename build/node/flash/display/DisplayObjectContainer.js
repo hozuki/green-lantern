@@ -165,7 +165,6 @@ var DisplayObjectContainer = (function (_super) {
             this.__postprocess(renderer);
         }
         else {
-            this.outputRenderTarget.clear();
         }
     };
     DisplayObjectContainer.prototype.__selectShader = function (shaderManager) {

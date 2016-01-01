@@ -63,13 +63,15 @@ export class PackedArrayBuffer implements IDisposable {
     }
 
     syncBufferData():void {
-        var T:any = this._arrayType;
         if (this._isDirty) {
+            var T:any = this._arrayType;
             this._typedArray = new T(this._array);
             this._isDirty = false;
         }
         this._glc.bindBuffer(this._bufferType, this._webglBuffer);
-        this._glc.bufferData(this._bufferType, this._typedArray, gl.STATIC_DRAW);
+        // DANGER! In complex scenes, bufferData() transfers large amount of data.
+        // Improper optimization does harm on performance.
+        this._glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
     }
 
     dispose():void {

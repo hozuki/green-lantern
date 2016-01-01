@@ -36,6 +36,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
         this._strokeRenderers = [];
         this._fillRenderers = [];
+        this._bufferTarget = renderer.createRenderTarget();
         this.__updateCurrentPoint(0, 0);
         this.__resetStyles();
         this.clear();
@@ -349,22 +350,25 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                 }
                 this._strokeRenderers[i].update();
             }
+            this._shouldUpdateRenderTarget = true;
         }
         this._isDirty = false;
     }
 
     render(renderer:WebGLRenderer, target:RenderTarget2D, clearOutput:boolean):void {
         var j = 0, fillLen = this._fillRenderers.length;
-        if (clearOutput) {
-            target.clear();
-        }
-        for (var i = 0; i < this._strokeRenderers.length; ++i) {
-            if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                this._fillRenderers[j].render(renderer, target);
-                j++;
+        if (this._shouldUpdateRenderTarget) {
+            this._bufferTarget.clear();
+            for (var i = 0; i < this._strokeRenderers.length; ++i) {
+                if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
+                    this._fillRenderers[j].render(renderer, this._bufferTarget);
+                    j++;
+                }
+                this._strokeRenderers[i].render(renderer, this._bufferTarget);
             }
-            this._strokeRenderers[i].render(renderer, target);
+            this._shouldUpdateRenderTarget = false;
         }
+        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     }
 
     dispose():void {
@@ -372,6 +376,8 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._strokeRenderers.pop();
         this._currentStrokeRenderer.dispose();
         this._currentStrokeRenderer = null;
+        this._bufferTarget.dispose();
+        this._bufferTarget = null;
     }
 
     get renderer():WebGLRenderer {
@@ -412,7 +418,9 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     private _displayObject:DisplayObject = null;
     private _isFilling:boolean = false;
     private _renderer:WebGLRenderer = null;
+    private _bufferTarget:RenderTarget2D = null;
     private _isDirty:boolean = true;
+    private _shouldUpdateRenderTarget:boolean = false;
 
     private _lineType:BrushType = BrushType.SOLID;
     private _lineWidth:number = 1;

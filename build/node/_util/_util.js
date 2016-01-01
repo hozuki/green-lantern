@@ -17,6 +17,14 @@ var _util = (function () {
         return value === undefined || value === null;
     };
     /**
+     * Check whether a value is {@link undefined}.
+     * @param value {*} The value to check.
+     * @returns {Boolean} True if the value is {@link undefined}, and false otherwise.
+     */
+    _util.isUndefined = function (value) {
+        return value === undefined;
+    };
+    /**
      * Limit a number inside a range specified by min and max (both are reachable).
      * @param v {Number} The number to limit.
      * @param min {Number} The lower bound. Numbers strictly less than this bound will be set to the value.

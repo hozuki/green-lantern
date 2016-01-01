@@ -17,7 +17,9 @@ var Graphics = (function () {
         this._displayObject = null;
         this._isFilling = false;
         this._renderer = null;
+        this._bufferTarget = null;
         this._isDirty = true;
+        this._shouldUpdateRenderTarget = false;
         this._lineType = BrushType_1.BrushType.SOLID;
         this._lineWidth = 1;
         this._lineAlpha = 1;
@@ -35,6 +37,7 @@ var Graphics = (function () {
         this._isDirty = true;
         this._strokeRenderers = [];
         this._fillRenderers = [];
+        this._bufferTarget = renderer.createRenderTarget();
         this.__updateCurrentPoint(0, 0);
         this.__resetStyles();
         this.clear();
@@ -348,27 +351,32 @@ var Graphics = (function () {
                 }
                 this._strokeRenderers[i].update();
             }
+            this._shouldUpdateRenderTarget = true;
         }
         this._isDirty = false;
     };
     Graphics.prototype.render = function (renderer, target, clearOutput) {
         var j = 0, fillLen = this._fillRenderers.length;
-        if (clearOutput) {
-            target.clear();
-        }
-        for (var i = 0; i < this._strokeRenderers.length; ++i) {
-            if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                this._fillRenderers[j].render(renderer, target);
-                j++;
+        if (this._shouldUpdateRenderTarget) {
+            this._bufferTarget.clear();
+            for (var i = 0; i < this._strokeRenderers.length; ++i) {
+                if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
+                    this._fillRenderers[j].render(renderer, this._bufferTarget);
+                    j++;
+                }
+                this._strokeRenderers[i].render(renderer, this._bufferTarget);
             }
-            this._strokeRenderers[i].render(renderer, target);
+            this._shouldUpdateRenderTarget = false;
         }
+        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     };
     Graphics.prototype.dispose = function () {
         this.clear();
         this._strokeRenderers.pop();
         this._currentStrokeRenderer.dispose();
         this._currentStrokeRenderer = null;
+        this._bufferTarget.dispose();
+        this._bufferTarget = null;
     };
     Object.defineProperty(Graphics.prototype, "renderer", {
         get: function () {

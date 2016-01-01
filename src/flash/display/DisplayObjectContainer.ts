@@ -174,7 +174,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
             }
             this.__postprocess(renderer);
         } else {
-            this.outputRenderTarget.clear();
+            //this.outputRenderTarget.clear();
         }
     }
 

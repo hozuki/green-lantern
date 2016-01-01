@@ -217,6 +217,14 @@ var _util = (function () {
         return value === undefined || value === null;
     };
     /**
+     * Check whether a value is {@link undefined}.
+     * @param value {*} The value to check.
+     * @returns {Boolean} True if the value is {@link undefined}, and false otherwise.
+     */
+    _util.isUndefined = function (value) {
+        return value === undefined;
+    };
+    /**
      * Limit a number inside a range specified by min and max (both are reachable).
      * @param v {Number} The number to limit.
      * @param min {Number} The lower bound. Numbers strictly less than this bound will be set to the value.
@@ -1598,7 +1606,6 @@ var DisplayObject = (function (_super) {
             this.__postprocess(renderer);
         }
         else {
-            this.outputRenderTarget.clear();
         }
     };
     Object.defineProperty(DisplayObject.prototype, "outputRenderTarget", {
@@ -1807,7 +1814,6 @@ var DisplayObjectContainer = (function (_super) {
             this.__postprocess(renderer);
         }
         else {
-            this.outputRenderTarget.clear();
         }
     };
     DisplayObjectContainer.prototype.__selectShader = function (shaderManager) {
@@ -1866,7 +1872,9 @@ var Graphics = (function () {
         this._displayObject = null;
         this._isFilling = false;
         this._renderer = null;
+        this._bufferTarget = null;
         this._isDirty = true;
+        this._shouldUpdateRenderTarget = false;
         this._lineType = BrushType_1.BrushType.SOLID;
         this._lineWidth = 1;
         this._lineAlpha = 1;
@@ -1884,6 +1892,7 @@ var Graphics = (function () {
         this._isDirty = true;
         this._strokeRenderers = [];
         this._fillRenderers = [];
+        this._bufferTarget = renderer.createRenderTarget();
         this.__updateCurrentPoint(0, 0);
         this.__resetStyles();
         this.clear();
@@ -2197,27 +2206,32 @@ var Graphics = (function () {
                 }
                 this._strokeRenderers[i].update();
             }
+            this._shouldUpdateRenderTarget = true;
         }
         this._isDirty = false;
     };
     Graphics.prototype.render = function (renderer, target, clearOutput) {
         var j = 0, fillLen = this._fillRenderers.length;
-        if (clearOutput) {
-            target.clear();
-        }
-        for (var i = 0; i < this._strokeRenderers.length; ++i) {
-            if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                this._fillRenderers[j].render(renderer, target);
-                j++;
+        if (this._shouldUpdateRenderTarget) {
+            this._bufferTarget.clear();
+            for (var i = 0; i < this._strokeRenderers.length; ++i) {
+                if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
+                    this._fillRenderers[j].render(renderer, this._bufferTarget);
+                    j++;
+                }
+                this._strokeRenderers[i].render(renderer, this._bufferTarget);
             }
-            this._strokeRenderers[i].render(renderer, target);
+            this._shouldUpdateRenderTarget = false;
         }
+        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     };
     Graphics.prototype.dispose = function () {
         this.clear();
         this._strokeRenderers.pop();
         this._currentStrokeRenderer.dispose();
         this._currentStrokeRenderer = null;
+        this._bufferTarget.dispose();
+        this._bufferTarget = null;
     };
     Object.defineProperty(Graphics.prototype, "renderer", {
         get: function () {
@@ -6402,13 +6416,15 @@ var PackedArrayBuffer = (function () {
         this._isDirty = true;
     };
     PackedArrayBuffer.prototype.syncBufferData = function () {
-        var T = this._arrayType;
         if (this._isDirty) {
+            var T = this._arrayType;
             this._typedArray = new T(this._array);
             this._isDirty = false;
         }
         this._glc.bindBuffer(this._bufferType, this._webglBuffer);
-        this._glc.bufferData(this._bufferType, this._typedArray, gl.STATIC_DRAW);
+        // DANGER! In complex scenes, bufferData() transfers large amount of data.
+        // Improper optimization does harm on performance.
+        this._glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
     };
     PackedArrayBuffer.prototype.dispose = function () {
         this._glc.deleteBuffer(this._webglBuffer);
@@ -6461,7 +6477,6 @@ var RenderHelper = (function () {
         var glc = renderer.context;
         var attributeLocation;
         renderTo.activate();
-        shader.select();
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
@@ -8245,7 +8260,8 @@ var Blur2Filter = (function (_super) {
     });
     Blur2Filter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
-        var passCoeff = 5;
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
         var t1 = input, t2 = this._tempTarget;
         t2.clear();
@@ -8435,10 +8451,12 @@ var BlurXFilter = (function (_super) {
     });
     BlurXFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
         var t1 = input, t2 = this._tempTarget;
         t2.clear();
         var t;
-        for (var i = 0; i < this.pass * 5; ++i) {
+        for (var i = 0; i < passCoeff * this.pass; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_X, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
                 shader.setStrength(_this.strength / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));
@@ -8509,10 +8527,12 @@ var BlurYFilter = (function (_super) {
     });
     BlurYFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
         var t1 = input, t2 = this._tempTarget;
         t2.clear();
         var t;
-        for (var i = 0; i < this.pass * 5; ++i) {
+        for (var i = 0; i < passCoeff * this.pass; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_Y, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
                 shader.setStrength(_this.strength / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));

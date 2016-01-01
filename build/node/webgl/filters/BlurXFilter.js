@@ -44,10 +44,12 @@ var BlurXFilter = (function (_super) {
     });
     BlurXFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
+        // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
+        var passCoeff = 3;
         var t1 = input, t2 = this._tempTarget;
         t2.clear();
         var t;
-        for (var i = 0; i < this.pass * 5; ++i) {
+        for (var i = 0; i < passCoeff * this.pass; ++i) {
             RenderHelper_1.RenderHelper.renderBuffered(renderer, t1, t2, ShaderID_1.ShaderID.BLUR_X, true, function (renderer) {
                 var shader = renderer.shaderManager.currentShader;
                 shader.setStrength(_this.strength / 4 / _this.pass / (t1.fitWidth / t1.originalWidth));
