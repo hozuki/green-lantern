@@ -72,10 +72,6 @@ The package structure of Flash is preserved in GLantern, so adding a `GLantern.`
 works. If you want to make it more like ActionScript, GLantern provides a `injectToGlobal()` function
 to inject the "packages" to the global scope.
 
-Either the first or the second style is accepted:
-
-**Common code, used in both Style #1 and Style #2**
-
 ```javascript
 var lantern = new GLantern.GLantern();
 lantern.initialize(682, 438);
@@ -83,42 +79,31 @@ document.body.appendChild(lantern.view);
 window.addEventListener("unload", function () {
     lantern.uninitialize();
 });
-```
+draw(true, this);
 
-**Style #1**
-
-```javascript
-var Display = Object.create({
-    "createShape": function (alpha) {
-        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
-        lantern.stage.addChild(s);
-        s.alpha = alpha;
-        return s;
+/**
+* Draws a rectangle.
+* @param asGlobal {Boolean} Whether to inject Flash packages to global scope or not.
+* @param g {*} The global object, usually {@link window}.
+*/
+function draw(asGLobal, g) {
+    if (asGLobal) {
+        GLantern.injectToGlobal(g);
     }
-});
-g = Display.createShape(1);
-g.graphics.beginFill(0xffffff);
-g.graphics.drawRect(0, 0, 540, 383);
-g.graphics.endFill();
-```
-
-**Style #2**
-
-```javascript
-GLantern.injectToGlobal(this);
-// And now GLantern members ("packages") are injected to the global scope.
-var Display = Object.create({
-    "createShape": function (alpha) {
-        var s = new flash.display.Shape(lantern.stage, lantern.stage);
-        lantern.stage.addChild(s);
-        s.alpha = alpha;
-        return s;
-    }
-});
-g = Display.createShape(1);
-g.graphics.beginFill(0xffffff);
-g.graphics.drawRect(0, 0, 540, 383);
-g.graphics.endFill();
+    var flash = g.flash ? g.flash : GLantern.flash;
+    var Display = Object.create({
+        "createShape": function (alpha) {
+            var s = new flash.display.Shape(lantern.stage, lantern.stage);
+            lantern.stage.addChild(s);
+            s.alpha = alpha;
+            return s;
+        }
+    });
+    g = Display.createShape(1);
+    g.graphics.beginFill(0xffffff);
+    g.graphics.drawRect(0, 0, 540, 383);
+    g.graphics.endFill();
+}
 ```
 
 ## API References
@@ -127,11 +112,19 @@ g.graphics.endFill();
 
 Visit the [ActionScript 3 API Reference](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/) instead.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## Q&A
+
+See [QA.md](QA.md).
+
 ## License
 
 [The MIT License](//mitlicense.org)
 
-You will also find a copy at [`LICENSE.md`](LICENSE.md).
+You will also find a copy in [`LICENSE.md`](LICENSE.md).
 
 ## Other Resources
 
