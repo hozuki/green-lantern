@@ -1617,6 +1617,7 @@ var DisplayObject = (function (_super) {
     });
     DisplayObject.prototype.__preprocess = function (renderer) {
         var _this = this;
+        this.outputRenderTarget.clear();
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
         this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);

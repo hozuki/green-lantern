@@ -274,6 +274,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected abstract __selectShader(shaderManager:ShaderManager):void;
 
     protected __preprocess(renderer:WebGLRenderer):void {
+        this.outputRenderTarget.clear();
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
         this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
