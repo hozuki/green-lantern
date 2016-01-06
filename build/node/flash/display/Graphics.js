@@ -381,7 +381,7 @@ var Graphics = (function () {
             }
             this._shouldUpdateRenderTarget = false;
         }
-        //renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
+        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     };
     Graphics.prototype.dispose = function () {
         this.clear();
