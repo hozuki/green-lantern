@@ -294,6 +294,9 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
             this._currentFillRenderer.closePath();
             this._currentStrokeRenderer.closePath();
             this._fillRenderers.push(this._currentFillRenderer);
+            if (this._currentFillRenderer.hasDrawnAnything) {
+                this._isDirty = true;
+            }
             this._currentFillRenderer = null;
         }
     }

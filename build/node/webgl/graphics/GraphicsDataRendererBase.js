@@ -85,6 +85,13 @@ var GraphicsDataRendererBase = (function () {
     GraphicsDataRendererBase.prototype.becomeDirty = function () {
         this._isDirty = true;
     };
+    Object.defineProperty(GraphicsDataRendererBase.prototype, "hasDrawnAnything", {
+        get: function () {
+            return this._hasDrawnAnything;
+        },
+        enumerable: true,
+        configurable: true
+    });
     GraphicsDataRendererBase.prototype.__initializeBuffers = function () {
         this._vertices = [];
         this._colors = [];

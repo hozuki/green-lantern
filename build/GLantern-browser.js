@@ -2153,6 +2153,9 @@ var Graphics = (function () {
             this._currentFillRenderer.closePath();
             this._currentStrokeRenderer.closePath();
             this._fillRenderers.push(this._currentFillRenderer);
+            if (this._currentFillRenderer.hasDrawnAnything) {
+                this._isDirty = true;
+            }
             this._currentFillRenderer = null;
         }
     };
@@ -8937,6 +8940,13 @@ var GraphicsDataRendererBase = (function () {
     GraphicsDataRendererBase.prototype.becomeDirty = function () {
         this._isDirty = true;
     };
+    Object.defineProperty(GraphicsDataRendererBase.prototype, "hasDrawnAnything", {
+        get: function () {
+            return this._hasDrawnAnything;
+        },
+        enumerable: true,
+        configurable: true
+    });
     GraphicsDataRendererBase.prototype.__initializeBuffers = function () {
         this._vertices = [];
         this._colors = [];

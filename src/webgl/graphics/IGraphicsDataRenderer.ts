@@ -20,4 +20,6 @@ export interface IGraphicsDataRenderer extends IDisposable {
     update():void;
     render(renderer:WebGLRenderer, target:RenderTarget2D):void;
 
+    hasDrawnAnything:boolean;
+
 }

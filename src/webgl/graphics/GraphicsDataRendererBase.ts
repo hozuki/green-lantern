@@ -89,6 +89,10 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._isDirty = true;
     }
 
+    get hasDrawnAnything():boolean {
+        return this._hasDrawnAnything;
+    }
+
     private __initializeBuffers():void {
         this._vertices = [];
         this._colors = [];
