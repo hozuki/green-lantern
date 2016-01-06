@@ -104,8 +104,8 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     removeChild(child:DisplayObject):DisplayObject {
-        if (this._children.indexOf(child) >= 0) {
-            var childIndex = child.childIndex;
+        var childIndex = this._children.indexOf(child);
+        if (childIndex >= 0) {
             return this.removeChildAt(childIndex);
         } else {
             return null;

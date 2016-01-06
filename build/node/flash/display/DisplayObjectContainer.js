@@ -98,8 +98,8 @@ var DisplayObjectContainer = (function (_super) {
         throw new NotImplementedError_1.NotImplementedError();
     };
     DisplayObjectContainer.prototype.removeChild = function (child) {
-        if (this._children.indexOf(child) >= 0) {
-            var childIndex = child.childIndex;
+        var childIndex = this._children.indexOf(child);
+        if (childIndex >= 0) {
             return this.removeChildAt(childIndex);
         }
         else {
