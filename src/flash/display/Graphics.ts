@@ -365,7 +365,12 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
 
     render(renderer:WebGLRenderer, target:RenderTarget2D, clearOutput:boolean):void {
         var j = 0, fillLen = this._fillRenderers.length;
-        if (this._shouldUpdateRenderTarget) {
+        // TODO: Extend texture copy shader.
+        // When _shouldUpdateRenderTarget and _bufferTarget are enabled, content of Graphics
+        // is cached so that rendering performance is improved but transforms and alpha changes
+        // are not reflected. To fix this behavior, consider extending the replicate shader to
+        // support state changes.
+        if (true || this._shouldUpdateRenderTarget) {
             this._bufferTarget.clear();
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
                 if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
@@ -376,7 +381,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
             }
             this._shouldUpdateRenderTarget = false;
         }
-        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
+        //renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     }
 
     dispose():void {
