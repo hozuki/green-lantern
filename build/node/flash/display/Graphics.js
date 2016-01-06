@@ -77,21 +77,26 @@ var Graphics = (function () {
         if (this._strokeRenderers !== null) {
             for (i = 0; i < this._strokeRenderers.length; ++i) {
                 this._strokeRenderers[i].dispose();
+                this._isDirty = true;
             }
         }
         if (this._fillRenderers !== null) {
             for (i = 0; i < this._fillRenderers.length; ++i) {
                 this._fillRenderers[i].dispose();
+                this._isDirty = true;
             }
         }
         if (this._currentFillRenderer !== null) {
             this._currentFillRenderer.dispose();
+            this._isDirty = true;
         }
         while (this._strokeRenderers.length > 0) {
             this._strokeRenderers.pop();
+            this._isDirty = true;
         }
         while (this._fillRenderers.length > 0) {
             this._fillRenderers.pop();
+            this._isDirty = true;
         }
         // create stroke and fill renderers according to current state
         // and push them into the stack

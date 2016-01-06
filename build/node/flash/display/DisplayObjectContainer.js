@@ -34,7 +34,15 @@ var DisplayObjectContainer = (function (_super) {
     };
     DisplayObjectContainer.prototype.addChildAt = function (child, index) {
         if (this._children.indexOf(child) < 0) {
-            this._children = this._children.slice(0, index - 1).concat(child).concat(this._children.slice(index, this._children.length - 1));
+            if (index === 0) {
+                this._children.unshift(child);
+            }
+            else if (index === this._children.length - 1) {
+                this._children.push(child);
+            }
+            else {
+                this._children = this._children.slice(0, index - 1).concat(child).concat(this._children.slice(index, this._children.length - 1));
+            }
         }
         child.childIndex = index;
         return child;

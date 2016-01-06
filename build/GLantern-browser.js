@@ -1684,7 +1684,15 @@ var DisplayObjectContainer = (function (_super) {
     };
     DisplayObjectContainer.prototype.addChildAt = function (child, index) {
         if (this._children.indexOf(child) < 0) {
-            this._children = this._children.slice(0, index - 1).concat(child).concat(this._children.slice(index, this._children.length - 1));
+            if (index === 0) {
+                this._children.unshift(child);
+            }
+            else if (index === this._children.length - 1) {
+                this._children.push(child);
+            }
+            else {
+                this._children = this._children.slice(0, index - 1).concat(child).concat(this._children.slice(index, this._children.length - 1));
+            }
         }
         child.childIndex = index;
         return child;
@@ -1933,21 +1941,26 @@ var Graphics = (function () {
         if (this._strokeRenderers !== null) {
             for (i = 0; i < this._strokeRenderers.length; ++i) {
                 this._strokeRenderers[i].dispose();
+                this._isDirty = true;
             }
         }
         if (this._fillRenderers !== null) {
             for (i = 0; i < this._fillRenderers.length; ++i) {
                 this._fillRenderers[i].dispose();
+                this._isDirty = true;
             }
         }
         if (this._currentFillRenderer !== null) {
             this._currentFillRenderer.dispose();
+            this._isDirty = true;
         }
         while (this._strokeRenderers.length > 0) {
             this._strokeRenderers.pop();
+            this._isDirty = true;
         }
         while (this._fillRenderers.length > 0) {
             this._fillRenderers.pop();
+            this._isDirty = true;
         }
         // create stroke and fill renderers according to current state
         // and push them into the stack
