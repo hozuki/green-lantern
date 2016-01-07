@@ -11,5 +11,7 @@ var filters = require("./filters/index");
 exports.filters = filters;
 var text = require("./text/index");
 exports.text = text;
+var utils = require("./utils/index");
+exports.utils = utils;
 
 //# sourceMappingURL=index.js.map

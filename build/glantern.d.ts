@@ -494,6 +494,19 @@ declare module "glantern" {
 
             }
 
+            class TimerEvent extends FlashEvent implements ICloneable<TimerEvent> {
+
+                constructor(type:string, bubbles?:boolean, cancelable?:boolean);
+
+                static TIMER:string;
+                static TIMER_COMPLETE:string;
+
+                updateAfterEvent():void;
+
+                clone():TimerEvent;
+
+            }
+
         }
 
         module filters {
@@ -1031,6 +1044,28 @@ declare module "glantern" {
 
                 static NORMAL:string;
                 static SELECTION:string;
+
+            }
+
+        }
+
+        module utils {
+
+            class Timer extends events.EventDispatcher {
+
+                constructor(delay:number, repeatCount?:number);
+
+                currentCount:number;
+                delay:number;
+                enabled:boolean;
+                repeatCount:number;
+                running:boolean;
+
+                reset():void;
+
+                start():void;
+
+                stop():void;
 
             }
 

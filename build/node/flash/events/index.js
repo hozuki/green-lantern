@@ -7,5 +7,6 @@ function __export(m) {
 __export(require("./EventDispatcher"));
 var FlashEvent_1 = require("./FlashEvent");
 exports.Event = FlashEvent_1.FlashEvent;
+__export(require("./TimerEvent"));
 
 //# sourceMappingURL=index.js.map

@@ -4,3 +4,4 @@
 
 export * from "./EventDispatcher";
 export {FlashEvent as Event} from "./FlashEvent";
+export * from "./TimerEvent";

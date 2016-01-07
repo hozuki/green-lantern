@@ -98,7 +98,7 @@ exports.GLantern = GLantern;
 
 
 
-},{"./_util/_util":5,"./flash/display/Stage":45,"./flash/events/FlashEvent":53,"./webgl/WebGLRenderer":98}],2:[function(require,module,exports){
+},{"./_util/_util":5,"./flash/display/Stage":45,"./flash/events/FlashEvent":53,"./webgl/WebGLRenderer":101}],2:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -459,7 +459,7 @@ __export(require("./NotImplementedError"));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./index":81}],8:[function(require,module,exports){
+},{"./index":84}],8:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -1647,7 +1647,7 @@ exports.DisplayObject = DisplayObject;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../events/EventDispatcher":52,"../geom/Transform":66,"./BlendMode":28}],33:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../events/EventDispatcher":52,"../geom/Transform":67,"./BlendMode":28}],33:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -1834,7 +1834,7 @@ exports.DisplayObjectContainer = DisplayObjectContainer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../webgl/ShaderID":93,"./InteractiveObject":38}],34:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../webgl/ShaderID":96,"./InteractiveObject":38}],34:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -2350,7 +2350,7 @@ function __checkPathCommands(commands, data) {
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/graphics/BrushType":107,"../../webgl/graphics/SolidFillRenderer":111,"../../webgl/graphics/SolidStrokeRenderer":112,"./GraphicsPathCommand":36,"./GraphicsPathWinding":37,"./InterpolationMethod":39,"./LineScaleMode":41,"./SpreadMethod":44,"./TriangleCulling":50}],36:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/graphics/BrushType":110,"../../webgl/graphics/SolidFillRenderer":114,"../../webgl/graphics/SolidStrokeRenderer":115,"./GraphicsPathCommand":36,"./GraphicsPathWinding":37,"./InterpolationMethod":39,"./LineScaleMode":41,"./SpreadMethod":44,"./TriangleCulling":50}],36:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -2627,7 +2627,7 @@ exports.Shape = Shape;
 
 
 
-},{"../../webgl/ShaderID":93,"./DisplayObject":32,"./Graphics":35}],44:[function(require,module,exports){
+},{"../../webgl/ShaderID":96,"./DisplayObject":32,"./Graphics":35}],44:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -3197,6 +3197,50 @@ exports.FlashEvent = FlashEvent;
 
 },{}],54:[function(require,module,exports){
 /**
+ * Created by MIC on 2016/1/7.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var NotImplementedError_1 = require("../../_util/NotImplementedError");
+var FlashEvent_1 = require("./FlashEvent");
+var TimerEvent = (function (_super) {
+    __extends(TimerEvent, _super);
+    function TimerEvent(type, bubbles, cancelable) {
+        if (bubbles === void 0) { bubbles = false; }
+        if (cancelable === void 0) { cancelable = false; }
+        _super.call(this, type, bubbles, cancelable);
+    }
+    Object.defineProperty(TimerEvent, "TIMER", {
+        get: function () {
+            return 'timer';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TimerEvent, "TIMER_COMPLETE", {
+        get: function () {
+            return 'timerComplete';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TimerEvent.prototype.updateAfterEvent = function () {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    TimerEvent.prototype.clone = function () {
+        throw new NotImplementedError_1.NotImplementedError();
+    };
+    return TimerEvent;
+})(FlashEvent_1.FlashEvent);
+exports.TimerEvent = TimerEvent;
+
+
+
+},{"../../_util/NotImplementedError":4,"./FlashEvent":53}],55:[function(require,module,exports){
+/**
  * Created by MIC on 2015/11/20.
  */
 function __export(m) {
@@ -3205,10 +3249,11 @@ function __export(m) {
 __export(require("./EventDispatcher"));
 var FlashEvent_1 = require("./FlashEvent");
 exports.Event = FlashEvent_1.FlashEvent;
+__export(require("./TimerEvent"));
 
 
 
-},{"./EventDispatcher":52,"./FlashEvent":53}],55:[function(require,module,exports){
+},{"./EventDispatcher":52,"./FlashEvent":53,"./TimerEvent":54}],56:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -3242,7 +3287,7 @@ exports.BitmapFilterQuality = BitmapFilterQuality;
 
 
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -3306,7 +3351,7 @@ exports.BlurFilter = BlurFilter;
 
 
 
-},{"../../webgl/filters/Blur2Filter":100,"./BitmapFilterQuality":55}],57:[function(require,module,exports){
+},{"../../webgl/filters/Blur2Filter":103,"./BitmapFilterQuality":56}],58:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -3425,7 +3470,7 @@ exports.GlowFilter = GlowFilter;
 
 
 
-},{"../../_util/_util":5,"../../webgl/filters/GlowFilter":105,"./BitmapFilterQuality":55}],58:[function(require,module,exports){
+},{"../../_util/_util":5,"../../webgl/filters/GlowFilter":108,"./BitmapFilterQuality":56}],59:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/30.
  */
@@ -3438,7 +3483,7 @@ __export(require("./GlowFilter"));
 
 
 
-},{"./BitmapFilterQuality":55,"./BlurFilter":56,"./GlowFilter":57}],59:[function(require,module,exports){
+},{"./BitmapFilterQuality":56,"./BlurFilter":57,"./GlowFilter":58}],60:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -3561,7 +3606,7 @@ exports.ColorTransform = ColorTransform;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5}],60:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5}],61:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -3762,7 +3807,7 @@ exports.Matrix = Matrix;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Point":64}],61:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Point":65}],62:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4135,7 +4180,7 @@ exports.Matrix3D = Matrix3D;
 
 
 
-},{"../../_util/ApplicationError":2,"../../_util/ArgumentError":3,"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Orientation3D":62,"./Vector3D":67}],62:[function(require,module,exports){
+},{"../../_util/ApplicationError":2,"../../_util/ArgumentError":3,"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Orientation3D":63,"./Vector3D":68}],63:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4169,7 +4214,7 @@ exports.Orientation3D = Orientation3D;
 
 
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4202,7 +4247,7 @@ exports.PerspectiveProjection = PerspectiveProjection;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Point":64}],64:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"./Point":65}],65:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4273,7 +4318,7 @@ exports.Point = Point;
 
 
 
-},{"../../_util/_util":5}],65:[function(require,module,exports){
+},{"../../_util/_util":5}],66:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4546,7 +4591,7 @@ exports.Rectangle = Rectangle;
 
 
 
-},{"../../_util/_util":5,"./Point":64}],66:[function(require,module,exports){
+},{"../../_util/_util":5,"./Point":65}],67:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4597,7 +4642,7 @@ exports.Transform = Transform;
 
 
 
-},{"../../_util/NotImplementedError":4,"./ColorTransform":59,"./Matrix":60,"./Matrix3D":61,"./PerspectiveProjection":63}],67:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"./ColorTransform":60,"./Matrix":61,"./Matrix3D":62,"./PerspectiveProjection":64}],68:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -4752,7 +4797,7 @@ exports.Vector3D = Vector3D;
 
 
 
-},{"../../_util/_util":5}],68:[function(require,module,exports){
+},{"../../_util/_util":5}],69:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -4771,7 +4816,7 @@ __export(require("./Vector3D"));
 
 
 
-},{"./ColorTransform":59,"./Matrix":60,"./Matrix3D":61,"./Orientation3D":62,"./PerspectiveProjection":63,"./Point":64,"./Rectangle":65,"./Transform":66,"./Vector3D":67}],69:[function(require,module,exports){
+},{"./ColorTransform":60,"./Matrix":61,"./Matrix3D":62,"./Orientation3D":63,"./PerspectiveProjection":64,"./Point":65,"./Rectangle":66,"./Transform":67,"./Vector3D":68}],70:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -4785,10 +4830,12 @@ var filters = require("./filters/index");
 exports.filters = filters;
 var text = require("./text/index");
 exports.text = text;
+var utils = require("./utils/index");
+exports.utils = utils;
 
 
 
-},{"./display/index":51,"./events/index":54,"./filters/index":58,"./geom/index":68,"./text/index":80}],70:[function(require,module,exports){
+},{"./display/index":51,"./events/index":55,"./filters/index":59,"./geom/index":69,"./text/index":81,"./utils/index":83}],71:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -4815,7 +4862,7 @@ exports.AntiAliasType = AntiAliasType;
 
 
 
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -4849,7 +4896,7 @@ exports.GridFitType = GridFitType;
 
 
 
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -4898,7 +4945,7 @@ exports.StyleSheet = StyleSheet;
 
 
 
-},{"../../_util/NotImplementedError":4,"../events/EventDispatcher":52}],73:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../events/EventDispatcher":52}],74:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5332,7 +5379,7 @@ exports.TextField = TextField;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/RenderHelper":90,"../../webgl/ShaderID":93,"../display/InteractiveObject":38,"./AntiAliasType":70,"./GridFitType":71,"./TextFieldAutoSize":74,"./TextFieldType":75,"./TextFormat":76,"./TextInteractionMode":78}],74:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../../webgl/RenderHelper":93,"../../webgl/ShaderID":96,"../display/InteractiveObject":38,"./AntiAliasType":71,"./GridFitType":72,"./TextFieldAutoSize":75,"./TextFieldType":76,"./TextFormat":77,"./TextInteractionMode":79}],75:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5373,7 +5420,7 @@ exports.TextFieldAutoSize = TextFieldAutoSize;
 
 
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5400,7 +5447,7 @@ exports.TextFieldType = TextFieldType;
 
 
 
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5751,7 +5798,7 @@ exports.TextFormat = TextFormat;
 
 
 
-},{"../../_util/_util":5,"../events/EventDispatcher":52,"../events/FlashEvent":53,"./TextFormatAlign":77,"os":126}],77:[function(require,module,exports){
+},{"../../_util/_util":5,"../events/EventDispatcher":52,"../events/FlashEvent":53,"./TextFormatAlign":78,"os":129}],78:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5806,7 +5853,7 @@ exports.TextFormatAlign = TextFormatAlign;
 
 
 
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5833,7 +5880,7 @@ exports.TextInteractionMode = TextInteractionMode;
 
 
 
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5858,7 +5905,7 @@ exports.TextLineMetrics = TextLineMetrics;
 
 
 
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -5878,7 +5925,133 @@ __export(require("./TextLineMetrics"));
 
 
 
-},{"./AntiAliasType":70,"./GridFitType":71,"./StyleSheet":72,"./TextField":73,"./TextFieldAutoSize":74,"./TextFieldType":75,"./TextFormat":76,"./TextFormatAlign":77,"./TextInteractionMode":78,"./TextLineMetrics":79}],81:[function(require,module,exports){
+},{"./AntiAliasType":71,"./GridFitType":72,"./StyleSheet":73,"./TextField":74,"./TextFieldAutoSize":75,"./TextFieldType":76,"./TextFormat":77,"./TextFormatAlign":78,"./TextInteractionMode":79,"./TextLineMetrics":80}],82:[function(require,module,exports){
+/**
+ * Created by MIC on 2016/1/7.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var EventDispatcher_1 = require("../events/EventDispatcher");
+var TimerEvent_1 = require("../events/TimerEvent");
+var Timer = (function (_super) {
+    __extends(Timer, _super);
+    function Timer(delay, repeatCount) {
+        if (repeatCount === void 0) { repeatCount = 0; }
+        _super.call(this);
+        this.enabled = true;
+        this._currentCount = 0;
+        this._delay = 1000;
+        this._repeatCount = 0;
+        this._running = false;
+        this._handle = 0;
+        this.delay = delay;
+        this.repeatCount = repeatCount;
+        this.start();
+    }
+    Object.defineProperty(Timer.prototype, "currentCount", {
+        get: function () {
+            return this._currentCount;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Timer.prototype, "delay", {
+        get: function () {
+            return this._delay;
+        },
+        set: function (v) {
+            v = Math.floor(v);
+            this._delay = v >= 0 ? v : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Timer.prototype, "repeatCount", {
+        get: function () {
+            return this._repeatCount;
+        },
+        set: function (v) {
+            v = Math.floor(v);
+            this._repeatCount = v >= 0 ? v : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Timer.prototype, "running", {
+        get: function () {
+            return this._running;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Timer.prototype.reset = function () {
+        if (this.running) {
+            window.clearInterval(this._handle);
+            this._handle = 0;
+            this._running = false;
+            this._currentCount = 0;
+        }
+    };
+    Timer.prototype.start = function () {
+        if (!this.running && (this.currentCount < this.repeatCount || this.repeatCount === 0)) {
+            this._handle = window.setInterval(this.__timerCallback.bind(this), this.delay);
+            this._running = true;
+        }
+    };
+    Timer.prototype.stop = function () {
+        if (this.running) {
+            window.clearInterval(this._handle);
+            this._handle = 0;
+            this._running = false;
+        }
+    };
+    Timer.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        this.reset();
+    };
+    Timer.prototype.__timerCallback = function () {
+        if (this.enabled) {
+            this._currentCount++;
+            if (this.repeatCount > 0 && this.currentCount > this.repeatCount) {
+                this.stop();
+                this.__raiseTimerCompleteEvent();
+            }
+            else {
+                this.__raiseTimerEvent();
+            }
+        }
+    };
+    Timer.prototype.__raiseTimerEvent = function () {
+        var ev = new TimerEvent_1.TimerEvent(TimerEvent_1.TimerEvent.TIMER);
+        ev.timeStamp = Date.now();
+        this.dispatchEvent(ev);
+    };
+    Timer.prototype.__raiseTimerCompleteEvent = function () {
+        var ev = new TimerEvent_1.TimerEvent(TimerEvent_1.TimerEvent.TIMER_COMPLETE);
+        ev.timeStamp = Date.now();
+        this.dispatchEvent(ev);
+    };
+    return Timer;
+})(EventDispatcher_1.EventDispatcher);
+exports.Timer = Timer;
+
+
+
+},{"../events/EventDispatcher":52,"../events/TimerEvent":54}],83:[function(require,module,exports){
+/**
+ * Created by MIC on 2016/1/7.
+ */
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+__export(require("./Timer"));
+
+
+
+},{"./Timer":82}],84:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -5905,7 +6078,7 @@ exports.injectToGlobal = injectToGlobal;
 
 
 
-},{"./GLantern":1,"./_util/index":6,"./fl/index":8,"./flash/index":69,"./mx/index":84,"./webgl/index":114}],82:[function(require,module,exports){
+},{"./GLantern":1,"./_util/index":6,"./fl/index":8,"./flash/index":70,"./mx/index":87,"./webgl/index":117}],85:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -5933,7 +6106,7 @@ exports.Canvas = Canvas;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../flash/display/DisplayObjectContainer":33}],83:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../flash/display/DisplayObjectContainer":33}],86:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -5944,7 +6117,7 @@ __export(require("./Canvas"));
 
 
 
-},{"./Canvas":82}],84:[function(require,module,exports){
+},{"./Canvas":85}],87:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -5953,7 +6126,7 @@ exports.containers = containers;
 
 
 
-},{"./containers/index":83}],85:[function(require,module,exports){
+},{"./containers/index":86}],88:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -5969,7 +6142,7 @@ exports.AttributeCache = AttributeCache;
 
 
 
-},{}],86:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6016,7 +6189,7 @@ exports.FilterBase = FilterBase;
 
 
 
-},{}],87:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -6101,7 +6274,7 @@ exports.FilterManager = FilterManager;
 
 
 
-},{}],88:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6360,7 +6533,7 @@ Values.copyImage = [
 
 
 
-},{}],89:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6481,7 +6654,7 @@ exports.PackedArrayBuffer = PackedArrayBuffer;
 
 
 
-},{"../_util/_util":5}],90:[function(require,module,exports){
+},{"../_util/_util":5}],93:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -6620,7 +6793,7 @@ function __checkRenderTargets(source, destination) {
 
 
 
-},{"../_util/_util":5,"./PackedArrayBuffer":89,"./RenderTarget2D":91,"./ShaderID":93}],91:[function(require,module,exports){
+},{"../_util/_util":5,"./PackedArrayBuffer":92,"./RenderTarget2D":94,"./ShaderID":96}],94:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -6973,7 +7146,7 @@ function initStaticFields(glc) {
 
 
 
-},{"../_util/_util":5,"./PackedArrayBuffer":89}],92:[function(require,module,exports){
+},{"../_util/_util":5,"./PackedArrayBuffer":92}],95:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7273,7 +7446,7 @@ function createShaderFromSource(glc, source, type) {
 
 
 
-},{"../_util/_util":5,"./FragmentShaders":88,"./VertexShaders":96,"./WebGLDataType":97}],93:[function(require,module,exports){
+},{"../_util/_util":5,"./FragmentShaders":91,"./VertexShaders":99,"./WebGLDataType":100}],96:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7342,7 +7515,7 @@ exports.ShaderID = ShaderID;
 
 
 
-},{}],94:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -7442,7 +7615,7 @@ exports.ShaderManager = ShaderManager;
 
 
 
-},{"./shaders/Blur2Shader":115,"./shaders/BlurXShader":116,"./shaders/BlurYShader":117,"./shaders/ColorTransformShader":119,"./shaders/CopyImageShader":120,"./shaders/FxaaShader":121,"./shaders/PrimitiveShader":122,"./shaders/ReplicateShader":123}],95:[function(require,module,exports){
+},{"./shaders/Blur2Shader":118,"./shaders/BlurXShader":119,"./shaders/BlurYShader":120,"./shaders/ColorTransformShader":122,"./shaders/CopyImageShader":123,"./shaders/FxaaShader":124,"./shaders/PrimitiveShader":125,"./shaders/ReplicateShader":126}],98:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -7463,7 +7636,7 @@ exports.UniformCache = UniformCache;
 
 
 
-},{"./WebGLDataType":97}],96:[function(require,module,exports){
+},{"./WebGLDataType":100}],99:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -7722,7 +7895,7 @@ Values.copyImage = [
 
 
 
-},{}],97:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -7759,7 +7932,7 @@ var WebGLDataType = exports.WebGLDataType;
 
 
 
-},{}],98:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -8127,7 +8300,7 @@ BMS[BlendMode_1.BlendMode.SUBTRACT] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 
 
 
-},{"../_util/_util":5,"../flash/display/BlendMode":28,"./FilterManager":87,"./RenderHelper":90,"./RenderTarget2D":91,"./ShaderManager":94,"./WebGLUtils":99,"libtess":125}],99:[function(require,module,exports){
+},{"../_util/_util":5,"../flash/display/BlendMode":28,"./FilterManager":90,"./RenderHelper":93,"./RenderTarget2D":94,"./ShaderManager":97,"./WebGLUtils":102,"libtess":128}],102:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/13.
  */
@@ -8220,7 +8393,7 @@ var OTHER_PROBLEM = '' +
 
 
 
-},{}],100:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/22.
  */
@@ -8325,7 +8498,7 @@ exports.Blur2Filter = Blur2Filter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":86,"../RenderHelper":90,"../ShaderID":93}],101:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"../RenderHelper":93,"../ShaderID":96}],104:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -8426,7 +8599,7 @@ exports.BlurFilter = BlurFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":86,"./BlurXFilter":102,"./BlurYFilter":103}],102:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"./BlurXFilter":105,"./BlurYFilter":106}],105:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -8502,7 +8675,7 @@ exports.BlurXFilter = BlurXFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":86,"../RenderHelper":90,"../ShaderID":93}],103:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"../RenderHelper":93,"../ShaderID":96}],106:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -8578,7 +8751,7 @@ exports.BlurYFilter = BlurYFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":86,"../RenderHelper":90,"../ShaderID":93}],104:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"../RenderHelper":93,"../ShaderID":96}],107:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -8617,7 +8790,7 @@ exports.ColorTransformFilter = ColorTransformFilter;
 
 
 
-},{"../FilterBase":86,"../RenderHelper":90,"../ShaderID":93}],105:[function(require,module,exports){
+},{"../FilterBase":89,"../RenderHelper":93,"../ShaderID":96}],108:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -8737,7 +8910,7 @@ exports.GlowFilter = GlowFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":86,"./Blur2Filter":100,"./ColorTransformFilter":104}],106:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"./Blur2Filter":103,"./ColorTransformFilter":107}],109:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -8753,7 +8926,7 @@ __export(require("./Blur2Filter"));
 
 
 
-},{"./Blur2Filter":100,"./BlurFilter":101,"./BlurXFilter":102,"./BlurYFilter":103,"./ColorTransformFilter":104,"./GlowFilter":105}],107:[function(require,module,exports){
+},{"./Blur2Filter":103,"./BlurFilter":104,"./BlurXFilter":105,"./BlurYFilter":106,"./ColorTransformFilter":107,"./GlowFilter":108}],110:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -8767,7 +8940,7 @@ var BrushType = exports.BrushType;
 
 
 
-},{}],108:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -8848,7 +9021,7 @@ exports.FillRendererBase = FillRendererBase;
 
 
 
-},{"./GraphicsDataRendererBase":110}],109:[function(require,module,exports){
+},{"./GraphicsDataRendererBase":113}],112:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -8857,7 +9030,7 @@ exports.STD_Z = 0;
 
 
 
-},{}],110:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -8979,7 +9152,7 @@ exports.GraphicsDataRendererBase = GraphicsDataRendererBase;
 
 
 
-},{"../../_util/NotImplementedError":4,"../PackedArrayBuffer":89}],111:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../PackedArrayBuffer":92}],114:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9199,7 +9372,7 @@ exports.SolidFillRenderer = SolidFillRenderer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":90,"./FillRendererBase":108,"./GRAPHICS_CONST":109,"libtess":125}],112:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":93,"./FillRendererBase":111,"./GRAPHICS_CONST":112,"libtess":128}],115:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9365,7 +9538,7 @@ exports.SolidStrokeRenderer = SolidStrokeRenderer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":90,"./GRAPHICS_CONST":109,"./StrokeRendererBase":113}],113:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":93,"./GRAPHICS_CONST":112,"./StrokeRendererBase":116}],116:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9464,7 +9637,7 @@ exports.StrokeRendererBase = StrokeRendererBase;
 
 
 
-},{"./GraphicsDataRendererBase":110}],114:[function(require,module,exports){
+},{"./GraphicsDataRendererBase":113}],117:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9493,7 +9666,7 @@ exports.shaders = shaders;
 
 
 
-},{"./AttributeCache":85,"./FilterBase":86,"./FilterManager":87,"./FragmentShaders":88,"./PackedArrayBuffer":89,"./RenderHelper":90,"./RenderTarget2D":91,"./ShaderBase":92,"./ShaderID":93,"./ShaderManager":94,"./UniformCache":95,"./VertexShaders":96,"./WebGLDataType":97,"./WebGLRenderer":98,"./WebGLUtils":99,"./filters/index":106,"./shaders/index":124}],115:[function(require,module,exports){
+},{"./AttributeCache":88,"./FilterBase":89,"./FilterManager":90,"./FragmentShaders":91,"./PackedArrayBuffer":92,"./RenderHelper":93,"./RenderTarget2D":94,"./ShaderBase":95,"./ShaderID":96,"./ShaderManager":97,"./UniformCache":98,"./VertexShaders":99,"./WebGLDataType":100,"./WebGLRenderer":101,"./WebGLUtils":102,"./filters/index":109,"./shaders/index":127}],118:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/22.
  */
@@ -9558,7 +9731,7 @@ exports.Blur2Shader = Blur2Shader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],116:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],119:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9604,7 +9777,7 @@ exports.BlurXShader = BlurXShader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],117:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],120:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9650,7 +9823,7 @@ exports.BlurYShader = BlurYShader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],118:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],121:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9703,7 +9876,7 @@ exports.BufferedShader = BufferedShader;
 
 
 
-},{"../../flash/geom/Matrix3D":61,"../FragmentShaders":88,"../ShaderBase":92,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97}],119:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../ShaderBase":95,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100}],122:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9753,7 +9926,7 @@ exports.ColorTransformShader = ColorTransformShader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],120:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],123:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -9837,7 +10010,7 @@ exports.CopyImageShader = CopyImageShader;
 
 
 
-},{"../../flash/geom/Matrix3D":61,"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],121:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],124:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9877,7 +10050,7 @@ exports.FxaaShader = FxaaShader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],122:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],125:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -9938,7 +10111,7 @@ exports.PrimitiveShader = PrimitiveShader;
 
 
 
-},{"../../flash/geom/Matrix3D":61,"../FragmentShaders":88,"../ShaderBase":92,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97}],123:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../ShaderBase":95,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100}],126:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -10002,7 +10175,7 @@ exports.ReplicateShader = ReplicateShader;
 
 
 
-},{"../FragmentShaders":88,"../UniformCache":95,"../VertexShaders":96,"../WebGLDataType":97,"./BufferedShader":118}],124:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],127:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -10021,7 +10194,7 @@ __export(require("./CopyImageShader"));
 
 
 
-},{"./Blur2Shader":115,"./BlurXShader":116,"./BlurYShader":117,"./BufferedShader":118,"./ColorTransformShader":119,"./CopyImageShader":120,"./FxaaShader":121,"./PrimitiveShader":122,"./ReplicateShader":123}],125:[function(require,module,exports){
+},{"./Blur2Shader":118,"./BlurXShader":119,"./BlurYShader":120,"./BufferedShader":121,"./ColorTransformShader":122,"./CopyImageShader":123,"./FxaaShader":124,"./PrimitiveShader":125,"./ReplicateShader":126}],128:[function(require,module,exports){
 /*
 
  Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.
@@ -10081,7 +10254,7 @@ function W(a,b){for(var c=a.d,d=a.e,e=a.c,f=b,g=c[f];;){var h=f<<1;h<a.a&&u(d[c[
 gluEnum:{GLU_TESS_MESH:100112,GLU_TESS_TOLERANCE:100142,GLU_TESS_WINDING_RULE:100140,GLU_TESS_BOUNDARY_ONLY:100141,GLU_INVALID_ENUM:100900,GLU_INVALID_VALUE:100901,GLU_TESS_BEGIN:100100,GLU_TESS_VERTEX:100101,GLU_TESS_END:100102,GLU_TESS_ERROR:100103,GLU_TESS_EDGE_FLAG:100104,GLU_TESS_COMBINE:100105,GLU_TESS_BEGIN_DATA:100106,GLU_TESS_VERTEX_DATA:100107,GLU_TESS_END_DATA:100108,GLU_TESS_ERROR_DATA:100109,GLU_TESS_EDGE_FLAG_DATA:100110,GLU_TESS_COMBINE_DATA:100111}};X.prototype.gluDeleteTess=X.prototype.x;
 X.prototype.gluTessProperty=X.prototype.B;X.prototype.gluGetTessProperty=X.prototype.y;X.prototype.gluTessNormal=X.prototype.A;X.prototype.gluTessCallback=X.prototype.z;X.prototype.gluTessVertex=X.prototype.C;X.prototype.gluTessBeginPolygon=X.prototype.u;X.prototype.gluTessBeginContour=X.prototype.t;X.prototype.gluTessEndContour=X.prototype.v;X.prototype.gluTessEndPolygon=X.prototype.w; if (typeof module !== 'undefined') { module.exports = this.libtess; }
 
-},{}],126:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
