@@ -8,5 +8,6 @@ import * as geom from "./geom/index";
 import * as filters from "./filters/index";
 import * as text from "./text/index";
 import * as utils from "./utils/index";
+import * as media from "./media/index";
 
 export {display, events, geom, filters, text, utils};
