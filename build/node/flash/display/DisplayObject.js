@@ -337,7 +337,13 @@ var DisplayObject = (function (_super) {
     };
     DisplayObject.prototype.__preprocess = function (renderer) {
         var _this = this;
-        renderer.setRenderTarget(this.__shouldProcessFilters() ? this._filterTarget : null);
+        if (this.__shouldProcessFilters()) {
+            this._filterTarget.clear();
+            renderer.setRenderTarget(this._filterTarget);
+        }
+        else {
+            renderer.setRenderTarget(null);
+        }
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
         var shader = manager.currentShader;

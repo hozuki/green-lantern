@@ -300,7 +300,12 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected abstract __selectShader(shaderManager:ShaderManager):void;
 
     protected __preprocess(renderer:WebGLRenderer):void {
-        renderer.setRenderTarget(this.__shouldProcessFilters() ? this._filterTarget : null);
+        if (this.__shouldProcessFilters()) {
+            this._filterTarget.clear();
+            renderer.setRenderTarget(this._filterTarget);
+        } else {
+            renderer.setRenderTarget(null);
+        }
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
         var shader = manager.currentShader;

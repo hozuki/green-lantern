@@ -62,7 +62,6 @@ export class FilterManager implements IDisposable {
             return;
         }
 
-        // 处理时仅最后一层有效，因为都是渲染到缓冲区上的，这一层渲染完后会作为源传给下一层
         if (this.hasFilterGroups) {
             var filterGroup:IBitmapFilter[] = this._filterGroups[this._filterGroups.length - 1];
             var filter:IBitmapFilter;
@@ -78,7 +77,7 @@ export class FilterManager implements IDisposable {
                     t2 = t;
                 }
             }
-            RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
+            RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
         }
     }
 

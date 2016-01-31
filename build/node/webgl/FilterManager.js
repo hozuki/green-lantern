@@ -58,7 +58,6 @@ var FilterManager = (function () {
             console.warn("Filter alert: input and output are the same, processing aborted.");
             return;
         }
-        // 处理时仅最后一层有效，因为都是渲染到缓冲区上的，这一层渲染完后会作为源传给下一层
         if (this.hasFilterGroups) {
             var filterGroup = this._filterGroups[this._filterGroups.length - 1];
             var filter;
@@ -74,7 +73,7 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
         }
     };
     return FilterManager;

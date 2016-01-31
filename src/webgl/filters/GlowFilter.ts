@@ -66,11 +66,9 @@ export class GlowFilter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
         RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
-        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
+        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
         RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     }
 

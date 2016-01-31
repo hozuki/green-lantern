@@ -1637,7 +1637,13 @@ var DisplayObject = (function (_super) {
     };
     DisplayObject.prototype.__preprocess = function (renderer) {
         var _this = this;
-        renderer.setRenderTarget(this.__shouldProcessFilters() ? this._filterTarget : null);
+        if (this.__shouldProcessFilters()) {
+            this._filterTarget.clear();
+            renderer.setRenderTarget(this._filterTarget);
+        }
+        else {
+            renderer.setRenderTarget(null);
+        }
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
         var shader = manager.currentShader;
@@ -6313,7 +6319,6 @@ var FilterManager = (function () {
             console.warn("Filter alert: input and output are the same, processing aborted.");
             return;
         }
-        // 处理时仅最后一层有效，因为都是渲染到缓冲区上的，这一层渲染完后会作为源传给下一层
         if (this.hasFilterGroups) {
             var filterGroup = this._filterGroups[this._filterGroups.length - 1];
             var filter;
@@ -6329,7 +6334,7 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
         }
     };
     return FilterManager;
@@ -8565,7 +8570,6 @@ var Blur2Filter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        //renderer.copyRenderTargetContent(t1, output, clearOutput);
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
     };
     Blur2Filter.prototype.__initialize = function () {
@@ -8975,11 +8979,9 @@ var GlowFilter = (function (_super) {
         this._colorMatrix = r4c5.slice();
     };
     GlowFilter.prototype.process = function (renderer, input, output, clearOutput) {
-        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
-        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
+        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     };
     GlowFilter.prototype.__initialize = function () {

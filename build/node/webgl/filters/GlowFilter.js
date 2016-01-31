@@ -87,11 +87,9 @@ var GlowFilter = (function (_super) {
         this._colorMatrix = r4c5.slice();
     };
     GlowFilter.prototype.process = function (renderer, input, output, clearOutput) {
-        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
-        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
+        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     };
     GlowFilter.prototype.__initialize = function () {
