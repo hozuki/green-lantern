@@ -71,7 +71,7 @@ var GraphicsDataRendererBase = (function () {
         // check whether to update the typed buffer
         this.__syncBuffers();
     };
-    GraphicsDataRendererBase.prototype.render = function (renderer, target) {
+    GraphicsDataRendererBase.prototype.render = function (renderer) {
         console.warn("Do not call GraphicsDataRendererBase.render().");
     };
     GraphicsDataRendererBase.prototype.dispose = function () {

@@ -151,11 +151,10 @@ var SolidStrokeRenderer = (function (_super) {
         this._currentX = x;
         this._currentY = y;
     };
-    SolidStrokeRenderer.prototype.render = function (renderer, target) {
+    SolidStrokeRenderer.prototype.render = function (renderer) {
         if (this._vertices.length > 0) {
-            //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
+            var target = renderer.currentRenderTarget;
+            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
         }
     };
     return SolidStrokeRenderer;

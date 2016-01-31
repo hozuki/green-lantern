@@ -375,7 +375,7 @@ var DisplayObject = (function (_super) {
         if (this._filterTarget === null) {
             return;
         }
-        this._filterTarget.dispose();
+        this._root.worldRenderer.releaseRenderTarget(this._filterTarget);
         this._filterTarget = null;
     };
     DisplayObject.prototype.__shouldProcessFilters = function () {

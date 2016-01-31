@@ -18,7 +18,7 @@ export interface IGraphicsDataRenderer extends IDisposable {
     lineTo(x:number, y:number):void;
     moveTo(x:number, y:number):void;
     update():void;
-    render(renderer:WebGLRenderer, target:RenderTarget2D):void;
+    render(renderer:WebGLRenderer):void;
 
     hasDrawnAnything:boolean;
 

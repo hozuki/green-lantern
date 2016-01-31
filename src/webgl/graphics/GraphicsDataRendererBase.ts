@@ -72,7 +72,7 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this.__syncBuffers();
     }
 
-    render(renderer:WebGLRenderer, target:RenderTarget2D):void {
+    render(renderer:WebGLRenderer):void {
         console.warn("Do not call GraphicsDataRendererBase.render().");
     }
 

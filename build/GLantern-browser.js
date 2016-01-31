@@ -1675,7 +1675,7 @@ var DisplayObject = (function (_super) {
         if (this._filterTarget === null) {
             return;
         }
-        this._filterTarget.dispose();
+        this._root.worldRenderer.releaseRenderTarget(this._filterTarget);
         this._filterTarget = null;
     };
     DisplayObject.prototype.__shouldProcessFilters = function () {
@@ -2284,10 +2284,10 @@ var Graphics = (function () {
             this._bufferTarget.clear();
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
                 if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                    this._fillRenderers[j].render(renderer, renderer.currentRenderTarget);
+                    this._fillRenderers[j].render(renderer);
                     j++;
                 }
-                this._strokeRenderers[i].render(renderer, renderer.currentRenderTarget);
+                this._strokeRenderers[i].render(renderer);
             }
             this._shouldUpdateRenderTarget = false;
         }
@@ -9198,7 +9198,7 @@ var GraphicsDataRendererBase = (function () {
         // check whether to update the typed buffer
         this.__syncBuffers();
     };
-    GraphicsDataRendererBase.prototype.render = function (renderer, target) {
+    GraphicsDataRendererBase.prototype.render = function (renderer) {
         console.warn("Do not call GraphicsDataRendererBase.render().");
     };
     GraphicsDataRendererBase.prototype.dispose = function () {
@@ -9454,12 +9454,10 @@ var SolidFillRenderer = (function (_super) {
         // Then update buffers
         _super.prototype.update.call(this);
     };
-    SolidFillRenderer.prototype.render = function (renderer, target) {
+    SolidFillRenderer.prototype.render = function (renderer) {
         if (this._vertices.length > 0) {
-            //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            //debugger;
-            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
+            var target = renderer.currentRenderTarget;
+            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
         }
     };
     return SolidFillRenderer;
@@ -9622,11 +9620,10 @@ var SolidStrokeRenderer = (function (_super) {
         this._currentX = x;
         this._currentY = y;
     };
-    SolidStrokeRenderer.prototype.render = function (renderer, target) {
+    SolidStrokeRenderer.prototype.render = function (renderer) {
         if (this._vertices.length > 0) {
-            //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
+            var target = renderer.currentRenderTarget;
+            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
         }
     };
     return SolidStrokeRenderer;
