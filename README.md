@@ -1,14 +1,12 @@
 # GLantern
 
-GLantern is a graphics library based on WebGL, providing a subset of
-[Flash](http://www.adobe.com/software/flash/about/)-like API. Sound support will be added in the
-future.
+GLantern is a library intended for a Flash-HTML5 shim layer.
 
 Screenshots of test cases can be found in [here](res/images).
 
 ## Acquiring the Source
 
-The repository is on [GitHub](http://github.com/Hozuki/GLantern/). You may want to use fine-tuned
+The repository is hosted on [GitHub](http://github.com/Hozuki/GLantern/). You may want to use fine-tuned
 [GitHub Desktop](//desktop.github.com/) (for Windows and Mac users), or `git` (for every OS) to
 clone it into your computer:
 
@@ -16,7 +14,7 @@ clone it into your computer:
 $ git clone https://github.com/Hozuki/GLantern.git /preferred/cloning/destination
 ```
 
-You may install it as a NPM package as an alternative:
+You may install it as a [NPM package](//npmjs.com/package/glantern) as an alternative:
 
 ```bash
 $ npm install glantern --save
