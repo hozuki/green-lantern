@@ -4029,4 +4029,4 @@ var Display = Object.create({
     g.curveTo(419, 248, 418, 242);
 })();
 
-lantern.startAnimation();
+lantern.runOneFrame();

@@ -73,7 +73,9 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
+            // Y-axis should be flipped from element to screen, due to the difference between OpenGL coordinate
+            // system and Flash coordinate system.
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, true, clearOutput);
         }
     };
     return FilterManager;

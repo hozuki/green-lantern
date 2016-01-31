@@ -79,7 +79,7 @@ export class Blur2Filter extends FilterBase {
             t1 = t2;
             t2 = t;
         }
-        RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     }
 
     protected __initialize():void {

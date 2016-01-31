@@ -87,7 +87,7 @@ var Blur2Filter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     };
     Blur2Filter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();

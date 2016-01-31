@@ -66,14 +66,6 @@ export abstract class FilterBase implements IBitmapFilter {
         this._flipY = v;
     }
 
-    shouldFlipY(target:RenderTarget2D):boolean {
-        if (target.isRoot) {
-            return true;
-        } else {
-            return this.flipY;
-        }
-    }
-
     protected __initialize():void {
     }
 

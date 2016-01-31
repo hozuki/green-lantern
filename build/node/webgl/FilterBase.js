@@ -63,14 +63,6 @@ var FilterBase = (function () {
         enumerable: true,
         configurable: true
     });
-    FilterBase.prototype.shouldFlipY = function (target) {
-        if (target.isRoot) {
-            return true;
-        }
-        else {
-            return this.flipY;
-        }
-    };
     FilterBase.prototype.__initialize = function () {
     };
     FilterBase.prototype.__dispose = function () {

@@ -59,7 +59,7 @@ var BlurXFilter = (function (_super) {
             t2 = t;
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     };
     BlurXFilter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();

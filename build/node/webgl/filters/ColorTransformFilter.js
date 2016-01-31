@@ -30,7 +30,7 @@ var ColorTransformFilter = (function (_super) {
             var shader = renderer.shaderManager.currentShader;
             shader.setColorMatrix(_this._colorMatrix);
         });
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.flipY, clearOutput);
     };
     ColorTransformFilter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();

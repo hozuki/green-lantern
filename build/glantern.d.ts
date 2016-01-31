@@ -1427,8 +1427,6 @@ declare module "glantern" {
             flipX:boolean;
             flipY:boolean;
 
-            shouldFlipY(target:RenderTarget2D):boolean;
-
         }
 
         class FilterManager implements IDisposable {

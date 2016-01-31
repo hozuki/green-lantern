@@ -90,7 +90,7 @@ var GlowFilter = (function (_super) {
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.flipY, false);
     };
     GlowFilter.prototype.__initialize = function () {
         this._blurFilter = new Blur2Filter_1.Blur2Filter(this.filterManager);

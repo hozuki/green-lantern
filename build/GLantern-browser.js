@@ -6240,14 +6240,6 @@ var FilterBase = (function () {
         enumerable: true,
         configurable: true
     });
-    FilterBase.prototype.shouldFlipY = function (target) {
-        if (target.isRoot) {
-            return true;
-        }
-        else {
-            return this.flipY;
-        }
-    };
     FilterBase.prototype.__initialize = function () {
     };
     FilterBase.prototype.__dispose = function () {
@@ -6334,7 +6326,9 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
+            // Y-axis should be flipped from element to screen, due to the difference between OpenGL coordinate
+            // system and Flash coordinate system.
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, true, clearOutput);
         }
     };
     return FilterManager;
@@ -8570,7 +8564,7 @@ var Blur2Filter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     };
     Blur2Filter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
@@ -8749,7 +8743,7 @@ var BlurXFilter = (function (_super) {
             t2 = t;
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     };
     BlurXFilter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
@@ -8826,7 +8820,7 @@ var BlurYFilter = (function (_super) {
             t2 = t;
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     };
     BlurYFilter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
@@ -8874,7 +8868,7 @@ var ColorTransformFilter = (function (_super) {
             var shader = renderer.shaderManager.currentShader;
             shader.setColorMatrix(_this._colorMatrix);
         });
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.flipY, clearOutput);
     };
     ColorTransformFilter.prototype.__initialize = function () {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
@@ -8982,7 +8976,7 @@ var GlowFilter = (function (_super) {
         RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.flipY, false);
     };
     GlowFilter.prototype.__initialize = function () {
         this._blurFilter = new Blur2Filter_1.Blur2Filter(this.filterManager);

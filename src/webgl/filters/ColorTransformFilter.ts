@@ -25,7 +25,7 @@ export class ColorTransformFilter extends FilterBase {
             var shader = <ColorTransformShader>renderer.shaderManager.currentShader;
             shader.setColorMatrix(this._colorMatrix);
         });
-        RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.flipY, clearOutput);
     }
 
     __initialize():void {

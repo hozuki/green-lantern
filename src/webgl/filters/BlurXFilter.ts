@@ -53,7 +53,7 @@ export class BlurXFilter extends FilterBase {
             t2 = t;
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
-        RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
+        RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     }
 
     __initialize():void {

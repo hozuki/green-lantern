@@ -77,7 +77,9 @@ export class FilterManager implements IDisposable {
                     t2 = t;
                 }
             }
-            RenderHelper.copyTargetContent(renderer, t1, output, false, false, clearOutput);
+            // Y-axis should be flipped from element to screen, due to the difference between OpenGL coordinate
+            // system and Flash coordinate system.
+            RenderHelper.copyTargetContent(renderer, t1, output, false, true, clearOutput);
         }
     }
 
