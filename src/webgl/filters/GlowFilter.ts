@@ -10,6 +10,7 @@ import {_util} from "../../_util/_util";
 import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";
 import {Blur2Filter} from "./Blur2Filter";
+import {RenderHelper} from "../RenderHelper";
 
 export class GlowFilter extends FilterBase {
 
@@ -65,31 +66,33 @@ export class GlowFilter extends FilterBase {
     }
 
     process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     }
 
     protected __initialize():void {
-        this._blurFilter = new Blur2Filter(this._filterManager);
-        this._colorTransformFilter = new ColorTransformFilter(this._filterManager);
+        this._blurFilter = new Blur2Filter(this.filterManager);
+        this._colorTransformFilter = new ColorTransformFilter(this.filterManager);
         this._blurFilter.initialize();
         this._colorTransformFilter.initialize();
         this._blurFilter.strengthX = this.strengthX;
         this._blurFilter.strengthY = this.strengthY;
         this._blurFilter.pass = this.pass;
         this._colorTransformFilter.setColorMatrix(this._colorMatrix);
-        this._tempOriginalTarget = this._filterManager.renderer.createRenderTarget();
-        this._tempColorTransformedTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempOriginalTarget = this.filterManager.renderer.createRenderTarget();
+        this._tempColorTransformedTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected __dispose():void {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
-        this._filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
-        this._filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
         this._tempOriginalTarget = this._tempColorTransformedTarget = null;
     }
 

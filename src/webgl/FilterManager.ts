@@ -6,6 +6,7 @@ import {WebGLRenderer} from "./WebGLRenderer";
 import {RenderTarget2D} from "./RenderTarget2D";
 import {IDisposable} from "../IDisposable";
 import {IBitmapFilter} from "./IBitmapFilter";
+import {RenderHelper} from "./RenderHelper";
 
 export class FilterManager implements IDisposable {
 
@@ -77,7 +78,7 @@ export class FilterManager implements IDisposable {
                     t2 = t;
                 }
             }
-            renderer.copyRenderTargetContent(t1, output, clearOutput);
+            RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
         }
     }
 

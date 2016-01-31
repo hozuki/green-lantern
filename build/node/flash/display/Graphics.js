@@ -374,14 +374,13 @@ var Graphics = (function () {
             this._bufferTarget.clear();
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
                 if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                    this._fillRenderers[j].render(renderer, this._bufferTarget);
+                    this._fillRenderers[j].render(renderer, renderer.currentRenderTarget);
                     j++;
                 }
-                this._strokeRenderers[i].render(renderer, this._bufferTarget);
+                this._strokeRenderers[i].render(renderer, renderer.currentRenderTarget);
             }
             this._shouldUpdateRenderTarget = false;
         }
-        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     };
     Graphics.prototype.dispose = function () {
         this.clear();

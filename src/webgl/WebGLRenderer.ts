@@ -46,13 +46,11 @@ export class WebGLRenderer implements IDisposable {
      */
     dispose():void {
         if (this._isInitialized) {
-            this._inputTarget.dispose();
             this._screenTarget.dispose();
             this._filterManager.dispose();
             this._shaderManager.dispose();
             this._filterManager = null;
             this._shaderManager = null;
-            this._inputTarget = null;
             this._screenTarget = null;
             this._context = null;
             if (this._view.parentNode !== null && this._view.parentNode !== undefined) {
@@ -68,8 +66,11 @@ export class WebGLRenderer implements IDisposable {
      * render target of the {@link WebGLRenderer}. The default value is null.
      */
     setRenderTarget(target:RenderTarget2D = null):void {
+        if (target === this._currentRenderTarget && target !== null) {
+            return;
+        }
         if (_util.isUndefinedOrNull(target)) {
-            this._currentRenderTarget = this._inputTarget;
+            this._currentRenderTarget = this._screenTarget;
         } else {
             this._currentRenderTarget = target;
         }
@@ -125,15 +126,6 @@ export class WebGLRenderer implements IDisposable {
     }
 
     /**
-     * Returns the first-time render target of the {@link WebGLRenderer}. Contents are all rendered to this target. Then,
-     * the contents on this target are copied to {@link WebGLRenderer.screenTarget} for postprocessing.
-     * @returns {RenderTarget2D} The first-time render target of the {@link WebGLRenderer}.
-     */
-    get inputTarget():RenderTarget2D {
-        return this._inputTarget;
-    }
-
-    /**
      * Returns the final output of the {@link WebGLRenderer}. This target is always a root render target, which directly
      * renders to the attached &lt;canvas&gt;. If FXAA is enabled, the copying process from {@link WebGLRenderer.inputTarget}
      * to this target performs a FXAA filtering. If not, it is a simple replicating process.
@@ -176,35 +168,6 @@ export class WebGLRenderer implements IDisposable {
     }
 
     /**
-     * Performs a simple copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    copyRenderTargetContent(source:RenderTarget2D, destination:RenderTarget2D, clearOutput:boolean):void {
-        RenderHelper.copyTargetContent(this, source, destination, false, false, clearOutput);
-    }
-
-    /**
-     * Performs an extended copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param flipX {Boolean} Whether to flip the contents horizontally during copying or not.
-     * @param flipY {Boolean} Whether to flip the contents vertically during copying or not.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    copyRenderTargetContentEx(source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void {
-        RenderHelper.copyTargetContent(this, source, destination, flipX, flipY, clearOutput);
-    }
-
-    /**
-     * Presents the final composition result.
-     */
-    present():void {
-        this.copyRenderTargetContentEx(this._inputTarget, this._screenTarget, false, true, true);
-    }
-
-    /**
      * Set current blend mode. Blend modes affects how the visual contents are rendered.
      * @param blendMode {String} See {@link BlendMode} for more information.
      * @see {@link BlendMode}
@@ -233,7 +196,7 @@ export class WebGLRenderer implements IDisposable {
      * @type {RendererOptions}
      */
     static DEFAULT_OPTIONS:RendererOptions = {
-        antialias: false,
+        antialias: true,
         depth: false,
         transparent: true
     };
@@ -271,17 +234,6 @@ export class WebGLRenderer implements IDisposable {
         glc.enable(gl.BLEND);
         this.setBlendMode(BlendMode.NORMAL);
 
-        /*
-         if (options.antialias) {
-         // If anti-alias is on, then we need to draw the "screen" to a FXAA buffer
-         this._receiveTarget = this.createRenderTarget(); // MSAA zoomFactor = 2
-         this._screenTarget = this.createRootRenderTarget(); // MSAA zoomFactor = 1
-         } else {
-         // If anti-alias is off, then we will output to the screen, directly.
-         this._receiveTarget = this.createRootRenderTarget();
-         }
-         */
-        this._inputTarget = this.createRenderTarget();
         this._screenTarget = this.createRootRenderTarget();
 
         canvas.addEventListener("webglcontextlost", this.onContextLost.bind(this));
@@ -343,7 +295,6 @@ export class WebGLRenderer implements IDisposable {
 
     private _currentRenderTarget:RenderTarget2D = null;
     private _currentBlendMode:string = null;
-    private _inputTarget:RenderTarget2D = null;
     private _screenTarget:RenderTarget2D = null;
     private _filterManager:FilterManager = null;
     private _shaderManager:ShaderManager = null;

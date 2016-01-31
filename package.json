@@ -1,10 +1,10 @@
 {
   "name": "glantern",
-  "version": "0.4.1-alpha",
-  "description": "A graphics library based on WebGL, providing a subset of Flash-like API.",
+  "version": "0.5.0-alpha",
+  "description": "A library intended for a Flash-HTML5 shim layer.",
   "main": "build/node/index.js",
   "scripts": {
-    "test": "echo Tests are not written yet. && exit 1"
+    "test": "echo Browse visual tests please. && exit 0"
   },
   "repository": {
     "type": "git",

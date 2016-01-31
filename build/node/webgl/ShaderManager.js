@@ -9,6 +9,7 @@ var ColorTransformShader_1 = require("./shaders/ColorTransformShader");
 var FxaaShader_1 = require("./shaders/FxaaShader");
 var Blur2Shader_1 = require("./shaders/Blur2Shader");
 var CopyImageShader_1 = require("./shaders/CopyImageShader");
+var Primitive2Shader_1 = require("./shaders/Primitive2Shader");
 var ShaderManager = (function () {
     function ShaderManager(renderer) {
         this._renderer = null;
@@ -90,6 +91,7 @@ var ShaderManager = (function () {
         shaderList.push(new FxaaShader_1.FxaaShader(this));
         shaderList.push(new Blur2Shader_1.Blur2Shader(this));
         shaderList.push(new CopyImageShader_1.CopyImageShader(this));
+        shaderList.push(new Primitive2Shader_1.Primitive2Shader(this));
     };
     return ShaderManager;
 })();

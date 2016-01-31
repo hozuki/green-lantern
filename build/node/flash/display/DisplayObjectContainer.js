@@ -8,7 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var InteractiveObject_1 = require("./InteractiveObject");
 var NotImplementedError_1 = require("../../_util/NotImplementedError");
-var ShaderID_1 = require("../../webgl/ShaderID");
 var DisplayObjectContainer = (function (_super) {
     __extends(DisplayObjectContainer, _super);
     function DisplayObjectContainer(root, parent) {
@@ -154,8 +153,8 @@ var DisplayObjectContainer = (function (_super) {
         return r;
     };
     DisplayObjectContainer.prototype.update = function () {
+        _super.prototype.update.call(this);
         if (this.enabled) {
-            _super.prototype.update.call(this);
             for (var i = 0; i < this._children.length; ++i) {
                 this._children[i].update();
             }
@@ -168,15 +167,22 @@ var DisplayObjectContainer = (function (_super) {
             for (var i = 0; i < this._children.length; ++i) {
                 var child = this._children[i];
                 child.render(renderer);
-                renderer.copyRenderTargetContent(child.outputRenderTarget, this._rawRenderTarget, false);
             }
             this.__postprocess(renderer);
         }
         else {
         }
     };
+    DisplayObjectContainer.prototype.requestUpdateTransform = function () {
+        this._isTransformDirty = true;
+        if (this._children !== null && this._children.length > 0) {
+            for (var i = 0; i < this._children.length; ++i) {
+                this._children[i].requestUpdateTransform();
+            }
+        }
+    };
     DisplayObjectContainer.prototype.__selectShader = function (shaderManager) {
-        shaderManager.selectShader(ShaderID_1.ShaderID.REPLICATE);
+        // Do nothing
     };
     return DisplayObjectContainer;
 })(InteractiveObject_1.InteractiveObject);

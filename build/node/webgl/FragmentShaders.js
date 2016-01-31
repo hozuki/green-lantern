@@ -1,7 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var Values = {};
+var Values = Object.create(null);
 var FragmentShaders = (function () {
     function FragmentShaders() {
     }

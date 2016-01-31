@@ -342,9 +342,8 @@ export class TextField extends InteractiveObject {
     protected __render(renderer:WebGLRenderer):void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
-            RenderHelper.copyImageContent(renderer, this._canvasTarget, this._rawRenderTarget, false, false, this.transform.matrix3D, this.alpha, true);
+            RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         } else {
-            this._rawRenderTarget.clear();
         }
     }
 

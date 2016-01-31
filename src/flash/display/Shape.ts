@@ -32,11 +32,12 @@ export class Shape extends DisplayObject {
     }
 
     protected __render(renderer:WebGLRenderer):void {
-        this._graphics.render(renderer, this._rawRenderTarget, true);
+        this.graphics.render(renderer, renderer.currentRenderTarget, false);
     }
 
     protected __selectShader(shaderManager:ShaderManager):void {
-        shaderManager.selectShader(ShaderID.PRIMITIVE);
+        // Switched to the new Primitive2Shader. Consider the obsolete of PrimitiveShader.
+        shaderManager.selectShader(ShaderID.PRIMITIVE2);
     }
 
     private _graphics:Graphics = null;

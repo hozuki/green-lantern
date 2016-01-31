@@ -32,10 +32,11 @@ var Shape = (function (_super) {
         this._graphics.update();
     };
     Shape.prototype.__render = function (renderer) {
-        this._graphics.render(renderer, this._rawRenderTarget, true);
+        this.graphics.render(renderer, renderer.currentRenderTarget, false);
     };
     Shape.prototype.__selectShader = function (shaderManager) {
-        shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE);
+        // Switched to the new Primitive2Shader. Consider the obsolete of PrimitiveShader.
+        shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE2);
     };
     return Shape;
 })(DisplayObject_1.DisplayObject);

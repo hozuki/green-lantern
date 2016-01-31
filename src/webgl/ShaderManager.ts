@@ -16,6 +16,7 @@ import {IDisposable} from "../IDisposable";
 import {ShaderID} from "./ShaderID";
 import {Blur2Shader} from "./shaders/Blur2Shader";
 import {CopyImageShader} from "./shaders/CopyImageShader";
+import {Primitive2Shader} from "./shaders/Primitive2Shader";
 
 export class ShaderManager implements IDisposable {
 
@@ -91,6 +92,7 @@ export class ShaderManager implements IDisposable {
         shaderList.push(new FxaaShader(this));
         shaderList.push(new Blur2Shader(this));
         shaderList.push(new CopyImageShader(this));
+        shaderList.push(new Primitive2Shader(this));
     }
 
     private _renderer:WebGLRenderer = null;

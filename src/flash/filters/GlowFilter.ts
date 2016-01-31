@@ -78,7 +78,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
     strength:number = 2;
 
     clone():GlowFilter {
-        return new GlowFilter(this._filterManager, this.color, this.alpha, this.blurX, this.blurY,
+        return new GlowFilter(this.filterManager, this.color, this.alpha, this.blurX, this.blurY,
             this.strength, this.quality, this.inner, this.knockout);
     }
 

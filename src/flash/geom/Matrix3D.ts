@@ -41,21 +41,21 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     append(lhs:Matrix3D):void {
-        this._data = Matrix3D.dotProduct(lhs._data, this._data);
+        this._data = Matrix3D.__dotProduct(lhs._data, this._data);
     }
 
     appendRotation(degrees:number, axis:Vector3D, pivotPoint:Vector3D = null):void {
         if (pivotPoint !== null) {
             this.appendTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
+        this._data = Matrix3D.__dotProduct(Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
         if (pivotPoint !== null) {
             this.appendTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     }
 
     appendScale(xScale:number, yScale:number, zScale:number):void {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -64,7 +64,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     appendTranslation(x:number, y:number, z:number):void {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -214,21 +214,21 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     prepend(rhs:Matrix3D):void {
-        this._data = Matrix3D.dotProduct(this._data, rhs._data);
+        this._data = Matrix3D.__dotProduct(this._data, rhs._data);
     }
 
     prependRotation(degrees:number, axis:Vector3D, pivotPoint:Vector3D = null):void {
         if (pivotPoint !== null) {
             this.prependTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(this._data, Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis));
+        this._data = Matrix3D.__dotProduct(this._data, Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis));
         if (pivotPoint !== null) {
             this.prependTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     }
 
     prependScale(xScale:number, yScale:number, zScale:number):void {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -237,7 +237,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     prependTranslation(x:number, y:number, z:number):void {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -278,13 +278,6 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
             d[2], d[6], d[10], d[14],
             d[3], d[7], d[11], d[15]
         ];
-    }
-
-    setTransformTo(x:number, y:number, z:number):void {
-        var d = this._data;
-        d[3] = x;
-        d[7] = y;
-        d[11] = z;
     }
 
     toArray():Float32Array {
@@ -362,7 +355,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
     position:Vector3D = null;
 
-    private static dotProduct(a:number[], b:number[]):number[] {
+    private static __dotProduct(a:number[], b:number[]):number[] {
         if (a.length !== 16 || b.length !== 16) {
             throw new Error("Matrix3D dot product needs a array of 16 elements.");
         }
@@ -377,7 +370,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         return res;
     }
 
-    private static getRotationMatrix(angle:number, axis:Vector3D):number[] {
+    private static __getRotationMatrix(angle:number, axis:Vector3D):number[] {
         // jabbany
         var sT:number = Math.sin(angle), cT:number = Math.cos(angle);
         return [

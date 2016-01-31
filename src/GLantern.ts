@@ -63,7 +63,6 @@ export class GLantern implements IDisposable {
         }
         this._stage.update();
         this._stage.render(this._renderer);
-        this._renderer.present();
     }
 
     get stage():Stage {

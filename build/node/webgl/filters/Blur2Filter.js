@@ -87,13 +87,14 @@ var Blur2Filter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        renderer.copyRenderTargetContent(t1, output, clearOutput);
+        //renderer.copyRenderTargetContent(t1, output, clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
     };
     Blur2Filter.prototype.__initialize = function () {
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     Blur2Filter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     };
     return Blur2Filter;

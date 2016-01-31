@@ -43,20 +43,20 @@ var Matrix3D = (function () {
         configurable: true
     });
     Matrix3D.prototype.append = function (lhs) {
-        this._data = Matrix3D.dotProduct(lhs._data, this._data);
+        this._data = Matrix3D.__dotProduct(lhs._data, this._data);
     };
     Matrix3D.prototype.appendRotation = function (degrees, axis, pivotPoint) {
         if (pivotPoint === void 0) { pivotPoint = null; }
         if (pivotPoint !== null) {
             this.appendTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
+        this._data = Matrix3D.__dotProduct(Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
         if (pivotPoint !== null) {
             this.appendTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     };
     Matrix3D.prototype.appendScale = function (xScale, yScale, zScale) {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -64,7 +64,7 @@ var Matrix3D = (function () {
         ], this._data);
     };
     Matrix3D.prototype.appendTranslation = function (x, y, z) {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -204,20 +204,20 @@ var Matrix3D = (function () {
         d[15] += d[12] * x + d[13] * y + d[14] * z;
     };
     Matrix3D.prototype.prepend = function (rhs) {
-        this._data = Matrix3D.dotProduct(this._data, rhs._data);
+        this._data = Matrix3D.__dotProduct(this._data, rhs._data);
     };
     Matrix3D.prototype.prependRotation = function (degrees, axis, pivotPoint) {
         if (pivotPoint === void 0) { pivotPoint = null; }
         if (pivotPoint !== null) {
             this.prependTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(this._data, Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis));
+        this._data = Matrix3D.__dotProduct(this._data, Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis));
         if (pivotPoint !== null) {
             this.prependTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     };
     Matrix3D.prototype.prependScale = function (xScale, yScale, zScale) {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -225,7 +225,7 @@ var Matrix3D = (function () {
         ]);
     };
     Matrix3D.prototype.prependTranslation = function (x, y, z) {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -263,12 +263,6 @@ var Matrix3D = (function () {
             d[2], d[6], d[10], d[14],
             d[3], d[7], d[11], d[15]
         ];
-    };
-    Matrix3D.prototype.setTransformTo = function (x, y, z) {
-        var d = this._data;
-        d[3] = x;
-        d[7] = y;
-        d[11] = z;
     };
     Matrix3D.prototype.toArray = function () {
         var d = this._data;
@@ -340,7 +334,7 @@ var Matrix3D = (function () {
         d[14] = -1;
         d[15] = 0;
     };
-    Matrix3D.dotProduct = function (a, b) {
+    Matrix3D.__dotProduct = function (a, b) {
         if (a.length !== 16 || b.length !== 16) {
             throw new Error("Matrix3D dot product needs a array of 16 elements.");
         }
@@ -354,7 +348,7 @@ var Matrix3D = (function () {
         }
         return res;
     };
-    Matrix3D.getRotationMatrix = function (angle, axis) {
+    Matrix3D.__getRotationMatrix = function (angle, axis) {
         // jabbany
         var sT = Math.sin(angle), cT = Math.cos(angle);
         return [

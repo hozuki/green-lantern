@@ -36,4 +36,8 @@ export abstract class ShaderID {
         return 7;
     }
 
+    static get PRIMITIVE2():number {
+        return 8;
+    }
+
 }

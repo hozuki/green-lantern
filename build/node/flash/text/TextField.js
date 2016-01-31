@@ -369,10 +369,9 @@ var TextField = (function (_super) {
     TextField.prototype.__render = function (renderer) {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
-            RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, this._rawRenderTarget, false, false, this.transform.matrix3D, this.alpha, true);
+            RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         }
         else {
-            this._rawRenderTarget.clear();
         }
     };
     TextField.prototype.__selectShader = function (shaderManager) {

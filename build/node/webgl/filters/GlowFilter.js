@@ -10,6 +10,7 @@ var ColorTransformFilter_1 = require("./ColorTransformFilter");
 var _util_1 = require("../../_util/_util");
 var FilterBase_1 = require("../FilterBase");
 var Blur2Filter_1 = require("./Blur2Filter");
+var RenderHelper_1 = require("../RenderHelper");
 var GlowFilter = (function (_super) {
     __extends(GlowFilter, _super);
     function GlowFilter(manager) {
@@ -86,29 +87,31 @@ var GlowFilter = (function (_super) {
         this._colorMatrix = r4c5.slice();
     };
     GlowFilter.prototype.process = function (renderer, input, output, clearOutput) {
-        renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     };
     GlowFilter.prototype.__initialize = function () {
-        this._blurFilter = new Blur2Filter_1.Blur2Filter(this._filterManager);
-        this._colorTransformFilter = new ColorTransformFilter_1.ColorTransformFilter(this._filterManager);
+        this._blurFilter = new Blur2Filter_1.Blur2Filter(this.filterManager);
+        this._colorTransformFilter = new ColorTransformFilter_1.ColorTransformFilter(this.filterManager);
         this._blurFilter.initialize();
         this._colorTransformFilter.initialize();
         this._blurFilter.strengthX = this.strengthX;
         this._blurFilter.strengthY = this.strengthY;
         this._blurFilter.pass = this.pass;
         this._colorTransformFilter.setColorMatrix(this._colorMatrix);
-        this._tempOriginalTarget = this._filterManager.renderer.createRenderTarget();
-        this._tempColorTransformedTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempOriginalTarget = this.filterManager.renderer.createRenderTarget();
+        this._tempColorTransformedTarget = this.filterManager.renderer.createRenderTarget();
     };
     GlowFilter.prototype.__dispose = function () {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
-        this._filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
-        this._filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
         this._tempOriginalTarget = this._tempColorTransformedTarget = null;
     };
     return GlowFilter;

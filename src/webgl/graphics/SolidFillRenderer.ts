@@ -215,7 +215,9 @@ export class SolidFillRenderer extends FillRendererBase {
     render(renderer:WebGLRenderer, target:RenderTarget2D):void {
         if (this._vertices.length > 0) {
             //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            //debugger;
+            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
         }
     }
 

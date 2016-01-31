@@ -46,13 +46,43 @@ export abstract class FilterBase implements IBitmapFilter {
         this.__initialize();
     }
 
+    get filterManager():FilterManager {
+        return this._filterManager;
+    }
+
+    get flipX():boolean {
+        return this._flipX;
+    }
+
+    set flipX(v:boolean) {
+        this._flipX = v;
+    }
+
+    get flipY():boolean {
+        return this._flipY;
+    }
+
+    set flipY(v:boolean) {
+        this._flipY = v;
+    }
+
+    shouldFlipY(target:RenderTarget2D):boolean {
+        if (target.isRoot) {
+            return true;
+        } else {
+            return this.flipY;
+        }
+    }
+
     protected __initialize():void {
     }
 
     protected __dispose():void {
     }
 
-    protected _filterManager:FilterManager = null;
+    private _filterManager:FilterManager = null;
+    private _flipY:boolean = false;
+    private _flipX:boolean = false;
     private _referenceCount:number = 0;
 
 }

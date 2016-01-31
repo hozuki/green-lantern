@@ -65,19 +65,20 @@ export class BlurFilter extends FilterBase {
     }
 
     protected __initialize():void {
-        this._blurXFilter = new BlurXFilter(this._filterManager);
-        this._blurYFilter = new BlurYFilter(this._filterManager);
+        this._blurXFilter = new BlurXFilter(this.filterManager);
+        this._blurYFilter = new BlurYFilter(this.filterManager);
         this._blurXFilter.initialize();
         this._blurYFilter.initialize();
         this._blurXFilter.strength = this.strengthX;
         this._blurYFilter.strength = this.strengthY;
         this._blurXFilter.pass = this.pass;
         this._blurYFilter.pass = this.pass;
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._blurXFilter.flipY = false;
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected __dispose():void {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();
         this._blurYFilter.dispose();

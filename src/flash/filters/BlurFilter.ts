@@ -45,7 +45,7 @@ export class BlurFilter extends WebGLBlur2Filter implements BitmapFilter {
     }
 
     clone():BlurFilter {
-        return new BlurFilter(this._filterManager, this.blurX, this.blurY, this.quality);
+        return new BlurFilter(this.filterManager, this.blurX, this.blurY, this.quality);
     }
 
 }

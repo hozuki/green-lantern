@@ -15,6 +15,32 @@ var RenderHelper = (function () {
         var glc = renderer.context;
         var attributeLocation;
         renderTo.activate();
+        shader.syncUniforms();
+        vertices.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexPosition");
+        glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+        colors.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexColor");
+        glc.vertexAttribPointer(attributeLocation, 4, colors.elementGLType, false, colors.elementSize * 4, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+        indices.syncBufferData();
+        if (clearOutput) {
+            renderTo.clear();
+        }
+        glc.viewport(0, 0, renderTo.originalWidth, renderTo.originalHeight);
+        glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
+    };
+    RenderHelper.renderPrimitives2 = function (renderer, renderTo, vertices, colors, indices, flipX, flipY, clearOutput) {
+        renderer.shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE2);
+        var shader = renderer.shaderManager.currentShader;
+        var glc = renderer.context;
+        var attributeLocation;
+        renderTo.activate();
+        shader.setOriginalSize([renderTo.originalWidth, renderTo.originalHeight]);
+        shader.setFlipX(flipX);
+        shader.setFlipY(flipY);
+        shader.syncUniforms();
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);

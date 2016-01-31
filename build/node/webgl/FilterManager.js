@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+var RenderHelper_1 = require("./RenderHelper");
 var FilterManager = (function () {
     function FilterManager(renderer) {
         this._tempTarget = null;
@@ -73,7 +74,7 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            renderer.copyRenderTargetContent(t1, output, clearOutput);
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
         }
     };
     return FilterManager;

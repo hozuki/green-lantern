@@ -19,16 +19,25 @@ var ColorTransformFilter = (function (_super) {
             0, 0, 1, 0, 0,
             0, 0, 0, 1, 0
         ];
+        this._tempTarget = null;
     }
     ColorTransformFilter.prototype.setColorMatrix = function (r4c5) {
         this._colorMatrix = r4c5.slice();
     };
     ColorTransformFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
-        RenderHelper_1.RenderHelper.renderBuffered(renderer, input, output, ShaderID_1.ShaderID.COLOR_TRANSFORM, clearOutput, function (renderer) {
+        RenderHelper_1.RenderHelper.renderBuffered(renderer, input, this._tempTarget, ShaderID_1.ShaderID.COLOR_TRANSFORM, true, function (renderer) {
             var shader = renderer.shaderManager.currentShader;
             shader.setColorMatrix(_this._colorMatrix);
         });
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.shouldFlipY(output), clearOutput);
+    };
+    ColorTransformFilter.prototype.__initialize = function () {
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
+    };
+    ColorTransformFilter.prototype.__dispose = function () {
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this._tempTarget = null;
     };
     return ColorTransformFilter;
 })(FilterBase_1.FilterBase);

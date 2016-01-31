@@ -53,7 +53,7 @@ var BlurFilter = (function (_super) {
         configurable: true
     });
     BlurFilter.prototype.clone = function () {
-        return new BlurFilter(this._filterManager, this.blurX, this.blurY, this.quality);
+        return new BlurFilter(this.filterManager, this.blurX, this.blurY, this.quality);
     };
     return BlurFilter;
 })(Blur2Filter_1.Blur2Filter);

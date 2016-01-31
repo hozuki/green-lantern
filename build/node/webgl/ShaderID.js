@@ -60,6 +60,13 @@ var ShaderID = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ShaderID, "PRIMITIVE2", {
+        get: function () {
+            return 8;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ShaderID;
 })();
 exports.ShaderID = ShaderID;

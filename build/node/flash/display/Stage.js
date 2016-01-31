@@ -38,7 +38,6 @@ var Stage = (function (_super) {
         this._worldRenderer = null;
         this._root = this;
         this._worldRenderer = renderer;
-        this._rawRenderTarget = renderer.createRenderTarget();
         this.resize(renderer.view.width, renderer.view.height);
     }
     Object.defineProperty(Stage.prototype, "allowFullScreen", {
@@ -135,14 +134,8 @@ var Stage = (function (_super) {
         this._height = height;
         // TODO: Fully implement this
     };
-    Stage.prototype.render = function (renderer) {
-        _super.prototype.render.call(this, renderer);
-        // Copy it to the screen target.
-        //throw new NotImplementedError();
-        renderer.copyRenderTargetContent(this.outputRenderTarget, renderer.inputTarget, true);
-    };
     Stage.prototype.__render = function (renderer) {
-        this._rawRenderTarget.clear();
+        renderer.currentRenderTarget.clear();
     };
     Stage.prototype.__update = function () {
     };

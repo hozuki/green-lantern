@@ -109,7 +109,7 @@ declare module "glantern" {
 
                 render(renderer:webgl.WebGLRenderer):void;
 
-                outputRenderTarget:webgl.RenderTarget2D;
+                requestUpdateTransform():void;
 
             }
 
@@ -787,8 +787,6 @@ declare module "glantern" {
 
                 transpose():void;
 
-                setTransformTo(x:number, y:number, z:number):void;
-
                 toArray():Float32Array;
 
                 setOrthographicProjection(left:number, right:number, top:number, bottom:number, near:number, far:number):void;
@@ -1257,6 +1255,8 @@ declare module "glantern" {
 
                 setTransform(matrix:flash.geom.Matrix3D):void;
 
+                setAlpha(alpha:number):void;
+
             }
 
             class BufferedShader extends ShaderBase {
@@ -1349,6 +1349,24 @@ declare module "glantern" {
 
             }
 
+            class Primitive2Shader extends ShaderBase {
+
+                constructor(manager:ShaderManager);
+
+                setProjection(matrix:flash.geom.Matrix3D):void;
+
+                setTransform(matrix:flash.geom.Matrix3D):void;
+
+                setAlpha(alpha:number):void;
+
+                setFlipX(flip:boolean):void;
+
+                setFlipY(flip:boolean):void;
+
+                setOriginalSize(xy:number[]):void
+
+            }
+
         }
 
         class AttributeCache {
@@ -1404,6 +1422,12 @@ declare module "glantern" {
             dispose():void;
 
             initialize():void;
+
+            filterManager:FilterManager;
+            flipX:boolean;
+            flipY:boolean;
+
+            shouldFlipY(target:RenderTarget2D):boolean;
 
         }
 
@@ -1523,7 +1547,6 @@ declare module "glantern" {
             shaderManager:ShaderManager;
             filterManager:FilterManager;
             tessellator:libtess.GluTesselator;
-            inputTarget:RenderTarget2D;
             screenTarget:RenderTarget2D;
 
             createRenderTarget(image?:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement):RenderTarget2D;
@@ -1536,8 +1559,6 @@ declare module "glantern" {
 
             copyRenderTargetContentEx(source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void;
 
-            present():void;
-
             setBlendMode(blendMode:string):void;
 
             static DEFAULT_OPTIONS:RendererOptions;
@@ -1547,6 +1568,8 @@ declare module "glantern" {
         abstract class RenderHelper {
 
             static renderPrimitives(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer, clearOutput:boolean):void;
+
+            static renderPrimitives2(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer, flipX:boolean, flipY:boolean, clearOutput:boolean):void
 
             static copyTargetContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void;
 
@@ -1568,6 +1591,7 @@ declare module "glantern" {
             static FXAA:number;
             static BLUR2:number;
             static COPY_IMAGE:number;
+            static PRIMITIVE2:number;
 
         }
 
@@ -1593,6 +1617,7 @@ declare module "glantern" {
             static fxaa:string;
             static blur2:string;
             static copyImage:string;
+            static primitive2:string;
 
         }
 

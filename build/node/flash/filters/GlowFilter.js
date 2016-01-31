@@ -95,7 +95,7 @@ var GlowFilter = (function (_super) {
         configurable: true
     });
     GlowFilter.prototype.clone = function () {
-        return new GlowFilter(this._filterManager, this.color, this.alpha, this.blurX, this.blurY, this.strength, this.quality, this.inner, this.knockout);
+        return new GlowFilter(this.filterManager, this.color, this.alpha, this.blurX, this.blurY, this.strength, this.quality, this.inner, this.knockout);
     };
     GlowFilter.prototype.__updateColorMatrix = function () {
         var r = ((this._color >>> 16) & 0xff) / 0xff;

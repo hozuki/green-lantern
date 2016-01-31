@@ -7,7 +7,6 @@ var FilterManager_1 = require("./FilterManager");
 var RenderTarget2D_1 = require("./RenderTarget2D");
 var WebGLUtils_1 = require("./WebGLUtils");
 var _util_1 = require("../_util/_util");
-var RenderHelper_1 = require("./RenderHelper");
 var BlendMode_1 = require("../flash/display/BlendMode");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 /**
@@ -24,7 +23,6 @@ var WebGLRenderer = (function () {
     function WebGLRenderer(width, height, options) {
         this._currentRenderTarget = null;
         this._currentBlendMode = null;
-        this._inputTarget = null;
         this._screenTarget = null;
         this._filterManager = null;
         this._shaderManager = null;
@@ -47,13 +45,11 @@ var WebGLRenderer = (function () {
      */
     WebGLRenderer.prototype.dispose = function () {
         if (this._isInitialized) {
-            this._inputTarget.dispose();
             this._screenTarget.dispose();
             this._filterManager.dispose();
             this._shaderManager.dispose();
             this._filterManager = null;
             this._shaderManager = null;
-            this._inputTarget = null;
             this._screenTarget = null;
             this._context = null;
             if (this._view.parentNode !== null && this._view.parentNode !== undefined) {
@@ -69,8 +65,11 @@ var WebGLRenderer = (function () {
      */
     WebGLRenderer.prototype.setRenderTarget = function (target) {
         if (target === void 0) { target = null; }
+        if (target === this._currentRenderTarget && target !== null) {
+            return;
+        }
         if (_util_1._util.isUndefinedOrNull(target)) {
-            this._currentRenderTarget = this._inputTarget;
+            this._currentRenderTarget = this._screenTarget;
         }
         else {
             this._currentRenderTarget = target;
@@ -143,18 +142,6 @@ var WebGLRenderer = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(WebGLRenderer.prototype, "inputTarget", {
-        /**
-         * Returns the first-time render target of the {@link WebGLRenderer}. Contents are all rendered to this target. Then,
-         * the contents on this target are copied to {@link WebGLRenderer.screenTarget} for postprocessing.
-         * @returns {RenderTarget2D} The first-time render target of the {@link WebGLRenderer}.
-         */
-        get: function () {
-            return this._inputTarget;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(WebGLRenderer.prototype, "screenTarget", {
         /**
          * Returns the final output of the {@link WebGLRenderer}. This target is always a root render target, which directly
@@ -198,32 +185,6 @@ var WebGLRenderer = (function () {
         if (target !== null && target !== undefined) {
             target.dispose();
         }
-    };
-    /**
-     * Performs a simple copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    WebGLRenderer.prototype.copyRenderTargetContent = function (source, destination, clearOutput) {
-        RenderHelper_1.RenderHelper.copyTargetContent(this, source, destination, false, false, clearOutput);
-    };
-    /**
-     * Performs an extended copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param flipX {Boolean} Whether to flip the contents horizontally during copying or not.
-     * @param flipY {Boolean} Whether to flip the contents vertically during copying or not.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    WebGLRenderer.prototype.copyRenderTargetContentEx = function (source, destination, flipX, flipY, clearOutput) {
-        RenderHelper_1.RenderHelper.copyTargetContent(this, source, destination, flipX, flipY, clearOutput);
-    };
-    /**
-     * Presents the final composition result.
-     */
-    WebGLRenderer.prototype.present = function () {
-        this.copyRenderTargetContentEx(this._inputTarget, this._screenTarget, false, true, true);
     };
     /**
      * Set current blend mode. Blend modes affects how the visual contents are rendered.
@@ -277,17 +238,6 @@ var WebGLRenderer = (function () {
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
         this.setBlendMode(BlendMode_1.BlendMode.NORMAL);
-        /*
-         if (options.antialias) {
-         // If anti-alias is on, then we need to draw the "screen" to a FXAA buffer
-         this._receiveTarget = this.createRenderTarget(); // MSAA zoomFactor = 2
-         this._screenTarget = this.createRootRenderTarget(); // MSAA zoomFactor = 1
-         } else {
-         // If anti-alias is off, then we will output to the screen, directly.
-         this._receiveTarget = this.createRootRenderTarget();
-         }
-         */
-        this._inputTarget = this.createRenderTarget();
         this._screenTarget = this.createRootRenderTarget();
         canvas.addEventListener("webglcontextlost", this.onContextLost.bind(this));
         canvas.addEventListener("webglcontextrestored", this.onContextRestored.bind(this));
@@ -339,7 +289,7 @@ var WebGLRenderer = (function () {
      * @type {RendererOptions}
      */
     WebGLRenderer.DEFAULT_OPTIONS = {
-        antialias: false,
+        antialias: true,
         depth: false,
         transparent: true
     };

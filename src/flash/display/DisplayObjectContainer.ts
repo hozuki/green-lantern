@@ -161,8 +161,8 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     update():void {
+        super.update();
         if (this.enabled) {
-            super.update();
             for (var i = 0; i < this._children.length; ++i) {
                 this._children[i].update();
             }
@@ -176,7 +176,6 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
             for (var i = 0; i < this._children.length; ++i) {
                 var child = this._children[i];
                 child.render(renderer);
-                renderer.copyRenderTargetContent(child.outputRenderTarget, this._rawRenderTarget, false);
             }
             this.__postprocess(renderer);
         } else {
@@ -184,8 +183,17 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
+    requestUpdateTransform():void {
+        this._isTransformDirty = true;
+        if (this._children !== null && this._children.length > 0) {
+            for (var i = 0; i < this._children.length; ++i) {
+                this._children[i].requestUpdateTransform();
+            }
+        }
+    }
+
     protected __selectShader(shaderManager:ShaderManager):void {
-        shaderManager.selectShader(ShaderID.REPLICATE);
+        // Do nothing
     }
 
     protected _children:DisplayObject[] = null;

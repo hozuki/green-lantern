@@ -1,7 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var Values = {};
+var Values = Object.create(null);
 var VertexShaders = (function () {
     function VertexShaders() {
     }
@@ -57,6 +57,13 @@ var VertexShaders = (function () {
     Object.defineProperty(VertexShaders, "copyImage", {
         get: function () {
             return Values.copyImage;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VertexShaders, "primitive2", {
+        get: function () {
+            return Values.primitive2;
         },
         enumerable: true,
         configurable: true
@@ -251,6 +258,32 @@ Values.copyImage = [
     "    }",
     "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
     "    vTextureCoord = newTextureCoord;",
+    "}"
+].join("\n");
+Values.primitive2 = [
+    "precision mediump float;",
+    "",
+    "attribute vec3 aVertexPosition;",
+    "attribute vec4 aVertexColor;",
+    "",
+    "uniform mat4 uProjectionMatrix;",
+    "uniform mat4 uTransformMatrix;",
+    "uniform vec2 uOriginalSize;",
+    "uniform bool uFlipX;",
+    "uniform bool uFlipY;",
+    "",
+    "varying vec4 vVertexColor;",
+    "",
+    "void main() {",
+    "    vec3 newVertexPostion = aVertexPosition;",
+    "    if (uFlipX) {",
+    "        newVertexPostion.x = uOriginalSize.x - newVertexPostion.x;",
+    "    }",
+    "    if (uFlipY) {",
+    "        newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;",
+    "    }",
+    "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
+    "    vVertexColor = aVertexColor;",
     "}"
 ].join("\n");
 

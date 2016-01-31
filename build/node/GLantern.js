@@ -58,7 +58,6 @@ var GLantern = (function () {
         }
         this._stage.update();
         this._stage.render(this._renderer);
-        this._renderer.present();
     };
     Object.defineProperty(GLantern.prototype, "stage", {
         get: function () {

@@ -11,6 +11,8 @@ import {BufferedShader} from "./shaders/BufferedShader";
 import {_util} from "../_util/_util";
 import {Matrix3D} from "../flash/geom/Matrix3D";
 import {CopyImageShader} from "./shaders/CopyImageShader";
+import {Primitive2Shader} from "./shaders/Primitive2Shader";
+import {PrimitiveShader} from "./shaders/PrimitiveShader";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 
@@ -19,11 +21,12 @@ export abstract class RenderHelper {
     static renderPrimitives(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer, clearOutput:boolean):void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
 
-        var shader = renderer.shaderManager.currentShader;
+        var shader = <PrimitiveShader>renderer.shaderManager.currentShader;
         var glc = renderer.context;
         var attributeLocation:number;
 
         renderTo.activate();
+        shader.syncUniforms();
 
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
@@ -43,6 +46,40 @@ export abstract class RenderHelper {
         glc.viewport(0, 0, renderTo.originalWidth, renderTo.originalHeight);
         glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
     }
+
+    static renderPrimitives2(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer,
+                             flipX:boolean, flipY:boolean, clearOutput:boolean):void {
+        renderer.shaderManager.selectShader(ShaderID.PRIMITIVE2);
+
+        var shader = <Primitive2Shader>renderer.shaderManager.currentShader;
+        var glc = renderer.context;
+        var attributeLocation:number;
+
+        renderTo.activate();
+        shader.setOriginalSize([renderTo.originalWidth, renderTo.originalHeight]);
+        shader.setFlipX(flipX);
+        shader.setFlipY(flipY);
+        shader.syncUniforms();
+
+        vertices.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexPosition");
+        glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+
+        colors.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexColor");
+        glc.vertexAttribPointer(attributeLocation, 4, colors.elementGLType, false, colors.elementSize * 4, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+
+        indices.syncBufferData();
+
+        if (clearOutput) {
+            renderTo.clear();
+        }
+        glc.viewport(0, 0, renderTo.originalWidth, renderTo.originalHeight);
+        glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
+    }
+
 
     static copyTargetContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r:WebGLRenderer):void => {

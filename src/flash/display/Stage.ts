@@ -20,7 +20,6 @@ export class Stage extends DisplayObjectContainer {
         super(null, null);
         this._root = this;
         this._worldRenderer = renderer;
-        this._rawRenderTarget = renderer.createRenderTarget();
         this.resize(renderer.view.width, renderer.view.height);
     }
 
@@ -108,15 +107,8 @@ export class Stage extends DisplayObjectContainer {
         // TODO: Fully implement this
     }
 
-    render(renderer:WebGLRenderer):void {
-        super.render(renderer);
-        // Copy it to the screen target.
-        //throw new NotImplementedError();
-        renderer.copyRenderTargetContent(this.outputRenderTarget, renderer.inputTarget, true);
-    }
-
     protected __render(renderer:WebGLRenderer):void {
-        this._rawRenderTarget.clear();
+        renderer.currentRenderTarget.clear();
     }
 
     protected __update():void {

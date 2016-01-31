@@ -59,7 +59,6 @@ var GLantern = (function () {
         }
         this._stage.update();
         this._stage.render(this._renderer);
-        this._renderer.present();
     };
     Object.defineProperty(GLantern.prototype, "stage", {
         get: function () {
@@ -1312,6 +1311,8 @@ var NotImplementedError_1 = require("../../_util/NotImplementedError");
 var EventDispatcher_1 = require("../events/EventDispatcher");
 var _util_1 = require("../../_util/_util");
 var BlendMode_1 = require("./BlendMode");
+var Matrix3D_1 = require("../geom/Matrix3D");
+var Vector3D_1 = require("../geom/Vector3D");
 var DisplayObject = (function (_super) {
     __extends(DisplayObject, _super);
     function DisplayObject(root, parent) {
@@ -1339,18 +1340,15 @@ var DisplayObject = (function (_super) {
         this._childIndex = -1;
         this._alpha = 1;
         this._filters = null;
+        this._filterTarget = null;
         this._transform = null;
-        this._rawRenderTarget = null;
-        this._filteredRenderTarget = null;
+        this._isTransformDirty = true;
         this._isRoot = false;
         this._root = root;
         this._stage = root;
         this._parent = parent;
         this._filters = [];
         this._transform = new Transform_1.Transform();
-        if (root !== null) {
-            this._rawRenderTarget = root.worldRenderer.createRenderTarget();
-        }
         this._isRoot = root === null;
     }
     Object.defineProperty(DisplayObject.prototype, "alpha", {
@@ -1386,7 +1384,6 @@ var DisplayObject = (function (_super) {
     });
     DisplayObject.prototype.dispose = function () {
         _super.prototype.dispose.call(this);
-        this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     };
     Object.defineProperty(DisplayObject.prototype, "filters", {
@@ -1408,14 +1405,12 @@ var DisplayObject = (function (_super) {
                     this._filters[i].notifyAdded();
                 }
             }
-            if (hasFiltersBefore !== hasFiltersNow) {
-                // Update filtered RenderTarget2D state.
-                if (hasFiltersBefore) {
-                    this._filteredRenderTarget.dispose();
-                    this._filteredRenderTarget = null;
+            if (hasFiltersNow !== hasFiltersBefore) {
+                if (hasFiltersNow) {
+                    this.__createFilterTarget(this._root.worldRenderer);
                 }
-                else if (hasFiltersNow) {
-                    this._filteredRenderTarget = this._root.worldRenderer.createRenderTarget();
+                else {
+                    this.__releaseFilterTarget();
                 }
             }
         },
@@ -1563,7 +1558,11 @@ var DisplayObject = (function (_super) {
             return this._x;
         },
         set: function (v) {
+            var b = this._x !== v;
             this._x = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -1573,7 +1572,11 @@ var DisplayObject = (function (_super) {
             return this._y;
         },
         set: function (v) {
+            var b = this._y !== v;
             this._y = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -1583,7 +1586,11 @@ var DisplayObject = (function (_super) {
             return this._z;
         },
         set: function (v) {
+            var b = this._z !== v;
             this._z = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -1595,6 +1602,9 @@ var DisplayObject = (function (_super) {
         throw new NotImplementedError_1.NotImplementedError();
     };
     DisplayObject.prototype.update = function () {
+        if (this._isTransformDirty) {
+            this.__updateTransform();
+        }
         if (this.enabled) {
             this.__update();
         }
@@ -1608,38 +1618,62 @@ var DisplayObject = (function (_super) {
         else {
         }
     };
-    Object.defineProperty(DisplayObject.prototype, "outputRenderTarget", {
-        get: function () {
-            return this.__shouldProcessFilters() ? this._filteredRenderTarget : this._rawRenderTarget;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    DisplayObject.prototype.requestUpdateTransform = function () {
+        this._isTransformDirty = true;
+    };
+    DisplayObject.prototype.__updateTransform = function () {
+        var matrix3D;
+        if (this._isRoot) {
+            matrix3D = new Matrix3D_1.Matrix3D();
+        }
+        else {
+            matrix3D = this.parent.transform.matrix3D.clone();
+        }
+        matrix3D.prependTranslation(this.x, this.y, this.z);
+        matrix3D.prependRotation(this.rotationX, Vector3D_1.Vector3D.X_AXIS);
+        matrix3D.prependRotation(this.rotationY, Vector3D_1.Vector3D.Y_AXIS);
+        matrix3D.prependRotation(this.rotationZ, Vector3D_1.Vector3D.Z_AXIS);
+        this.transform.matrix3D.copyFrom(matrix3D);
+    };
     DisplayObject.prototype.__preprocess = function (renderer) {
         var _this = this;
-        this.outputRenderTarget.clear();
+        renderer.setRenderTarget(this.__shouldProcessFilters() ? this._filterTarget : null);
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
-        this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
-        manager.currentShader.changeValue("uTransformMatrix", function (u) {
-            u.value = _this.transform.matrix3D.toArray();
-        });
-        manager.currentShader.changeValue("uAlpha", function (u) {
-            u.value = _this.alpha;
-        });
-        manager.currentShader.syncUniforms();
+        var shader = manager.currentShader;
+        if (!_util_1._util.isUndefinedOrNull(shader)) {
+            shader.changeValue("uTransformMatrix", function (u) {
+                u.value = _this.transform.matrix3D.toArray();
+            });
+            shader.changeValue("uAlpha", function (u) {
+                u.value = _this.alpha;
+            });
+        }
         renderer.setBlendMode(this.blendMode);
     };
     DisplayObject.prototype.__postprocess = function (renderer) {
         if (this.__shouldProcessFilters()) {
             var filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
-            filterManager.processFilters(renderer, this._rawRenderTarget, this._filteredRenderTarget, true);
+            filterManager.processFilters(renderer, this._filterTarget, renderer.screenTarget, false);
             filterManager.popFilterGroup();
         }
     };
+    DisplayObject.prototype.__createFilterTarget = function (renderer) {
+        if (this._filterTarget !== null) {
+            return;
+        }
+        this._filterTarget = renderer.createRenderTarget();
+    };
+    DisplayObject.prototype.__releaseFilterTarget = function () {
+        if (this._filterTarget === null) {
+            return;
+        }
+        this._filterTarget.dispose();
+        this._filterTarget = null;
+    };
     DisplayObject.prototype.__shouldProcessFilters = function () {
-        return this._filters !== null && this._filters.length > 0;
+        return this.filters !== null && this.filters.length > 0;
     };
     return DisplayObject;
 })(EventDispatcher_1.EventDispatcher);
@@ -1647,7 +1681,7 @@ exports.DisplayObject = DisplayObject;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../events/EventDispatcher":52,"../geom/Transform":67,"./BlendMode":28}],33:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../events/EventDispatcher":52,"../geom/Matrix3D":62,"../geom/Transform":67,"../geom/Vector3D":68,"./BlendMode":28}],33:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -1658,7 +1692,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var InteractiveObject_1 = require("./InteractiveObject");
 var NotImplementedError_1 = require("../../_util/NotImplementedError");
-var ShaderID_1 = require("../../webgl/ShaderID");
 var DisplayObjectContainer = (function (_super) {
     __extends(DisplayObjectContainer, _super);
     function DisplayObjectContainer(root, parent) {
@@ -1804,8 +1837,8 @@ var DisplayObjectContainer = (function (_super) {
         return r;
     };
     DisplayObjectContainer.prototype.update = function () {
+        _super.prototype.update.call(this);
         if (this.enabled) {
-            _super.prototype.update.call(this);
             for (var i = 0; i < this._children.length; ++i) {
                 this._children[i].update();
             }
@@ -1818,15 +1851,22 @@ var DisplayObjectContainer = (function (_super) {
             for (var i = 0; i < this._children.length; ++i) {
                 var child = this._children[i];
                 child.render(renderer);
-                renderer.copyRenderTargetContent(child.outputRenderTarget, this._rawRenderTarget, false);
             }
             this.__postprocess(renderer);
         }
         else {
         }
     };
+    DisplayObjectContainer.prototype.requestUpdateTransform = function () {
+        this._isTransformDirty = true;
+        if (this._children !== null && this._children.length > 0) {
+            for (var i = 0; i < this._children.length; ++i) {
+                this._children[i].requestUpdateTransform();
+            }
+        }
+    };
     DisplayObjectContainer.prototype.__selectShader = function (shaderManager) {
-        shaderManager.selectShader(ShaderID_1.ShaderID.REPLICATE);
+        // Do nothing
     };
     return DisplayObjectContainer;
 })(InteractiveObject_1.InteractiveObject);
@@ -1834,7 +1874,7 @@ exports.DisplayObjectContainer = DisplayObjectContainer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../webgl/ShaderID":96,"./InteractiveObject":38}],34:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"./InteractiveObject":38}],34:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -2238,14 +2278,13 @@ var Graphics = (function () {
             this._bufferTarget.clear();
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
                 if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                    this._fillRenderers[j].render(renderer, this._bufferTarget);
+                    this._fillRenderers[j].render(renderer, renderer.currentRenderTarget);
                     j++;
                 }
-                this._strokeRenderers[i].render(renderer, this._bufferTarget);
+                this._strokeRenderers[i].render(renderer, renderer.currentRenderTarget);
             }
             this._shouldUpdateRenderTarget = false;
         }
-        renderer.copyRenderTargetContent(this._bufferTarget, target, clearOutput);
     };
     Graphics.prototype.dispose = function () {
         this.clear();
@@ -2616,10 +2655,11 @@ var Shape = (function (_super) {
         this._graphics.update();
     };
     Shape.prototype.__render = function (renderer) {
-        this._graphics.render(renderer, this._rawRenderTarget, true);
+        this.graphics.render(renderer, renderer.currentRenderTarget, false);
     };
     Shape.prototype.__selectShader = function (shaderManager) {
-        shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE);
+        // Switched to the new Primitive2Shader. Consider the obsolete of PrimitiveShader.
+        shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE2);
     };
     return Shape;
 })(DisplayObject_1.DisplayObject);
@@ -2702,7 +2742,6 @@ var Stage = (function (_super) {
         this._worldRenderer = null;
         this._root = this;
         this._worldRenderer = renderer;
-        this._rawRenderTarget = renderer.createRenderTarget();
         this.resize(renderer.view.width, renderer.view.height);
     }
     Object.defineProperty(Stage.prototype, "allowFullScreen", {
@@ -2799,14 +2838,8 @@ var Stage = (function (_super) {
         this._height = height;
         // TODO: Fully implement this
     };
-    Stage.prototype.render = function (renderer) {
-        _super.prototype.render.call(this, renderer);
-        // Copy it to the screen target.
-        //throw new NotImplementedError();
-        renderer.copyRenderTargetContent(this.outputRenderTarget, renderer.inputTarget, true);
-    };
     Stage.prototype.__render = function (renderer) {
-        this._rawRenderTarget.clear();
+        renderer.currentRenderTarget.clear();
     };
     Stage.prototype.__update = function () {
     };
@@ -3343,7 +3376,7 @@ var BlurFilter = (function (_super) {
         configurable: true
     });
     BlurFilter.prototype.clone = function () {
-        return new BlurFilter(this._filterManager, this.blurX, this.blurY, this.quality);
+        return new BlurFilter(this.filterManager, this.blurX, this.blurY, this.quality);
     };
     return BlurFilter;
 })(Blur2Filter_1.Blur2Filter);
@@ -3449,7 +3482,7 @@ var GlowFilter = (function (_super) {
         configurable: true
     });
     GlowFilter.prototype.clone = function () {
-        return new GlowFilter(this._filterManager, this.color, this.alpha, this.blurX, this.blurY, this.strength, this.quality, this.inner, this.knockout);
+        return new GlowFilter(this.filterManager, this.color, this.alpha, this.blurX, this.blurY, this.strength, this.quality, this.inner, this.knockout);
     };
     GlowFilter.prototype.__updateColorMatrix = function () {
         var r = ((this._color >>> 16) & 0xff) / 0xff;
@@ -3853,20 +3886,20 @@ var Matrix3D = (function () {
         configurable: true
     });
     Matrix3D.prototype.append = function (lhs) {
-        this._data = Matrix3D.dotProduct(lhs._data, this._data);
+        this._data = Matrix3D.__dotProduct(lhs._data, this._data);
     };
     Matrix3D.prototype.appendRotation = function (degrees, axis, pivotPoint) {
         if (pivotPoint === void 0) { pivotPoint = null; }
         if (pivotPoint !== null) {
             this.appendTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
+        this._data = Matrix3D.__dotProduct(Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis), this._data);
         if (pivotPoint !== null) {
             this.appendTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     };
     Matrix3D.prototype.appendScale = function (xScale, yScale, zScale) {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -3874,7 +3907,7 @@ var Matrix3D = (function () {
         ], this._data);
     };
     Matrix3D.prototype.appendTranslation = function (x, y, z) {
-        this._data = Matrix3D.dotProduct([
+        this._data = Matrix3D.__dotProduct([
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -4014,20 +4047,20 @@ var Matrix3D = (function () {
         d[15] += d[12] * x + d[13] * y + d[14] * z;
     };
     Matrix3D.prototype.prepend = function (rhs) {
-        this._data = Matrix3D.dotProduct(this._data, rhs._data);
+        this._data = Matrix3D.__dotProduct(this._data, rhs._data);
     };
     Matrix3D.prototype.prependRotation = function (degrees, axis, pivotPoint) {
         if (pivotPoint === void 0) { pivotPoint = null; }
         if (pivotPoint !== null) {
             this.prependTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
-        this._data = Matrix3D.dotProduct(this._data, Matrix3D.getRotationMatrix(degrees * Math.PI / 180, axis));
+        this._data = Matrix3D.__dotProduct(this._data, Matrix3D.__getRotationMatrix(degrees * Math.PI / 180, axis));
         if (pivotPoint !== null) {
             this.prependTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
         }
     };
     Matrix3D.prototype.prependScale = function (xScale, yScale, zScale) {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
             0, 0, zScale, 0,
@@ -4035,7 +4068,7 @@ var Matrix3D = (function () {
         ]);
     };
     Matrix3D.prototype.prependTranslation = function (x, y, z) {
-        this._data = Matrix3D.dotProduct(this._data, [
+        this._data = Matrix3D.__dotProduct(this._data, [
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -4073,12 +4106,6 @@ var Matrix3D = (function () {
             d[2], d[6], d[10], d[14],
             d[3], d[7], d[11], d[15]
         ];
-    };
-    Matrix3D.prototype.setTransformTo = function (x, y, z) {
-        var d = this._data;
-        d[3] = x;
-        d[7] = y;
-        d[11] = z;
     };
     Matrix3D.prototype.toArray = function () {
         var d = this._data;
@@ -4150,7 +4177,7 @@ var Matrix3D = (function () {
         d[14] = -1;
         d[15] = 0;
     };
-    Matrix3D.dotProduct = function (a, b) {
+    Matrix3D.__dotProduct = function (a, b) {
         if (a.length !== 16 || b.length !== 16) {
             throw new Error("Matrix3D dot product needs a array of 16 elements.");
         }
@@ -4164,7 +4191,7 @@ var Matrix3D = (function () {
         }
         return res;
     };
-    Matrix3D.getRotationMatrix = function (angle, axis) {
+    Matrix3D.__getRotationMatrix = function (angle, axis) {
         // jabbany
         var sT = Math.sin(angle), cT = Math.cos(angle);
         return [
@@ -5317,10 +5344,9 @@ var TextField = (function (_super) {
     TextField.prototype.__render = function (renderer) {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
-            RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, this._rawRenderTarget, false, false, this.transform.matrix3D, this.alpha, true);
+            RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         }
         else {
-            this._rawRenderTarget.clear();
         }
     };
     TextField.prototype.__selectShader = function (shaderManager) {
@@ -5798,7 +5824,7 @@ exports.TextFormat = TextFormat;
 
 
 
-},{"../../_util/_util":5,"../events/EventDispatcher":52,"../events/FlashEvent":53,"./TextFormatAlign":78,"os":129}],78:[function(require,module,exports){
+},{"../../_util/_util":5,"../events/EventDispatcher":52,"../events/FlashEvent":53,"./TextFormatAlign":78,"os":130}],78:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/23.
  */
@@ -6149,6 +6175,8 @@ exports.AttributeCache = AttributeCache;
 var FilterBase = (function () {
     function FilterBase(manager) {
         this._filterManager = null;
+        this._flipY = false;
+        this._flipX = false;
         this._referenceCount = 0;
         this._filterManager = manager;
     }
@@ -6179,6 +6207,41 @@ var FilterBase = (function () {
     FilterBase.prototype.initialize = function () {
         this.__initialize();
     };
+    Object.defineProperty(FilterBase.prototype, "filterManager", {
+        get: function () {
+            return this._filterManager;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilterBase.prototype, "flipX", {
+        get: function () {
+            return this._flipX;
+        },
+        set: function (v) {
+            this._flipX = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilterBase.prototype, "flipY", {
+        get: function () {
+            return this._flipY;
+        },
+        set: function (v) {
+            this._flipY = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FilterBase.prototype.shouldFlipY = function (target) {
+        if (target.isRoot) {
+            return true;
+        }
+        else {
+            return this.flipY;
+        }
+    };
     FilterBase.prototype.__initialize = function () {
     };
     FilterBase.prototype.__dispose = function () {
@@ -6193,6 +6256,7 @@ exports.FilterBase = FilterBase;
 /**
  * Created by MIC on 2015/11/17.
  */
+var RenderHelper_1 = require("./RenderHelper");
 var FilterManager = (function () {
     function FilterManager(renderer) {
         this._tempTarget = null;
@@ -6265,7 +6329,7 @@ var FilterManager = (function () {
                     t2 = t;
                 }
             }
-            renderer.copyRenderTargetContent(t1, output, clearOutput);
+            RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, false, false, false);
         }
     };
     return FilterManager;
@@ -6274,11 +6338,11 @@ exports.FilterManager = FilterManager;
 
 
 
-},{}],91:[function(require,module,exports){
+},{"./RenderHelper":93}],91:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
-var Values = {};
+var Values = Object.create(null);
 var FragmentShaders = (function () {
     function FragmentShaders() {
     }
@@ -6672,6 +6736,32 @@ var RenderHelper = (function () {
         var glc = renderer.context;
         var attributeLocation;
         renderTo.activate();
+        shader.syncUniforms();
+        vertices.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexPosition");
+        glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+        colors.syncBufferData();
+        attributeLocation = shader.getAttributeLocation("aVertexColor");
+        glc.vertexAttribPointer(attributeLocation, 4, colors.elementGLType, false, colors.elementSize * 4, 0);
+        glc.enableVertexAttribArray(attributeLocation);
+        indices.syncBufferData();
+        if (clearOutput) {
+            renderTo.clear();
+        }
+        glc.viewport(0, 0, renderTo.originalWidth, renderTo.originalHeight);
+        glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
+    };
+    RenderHelper.renderPrimitives2 = function (renderer, renderTo, vertices, colors, indices, flipX, flipY, clearOutput) {
+        renderer.shaderManager.selectShader(ShaderID_1.ShaderID.PRIMITIVE2);
+        var shader = renderer.shaderManager.currentShader;
+        var glc = renderer.context;
+        var attributeLocation;
+        renderTo.activate();
+        shader.setOriginalSize([renderTo.originalWidth, renderTo.originalHeight]);
+        shader.setFlipX(flipX);
+        shader.setFlipY(flipY);
+        shader.syncUniforms();
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
@@ -7509,6 +7599,13 @@ var ShaderID = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ShaderID, "PRIMITIVE2", {
+        get: function () {
+            return 8;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ShaderID;
 })();
 exports.ShaderID = ShaderID;
@@ -7527,6 +7624,7 @@ var ColorTransformShader_1 = require("./shaders/ColorTransformShader");
 var FxaaShader_1 = require("./shaders/FxaaShader");
 var Blur2Shader_1 = require("./shaders/Blur2Shader");
 var CopyImageShader_1 = require("./shaders/CopyImageShader");
+var Primitive2Shader_1 = require("./shaders/Primitive2Shader");
 var ShaderManager = (function () {
     function ShaderManager(renderer) {
         this._renderer = null;
@@ -7608,6 +7706,7 @@ var ShaderManager = (function () {
         shaderList.push(new FxaaShader_1.FxaaShader(this));
         shaderList.push(new Blur2Shader_1.Blur2Shader(this));
         shaderList.push(new CopyImageShader_1.CopyImageShader(this));
+        shaderList.push(new Primitive2Shader_1.Primitive2Shader(this));
     };
     return ShaderManager;
 })();
@@ -7615,7 +7714,7 @@ exports.ShaderManager = ShaderManager;
 
 
 
-},{"./shaders/Blur2Shader":118,"./shaders/BlurXShader":119,"./shaders/BlurYShader":120,"./shaders/ColorTransformShader":122,"./shaders/CopyImageShader":123,"./shaders/FxaaShader":124,"./shaders/PrimitiveShader":125,"./shaders/ReplicateShader":126}],98:[function(require,module,exports){
+},{"./shaders/Blur2Shader":118,"./shaders/BlurXShader":119,"./shaders/BlurYShader":120,"./shaders/ColorTransformShader":122,"./shaders/CopyImageShader":123,"./shaders/FxaaShader":124,"./shaders/Primitive2Shader":125,"./shaders/PrimitiveShader":126,"./shaders/ReplicateShader":127}],98:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -7640,7 +7739,7 @@ exports.UniformCache = UniformCache;
 /**
  * Created by MIC on 2015/11/18.
  */
-var Values = {};
+var Values = Object.create(null);
 var VertexShaders = (function () {
     function VertexShaders() {
     }
@@ -7696,6 +7795,13 @@ var VertexShaders = (function () {
     Object.defineProperty(VertexShaders, "copyImage", {
         get: function () {
             return Values.copyImage;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VertexShaders, "primitive2", {
+        get: function () {
+            return Values.primitive2;
         },
         enumerable: true,
         configurable: true
@@ -7892,6 +7998,32 @@ Values.copyImage = [
     "    vTextureCoord = newTextureCoord;",
     "}"
 ].join("\n");
+Values.primitive2 = [
+    "precision mediump float;",
+    "",
+    "attribute vec3 aVertexPosition;",
+    "attribute vec4 aVertexColor;",
+    "",
+    "uniform mat4 uProjectionMatrix;",
+    "uniform mat4 uTransformMatrix;",
+    "uniform vec2 uOriginalSize;",
+    "uniform bool uFlipX;",
+    "uniform bool uFlipY;",
+    "",
+    "varying vec4 vVertexColor;",
+    "",
+    "void main() {",
+    "    vec3 newVertexPostion = aVertexPosition;",
+    "    if (uFlipX) {",
+    "        newVertexPostion.x = uOriginalSize.x - newVertexPostion.x;",
+    "    }",
+    "    if (uFlipY) {",
+    "        newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;",
+    "    }",
+    "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
+    "    vVertexColor = aVertexColor;",
+    "}"
+].join("\n");
 
 
 
@@ -7942,7 +8074,6 @@ var FilterManager_1 = require("./FilterManager");
 var RenderTarget2D_1 = require("./RenderTarget2D");
 var WebGLUtils_1 = require("./WebGLUtils");
 var _util_1 = require("../_util/_util");
-var RenderHelper_1 = require("./RenderHelper");
 var BlendMode_1 = require("../flash/display/BlendMode");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 /**
@@ -7959,7 +8090,6 @@ var WebGLRenderer = (function () {
     function WebGLRenderer(width, height, options) {
         this._currentRenderTarget = null;
         this._currentBlendMode = null;
-        this._inputTarget = null;
         this._screenTarget = null;
         this._filterManager = null;
         this._shaderManager = null;
@@ -7982,13 +8112,11 @@ var WebGLRenderer = (function () {
      */
     WebGLRenderer.prototype.dispose = function () {
         if (this._isInitialized) {
-            this._inputTarget.dispose();
             this._screenTarget.dispose();
             this._filterManager.dispose();
             this._shaderManager.dispose();
             this._filterManager = null;
             this._shaderManager = null;
-            this._inputTarget = null;
             this._screenTarget = null;
             this._context = null;
             if (this._view.parentNode !== null && this._view.parentNode !== undefined) {
@@ -8004,8 +8132,11 @@ var WebGLRenderer = (function () {
      */
     WebGLRenderer.prototype.setRenderTarget = function (target) {
         if (target === void 0) { target = null; }
+        if (target === this._currentRenderTarget && target !== null) {
+            return;
+        }
         if (_util_1._util.isUndefinedOrNull(target)) {
-            this._currentRenderTarget = this._inputTarget;
+            this._currentRenderTarget = this._screenTarget;
         }
         else {
             this._currentRenderTarget = target;
@@ -8078,18 +8209,6 @@ var WebGLRenderer = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(WebGLRenderer.prototype, "inputTarget", {
-        /**
-         * Returns the first-time render target of the {@link WebGLRenderer}. Contents are all rendered to this target. Then,
-         * the contents on this target are copied to {@link WebGLRenderer.screenTarget} for postprocessing.
-         * @returns {RenderTarget2D} The first-time render target of the {@link WebGLRenderer}.
-         */
-        get: function () {
-            return this._inputTarget;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(WebGLRenderer.prototype, "screenTarget", {
         /**
          * Returns the final output of the {@link WebGLRenderer}. This target is always a root render target, which directly
@@ -8133,32 +8252,6 @@ var WebGLRenderer = (function () {
         if (target !== null && target !== undefined) {
             target.dispose();
         }
-    };
-    /**
-     * Performs a simple copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    WebGLRenderer.prototype.copyRenderTargetContent = function (source, destination, clearOutput) {
-        RenderHelper_1.RenderHelper.copyTargetContent(this, source, destination, false, false, clearOutput);
-    };
-    /**
-     * Performs an extended copying from the source {@link RenderTarget2D} to the destination {@link RenderTarget2D}.
-     * @param source {RenderTarget2D} The source of contents.
-     * @param destination {RenderTarget2D} The destination to which the contents are copyied.
-     * @param flipX {Boolean} Whether to flip the contents horizontally during copying or not.
-     * @param flipY {Boolean} Whether to flip the contents vertically during copying or not.
-     * @param clearOutput {Boolean} Whether to clear the contents of the destination before copying or not.
-     */
-    WebGLRenderer.prototype.copyRenderTargetContentEx = function (source, destination, flipX, flipY, clearOutput) {
-        RenderHelper_1.RenderHelper.copyTargetContent(this, source, destination, flipX, flipY, clearOutput);
-    };
-    /**
-     * Presents the final composition result.
-     */
-    WebGLRenderer.prototype.present = function () {
-        this.copyRenderTargetContentEx(this._inputTarget, this._screenTarget, false, true, true);
     };
     /**
      * Set current blend mode. Blend modes affects how the visual contents are rendered.
@@ -8212,17 +8305,6 @@ var WebGLRenderer = (function () {
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
         this.setBlendMode(BlendMode_1.BlendMode.NORMAL);
-        /*
-         if (options.antialias) {
-         // If anti-alias is on, then we need to draw the "screen" to a FXAA buffer
-         this._receiveTarget = this.createRenderTarget(); // MSAA zoomFactor = 2
-         this._screenTarget = this.createRootRenderTarget(); // MSAA zoomFactor = 1
-         } else {
-         // If anti-alias is off, then we will output to the screen, directly.
-         this._receiveTarget = this.createRootRenderTarget();
-         }
-         */
-        this._inputTarget = this.createRenderTarget();
         this._screenTarget = this.createRootRenderTarget();
         canvas.addEventListener("webglcontextlost", this.onContextLost.bind(this));
         canvas.addEventListener("webglcontextrestored", this.onContextRestored.bind(this));
@@ -8274,7 +8356,7 @@ var WebGLRenderer = (function () {
      * @type {RendererOptions}
      */
     WebGLRenderer.DEFAULT_OPTIONS = {
-        antialias: false,
+        antialias: true,
         depth: false,
         transparent: true
     };
@@ -8300,7 +8382,7 @@ BMS[BlendMode_1.BlendMode.SUBTRACT] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 
 
 
-},{"../_util/_util":5,"../flash/display/BlendMode":28,"./FilterManager":90,"./RenderHelper":93,"./RenderTarget2D":94,"./ShaderManager":97,"./WebGLUtils":102,"libtess":128}],102:[function(require,module,exports){
+},{"../_util/_util":5,"../flash/display/BlendMode":28,"./FilterManager":90,"./RenderTarget2D":94,"./ShaderManager":97,"./WebGLUtils":102,"libtess":129}],102:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/13.
  */
@@ -8483,13 +8565,14 @@ var Blur2Filter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        renderer.copyRenderTargetContent(t1, output, clearOutput);
+        //renderer.copyRenderTargetContent(t1, output, clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
     };
     Blur2Filter.prototype.__initialize = function () {
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     Blur2Filter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     };
     return Blur2Filter;
@@ -8576,18 +8659,19 @@ var BlurFilter = (function (_super) {
         this._blurYFilter.process(renderer, this._tempTarget, output, clearOutput);
     };
     BlurFilter.prototype.__initialize = function () {
-        this._blurXFilter = new BlurXFilter_1.BlurXFilter(this._filterManager);
-        this._blurYFilter = new BlurYFilter_1.BlurYFilter(this._filterManager);
+        this._blurXFilter = new BlurXFilter_1.BlurXFilter(this.filterManager);
+        this._blurYFilter = new BlurYFilter_1.BlurYFilter(this.filterManager);
         this._blurXFilter.initialize();
         this._blurYFilter.initialize();
         this._blurXFilter.strength = this.strengthX;
         this._blurYFilter.strength = this.strengthY;
         this._blurXFilter.pass = this.pass;
         this._blurYFilter.pass = this.pass;
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._blurXFilter.flipY = false;
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     BlurFilter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();
         this._blurYFilter.dispose();
@@ -8660,13 +8744,14 @@ var BlurXFilter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        renderer.copyRenderTargetContent(t1, output, clearOutput);
+        //renderer.copyRenderTargetContent(t1, output, clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
     };
     BlurXFilter.prototype.__initialize = function () {
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     BlurXFilter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     };
     return BlurXFilter;
@@ -8736,13 +8821,14 @@ var BlurYFilter = (function (_super) {
             t1 = t2;
             t2 = t;
         }
-        renderer.copyRenderTargetContent(t1, output, clearOutput);
+        //renderer.copyRenderTargetContent(t1, output, clearOutput);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.shouldFlipY(output), clearOutput);
     };
     BlurYFilter.prototype.__initialize = function () {
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     BlurYFilter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     };
     return BlurYFilter;
@@ -8773,16 +8859,25 @@ var ColorTransformFilter = (function (_super) {
             0, 0, 1, 0, 0,
             0, 0, 0, 1, 0
         ];
+        this._tempTarget = null;
     }
     ColorTransformFilter.prototype.setColorMatrix = function (r4c5) {
         this._colorMatrix = r4c5.slice();
     };
     ColorTransformFilter.prototype.process = function (renderer, input, output, clearOutput) {
         var _this = this;
-        RenderHelper_1.RenderHelper.renderBuffered(renderer, input, output, ShaderID_1.ShaderID.COLOR_TRANSFORM, clearOutput, function (renderer) {
+        RenderHelper_1.RenderHelper.renderBuffered(renderer, input, this._tempTarget, ShaderID_1.ShaderID.COLOR_TRANSFORM, true, function (renderer) {
             var shader = renderer.shaderManager.currentShader;
             shader.setColorMatrix(_this._colorMatrix);
         });
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.shouldFlipY(output), clearOutput);
+    };
+    ColorTransformFilter.prototype.__initialize = function () {
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
+    };
+    ColorTransformFilter.prototype.__dispose = function () {
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this._tempTarget = null;
     };
     return ColorTransformFilter;
 })(FilterBase_1.FilterBase);
@@ -8803,6 +8898,7 @@ var ColorTransformFilter_1 = require("./ColorTransformFilter");
 var _util_1 = require("../../_util/_util");
 var FilterBase_1 = require("../FilterBase");
 var Blur2Filter_1 = require("./Blur2Filter");
+var RenderHelper_1 = require("../RenderHelper");
 var GlowFilter = (function (_super) {
     __extends(GlowFilter, _super);
     function GlowFilter(manager) {
@@ -8879,29 +8975,31 @@ var GlowFilter = (function (_super) {
         this._colorMatrix = r4c5.slice();
     };
     GlowFilter.prototype.process = function (renderer, input, output, clearOutput) {
-        renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        //renderer.copyRenderTargetContent(input, this._tempOriginalTarget, true);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, clearOutput);
         this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        //renderer.copyRenderTargetContent(this._tempOriginalTarget, output, false);
+        RenderHelper_1.RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.shouldFlipY(output), false);
     };
     GlowFilter.prototype.__initialize = function () {
-        this._blurFilter = new Blur2Filter_1.Blur2Filter(this._filterManager);
-        this._colorTransformFilter = new ColorTransformFilter_1.ColorTransformFilter(this._filterManager);
+        this._blurFilter = new Blur2Filter_1.Blur2Filter(this.filterManager);
+        this._colorTransformFilter = new ColorTransformFilter_1.ColorTransformFilter(this.filterManager);
         this._blurFilter.initialize();
         this._colorTransformFilter.initialize();
         this._blurFilter.strengthX = this.strengthX;
         this._blurFilter.strengthY = this.strengthY;
         this._blurFilter.pass = this.pass;
         this._colorTransformFilter.setColorMatrix(this._colorMatrix);
-        this._tempOriginalTarget = this._filterManager.renderer.createRenderTarget();
-        this._tempColorTransformedTarget = this._filterManager.renderer.createRenderTarget();
+        this._tempOriginalTarget = this.filterManager.renderer.createRenderTarget();
+        this._tempColorTransformedTarget = this.filterManager.renderer.createRenderTarget();
     };
     GlowFilter.prototype.__dispose = function () {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
-        this._filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
-        this._filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
         this._tempOriginalTarget = this._tempColorTransformedTarget = null;
     };
     return GlowFilter;
@@ -8910,7 +9008,7 @@ exports.GlowFilter = GlowFilter;
 
 
 
-},{"../../_util/_util":5,"../FilterBase":89,"./Blur2Filter":103,"./ColorTransformFilter":107}],109:[function(require,module,exports){
+},{"../../_util/_util":5,"../FilterBase":89,"../RenderHelper":93,"./Blur2Filter":103,"./ColorTransformFilter":107}],109:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9363,7 +9461,9 @@ var SolidFillRenderer = (function (_super) {
     SolidFillRenderer.prototype.render = function (renderer, target) {
         if (this._vertices.length > 0) {
             //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper_1.RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            //debugger;
+            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
         }
     };
     return SolidFillRenderer;
@@ -9372,7 +9472,7 @@ exports.SolidFillRenderer = SolidFillRenderer;
 
 
 
-},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":93,"./FillRendererBase":111,"./GRAPHICS_CONST":112,"libtess":128}],115:[function(require,module,exports){
+},{"../../_util/NotImplementedError":4,"../../_util/_util":5,"../RenderHelper":93,"./FillRendererBase":111,"./GRAPHICS_CONST":112,"libtess":129}],115:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -9529,7 +9629,8 @@ var SolidStrokeRenderer = (function (_super) {
     SolidStrokeRenderer.prototype.render = function (renderer, target) {
         if (this._vertices.length > 0) {
             //primitiveTarget.renderPrimitives(this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
-            RenderHelper_1.RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            //RenderHelper.renderPrimitives(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false);
+            RenderHelper_1.RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, true, false);
         }
     };
     return SolidStrokeRenderer;
@@ -9666,7 +9767,7 @@ exports.shaders = shaders;
 
 
 
-},{"./AttributeCache":88,"./FilterBase":89,"./FilterManager":90,"./FragmentShaders":91,"./PackedArrayBuffer":92,"./RenderHelper":93,"./RenderTarget2D":94,"./ShaderBase":95,"./ShaderID":96,"./ShaderManager":97,"./UniformCache":98,"./VertexShaders":99,"./WebGLDataType":100,"./WebGLRenderer":101,"./WebGLUtils":102,"./filters/index":109,"./shaders/index":127}],118:[function(require,module,exports){
+},{"./AttributeCache":88,"./FilterBase":89,"./FilterManager":90,"./FragmentShaders":91,"./PackedArrayBuffer":92,"./RenderHelper":93,"./RenderTarget2D":94,"./ShaderBase":95,"./ShaderID":96,"./ShaderManager":97,"./UniformCache":98,"./VertexShaders":99,"./WebGLDataType":100,"./WebGLRenderer":101,"./WebGLUtils":102,"./filters/index":109,"./shaders/index":128}],118:[function(require,module,exports){
 /**
  * Created by MIC on 2015/12/22.
  */
@@ -10065,6 +10166,94 @@ var VertexShaders_1 = require("../VertexShaders");
 var FragmentShaders_1 = require("../FragmentShaders");
 var ShaderBase_1 = require("../ShaderBase");
 var WebGLDataType_1 = require("../WebGLDataType");
+var Primitive2Shader = (function (_super) {
+    __extends(Primitive2Shader, _super);
+    function Primitive2Shader(manager) {
+        _super.call(this, manager, Primitive2Shader.VERTEX_SOURCE, Primitive2Shader.FRAGMENT_SOURCE, null, null);
+    }
+    Primitive2Shader.prototype.setProjection = function (matrix) {
+        this._uniforms.get("uProjectionMatrix").value = matrix.toArray();
+    };
+    Primitive2Shader.prototype.setTransform = function (matrix) {
+        this._uniforms.get("uTransformMatrix").value = matrix.toArray();
+    };
+    Primitive2Shader.prototype.setAlpha = function (alpha) {
+        this._uniforms.get("uAlpha").value = alpha;
+    };
+    Primitive2Shader.prototype.setFlipX = function (flip) {
+        this._uniforms.get("uFlipX").value = flip;
+    };
+    Primitive2Shader.prototype.setFlipY = function (flip) {
+        this._uniforms.get("uFlipY").value = flip;
+    };
+    Primitive2Shader.prototype.setOriginalSize = function (xy) {
+        this._uniforms.get("uOriginalSize").value = xy.slice();
+    };
+    Primitive2Shader.prototype.__localInit = function (manager, uniforms, attributes) {
+        _super.prototype.__localInit.call(this, manager, uniforms, attributes);
+        var u;
+        var transformMatrix = new Matrix3D_1.Matrix3D();
+        var projectionMatrix = new Matrix3D_1.Matrix3D();
+        var w = manager.renderer.view.width;
+        var h = manager.renderer.view.height;
+        projectionMatrix.setOrthographicProjection(0, w, h, 0, -1000, 1000);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uProjectionMatrix";
+        u.type = WebGLDataType_1.WebGLDataType.UMat4;
+        u.value = projectionMatrix.toArray();
+        u.transpose = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uTransformMatrix";
+        u.type = WebGLDataType_1.WebGLDataType.UMat4;
+        u.value = transformMatrix.toArray();
+        u.transpose = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uAlpha";
+        u.type = WebGLDataType_1.WebGLDataType.U1F;
+        u.value = 1;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uFlipX";
+        u.type = WebGLDataType_1.WebGLDataType.UBool;
+        u.value = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uFlipY";
+        u.type = WebGLDataType_1.WebGLDataType.UBool;
+        u.value = false;
+        uniforms.set(u.name, u);
+        u = new UniformCache_1.UniformCache();
+        u.name = "uOriginalSize";
+        u.type = WebGLDataType_1.WebGLDataType.U2F;
+        u.value = [0, 0];
+        uniforms.set(u.name, u);
+    };
+    Primitive2Shader.SHADER_CLASS_NAME = "Primitive2Shader";
+    Primitive2Shader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.primitive;
+    Primitive2Shader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.primitive2;
+    return Primitive2Shader;
+})(ShaderBase_1.ShaderBase);
+exports.Primitive2Shader = Primitive2Shader;
+
+
+
+},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../ShaderBase":95,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100}],126:[function(require,module,exports){
+/**
+ * Created by MIC on 2015/11/18.
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var Matrix3D_1 = require("../../flash/geom/Matrix3D");
+var UniformCache_1 = require("../UniformCache");
+var VertexShaders_1 = require("../VertexShaders");
+var FragmentShaders_1 = require("../FragmentShaders");
+var ShaderBase_1 = require("../ShaderBase");
+var WebGLDataType_1 = require("../WebGLDataType");
 var PrimitiveShader = (function (_super) {
     __extends(PrimitiveShader, _super);
     function PrimitiveShader(manager) {
@@ -10075,6 +10264,9 @@ var PrimitiveShader = (function (_super) {
     };
     PrimitiveShader.prototype.setTransform = function (matrix) {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
+    };
+    PrimitiveShader.prototype.setAlpha = function (alpha) {
+        this._uniforms.get("uAlpha").value = alpha;
     };
     PrimitiveShader.prototype.__localInit = function (manager, uniforms, attributes) {
         _super.prototype.__localInit.call(this, manager, uniforms, attributes);
@@ -10111,7 +10303,7 @@ exports.PrimitiveShader = PrimitiveShader;
 
 
 
-},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../ShaderBase":95,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100}],126:[function(require,module,exports){
+},{"../../flash/geom/Matrix3D":62,"../FragmentShaders":91,"../ShaderBase":95,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100}],127:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/18.
  */
@@ -10175,7 +10367,7 @@ exports.ReplicateShader = ReplicateShader;
 
 
 
-},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],127:[function(require,module,exports){
+},{"../FragmentShaders":91,"../UniformCache":98,"../VertexShaders":99,"../WebGLDataType":100,"./BufferedShader":121}],128:[function(require,module,exports){
 /**
  * Created by MIC on 2015/11/20.
  */
@@ -10194,7 +10386,7 @@ __export(require("./CopyImageShader"));
 
 
 
-},{"./Blur2Shader":118,"./BlurXShader":119,"./BlurYShader":120,"./BufferedShader":121,"./ColorTransformShader":122,"./CopyImageShader":123,"./FxaaShader":124,"./PrimitiveShader":125,"./ReplicateShader":126}],128:[function(require,module,exports){
+},{"./Blur2Shader":118,"./BlurXShader":119,"./BlurYShader":120,"./BufferedShader":121,"./ColorTransformShader":122,"./CopyImageShader":123,"./FxaaShader":124,"./PrimitiveShader":126,"./ReplicateShader":127}],129:[function(require,module,exports){
 /*
 
  Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.
@@ -10254,7 +10446,7 @@ function W(a,b){for(var c=a.d,d=a.e,e=a.c,f=b,g=c[f];;){var h=f<<1;h<a.a&&u(d[c[
 gluEnum:{GLU_TESS_MESH:100112,GLU_TESS_TOLERANCE:100142,GLU_TESS_WINDING_RULE:100140,GLU_TESS_BOUNDARY_ONLY:100141,GLU_INVALID_ENUM:100900,GLU_INVALID_VALUE:100901,GLU_TESS_BEGIN:100100,GLU_TESS_VERTEX:100101,GLU_TESS_END:100102,GLU_TESS_ERROR:100103,GLU_TESS_EDGE_FLAG:100104,GLU_TESS_COMBINE:100105,GLU_TESS_BEGIN_DATA:100106,GLU_TESS_VERTEX_DATA:100107,GLU_TESS_END_DATA:100108,GLU_TESS_ERROR_DATA:100109,GLU_TESS_EDGE_FLAG_DATA:100110,GLU_TESS_COMBINE_DATA:100111}};X.prototype.gluDeleteTess=X.prototype.x;
 X.prototype.gluTessProperty=X.prototype.B;X.prototype.gluGetTessProperty=X.prototype.y;X.prototype.gluTessNormal=X.prototype.A;X.prototype.gluTessCallback=X.prototype.z;X.prototype.gluTessVertex=X.prototype.C;X.prototype.gluTessBeginPolygon=X.prototype.u;X.prototype.gluTessBeginContour=X.prototype.t;X.prototype.gluTessEndContour=X.prototype.v;X.prototype.gluTessEndPolygon=X.prototype.w; if (typeof module !== 'undefined') { module.exports = this.libtess; }
 
-},{}],129:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {

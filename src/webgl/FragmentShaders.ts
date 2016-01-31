@@ -2,28 +2,6 @@
  * Created by MIC on 2015/11/18.
  */
 
-/*
- import * as fs from "fs";
-
- var Locations = {
- "buffered": "./src/webgl/shaders/glsl/buffered.frag",
- "blur": "./src/webgl/shaders/glsl/blur.frag",
- "primitive": "./src/webgl/shaders/glsl/primitive.frag",
- "colorTransform": "./src/webgl/shaders/glsl/color-transform.frag",
- "fxaa": "./src/webgl/shaders/glsl/fxaa.frag"
- };
-
- var encoding:string = "utf-8";
-
- var Values = {
- "buffered": fs.readFileSync(Locations.buffered, encoding),
- "blur": fs.readFileSync(Locations.blur, encoding),
- "primitive": fs.readFileSync(Locations.primitive, encoding),
- "colorTransform": fs.readFileSync(Locations.colorTransform, encoding),
- "fxaa": fs.readFileSync(Locations.fxaa, encoding)
- };
- */
-
 interface FragmentShadersObject {
     buffered?:string;
     blur?:string;
@@ -34,7 +12,7 @@ interface FragmentShadersObject {
     copyImage?:string;
 }
 
-var Values:FragmentShadersObject = {};
+var Values:FragmentShadersObject = Object.create(null);
 
 export abstract class FragmentShaders {
 

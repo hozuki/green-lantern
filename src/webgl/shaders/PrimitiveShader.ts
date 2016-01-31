@@ -29,6 +29,10 @@ export class PrimitiveShader extends ShaderBase {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
     }
 
+    setAlpha(alpha:number):void {
+        this._uniforms.get("uAlpha").value = alpha;
+    }
+
     protected __localInit(manager:ShaderManager, uniforms:Map<string,UniformCache>, attributes:Map<string, AttributeCache>):void {
         super.__localInit(manager, uniforms, attributes);
 

@@ -2,30 +2,6 @@
  * Created by MIC on 2015/11/18.
  */
 
-/*
- import * as fs from "fs";
-
- var Locations = {
- "buffered": "./src/webgl/shaders/glsl/buffered.vert",
- "blurX": "./src/webgl/shaders/glsl/blur-x.vert",
- "blurY": "./src/webgl/shaders/glsl/blur-y.vert",
- "primitive": "./src/webgl/shaders/glsl/primitive.vert",
- "replicate": "./src/webgl/shaders/glsl/replicate.vert",
- "fxaa": "./src/webgl/shaders/glsl/fxaa.vert"
- };
-
- var encoding:string = "utf-8";
-
- var Values = {
- "buffered": fs.readFileSync(Locations.buffered, encoding),
- "blurX": fs.readFileSync(Locations.blurX, encoding),
- "blurY": fs.readFileSync(Locations.blurY, encoding),
- "primitive": fs.readFileSync(Locations.primitive, encoding),
- "replicate": fs.readFileSync(Locations.replicate, encoding),
- "fxaa": fs.readFileSync(Locations.fxaa, encoding)
- };
- */
-
 interface VertexShadersObject {
     buffered?:string;
     blurX?:string;
@@ -35,9 +11,10 @@ interface VertexShadersObject {
     fxaa?:string;
     blur2?:string;
     copyImage?:string;
+    primitive2?:string;
 }
 
-var Values:VertexShadersObject = {};
+var Values:VertexShadersObject = Object.create(null);
 
 export abstract class VertexShaders {
 
@@ -71,6 +48,10 @@ export abstract class VertexShaders {
 
     static get copyImage():string {
         return Values.copyImage;
+    }
+
+    static get primitive2():string {
+        return Values.primitive2;
     }
 
 }
@@ -269,5 +250,32 @@ Values.copyImage = [
     "    }",
     "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
     "    vTextureCoord = newTextureCoord;",
+    "}"
+].join("\n");
+
+Values.primitive2 = [
+    "precision mediump float;",
+    "",
+    "attribute vec3 aVertexPosition;",
+    "attribute vec4 aVertexColor;",
+    "",
+    "uniform mat4 uProjectionMatrix;",
+    "uniform mat4 uTransformMatrix;",
+    "uniform vec2 uOriginalSize;",
+    "uniform bool uFlipX;",
+    "uniform bool uFlipY;",
+    "",
+    "varying vec4 vVertexColor;",
+    "",
+    "void main() {",
+    "    vec3 newVertexPostion = aVertexPosition;",
+    "    if (uFlipX) {",
+    "        newVertexPostion.x = uOriginalSize.x - newVertexPostion.x;",
+    "    }",
+    "    if (uFlipY) {",
+    "        newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;",
+    "    }",
+    "    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);",
+    "    vVertexColor = aVertexColor;",
     "}"
 ].join("\n");

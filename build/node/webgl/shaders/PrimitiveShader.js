@@ -23,6 +23,9 @@ var PrimitiveShader = (function (_super) {
     PrimitiveShader.prototype.setTransform = function (matrix) {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
     };
+    PrimitiveShader.prototype.setAlpha = function (alpha) {
+        this._uniforms.get("uAlpha").value = alpha;
+    };
     PrimitiveShader.prototype.__localInit = function (manager, uniforms, attributes) {
         _super.prototype.__localInit.call(this, manager, uniforms, attributes);
         var u;

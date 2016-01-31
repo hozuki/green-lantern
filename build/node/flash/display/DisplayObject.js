@@ -11,6 +11,8 @@ var NotImplementedError_1 = require("../../_util/NotImplementedError");
 var EventDispatcher_1 = require("../events/EventDispatcher");
 var _util_1 = require("../../_util/_util");
 var BlendMode_1 = require("./BlendMode");
+var Matrix3D_1 = require("../geom/Matrix3D");
+var Vector3D_1 = require("../geom/Vector3D");
 var DisplayObject = (function (_super) {
     __extends(DisplayObject, _super);
     function DisplayObject(root, parent) {
@@ -38,18 +40,15 @@ var DisplayObject = (function (_super) {
         this._childIndex = -1;
         this._alpha = 1;
         this._filters = null;
+        this._filterTarget = null;
         this._transform = null;
-        this._rawRenderTarget = null;
-        this._filteredRenderTarget = null;
+        this._isTransformDirty = true;
         this._isRoot = false;
         this._root = root;
         this._stage = root;
         this._parent = parent;
         this._filters = [];
         this._transform = new Transform_1.Transform();
-        if (root !== null) {
-            this._rawRenderTarget = root.worldRenderer.createRenderTarget();
-        }
         this._isRoot = root === null;
     }
     Object.defineProperty(DisplayObject.prototype, "alpha", {
@@ -85,7 +84,6 @@ var DisplayObject = (function (_super) {
     });
     DisplayObject.prototype.dispose = function () {
         _super.prototype.dispose.call(this);
-        this._root.worldRenderer.releaseRenderTarget(this._rawRenderTarget);
         this.filters = [];
     };
     Object.defineProperty(DisplayObject.prototype, "filters", {
@@ -107,14 +105,12 @@ var DisplayObject = (function (_super) {
                     this._filters[i].notifyAdded();
                 }
             }
-            if (hasFiltersBefore !== hasFiltersNow) {
-                // Update filtered RenderTarget2D state.
-                if (hasFiltersBefore) {
-                    this._filteredRenderTarget.dispose();
-                    this._filteredRenderTarget = null;
+            if (hasFiltersNow !== hasFiltersBefore) {
+                if (hasFiltersNow) {
+                    this.__createFilterTarget(this._root.worldRenderer);
                 }
-                else if (hasFiltersNow) {
-                    this._filteredRenderTarget = this._root.worldRenderer.createRenderTarget();
+                else {
+                    this.__releaseFilterTarget();
                 }
             }
         },
@@ -262,7 +258,11 @@ var DisplayObject = (function (_super) {
             return this._x;
         },
         set: function (v) {
+            var b = this._x !== v;
             this._x = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -272,7 +272,11 @@ var DisplayObject = (function (_super) {
             return this._y;
         },
         set: function (v) {
+            var b = this._y !== v;
             this._y = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -282,7 +286,11 @@ var DisplayObject = (function (_super) {
             return this._z;
         },
         set: function (v) {
+            var b = this._z !== v;
             this._z = v;
+            if (b) {
+                this.requestUpdateTransform();
+            }
         },
         enumerable: true,
         configurable: true
@@ -294,6 +302,9 @@ var DisplayObject = (function (_super) {
         throw new NotImplementedError_1.NotImplementedError();
     };
     DisplayObject.prototype.update = function () {
+        if (this._isTransformDirty) {
+            this.__updateTransform();
+        }
         if (this.enabled) {
             this.__update();
         }
@@ -307,38 +318,62 @@ var DisplayObject = (function (_super) {
         else {
         }
     };
-    Object.defineProperty(DisplayObject.prototype, "outputRenderTarget", {
-        get: function () {
-            return this.__shouldProcessFilters() ? this._filteredRenderTarget : this._rawRenderTarget;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    DisplayObject.prototype.requestUpdateTransform = function () {
+        this._isTransformDirty = true;
+    };
+    DisplayObject.prototype.__updateTransform = function () {
+        var matrix3D;
+        if (this._isRoot) {
+            matrix3D = new Matrix3D_1.Matrix3D();
+        }
+        else {
+            matrix3D = this.parent.transform.matrix3D.clone();
+        }
+        matrix3D.prependTranslation(this.x, this.y, this.z);
+        matrix3D.prependRotation(this.rotationX, Vector3D_1.Vector3D.X_AXIS);
+        matrix3D.prependRotation(this.rotationY, Vector3D_1.Vector3D.Y_AXIS);
+        matrix3D.prependRotation(this.rotationZ, Vector3D_1.Vector3D.Z_AXIS);
+        this.transform.matrix3D.copyFrom(matrix3D);
+    };
     DisplayObject.prototype.__preprocess = function (renderer) {
         var _this = this;
-        this.outputRenderTarget.clear();
+        renderer.setRenderTarget(this.__shouldProcessFilters() ? this._filterTarget : null);
         var manager = renderer.shaderManager;
         this.__selectShader(manager);
-        this.transform.matrix3D.setTransformTo(this.x, this.y, this.z);
-        manager.currentShader.changeValue("uTransformMatrix", function (u) {
-            u.value = _this.transform.matrix3D.toArray();
-        });
-        manager.currentShader.changeValue("uAlpha", function (u) {
-            u.value = _this.alpha;
-        });
-        manager.currentShader.syncUniforms();
+        var shader = manager.currentShader;
+        if (!_util_1._util.isUndefinedOrNull(shader)) {
+            shader.changeValue("uTransformMatrix", function (u) {
+                u.value = _this.transform.matrix3D.toArray();
+            });
+            shader.changeValue("uAlpha", function (u) {
+                u.value = _this.alpha;
+            });
+        }
         renderer.setBlendMode(this.blendMode);
     };
     DisplayObject.prototype.__postprocess = function (renderer) {
         if (this.__shouldProcessFilters()) {
             var filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
-            filterManager.processFilters(renderer, this._rawRenderTarget, this._filteredRenderTarget, true);
+            filterManager.processFilters(renderer, this._filterTarget, renderer.screenTarget, false);
             filterManager.popFilterGroup();
         }
     };
+    DisplayObject.prototype.__createFilterTarget = function (renderer) {
+        if (this._filterTarget !== null) {
+            return;
+        }
+        this._filterTarget = renderer.createRenderTarget();
+    };
+    DisplayObject.prototype.__releaseFilterTarget = function () {
+        if (this._filterTarget === null) {
+            return;
+        }
+        this._filterTarget.dispose();
+        this._filterTarget = null;
+    };
     DisplayObject.prototype.__shouldProcessFilters = function () {
-        return this._filters !== null && this._filters.length > 0;
+        return this.filters !== null && this.filters.length > 0;
     };
     return DisplayObject;
 })(EventDispatcher_1.EventDispatcher);

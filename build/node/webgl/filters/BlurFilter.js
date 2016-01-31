@@ -75,18 +75,19 @@ var BlurFilter = (function (_super) {
         this._blurYFilter.process(renderer, this._tempTarget, output, clearOutput);
     };
     BlurFilter.prototype.__initialize = function () {
-        this._blurXFilter = new BlurXFilter_1.BlurXFilter(this._filterManager);
-        this._blurYFilter = new BlurYFilter_1.BlurYFilter(this._filterManager);
+        this._blurXFilter = new BlurXFilter_1.BlurXFilter(this.filterManager);
+        this._blurYFilter = new BlurYFilter_1.BlurYFilter(this.filterManager);
         this._blurXFilter.initialize();
         this._blurYFilter.initialize();
         this._blurXFilter.strength = this.strengthX;
         this._blurYFilter.strength = this.strengthY;
         this._blurXFilter.pass = this.pass;
         this._blurYFilter.pass = this.pass;
-        this._tempTarget = this._filterManager.renderer.createRenderTarget();
+        this._blurXFilter.flipY = false;
+        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     };
     BlurFilter.prototype.__dispose = function () {
-        this._filterManager.renderer.releaseRenderTarget(this._tempTarget);
+        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();
         this._blurYFilter.dispose();

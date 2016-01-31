@@ -4,6 +4,8 @@
 var FilterBase = (function () {
     function FilterBase(manager) {
         this._filterManager = null;
+        this._flipY = false;
+        this._flipX = false;
         this._referenceCount = 0;
         this._filterManager = manager;
     }
@@ -33,6 +35,41 @@ var FilterBase = (function () {
     };
     FilterBase.prototype.initialize = function () {
         this.__initialize();
+    };
+    Object.defineProperty(FilterBase.prototype, "filterManager", {
+        get: function () {
+            return this._filterManager;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilterBase.prototype, "flipX", {
+        get: function () {
+            return this._flipX;
+        },
+        set: function (v) {
+            this._flipX = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilterBase.prototype, "flipY", {
+        get: function () {
+            return this._flipY;
+        },
+        set: function (v) {
+            this._flipY = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FilterBase.prototype.shouldFlipY = function (target) {
+        if (target.isRoot) {
+            return true;
+        }
+        else {
+            return this.flipY;
+        }
     };
     FilterBase.prototype.__initialize = function () {
     };
