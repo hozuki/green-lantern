@@ -99,10 +99,10 @@ function draw(asGLobal, g) {
             return s;
         }
     });
-    g = Display.createShape(1);
-    g.graphics.beginFill(0xffffff);
-    g.graphics.drawRect(0, 0, 540, 383);
-    g.graphics.endFill();
+    var shape1 = Display.createShape(1);
+    shape1.graphics.beginFill(0xffffff);
+    shape1.graphics.drawRect(0, 0, 540, 383);
+    shape1.graphics.endFill();
 }
 ```
 
