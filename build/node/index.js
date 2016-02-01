@@ -28,17 +28,25 @@ function isSupported() {
         return false;
     }
     // GLantern is based on <canvas>, so it should exist.
-    if (!util.isFunction(globalObject["HTMLCanvasElement"])) {
+    if (!util.isClassDefinition(globalObject["HTMLCanvasElement"])) {
         return false;
     }
     // GLantern uses WebGL, so there should be a corresponding rendering context.
-    if (!util.isFunction(globalObject["WebGLRenderingContext"])) {
+    if (!util.isClassDefinition(globalObject["WebGLRenderingContext"])) {
         return false;
     }
     // GLantern uses Map class, so it should exist.
     // Note: Map is a ES6 feature, but it is a de facto standard on modern browsers.
-    if (!util.isFunction(globalObject["Map"])) {
+    if (!util.isClassDefinition(globalObject["Map"])) {
         return false;
+    }
+    // No plans for support of Chrome whose version is under 42, due to a WebGL memory leak problem.
+    if (typeof globalObject["chrome"] === "object") {
+        var chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
+        var chromeVersionInfo = chromeVersionRegExp.exec(navigator.appVersion);
+        if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 42) {
+            return false;
+        }
     }
     return true;
 }

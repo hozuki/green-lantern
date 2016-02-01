@@ -18,6 +18,8 @@ declare module "glantern" {
 
             static isFunction(value:any):boolean
 
+            static isClassDefinition(value:any):boolean
+
             static limitInto(v:number, min:number, max:number):number;
 
             static isValueBetweenNotEquals(v:number, min:number, max:number):boolean;
