@@ -7,7 +7,12 @@
  instead of Node's "global" object.
  */
 (function ($global) {
-    ($global).GLantern = require("./index");
-})(window || self || global || {});
+    if (!$global) {
+        console.error("GLantern must run in a browser.");
+    }
+    else {
+        ($global).GLantern = require("./index");
+    }
+})(window);
 
 //# sourceMappingURL=browser-bootstrap.js.map

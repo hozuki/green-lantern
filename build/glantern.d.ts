@@ -14,6 +14,10 @@ declare module "glantern" {
 
             static isUndefinedOrNull(value:any):boolean;
 
+            static isUndefined(value:any):boolean
+
+            static isFunction(value:any):boolean
+
             static limitInto(v:number, min:number, max:number):number;
 
             static isValueBetweenNotEquals(v:number, min:number, max:number):boolean;

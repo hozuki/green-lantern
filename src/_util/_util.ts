@@ -28,6 +28,15 @@ export abstract class _util {
     }
 
     /**
+     * Check whether a value is a function.
+     * @param value {*} The value to check.
+     * @returns {Boolean} True if the value is function, and false otherwise.
+     */
+    static isFunction(value:any):boolean {
+        return typeof value === "function";
+    }
+
+    /**
      * Limit a number inside a range specified by min and max (both are reachable).
      * @param v {Number} The number to limit.
      * @param min {Number} The lower bound. Numbers strictly less than this bound will be set to the value.

@@ -224,6 +224,14 @@ var _util = (function () {
         return value === undefined;
     };
     /**
+     * Check whether a value is a function.
+     * @param value {*} The value to check.
+     * @returns {Boolean} True if the value is function, and false otherwise.
+     */
+    _util.isFunction = function (value) {
+        return typeof value === "function";
+    };
+    /**
      * Limit a number inside a range specified by min and max (both are reachable).
      * @param v {Number} The number to limit.
      * @param min {Number} The lower bound. Numbers strictly less than this bound will be set to the value.
@@ -441,7 +449,6 @@ __export(require("./NotImplementedError"));
 
 
 },{"./ApplicationError":2,"./ArgumentError":3,"./NotImplementedError":4,"./_util":5}],7:[function(require,module,exports){
-(function (global){
 /**
  * Created by MIC on 2015/12/4.
  */
@@ -451,12 +458,15 @@ __export(require("./NotImplementedError"));
  instead of Node's "global" object.
  */
 (function ($global) {
-    ($global).GLantern = require("./index");
-})(window || self || global || {});
+    if (!$global) {
+        console.error("GLantern must run in a browser.");
+    }
+    else {
+        ($global).GLantern = require("./index");
+    }
+})(window);
 
 
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{"./index":84}],8:[function(require,module,exports){
 /**
@@ -6107,6 +6117,28 @@ function injectToGlobal($this) {
     $this["mx"] = mx;
 }
 exports.injectToGlobal = injectToGlobal;
+function isSupported() {
+    var globalObject = window;
+    var util = _util._util;
+    if (!globalObject) {
+        return false;
+    }
+    // GLantern is based on <canvas>, so it should exist.
+    if (!util.isFunction(globalObject["HTMLCanvasElement"])) {
+        return false;
+    }
+    // GLantern uses WebGL, so there should be a corresponding rendering context.
+    if (!util.isFunction(globalObject["WebGLRenderingContext"])) {
+        return false;
+    }
+    // GLantern uses Map class, so it should exist.
+    // Note: Map is a ES6 feature, but it is a de facto standard on modern browsers.
+    if (!util.isFunction(globalObject["Map"])) {
+        return false;
+    }
+    return true;
+}
+exports.isSupported = isSupported;
 
 
 

@@ -71,13 +71,20 @@ works. If you want to make it more like ActionScript, GLantern provides a `injec
 to inject the "packages" to the global scope.
 
 ```javascript
-var lantern = new GLantern.GLantern();
-lantern.initialize(682, 438);
-document.body.appendChild(lantern.view);
-window.addEventListener("unload", function () {
-    lantern.uninitialize();
-});
-draw(true, this);
+// Check if GLantern is supported
+if (GLantern.isSupported()) {
+    var lantern = new GLantern.GLantern();
+    lantern.initialize(682, 438);
+    document.body.appendChild(lantern.view);
+    window.addEventListener("unload", function () {
+        lantern.uninitialize();
+    });
+    draw(true, this);
+} else {
+    var prompt = document.createElement("span");
+    prompt.textContent = "Oops, GLantern is not supported on your browser.";
+    document.body.appendChild(prompt);
+}
 
 /**
 * Draws a rectangle.
