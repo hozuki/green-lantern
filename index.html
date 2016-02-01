@@ -61,7 +61,7 @@ $ gulp build</pre></div>
 <p>After building, you will find:</p>
 
 <ul>
-<li>a <code>build/node</code> directory for NW.js and Electron (<code>var GLantern = require("glantern");</code>);</li>
+<li>a <code>build/node</code> directory for NW.js and Electron;</li>
 <li>a <code>build/GLantern-browser.js</code> file as the full, concatenated JavaScript file that can be placed
 in browsers using the <code>&lt;script&gt;</code> tag;</li>
 <li>a <code>build/GLantern-browser.min.js</code> (and corresponding source mapping) as the minimized file for
@@ -105,7 +105,7 @@ to inject the "packages" to the global scope.</p>
     <span class="pl-smi">lantern</span>.<span class="pl-en">initialize</span>(<span class="pl-c1">682</span>, <span class="pl-c1">438</span>);
     <span class="pl-smi">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(<span class="pl-smi">lantern</span>.<span class="pl-smi">view</span>);
     <span class="pl-smi">window</span>.<span class="pl-en">addEventListener</span>(<span class="pl-s"><span class="pl-pds">"</span>unload<span class="pl-pds">"</span></span>, <span class="pl-k">function</span> () {
-        <span class="pl-smi">lantern</span>.<span class="pl-en">uninitialize</span>();
+        <span class="pl-smi">lantern</span>.<span class="pl-en">dispose</span>();
     });
     <span class="pl-en">draw</span>(<span class="pl-c1">true</span>, <span class="pl-v">this</span>);
 } <span class="pl-k">else</span> {
