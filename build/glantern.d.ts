@@ -1917,4 +1917,8 @@ declare module "glantern" {
 
     }
 
+    function injectToGlobal($this:any):void;
+
+    function isSupported():boolean;
+
 }
