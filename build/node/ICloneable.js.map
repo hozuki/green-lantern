@@ -1,0 +1,1 @@
+{"version":3,"sources":["ICloneable.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"ICloneable.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/19.\r\n */\r\n\r\nexport interface ICloneable<T> {\r\n    clone():T;\r\n}\r\n"],"sourceRoot":"/source/"}
