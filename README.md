@@ -1,8 +1,9 @@
 # GLantern
 
-GLantern is a library intended for a Flash-HTML5 shim layer.
+GLantern is a library intended for a Flash-HTML5 shim layer. Enjoy the live preview
+[here](test/visual/index.html).
 
-Screenshots of test cases can be found in [here](res/images).
+Screenshots of test cases can be found [here](res/images).
 
 ## Acquiring the Source
 
