@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>GLantern by Hozuki</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>GLantern</h1>
+        <h2>A library intended for a Flash-HTML5 shim layer</h2>
+        <a href="https://github.com/Hozuki/GLantern" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="glantern" class="anchor" href="#glantern" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GLantern</h1>
+
+<p>GLantern is a library intended for a Flash-HTML5 shim layer.</p>
+
+<p>Screenshots of test cases can be found in <a href="res/images">here</a>.</p>
+
+<h2>
+<a id="acquiring-the-source" class="anchor" href="#acquiring-the-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acquiring the Source</h2>
+
+<p>The repository is hosted on <a href="http://github.com/Hozuki/GLantern/">GitHub</a>. You may want to use fine-tuned
+<a href="//desktop.github.com/">GitHub Desktop</a> (for Windows and Mac users), or <code>git</code> (for every OS) to
+clone it into your computer:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ git clone https://github.com/Hozuki/GLantern.git /preferred/cloning/destination</pre></div>
+
+<p>You may install it as a <a href="//npmjs.com/package/glantern">NPM package</a> as an alternative:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install glantern --save</pre></div>
+
+<h2>
+<a id="building-from-the-source" class="anchor" href="#building-from-the-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building from the Source</h2>
+
+<p>Make sure you have Node.js and NPM installed. The rest is quite simple:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ <span class="pl-c1">cd</span> /path/to/GLantern/
+$ npm install
+$ gulp build</pre></div>
+
+<p>After building, you will find:</p>
+
+<ul>
+<li>a <code>build/node</code> directory for NW.js and Electron (<code>var GLantern = require("glantern");</code>);</li>
+<li>a <code>build/GLantern-browser.js</code> file as the full, concatenated JavaScript file that can be placed
+in browsers using the <code>&lt;script&gt;</code> tag;</li>
+<li>a <code>build/GLantern-browser.min.js</code> (and corresponding source mapping) as the minimized file for
+better loading speed.</li>
+</ul>
+
+<h2>
+<a id="using-the-library" class="anchor" href="#using-the-library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using the Library</h2>
+
+<p>See the demo page at <code>test/visual/index.html</code>. You will need an environment with WebGL, like
+modern browsers, <a href="http://nwjs.io/">NW.js</a>, or <a href="http://electron.atom.io/">Electron</a>.</p>
+
+<h3>
+<a id="importing-into-your-project" class="anchor" href="#importing-into-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Importing into Your Project</h3>
+
+<p>GLantern supports two styles of importing.</p>
+
+<p>The first one is importing by <code>&lt;script&gt;</code> tag. Use its <code>src</code> attribute and point it to <code>GLantern-browser.min.js</code>
+in the <code>build</code> directory:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>build/GLantern-browser.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<p>In environments that support Node.js, like NW.js or Electron, you can also use the <code>require</code> syntax:</p>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span>&gt;</span>
+<span class="pl-s1">    <span class="pl-k">var</span> GLantern <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>glantern<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p>After importing with either the former or the latter style, the <code>GLantern</code> object is globally available.</p>
+
+<h3>
+<a id="using-exported-members" class="anchor" href="#using-exported-members" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Exported Members</h3>
+
+<p>The package structure of Flash is preserved in GLantern, so adding a <code>GLantern.</code> prefix usually
+works. If you want to make it more like ActionScript, GLantern provides a <code>injectToGlobal()</code> function
+to inject the "packages" to the global scope.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Check if GLantern is supported</span>
+<span class="pl-k">if</span> (<span class="pl-smi">GLantern</span>.<span class="pl-en">isSupported</span>()) {
+    <span class="pl-k">var</span> lantern <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">GLantern.GLantern</span>();
+    <span class="pl-smi">lantern</span>.<span class="pl-en">initialize</span>(<span class="pl-c1">682</span>, <span class="pl-c1">438</span>);
+    <span class="pl-smi">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(<span class="pl-smi">lantern</span>.<span class="pl-smi">view</span>);
+    <span class="pl-smi">window</span>.<span class="pl-en">addEventListener</span>(<span class="pl-s"><span class="pl-pds">"</span>unload<span class="pl-pds">"</span></span>, <span class="pl-k">function</span> () {
+        <span class="pl-smi">lantern</span>.<span class="pl-en">uninitialize</span>();
+    });
+    <span class="pl-en">draw</span>(<span class="pl-c1">true</span>, <span class="pl-v">this</span>);
+} <span class="pl-k">else</span> {
+    <span class="pl-k">var</span> prompt <span class="pl-k">=</span> <span class="pl-smi">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">"</span>span<span class="pl-pds">"</span></span>);
+    <span class="pl-smi">prompt</span>.<span class="pl-smi">textContent</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Oops, GLantern is not supported on your browser.<span class="pl-pds">"</span></span>;
+    <span class="pl-smi">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(prompt);
+}
+
+<span class="pl-c">/**</span>
+<span class="pl-c">* Draws a rectangle.</span>
+<span class="pl-c">* <span class="pl-k">@param</span> asGlobal {Boolean} Whether to inject Flash packages to global scope or not.</span>
+<span class="pl-c">* <span class="pl-k">@param</span> g {*} The global object, usually {@link window}.</span>
+<span class="pl-c">*/</span>
+<span class="pl-k">function</span> <span class="pl-en">draw</span>(<span class="pl-smi">asGLobal</span>, <span class="pl-smi">g</span>) {
+    <span class="pl-k">if</span> (asGLobal) {
+        <span class="pl-smi">GLantern</span>.<span class="pl-en">injectToGlobal</span>(g);
+    }
+    <span class="pl-k">var</span> flash <span class="pl-k">=</span> <span class="pl-smi">g</span>.<span class="pl-smi">flash</span> <span class="pl-k">?</span> <span class="pl-smi">g</span>.<span class="pl-smi">flash</span> <span class="pl-k">:</span> <span class="pl-smi">GLantern</span>.<span class="pl-smi">flash</span>;
+    <span class="pl-k">var</span> Display <span class="pl-k">=</span> <span class="pl-smi">Object</span>.<span class="pl-en">create</span>({
+        <span class="pl-s"><span class="pl-pds">"</span><span class="pl-en">createShape</span><span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">alpha</span>) {
+            <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">flash.display</span>.<span class="pl-en">Shape</span>(<span class="pl-smi">lantern</span>.<span class="pl-smi">stage</span>, <span class="pl-smi">lantern</span>.<span class="pl-smi">stage</span>);
+            <span class="pl-smi">lantern</span>.<span class="pl-smi">stage</span>.<span class="pl-en">addChild</span>(s);
+            <span class="pl-smi">s</span>.<span class="pl-smi">alpha</span> <span class="pl-k">=</span> alpha;
+            <span class="pl-k">return</span> s;
+        }
+    });
+    <span class="pl-k">var</span> shape1 <span class="pl-k">=</span> <span class="pl-smi">Display</span>.<span class="pl-en">createShape</span>(<span class="pl-c1">1</span>);
+    <span class="pl-smi">shape1</span>.<span class="pl-smi">graphics</span>.<span class="pl-en">beginFill</span>(<span class="pl-c1">0xffffff</span>);
+    <span class="pl-smi">shape1</span>.<span class="pl-smi">graphics</span>.<span class="pl-en">drawRect</span>(<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">540</span>, <span class="pl-c1">383</span>);
+    <span class="pl-smi">shape1</span>.<span class="pl-smi">graphics</span>.<span class="pl-en">endFill</span>();
+}</pre></div>
+
+<h2>
+<a id="api-references" class="anchor" href="#api-references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API References</h2>
+
+<p><del>See <a href="//github.com/Hozuki/GLantern/wiki/">Wiki</a>.</del> (Not written yet.)</p>
+
+<p>Visit the <a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/">ActionScript 3 API Reference</a> instead.</p>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog</h2>
+
+<p>See <a href="CHANGELOG.md">CHANGELOG.md</a>.</p>
+
+<h2>
+<a id="qa" class="anchor" href="#qa" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Q&amp;A</h2>
+
+<p>See <a href="QA.md">QA.md</a>.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p><a href="//mitlicense.org">The MIT License</a></p>
+
+<p>You will also find a copy in <a href="LICENSE.md"><code>LICENSE.md</code></a>.</p>
+
+<h2>
+<a id="other-resources" class="anchor" href="#other-resources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other Resources</h2>
+
+<ul>
+<li>Adobe Flash CC is able to export Flash project as WebGL projects. The tutorial and
+restrictions can be found <a href="https://helpx.adobe.com/flash/using/creating-publishing-webgl-document.html">here</a>.
+However, it has recently be announced that <a href="http://blogs.adobe.com/flashpro/welcome-adobe-animate-cc-a-new-era-for-flash-professional/">Flash is replaced by Animate</a>.
+So fellas, you may want to give a warm welcome to that new solution.</li>
+<li>Mozilla has started a project, <a href="https://wiki.mozilla.org/Shumway">Shumway</a>, which is intended to
+provide Flash-like support by using HTML 5 features on Firefox.</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/Hozuki/GLantern/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Hozuki/GLantern/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/Hozuki/GLantern"></a> is maintained by <a href="https://github.com/Hozuki">Hozuki</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
