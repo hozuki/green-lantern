@@ -33,11 +33,10 @@ $ gulp build
 
 After building, you will find:
 
-- a `build/node` directory for NW.js and Electron (`var GLantern = require("glantern");`);
-- a `build/GLantern-browser.js` file as the full, concatenated JavaScript file that can be placed
-in browsers using the `<script>` tag;
-- a `build/GLantern-browser.min.js` (and corresponding source mapping) as the minimized file for
-better loading speed.
+- a `build/node` directory for NW.js and Electron;
+- a `build/GLantern-browser.js` file as the full, concatenated JavaScript file for browsers;
+- a `build/GLantern-browser.min.js` (and corresponding source mapping) for browsers, as the
+minimized file for a better loading speed.
 
 ## Using the Library
 
@@ -78,7 +77,7 @@ if (GLantern.isSupported()) {
     lantern.initialize(682, 438);
     document.body.appendChild(lantern.view);
     window.addEventListener("unload", function () {
-        lantern.uninitialize();
+        lantern.dispose();
     });
     draw(true, this);
 } else {
