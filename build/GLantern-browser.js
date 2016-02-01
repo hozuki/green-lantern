@@ -6159,7 +6159,7 @@ function isSupported() {
     // No plans for support of Chrome whose version is under 42, due to a WebGL memory leak problem.
     if (typeof globalObject["chrome"] === "object") {
         var chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
-        var chromeVersionInfo = chromeVersionRegExp.exec(navigator.appVersion);
+        var chromeVersionInfo = chromeVersionRegExp.exec(window.navigator.appVersion);
         if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 42) {
             return false;
         }
