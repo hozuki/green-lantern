@@ -40,11 +40,11 @@ function isSupported() {
     if (!util.isClassDefinition(globalObject["Map"])) {
         return false;
     }
-    // No plans for support of Chrome whose version is under 42, due to a WebGL memory leak problem.
+    // No plans for support of Chrome whose version is under 40, due to a WebGL memory leak problem.
     if (typeof globalObject["chrome"] === "object") {
         var chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
         var chromeVersionInfo = chromeVersionRegExp.exec(window.navigator.appVersion);
-        if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 42) {
+        if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 40) {
             return false;
         }
     }
