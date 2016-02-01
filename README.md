@@ -1,7 +1,7 @@
 # GLantern
 
 GLantern is a library intended for a Flash-HTML5 shim layer. Enjoy the live preview
-[here](test/visual/index.html).
+from <http://hozuki.github.io/GLantern>.
 
 Screenshots of test cases can be found [here](res/images).
 
