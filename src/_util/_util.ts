@@ -121,7 +121,7 @@ export abstract class _util {
      * @param sourceObject {*} The object to be cloned.
      * @returns {*} The copy of original object.
      */
-    static deepClone(sourceObject:any):any {
+    static deepClone<T>(sourceObject:T):T {
         if (sourceObject === undefined || sourceObject === null || sourceObject === true || sourceObject === false) {
             return sourceObject;
         }
@@ -153,15 +153,16 @@ export abstract class _util {
         }
         /* Classic ES5 functions. */
         if (sourceObject instanceof Function || typeof sourceObject === "function") {
+            var sourceFunctionObject = <Function>sourceObject;
             var fn = (function ():Function {
                 return function () {
-                    return sourceObject.apply(this, arguments);
+                    return sourceFunctionObject.apply(this, arguments);
                 }
             })();
-            fn.prototype = sourceObject.prototype;
-            for (var key in sourceObject) {
-                if (sourceObject.hasOwnProperty(key)) {
-                    (<any>fn)[key] = (<any>sourceObject)[key];
+            fn.prototype = sourceFunctionObject.prototype;
+            for (var key in sourceFunctionObject) {
+                if (sourceFunctionObject.hasOwnProperty(key)) {
+                    (<any>fn)[key] = (<any>sourceFunctionObject)[key];
                 }
             }
             return fn;
@@ -169,8 +170,14 @@ export abstract class _util {
         /* Classic ES5 objects. */
         if (sourceObject instanceof Object || typeof sourceObject === "object") {
             var newObject = Object.create(null);
-            for (var key in sourceObject) {
-                if (sourceObject.hasOwnProperty(key)) {
+            if (typeof sourceObject.hasOwnProperty === "function") {
+                for (var key in sourceObject) {
+                    if (sourceObject.hasOwnProperty(key)) {
+                        newObject[key] = _util.deepClone(sourceObject[key]);
+                    }
+                }
+            } else {
+                for (var key in sourceObject) {
                     newObject[key] = _util.deepClone(sourceObject[key]);
                 }
             }
