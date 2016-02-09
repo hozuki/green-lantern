@@ -64,7 +64,7 @@ export class Stage extends DisplayObjectContainer {
     }
 
     get stageHeight():number {
-        throw new NotImplementedError();
+        return this.worldRenderer.view.height;
     }
 
     set stageHeight(v:number) {
@@ -72,7 +72,7 @@ export class Stage extends DisplayObjectContainer {
     }
 
     get stageWidth():number {
-        throw new NotImplementedError();
+        return this.worldRenderer.view.width;
     }
 
     set stageWidth(v:number) {
@@ -117,8 +117,6 @@ export class Stage extends DisplayObjectContainer {
     private _allowFullScreen:boolean = true;
     private _allowFullScreenInteractive:boolean = true;
     private _colorCorrectionSupport:string = ColorCorrectionSupport.DEFAULT_OFF;
-    private _stageHeight:number = 0;
-    private _stageWidth:number = 0;
     private _worldRenderer:WebGLRenderer = null;
 
 }
