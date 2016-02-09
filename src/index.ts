@@ -34,9 +34,12 @@ export function isSupported():boolean {
     if (!util.isClassDefinition(globalObject["WebGLRenderingContext"])) {
         return false;
     }
-    // GLantern uses Map class, so it should exist.
-    // Note: Map is a ES6 feature, but it is a de facto standard on modern browsers.
+    // GLantern uses Map and Set class, so they should exist.
+    // Note: Map and Set are ES6 features, but they are implemented on modern browsers.
     if (!util.isClassDefinition(globalObject["Map"])) {
+        return false;
+    }
+    if (!util.isClassDefinition(globalObject["Set"])) {
         return false;
     }
     // No plans for support of Chrome whose version is under 40, due to a WebGL memory leak problem.
