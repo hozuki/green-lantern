@@ -33,8 +33,6 @@ var Stage = (function (_super) {
         this._allowFullScreen = true;
         this._allowFullScreenInteractive = true;
         this._colorCorrectionSupport = ColorCorrectionSupport_1.ColorCorrectionSupport.DEFAULT_OFF;
-        this._stageHeight = 0;
-        this._stageWidth = 0;
         this._worldRenderer = null;
         this._root = this;
         this._worldRenderer = renderer;
@@ -84,7 +82,7 @@ var Stage = (function (_super) {
     });
     Object.defineProperty(Stage.prototype, "stageHeight", {
         get: function () {
-            throw new NotImplementedError_1.NotImplementedError();
+            return this.worldRenderer.view.height;
         },
         set: function (v) {
             throw new NotImplementedError_1.NotImplementedError();
@@ -94,7 +92,7 @@ var Stage = (function (_super) {
     });
     Object.defineProperty(Stage.prototype, "stageWidth", {
         get: function () {
-            throw new NotImplementedError_1.NotImplementedError();
+            return this.worldRenderer.view.width;
         },
         set: function (v) {
             throw new NotImplementedError_1.NotImplementedError();

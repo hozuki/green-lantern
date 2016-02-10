@@ -371,8 +371,6 @@ var TextField = (function (_super) {
             this._canvasTarget.updateImageContent();
             RenderHelper_1.RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         }
-        else {
-        }
     };
     TextField.prototype.__selectShader = function (shaderManager) {
         shaderManager.selectShader(ShaderID_1.ShaderID.COPY_IMAGE);
