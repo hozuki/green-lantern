@@ -121,7 +121,7 @@ export abstract class _util {
      * @param sourceObject {*} The object to be cloned.
      * @returns {*} The copy of original object.
      */
-    static deepClone<T>(sourceObject:T):T {
+    static deepClone(sourceObject:any):any {
         if (sourceObject === undefined || sourceObject === null || sourceObject === true || sourceObject === false) {
             return sourceObject;
         }

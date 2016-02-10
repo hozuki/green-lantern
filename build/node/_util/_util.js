@@ -151,15 +151,16 @@ var _util = (function () {
         }
         /* Classic ES5 functions. */
         if (sourceObject instanceof Function || typeof sourceObject === "function") {
+            var sourceFunctionObject = sourceObject;
             var fn = (function () {
                 return function () {
-                    return sourceObject.apply(this, arguments);
+                    return sourceFunctionObject.apply(this, arguments);
                 };
             })();
-            fn.prototype = sourceObject.prototype;
-            for (var key in sourceObject) {
-                if (sourceObject.hasOwnProperty(key)) {
-                    fn[key] = sourceObject[key];
+            fn.prototype = sourceFunctionObject.prototype;
+            for (var key in sourceFunctionObject) {
+                if (sourceFunctionObject.hasOwnProperty(key)) {
+                    fn[key] = sourceFunctionObject[key];
                 }
             }
             return fn;
@@ -167,8 +168,15 @@ var _util = (function () {
         /* Classic ES5 objects. */
         if (sourceObject instanceof Object || typeof sourceObject === "object") {
             var newObject = Object.create(null);
-            for (var key in sourceObject) {
-                if (sourceObject.hasOwnProperty(key)) {
+            if (typeof sourceObject.hasOwnProperty === "function") {
+                for (var key in sourceObject) {
+                    if (sourceObject.hasOwnProperty(key)) {
+                        newObject[key] = _util.deepClone(sourceObject[key]);
+                    }
+                }
+            }
+            else {
+                for (var key in sourceObject) {
                     newObject[key] = _util.deepClone(sourceObject[key]);
                 }
             }
