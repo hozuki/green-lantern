@@ -1,7 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
-var $global = global || window;
+var $global = window || self || global || {};
 /**
  * The class providing utility functions.
  */
@@ -114,11 +114,6 @@ var _util = (function () {
         var regex = /{[\d]+}/g;
         return format.replace(regex, __stringFormatter);
     };
-    /**
-     * Deeply clones an object. The cloned object has the exactly same values but no connection with the original one.
-     * @param sourceObject {*} The object to be cloned.
-     * @returns {*} The copy of original object.
-     */
     _util.deepClone = function (sourceObject) {
         if (sourceObject === undefined || sourceObject === null || sourceObject === true || sourceObject === false) {
             return sourceObject;

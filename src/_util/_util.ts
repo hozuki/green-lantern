@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/17.
  */
 
-var $global = global || <any>window;
+var $global = <any>window || <any>self || global || {};
 
 /**
  * The class providing utility functions.
@@ -121,6 +121,14 @@ export abstract class _util {
      * @param sourceObject {*} The object to be cloned.
      * @returns {*} The copy of original object.
      */
+    static deepClone(sourceObject:boolean):boolean;
+    static deepClone(sourceObject:string):string;
+    static deepClone(sourceObject:number):number;
+    static deepClone<T>(sourceObject:T[]):T[];
+    static deepClone<T extends Object>(sourceObject:T):T;
+    static deepClone<K, V>(sourceObject:Map<K, V>):Map<K, V>;
+    static deepClone<T>(sourceObject:Set<T>):Set<T>;
+    static deepClone<T extends Function>(sourceObject:T):T;
     static deepClone(sourceObject:any):any {
         if (sourceObject === undefined || sourceObject === null || sourceObject === true || sourceObject === false) {
             return sourceObject;
