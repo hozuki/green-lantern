@@ -7,15 +7,13 @@ Screenshots of test cases can be found [here](res/images).
 
 ## Acquiring the Source
 
-The repository is hosted on [GitHub](http://github.com/Hozuki/GLantern/). You may want to use fine-tuned
-[GitHub Desktop](//desktop.github.com/) (for Windows and Mac users), or `git` (for every OS) to
-clone it into your computer:
+Native `git` is highly recommended against other clients:
 
 ```bash
 $ git clone https://github.com/Hozuki/GLantern.git /preferred/cloning/destination
 ```
 
-You may install it as a [NPM package](//npmjs.com/package/glantern) as an alternative:
+Or, as a [NPM package](//npmjs.com/package/glantern), you can install it via `npm`:
 
 ```bash
 $ npm install glantern --save
