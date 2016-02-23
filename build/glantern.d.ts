@@ -26,6 +26,14 @@ declare module "glantern" {
 
             static formatString(format:string, ...replaceWithArray:any[]):string;
 
+            static deepClone(sourceObject:boolean):boolean;
+            static deepClone(sourceObject:string):string;
+            static deepClone(sourceObject:number):number;
+            static deepClone<T>(sourceObject:T[]):T[];
+            static deepClone<T extends Object>(sourceObject:T):T;
+            static deepClone<K, V>(sourceObject:Map<K, V>):Map<K, V>;
+            static deepClone<T>(sourceObject:Set<T>):Set<T>;
+            static deepClone<T extends Function>(sourceObject:T):T;
             static deepClone(sourceObject:any):any;
 
             static isPowerOfTwo(positiveNumber:number):boolean;
