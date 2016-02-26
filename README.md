@@ -115,10 +115,6 @@ function draw(asGLobal, g) {
 
 Visit the [ActionScript 3 API Reference](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/) instead.
 
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md).
-
 ## Q&A
 
 See [QA.md](QA.md).

@@ -2,7 +2,7 @@
   "name": "glantern",
   "version": "0.5.3-alpha",
   "description": "A library intended for a Flash-HTML5 shim layer.",
-  "main": "build/node/index.js",
+  "main": "build/node/glantern/index.js",
   "scripts": {
     "test": "echo Browse visual tests please. && exit 0"
   },

@@ -23,7 +23,7 @@ var tsConfig = {
 
 gulp.task("build", ["build-compile", "build-browserify"]);
 
-gulp.task("build-compile", function () {
+gulp.task("build-compile", ["build-compile-utils"], function () {
     "use strict";
     return gulp
         .src(["src/**/*.ts", "inc/**/*.ts"])
@@ -37,7 +37,7 @@ gulp.task("build-compile", function () {
 gulp.task("build-browserify", ["build-compile"], function () {
     "use strict";
     return browserify({
-        entries: "build/node/browser-bootstrap.js",
+        entries: "build/node/glantern/browser-bootstrap.js",
         debug: true
     })
         .bundle()
@@ -52,11 +52,22 @@ gulp.task("build-browserify", ["build-compile"], function () {
         .pipe(gulp.dest("build"));
 });
 
-gulp.task("build-generate-definition", function () {
+gulp.task("build-compile-utils", function () {
     "use strict";
     return gulp
-        .src(["inc/**/*.ts", "tools/gendef/**/*.ts"])
+        .src(["lib/glantern-utils/src/**/*.ts", "lib/glantern-utils/inc/**/*.ts"])
+        .pipe(sourcemaps.init())
         .pipe(ts(tsConfig))
         .js
-        .pipe(gulp.dest("tools/gendef"))
+        .pipe(sourcemaps.write("."))
+        .pipe(gulp.dest("build/lib/glantern-utils/src"))
 });
+
+//gulp.task("build-generate-definition", function () {
+//    "use strict";
+//    return gulp
+//        .src(["inc/**/*.ts", "tools/gendef/**/*.ts"])
+//        .pipe(ts(tsConfig))
+//        .js
+//        .pipe(gulp.dest("tools/gendef"))
+//});
