@@ -276,6 +276,17 @@ var _util = (function () {
         return min < v && v < max;
     };
     /**
+     * Check whether a number is inside a range specified min a max (both are reachable).
+     * @param v {Number} The number to check.
+     * @param min {Number} The lower bound.
+     * @param max {Number} The upper bound.
+     * @returns {Boolean} True if the number to check is not less than min and not greater than max, and
+     * false otherwise.
+     */
+    _util.isValueBetweenEquals = function (v, min, max) {
+        return min <= v && v <= max;
+    };
+    /**
      * Generate a string based on the template, and provided values. This function acts similarly to the String.Format()
      * function in CLR.
      * @param format {String} The template string.
@@ -2853,6 +2864,20 @@ var Stage = (function (_super) {
     Object.defineProperty(Stage.prototype, "y", {
         get: function () {
             return 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Stage.prototype, "width", {
+        get: function () {
+            return this.worldRenderer.view.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Stage.prototype, "height", {
+        get: function () {
+            return this.worldRenderer.view.height;
         },
         enumerable: true,
         configurable: true
