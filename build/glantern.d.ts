@@ -24,6 +24,8 @@ declare module "glantern" {
 
             static isValueBetweenNotEquals(v:number, min:number, max:number):boolean;
 
+            static isValueBetweenEquals(v:number, min:number, max:number):boolean;
+
             static formatString(format:string, ...replaceWithArray:any[]):string;
 
             static deepClone(sourceObject:boolean):boolean;

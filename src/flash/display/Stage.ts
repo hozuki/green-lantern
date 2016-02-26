@@ -89,6 +89,14 @@ export class Stage extends DisplayObjectContainer {
         return 0;
     }
 
+    get width():number {
+        return this.worldRenderer.view.width;
+    }
+
+    get height():number {
+        return this.worldRenderer.view.height;
+    }
+
     invalidate():void {
         throw new NotImplementedError();
     }

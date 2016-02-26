@@ -114,6 +114,20 @@ var Stage = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Stage.prototype, "width", {
+        get: function () {
+            return this.worldRenderer.view.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Stage.prototype, "height", {
+        get: function () {
+            return this.worldRenderer.view.height;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Stage.prototype.invalidate = function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
