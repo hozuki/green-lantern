@@ -109,12 +109,6 @@ function draw(asGLobal, g) {
 }
 ```
 
-## API References
-
-<del>See [Wiki](//github.com/Hozuki/GLantern/wiki/).</del> (Not written yet.)
-
-Visit the [ActionScript 3 API Reference](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/) instead.
-
 ## Q&A
 
 See [QA.md](QA.md).
