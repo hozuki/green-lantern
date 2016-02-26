@@ -1,1 +1,0 @@
-{"version":3,"sources":["glantern/idisposable.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"glantern/IDisposable.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/19.\r\n */\r\n\r\nexport interface IDisposable {\r\n    dispose():void;\r\n}\r\n"],"sourceRoot":"/source/"}

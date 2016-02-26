@@ -37,7 +37,7 @@ gulp.task("build-compile", ["build-compile-utils"], function () {
 gulp.task("build-browserify", ["build-compile"], function () {
     "use strict";
     return browserify({
-        entries: "build/node/glantern/browser-bootstrap.js",
+        entries: "build/node/browser-bootstrap.js",
         debug: true
     })
         .bundle()
