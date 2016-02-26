@@ -7,3 +7,7 @@
 ## Node.js modules
 
 node_modules
+
+## External builds
+
+build/lib

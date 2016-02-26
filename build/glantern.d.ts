@@ -1,4 +1,4 @@
-import {TextLineMetrics} from "../src/flash/text/TextLineMetrics";
+import {TextLineMetrics} from "../src/glantern/flash/text/TextLineMetrics";
 /**
  * Created by MIC on 2015/12/26.
  */
@@ -7,79 +7,6 @@ import {TextLineMetrics} from "../src/flash/text/TextLineMetrics";
 ///<reference path="../libtess.js/libtess.js.d.ts"/>
 
 declare module "glantern" {
-
-    module _util {
-
-        abstract class _util {
-
-            static isUndefinedOrNull(value:any):boolean;
-
-            static isUndefined(value:any):boolean
-
-            static isFunction(value:any):boolean
-
-            static isClassDefinition(value:any):boolean
-
-            static limitInto(v:number, min:number, max:number):number;
-
-            static isValueBetweenNotEquals(v:number, min:number, max:number):boolean;
-
-            static isValueBetweenEquals(v:number, min:number, max:number):boolean;
-
-            static formatString(format:string, ...replaceWithArray:any[]):string;
-
-            static deepClone(sourceObject:boolean):boolean;
-            static deepClone(sourceObject:string):string;
-            static deepClone(sourceObject:number):number;
-            static deepClone<T>(sourceObject:T[]):T[];
-            static deepClone<T extends Object>(sourceObject:T):T;
-            static deepClone<K, V>(sourceObject:Map<K, V>):Map<K, V>;
-            static deepClone<T>(sourceObject:Set<T>):Set<T>;
-            static deepClone<T extends Function>(sourceObject:T):T;
-            static deepClone(sourceObject:any):any;
-
-            static isPowerOfTwo(positiveNumber:number):boolean;
-
-            static power2Roundup(positiveNumber:number):number;
-
-            static trace(message:string, extra?:any):void;
-
-            static requestAnimationFrame(f:FrameRequestCallback):number;
-
-            static cancelAnimationFrame(handle:number):void;
-
-            static colorToCssSharp(color:number):string;
-
-            static colorToCssRgba(color:number):string;
-
-            static padLeft(str:string, targetLength:number, padWith:string):string;
-
-        }
-
-        class ApplicationError implements Error {
-
-            constructor(message?:string);
-
-            message:string;
-            name:string;
-
-        }
-
-        class ArgumentError extends ApplicationError {
-
-            constructor(message?:string, argument?:string);
-
-            argument:string;
-
-        }
-
-        class NotImplementedError extends ApplicationError {
-
-            constructor(message?:string);
-
-        }
-
-    }
 
     module flash {
 

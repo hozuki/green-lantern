@@ -1,1 +1,0 @@
-{"version":3,"sources":["flash/media/index.ts"],"names":[],"mappings":"AAAA;;GAEG;;;;AAEH,iBAAc,SAAS,CAAC,EAAA","file":"flash/media/index.js","sourcesContent":["/**\r\n * Created by MIC on 2016/1/7.\r\n */\r\n\r\nexport * from \"./Sound\";\r\n"],"sourceRoot":"/source/"}
