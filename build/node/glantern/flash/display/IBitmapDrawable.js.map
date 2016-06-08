@@ -1,1 +1,0 @@
-{"version":3,"sources":["glantern/flash/display/ibitmapdrawable.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"glantern/flash/display/IBitmapDrawable.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/18.\r\n */\r\n\r\nexport interface IBitmapDrawable {\r\n\r\n}\r\n"],"sourceRoot":"/source/"}

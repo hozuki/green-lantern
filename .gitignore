@@ -1,13 +1,8 @@
-# Created by .ignore support plugin (hsz.mobi)
-
-## IntelliJ project files
-
+# IntelliJ project files
 .idea
 
-## Node.js modules
-
+# Node.js modules
 node_modules
 
-## External builds
-
-build/lib
+# Build result
+build

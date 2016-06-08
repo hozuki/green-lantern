@@ -1,1 +1,0 @@
-{"version":3,"sources":["glantern/webgl/rendereroptions.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"glantern/webgl/RendererOptions.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/20.\r\n */\r\n\r\nexport interface RendererOptions {\r\n\r\n    antialias?:boolean;\r\n    depth?:boolean;\r\n    transparent?:boolean;\r\n\r\n}\r\n"],"sourceRoot":"/source/"}

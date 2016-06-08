@@ -3,21 +3,23 @@
  */
 
 /**
- * @type {GLantern}
+ * @type {EngineBase}
  */
 var lantern = null;
-if (GLantern.isSupported()) {
-    lantern = new GLantern.GLantern();
-    lantern.initialize(682, 438);
-    (function (selector) {
-        var elem = document.querySelector(selector);
-        elem.appendChild(lantern.view);
-    })("#glantern-container");
+(function initGLantern() {
+    if (GLantern.isSupported()) {
+        lantern = new GLantern.EngineBase();
+        lantern.initialize(682, 438);
+        (function (selector) {
+            var elem = document.querySelector(selector);
+            elem.appendChild(lantern.view);
+        })("#glantern-container");
 
-    window.addEventListener("unload", function () {
-        lantern.dispose();
-    });
-}
+        window.addEventListener("unload", function () {
+            lantern.dispose();
+        });
+    }
+})();
 
 (function initList() {
     var testCases = {
@@ -88,7 +90,7 @@ if (GLantern.isSupported()) {
          * @type {HTMLLIElement}
          */
         var liElem = document.createElement("li");
-        liElem.textContent = "Oops, it seems that GLantern does not support your browser.";
+        liElem.textContent = "Oops, it seems that EngineBase does not support your browser.";
         caseListElem.appendChild(liElem);
     }
 })();
