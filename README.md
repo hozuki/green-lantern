@@ -45,11 +45,10 @@ modern browsers, [NW.js](http://nwjs.io/), or [Electron](http://electron.atom.io
 
 GLantern supports two styles of importing.
 
-The first one is importing by `<script>` tag. Use its `src` attribute and point it to `GLantern-browser.min.js`
-in the `build` directory:
+The first one is importing by `<script>` tag. Use its `src` attribute and point it to the compiled result:
 
 ```html
-<script type="text/javascript" src="build/GLantern-browser.min.js"></script>
+<script type="text/javascript" src="GLantern-browser.min.js"></script>
 ```
 
 In environments that support Node.js, like NW.js or Electron, you can also use the `require` syntax:
@@ -71,7 +70,7 @@ to inject the "packages" to the global scope.
 ```javascript
 // Check if GLantern is supported
 if (GLantern.isSupported()) {
-    var lantern = new GLantern.GLantern();
+    var lantern = new GLantern.EngineBase();
     lantern.initialize(682, 438);
     document.body.appendChild(lantern.view);
     window.addEventListener("unload", function () {

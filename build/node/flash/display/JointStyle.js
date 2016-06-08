@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var JointStyle = (function () {
     function JointStyle() {
     }
@@ -26,7 +27,7 @@ var JointStyle = (function () {
         configurable: true
     });
     return JointStyle;
-})();
+}());
 exports.JointStyle = JointStyle;
 
 //# sourceMappingURL=JointStyle.js.map

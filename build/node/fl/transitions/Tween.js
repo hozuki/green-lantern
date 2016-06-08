@@ -1,13 +1,14 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var EventDispatcher_1 = require("../../flash/events/EventDispatcher");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var Tween = (function (_super) {
     __extends(Tween, _super);
     function Tween(obj, prop, func, begin, finish, duration, useSeconds) {
@@ -62,7 +63,7 @@ var Tween = (function (_super) {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return Tween;
-})(EventDispatcher_1.EventDispatcher);
+}(EventDispatcher_1.EventDispatcher));
 exports.Tween = Tween;
 
 //# sourceMappingURL=Tween.js.map

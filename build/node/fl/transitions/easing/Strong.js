@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/12/26.
  */
-var NotImplementedError_1 = require("../../../../lib/glantern-utils/src/NotImplementedError");
+"use strict";
+var NotImplementedError_1 = require("../../../flash/errors/NotImplementedError");
 var Strong = (function () {
     function Strong() {
     }
@@ -15,7 +16,7 @@ var Strong = (function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return Strong;
-})();
+}());
 exports.Strong = Strong;
 
 //# sourceMappingURL=Strong.js.map

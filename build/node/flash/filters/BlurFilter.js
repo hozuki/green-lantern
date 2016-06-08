@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/30.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -56,7 +57,7 @@ var BlurFilter = (function (_super) {
         return new BlurFilter(this.filterManager, this.blurX, this.blurY, this.quality);
     };
     return BlurFilter;
-})(Blur2Filter_1.Blur2Filter);
+}(Blur2Filter_1.Blur2Filter));
 exports.BlurFilter = BlurFilter;
 
 //# sourceMappingURL=BlurFilter.js.map

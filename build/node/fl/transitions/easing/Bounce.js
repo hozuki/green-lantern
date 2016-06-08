@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Bounce = (function () {
     function Bounce() {
     }
@@ -30,7 +31,7 @@ var Bounce = (function () {
         }
     };
     return Bounce;
-})();
+}());
 exports.Bounce = Bounce;
 
 //# sourceMappingURL=Bounce.js.map

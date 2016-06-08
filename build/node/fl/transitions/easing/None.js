@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var None = (function () {
     function None() {
     }
@@ -17,7 +18,7 @@ var None = (function () {
         return c * t / d + b;
     };
     return None;
-})();
+}());
 exports.None = None;
 
 //# sourceMappingURL=None.js.map

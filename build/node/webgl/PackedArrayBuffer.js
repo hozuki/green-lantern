@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var GLUtil_1 = require("../../lib/glantern-utils/src/GLUtil");
+"use strict";
+var GLUtil_1 = require("../GLUtil");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var PackedArrayBuffer = (function () {
     function PackedArrayBuffer() {
@@ -113,7 +114,7 @@ var PackedArrayBuffer = (function () {
         }
     };
     return PackedArrayBuffer;
-})();
+}());
 exports.PackedArrayBuffer = PackedArrayBuffer;
 
 //# sourceMappingURL=PackedArrayBuffer.js.map

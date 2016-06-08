@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,8 +16,8 @@ var TextInteractionMode_1 = require("./TextInteractionMode");
 var TextFieldType_1 = require("./TextFieldType");
 var ShaderID_1 = require("../../webgl/ShaderID");
 var RenderHelper_1 = require("../../webgl/RenderHelper");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
 var TextField = (function (_super) {
     __extends(TextField, _super);
     function TextField(root, parent) {
@@ -423,7 +424,7 @@ var TextField = (function (_super) {
         this._isContentChanged = true;
     };
     return TextField;
-})(InteractiveObject_1.InteractiveObject);
+}(InteractiveObject_1.InteractiveObject));
 exports.TextField = TextField;
 
 //# sourceMappingURL=TextField.js.map

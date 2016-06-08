@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Sine = (function () {
     function Sine() {
     }
@@ -14,7 +15,7 @@ var Sine = (function () {
         return c * Math.sin(t / d * (Math.PI / 2)) + b;
     };
     return Sine;
-})();
+}());
 exports.Sine = Sine;
 
 //# sourceMappingURL=Sine.js.map

@@ -1,13 +1,14 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var EventDispatcher_1 = require("../events/EventDispatcher");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var StyleSheet = (function (_super) {
     __extends(StyleSheet, _super);
     function StyleSheet() {
@@ -41,7 +42,7 @@ var StyleSheet = (function (_super) {
         configurable: true
     });
     return StyleSheet;
-})(EventDispatcher_1.EventDispatcher);
+}(EventDispatcher_1.EventDispatcher));
 exports.StyleSheet = StyleSheet;
 
 //# sourceMappingURL=StyleSheet.js.map

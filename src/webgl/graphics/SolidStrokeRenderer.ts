@@ -8,8 +8,8 @@ import {StrokeRendererBase} from "./StrokeRendererBase";
 import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {RenderHelper} from "../RenderHelper";
 import {RenderTarget2D} from "../RenderTarget2D";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {GLUtil} from "../../GLUtil";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class SolidStrokeRenderer extends StrokeRendererBase {
 

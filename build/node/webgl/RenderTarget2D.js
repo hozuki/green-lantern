@@ -1,8 +1,9 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 var PackedArrayBuffer_1 = require("./PackedArrayBuffer");
-var GLUtil_1 = require("../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../GLUtil");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var isInitializedStatically = false;
 /**
@@ -327,7 +328,7 @@ var RenderTarget2D = (function () {
     RenderTarget2D.textureCoords = null;
     RenderTarget2D.textureIndices = null;
     return RenderTarget2D;
-})();
+}());
 exports.RenderTarget2D = RenderTarget2D;
 function initStaticFields(glc) {
     if (isInitializedStatically) {

@@ -1,10 +1,11 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var RenderTarget2D_1 = require("./RenderTarget2D");
 var PackedArrayBuffer_1 = require("./PackedArrayBuffer");
 var ShaderID_1 = require("./ShaderID");
-var GLUtil_1 = require("../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../GLUtil");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var RenderHelper = (function () {
     function RenderHelper() {
@@ -138,7 +139,7 @@ var RenderHelper = (function () {
     // Be careful! Manually dispose it when the whole module is finalizing.
     RenderHelper._glVertexPositionBuffer = null;
     return RenderHelper;
-})();
+}());
 exports.RenderHelper = RenderHelper;
 function __checkRenderTargets(source, destination) {
     if (GLUtil_1.GLUtil.isUndefinedOrNull(source)) {

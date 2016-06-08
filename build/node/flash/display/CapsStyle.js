@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var CapsStyle = (function () {
     function CapsStyle() {
     }
@@ -26,7 +27,7 @@ var CapsStyle = (function () {
         configurable: true
     });
     return CapsStyle;
-})();
+}());
 exports.CapsStyle = CapsStyle;
 
 //# sourceMappingURL=CapsStyle.js.map

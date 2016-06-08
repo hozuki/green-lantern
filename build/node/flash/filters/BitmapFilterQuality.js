@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/30.
  */
+"use strict";
 var BitmapFilterQuality = (function () {
     function BitmapFilterQuality() {
     }
@@ -26,7 +27,7 @@ var BitmapFilterQuality = (function () {
         configurable: true
     });
     return BitmapFilterQuality;
-})();
+}());
 exports.BitmapFilterQuality = BitmapFilterQuality;
 
 //# sourceMappingURL=BitmapFilterQuality.js.map

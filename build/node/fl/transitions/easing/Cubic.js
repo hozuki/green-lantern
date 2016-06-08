@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Cubic = (function () {
     function Cubic() {
     }
@@ -19,7 +20,7 @@ var Cubic = (function () {
         return c * ((t = t / d - 1) * t * t + 1) + b;
     };
     return Cubic;
-})();
+}());
 exports.Cubic = Cubic;
 
 //# sourceMappingURL=Cubic.js.map

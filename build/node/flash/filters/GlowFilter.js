@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/30.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -8,7 +9,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var GlowFilter_1 = require("../../webgl/filters/GlowFilter");
 var BitmapFilterQuality_1 = require("./BitmapFilterQuality");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../../GLUtil");
 var GlowFilter = (function (_super) {
     __extends(GlowFilter, _super);
     function GlowFilter(filterManager, color, alpha, blurX, blurY, strength, quality, inner, knockout) {
@@ -111,7 +112,7 @@ var GlowFilter = (function (_super) {
         this.setColorMatrix(cm);
     };
     return GlowFilter;
-})(GlowFilter_1.GlowFilter);
+}(GlowFilter_1.GlowFilter));
 exports.GlowFilter = GlowFilter;
 
 //# sourceMappingURL=GlowFilter.js.map

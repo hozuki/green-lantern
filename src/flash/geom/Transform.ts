@@ -8,7 +8,7 @@ import {Matrix} from "./Matrix";
 import {PerspectiveProjection} from "./PerspectiveProjection";
 import {Rectangle} from "./Rectangle";
 import {DisplayObject} from "../display/DisplayObject";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class Transform {
 

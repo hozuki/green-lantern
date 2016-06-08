@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+"use strict";
+var GLUtil_1 = require("../../GLUtil");
 var Point = (function () {
     function Point(x, y) {
         if (x === void 0) { x = 0; }
@@ -63,7 +64,7 @@ var Point = (function () {
         return "(X=" + this.x + ", y=" + this.y + ")";
     };
     return Point;
-})();
+}());
 exports.Point = Point;
 
 //# sourceMappingURL=Point.js.map

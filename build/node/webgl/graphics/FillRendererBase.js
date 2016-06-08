@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -73,7 +74,7 @@ var FillRendererBase = (function (_super) {
         return currentContour;
     };
     return FillRendererBase;
-})(GraphicsDataRendererBase_1.GraphicsDataRendererBase);
+}(GraphicsDataRendererBase_1.GraphicsDataRendererBase));
 exports.FillRendererBase = FillRendererBase;
 
 //# sourceMappingURL=FillRendererBase.js.map

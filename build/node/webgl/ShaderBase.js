@@ -1,10 +1,11 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var VertexShaders_1 = require("./VertexShaders");
 var FragmentShaders_1 = require("./FragmentShaders");
 var WebGLDataType_1 = require("./WebGLDataType");
-var GLUtil_1 = require("../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../GLUtil");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var ShaderBase = (function () {
     function ShaderBase(manager, vertexSource, fragmentSource, uniforms, attributes) {
@@ -275,7 +276,7 @@ var ShaderBase = (function () {
     ShaderBase.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.buffered;
     ShaderBase.VERTEX_SOURCE = VertexShaders_1.VertexShaders.buffered;
     return ShaderBase;
-})();
+}());
 exports.ShaderBase = ShaderBase;
 function createShaderFromSource(glc, source, type) {
     var shader = glc.createShader(type);

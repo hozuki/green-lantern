@@ -9,7 +9,7 @@ import {FilterBase} from "../FilterBase";
 import {RenderHelper} from "../RenderHelper";
 import {ShaderID} from "../ShaderID";
 import {Blur2Shader} from "../shaders/Blur2Shader";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../../GLUtil";
 
 export class Blur2Filter extends FilterBase {
 

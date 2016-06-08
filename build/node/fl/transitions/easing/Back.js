@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Back = (function () {
     function Back() {
     }
@@ -25,7 +26,7 @@ var Back = (function () {
         return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
     };
     return Back;
-})();
+}());
 exports.Back = Back;
 
 //# sourceMappingURL=Back.js.map

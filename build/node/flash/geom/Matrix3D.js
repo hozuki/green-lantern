@@ -1,12 +1,13 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Vector3D_1 = require("./Vector3D");
 var Orientation3D_1 = require("./Orientation3D");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
-var ApplicationError_1 = require("../../../lib/glantern-utils/src/ApplicationError");
-var ArgumentError_1 = require("../../../lib/glantern-utils/src/ArgumentError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
+var ArgumentError_1 = require("../../flash/errors/ArgumentError");
+var ApplicationError_1 = require("../errors/ApplicationError");
 var Matrix3D = (function () {
     function Matrix3D(v) {
         if (v === void 0) { v = null; }
@@ -359,7 +360,7 @@ var Matrix3D = (function () {
         ];
     };
     return Matrix3D;
-})();
+}());
 exports.Matrix3D = Matrix3D;
 
 //# sourceMappingURL=Matrix3D.js.map

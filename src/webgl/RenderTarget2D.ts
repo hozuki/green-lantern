@@ -5,7 +5,7 @@
 import {WebGLRenderer} from "./WebGLRenderer";
 import {IDisposable} from "../IDisposable";
 import {PackedArrayBuffer} from "./PackedArrayBuffer";
-import {GLUtil} from "../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../GLUtil";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 var isInitializedStatically:boolean = false;

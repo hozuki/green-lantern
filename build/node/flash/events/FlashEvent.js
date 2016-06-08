@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/21.
  */
+"use strict";
 var FlashEvent = (function () {
     function FlashEvent(type, bubbles, cancelable) {
         if (bubbles === void 0) { bubbles = false; }
@@ -45,7 +46,7 @@ var FlashEvent = (function () {
         configurable: true
     });
     return FlashEvent;
-})();
+}());
 exports.FlashEvent = FlashEvent;
 
 //# sourceMappingURL=FlashEvent.js.map

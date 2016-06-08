@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Orientation3D = (function () {
     function Orientation3D() {
     }
@@ -26,7 +27,7 @@ var Orientation3D = (function () {
         configurable: true
     });
     return Orientation3D;
-})();
+}());
 exports.Orientation3D = Orientation3D;
 
 //# sourceMappingURL=Orientation3D.js.map

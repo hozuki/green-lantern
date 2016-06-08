@@ -6,7 +6,7 @@ import {Point} from "./Point";
 import {Vector3D} from "./Vector3D";
 import {ICloneable} from "../../ICloneable";
 import {ICopyable} from "../../ICopyable";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
 

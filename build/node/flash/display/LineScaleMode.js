@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var LineScaleMode = (function () {
     function LineScaleMode() {
     }
@@ -33,7 +34,7 @@ var LineScaleMode = (function () {
         configurable: true
     });
     return LineScaleMode;
-})();
+}());
 exports.LineScaleMode = LineScaleMode;
 
 //# sourceMappingURL=LineScaleMode.js.map

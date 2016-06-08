@@ -1,11 +1,12 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Matrix3D_1 = require("./Matrix3D");
 var ColorTransform_1 = require("./ColorTransform");
 var Matrix_1 = require("./Matrix");
 var PerspectiveProjection_1 = require("./PerspectiveProjection");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var Transform = (function () {
     function Transform() {
         this.colorTransform = null;
@@ -43,7 +44,7 @@ var Transform = (function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return Transform;
-})();
+}());
 exports.Transform = Transform;
 
 //# sourceMappingURL=Transform.js.map

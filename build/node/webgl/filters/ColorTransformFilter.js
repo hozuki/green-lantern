@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -40,7 +41,7 @@ var ColorTransformFilter = (function (_super) {
         this._tempTarget = null;
     };
     return ColorTransformFilter;
-})(FilterBase_1.FilterBase);
+}(FilterBase_1.FilterBase));
 exports.ColorTransformFilter = ColorTransformFilter;
 
 //# sourceMappingURL=ColorTransformFilter.js.map

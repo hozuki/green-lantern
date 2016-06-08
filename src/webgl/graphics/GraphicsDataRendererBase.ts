@@ -6,8 +6,7 @@ import {Graphics} from "../../flash/display/Graphics";
 import {IGraphicsDataRenderer} from "./IGraphicsDataRenderer";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {PackedArrayBuffer} from "../PackedArrayBuffer";
-import {RenderTarget2D} from "../RenderTarget2D";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 

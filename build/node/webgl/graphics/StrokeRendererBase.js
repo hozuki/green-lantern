@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -91,7 +92,7 @@ var StrokeRendererBase = (function (_super) {
         ];
     };
     return StrokeRendererBase;
-})(GraphicsDataRendererBase_1.GraphicsDataRendererBase);
+}(GraphicsDataRendererBase_1.GraphicsDataRendererBase));
 exports.StrokeRendererBase = StrokeRendererBase;
 
 //# sourceMappingURL=StrokeRendererBase.js.map

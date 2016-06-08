@@ -1,8 +1,9 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Point_1 = require("./Point");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var Matrix = (function () {
     function Matrix(a, b, c, d, tx, ty) {
         if (a === void 0) { a = 1; }
@@ -192,7 +193,7 @@ var Matrix = (function () {
         return result;
     };
     return Matrix;
-})();
+}());
 exports.Matrix = Matrix;
 
 //# sourceMappingURL=Matrix.js.map

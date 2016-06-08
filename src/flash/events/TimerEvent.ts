@@ -4,7 +4,7 @@
 
 import {ICloneable} from "../../ICloneable";
 import {FlashEvent} from "./FlashEvent";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class TimerEvent extends FlashEvent implements ICloneable<TimerEvent> {
 

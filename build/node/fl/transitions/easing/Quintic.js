@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Quintic = (function () {
     function Quintic() {
     }
@@ -19,7 +20,7 @@ var Quintic = (function () {
         return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
     };
     return Quintic;
-})();
+}());
 exports.Quintic = Quintic;
 
 //# sourceMappingURL=Quintic.js.map

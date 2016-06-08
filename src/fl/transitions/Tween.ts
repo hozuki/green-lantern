@@ -3,7 +3,7 @@
  */
 
 import {EventDispatcher} from "../../flash/events/EventDispatcher";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class Tween extends EventDispatcher {
 

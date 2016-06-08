@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/12/26.
  */
-var NotImplementedError_1 = require("../../../../lib/glantern-utils/src/NotImplementedError");
+"use strict";
+var NotImplementedError_1 = require("../../../flash/errors/NotImplementedError");
 var Regular = (function () {
     function Regular() {
     }
@@ -15,7 +16,7 @@ var Regular = (function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return Regular;
-})();
+}());
 exports.Regular = Regular;
 
 //# sourceMappingURL=Regular.js.map

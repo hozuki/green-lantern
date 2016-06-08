@@ -3,7 +3,7 @@
  */
 
 import {IDisposable} from "../IDisposable";
-import {GLUtil} from "../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../GLUtil";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 

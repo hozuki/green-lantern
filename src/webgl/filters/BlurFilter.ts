@@ -8,7 +8,7 @@ import {RenderTarget2D} from "../RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../../GLUtil";
 
 export class BlurFilter extends FilterBase {
 

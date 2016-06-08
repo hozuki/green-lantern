@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/13.
  */
+"use strict";
 /*
  * Copyright 2010, Google Inc.
  * All rights reserved.
@@ -55,7 +56,7 @@ var WebGLUtils = (function () {
         return context;
     };
     return WebGLUtils;
-})();
+}());
 exports.WebGLUtils = WebGLUtils;
 function makeFailHtml(message) {
     return '' +

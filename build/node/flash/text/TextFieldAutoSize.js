@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var TextFieldAutoSize = (function () {
     function TextFieldAutoSize() {
     }
@@ -33,7 +34,7 @@ var TextFieldAutoSize = (function () {
         configurable: true
     });
     return TextFieldAutoSize;
-})();
+}());
 exports.TextFieldAutoSize = TextFieldAutoSize;
 
 //# sourceMappingURL=TextFieldAutoSize.js.map

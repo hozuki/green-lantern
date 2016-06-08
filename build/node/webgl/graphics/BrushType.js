@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 (function (BrushType) {
     BrushType[BrushType["SOLID"] = 0] = "SOLID";
     BrushType[BrushType["GRADIENT"] = 1] = "GRADIENT";

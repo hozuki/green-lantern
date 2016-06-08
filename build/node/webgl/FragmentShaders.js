@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Values = Object.create(null);
 var FragmentShaders = (function () {
     function FragmentShaders() {
@@ -55,7 +56,7 @@ var FragmentShaders = (function () {
         configurable: true
     });
     return FragmentShaders;
-})();
+}());
 exports.FragmentShaders = FragmentShaders;
 Values.buffered = [
     "precision mediump float;",

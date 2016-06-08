@@ -1,1 +1,1 @@
-{"version":3,"sources":["flash/display/ibitmapdrawable.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"flash/display/IBitmapDrawable.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/18.\r\n */\r\n\r\nexport interface IBitmapDrawable {\r\n\r\n}\r\n"],"sourceRoot":"/source/"}
+{"version":3,"sources":["flash/display/IBitmapDrawable.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"flash/display/IBitmapDrawable.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/18.\r\n */\r\n\r\nexport interface IBitmapDrawable {\r\n\r\n}\r\n"],"sourceRoot":"/source/"}

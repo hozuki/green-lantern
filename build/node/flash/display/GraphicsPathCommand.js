@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var GraphicsPathCommand = (function () {
     function GraphicsPathCommand() {
     }
@@ -54,7 +55,7 @@ var GraphicsPathCommand = (function () {
         configurable: true
     });
     return GraphicsPathCommand;
-})();
+}());
 exports.GraphicsPathCommand = GraphicsPathCommand;
 
 //# sourceMappingURL=GraphicsPathCommand.js.map

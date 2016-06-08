@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -10,7 +11,7 @@ var os = require("os");
 var TextFormatAlign_1 = require("./TextFormatAlign");
 var EventDispatcher_1 = require("../events/EventDispatcher");
 var FlashEvent_1 = require("../events/FlashEvent");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../../GLUtil");
 var TextFormat = (function (_super) {
     __extends(TextFormat, _super);
     function TextFormat(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading) {
@@ -343,7 +344,7 @@ var TextFormat = (function (_super) {
         this.dispatchEvent(ev);
     };
     return TextFormat;
-})(EventDispatcher_1.EventDispatcher);
+}(EventDispatcher_1.EventDispatcher));
 exports.TextFormat = TextFormat;
 
 //# sourceMappingURL=TextFormat.js.map

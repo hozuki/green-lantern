@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var GradientType = (function () {
     function GradientType() {
     }
@@ -19,7 +20,7 @@ var GradientType = (function () {
         configurable: true
     });
     return GradientType;
-})();
+}());
 exports.GradientType = GradientType;
 
 //# sourceMappingURL=GradientType.js.map

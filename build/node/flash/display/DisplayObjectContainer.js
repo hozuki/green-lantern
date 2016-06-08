@@ -1,13 +1,14 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var InteractiveObject_1 = require("./InteractiveObject");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var DisplayObjectContainer = (function (_super) {
     __extends(DisplayObjectContainer, _super);
     function DisplayObjectContainer(root, parent) {
@@ -185,7 +186,7 @@ var DisplayObjectContainer = (function (_super) {
         // Do nothing
     };
     return DisplayObjectContainer;
-})(InteractiveObject_1.InteractiveObject);
+}(InteractiveObject_1.InteractiveObject));
 exports.DisplayObjectContainer = DisplayObjectContainer;
 
 //# sourceMappingURL=DisplayObjectContainer.js.map

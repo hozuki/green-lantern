@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-import {NotImplementedError} from "../../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../../flash/errors/NotImplementedError";
 
 export abstract class Regular {
 

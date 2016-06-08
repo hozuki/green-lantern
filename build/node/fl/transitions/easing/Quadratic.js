@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Quadratic = (function () {
     function Quadratic() {
     }
@@ -19,7 +20,7 @@ var Quadratic = (function () {
         return -c * (t /= d) * (t - 2) + b;
     };
     return Quadratic;
-})();
+}());
 exports.Quadratic = Quadratic;
 
 //# sourceMappingURL=Quadratic.js.map

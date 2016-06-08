@@ -1,8 +1,9 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var PackedArrayBuffer_1 = require("../PackedArrayBuffer");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 var GraphicsDataRendererBase = (function () {
     function GraphicsDataRendererBase(graphics, lastPathStartX, lastPathStartY, currentX, currentY) {
@@ -114,7 +115,7 @@ var GraphicsDataRendererBase = (function () {
         }
     };
     return GraphicsDataRendererBase;
-})();
+}());
 exports.GraphicsDataRendererBase = GraphicsDataRendererBase;
 
 //# sourceMappingURL=GraphicsDataRendererBase.js.map

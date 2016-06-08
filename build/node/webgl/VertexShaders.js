@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Values = Object.create(null);
 var VertexShaders = (function () {
     function VertexShaders() {
@@ -69,7 +70,7 @@ var VertexShaders = (function () {
         configurable: true
     });
     return VertexShaders;
-})();
+}());
 exports.VertexShaders = VertexShaders;
 Values.buffered = [
     "attribute vec3 aVertexPosition;",

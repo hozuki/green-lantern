@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Point_1 = require("./Point");
 var Rectangle = (function () {
     function Rectangle(x, y, width, height) {
@@ -264,7 +265,7 @@ var Rectangle = (function () {
         configurable: true
     });
     return Rectangle;
-})();
+}());
 exports.Rectangle = Rectangle;
 
 //# sourceMappingURL=Rectangle.js.map

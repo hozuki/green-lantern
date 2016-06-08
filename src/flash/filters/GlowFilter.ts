@@ -6,7 +6,7 @@ import {BitmapFilter} from "./BitmapFilter";
 import {GlowFilter as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
 import {FilterManager} from "../../webgl/FilterManager";
 import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../../GLUtil";
 
 export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 

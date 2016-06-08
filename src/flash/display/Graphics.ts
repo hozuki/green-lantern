@@ -13,7 +13,6 @@ import {GraphicsPathCommand} from "./GraphicsPathCommand";
 import {TriangleCulling} from "./TriangleCulling";
 import {LineScaleMode} from "./LineScaleMode";
 import {BrushType} from "../../webgl/graphics/BrushType";
-import {IGraphicsDataRenderer} from "../../webgl/graphics/IGraphicsDataRenderer";
 import {IFillDataRenderer} from "../../webgl/graphics/IFillDataRenderer";
 import {IStrokeDataRenderer} from "../../webgl/graphics/IStrokeDataRenderer";
 import {StrokeRendererBase} from "../../webgl/graphics/StrokeRendererBase";
@@ -22,12 +21,10 @@ import {IGraphicsData} from "./IGraphicsData";
 import {BitmapData} from "./BitmapData";
 import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
-import {IWebGLElement} from "../../webgl/IWebGLElement";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {IDisposable} from "../../IDisposable";
-import {RenderHelper} from "../../webgl/RenderHelper";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {GLUtil} from "../../GLUtil";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {
 
@@ -405,7 +402,6 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         switch (this._lineType) {
             case BrushType.SOLID:
                 return new SolidStrokeRenderer(this, this._lastPathStartX, this._lastPathStartY, this._currentX, this._currentY, this._lineWidth, this._lineColor, this._lineAlpha);
-                break;
             default:
                 throw new NotImplementedError();
         }

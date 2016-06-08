@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 var WebGLDataType_1 = require("./WebGLDataType");
 var UniformCache = (function () {
     function UniformCache() {
@@ -13,7 +14,7 @@ var UniformCache = (function () {
         this.texture = null;
     }
     return UniformCache;
-})();
+}());
 exports.UniformCache = UniformCache;
 
 //# sourceMappingURL=UniformCache.js.map

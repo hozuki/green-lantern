@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 var PrimitiveShader_1 = require("./shaders/PrimitiveShader");
 var BlurXShader_1 = require("./shaders/BlurXShader");
 var BlurYShader_1 = require("./shaders/BlurYShader");
@@ -94,7 +95,7 @@ var ShaderManager = (function () {
         shaderList.push(new Primitive2Shader_1.Primitive2Shader(this));
     };
     return ShaderManager;
-})();
+}());
 exports.ShaderManager = ShaderManager;
 
 //# sourceMappingURL=ShaderManager.js.map

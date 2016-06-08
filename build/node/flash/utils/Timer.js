@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2016/1/7.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -107,7 +108,7 @@ var Timer = (function (_super) {
         this.dispatchEvent(ev);
     };
     return Timer;
-})(EventDispatcher_1.EventDispatcher);
+}(EventDispatcher_1.EventDispatcher));
 exports.Timer = Timer;
 
 //# sourceMappingURL=Timer.js.map

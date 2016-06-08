@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var StageDisplayState = (function () {
     function StageDisplayState() {
     }
@@ -26,7 +27,7 @@ var StageDisplayState = (function () {
         configurable: true
     });
     return StageDisplayState;
-})();
+}());
 exports.StageDisplayState = StageDisplayState;
 
 //# sourceMappingURL=StageDisplayState.js.map

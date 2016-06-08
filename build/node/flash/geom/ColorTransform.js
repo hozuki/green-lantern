@@ -1,8 +1,9 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+"use strict";
+var GLUtil_1 = require("../../GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var ColorTransform = (function () {
     function ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
         if (redMultiplier === void 0) { redMultiplier = 1; }
@@ -115,7 +116,7 @@ var ColorTransform = (function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return ColorTransform;
-})();
+}());
 exports.ColorTransform = ColorTransform;
 
 //# sourceMappingURL=ColorTransform.js.map

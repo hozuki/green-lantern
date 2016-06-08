@@ -12,7 +12,7 @@ import {WebGLUtils} from "./WebGLUtils";
 import {IDisposable} from "../IDisposable";
 import {RenderHelper} from "./RenderHelper";
 import {BlendMode} from "../flash/display/BlendMode";
-import {GLUtil} from "../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../GLUtil";
 
 var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
 

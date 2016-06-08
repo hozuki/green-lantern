@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -13,7 +14,7 @@ var Bitmap = (function (_super) {
         _super.apply(this, arguments);
     }
     return Bitmap;
-})(DisplayObject_1.DisplayObject);
+}(DisplayObject_1.DisplayObject));
 exports.Bitmap = Bitmap;
 
 //# sourceMappingURL=Bitmap.js.map

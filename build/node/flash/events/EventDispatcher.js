@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+"use strict";
+var GLUtil_1 = require("../../GLUtil");
 var EventDispatcher = (function () {
     function EventDispatcher() {
         this._listeners = null;
@@ -64,7 +65,7 @@ var EventDispatcher = (function () {
         this._listeners.clear();
     };
     return EventDispatcher;
-})();
+}());
 exports.EventDispatcher = EventDispatcher;
 
 //# sourceMappingURL=EventDispatcher.js.map

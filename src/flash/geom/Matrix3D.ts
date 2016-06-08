@@ -6,10 +6,10 @@ import {Vector3D} from "./Vector3D";
 import {Orientation3D} from "./Orientation3D";
 import {ICopyable} from "../../ICopyable";
 import {ICloneable} from "../../ICloneable";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
-import {ApplicationError} from "../../../lib/glantern-utils/src/ApplicationError";
-import {ArgumentError} from "../../../lib/glantern-utils/src/ArgumentError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {GLUtil} from "../../GLUtil";
+import {ArgumentError} from "../../flash/errors/ArgumentError";
+import {ApplicationError} from "../errors/ApplicationError";
 
 export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 

@@ -2,8 +2,8 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {GLUtil} from "../../GLUtil";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class ColorTransform {
 

@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var ColorCorrectionSupport = (function () {
     function ColorCorrectionSupport() {
     }
@@ -26,7 +27,7 @@ var ColorCorrectionSupport = (function () {
         configurable: true
     });
     return ColorCorrectionSupport;
-})();
+}());
 exports.ColorCorrectionSupport = ColorCorrectionSupport;
 
 //# sourceMappingURL=ColorCorrectionSupport.js.map

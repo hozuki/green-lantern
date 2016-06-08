@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -9,8 +10,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var StrokeRendererBase_1 = require("./StrokeRendererBase");
 var GRAPHICS_CONST_1 = require("./GRAPHICS_CONST");
 var RenderHelper_1 = require("../RenderHelper");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var SolidStrokeRenderer = (function (_super) {
     __extends(SolidStrokeRenderer, _super);
     function SolidStrokeRenderer(graphics, lastPathStartX, lastPathStartY, currentX, currentY, lineWidth, color, alpha) {
@@ -158,7 +159,7 @@ var SolidStrokeRenderer = (function (_super) {
         }
     };
     return SolidStrokeRenderer;
-})(StrokeRendererBase_1.StrokeRendererBase);
+}(StrokeRendererBase_1.StrokeRendererBase));
 exports.SolidStrokeRenderer = SolidStrokeRenderer;
 
 //# sourceMappingURL=SolidStrokeRenderer.js.map

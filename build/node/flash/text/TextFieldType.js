@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var TextFieldType = (function () {
     function TextFieldType() {
     }
@@ -19,7 +20,7 @@ var TextFieldType = (function () {
         configurable: true
     });
     return TextFieldType;
-})();
+}());
 exports.TextFieldType = TextFieldType;
 
 //# sourceMappingURL=TextFieldType.js.map

@@ -1,13 +1,14 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 var libtess = require("libtess");
 var ShaderManager_1 = require("./ShaderManager");
 var FilterManager_1 = require("./FilterManager");
 var RenderTarget2D_1 = require("./RenderTarget2D");
 var WebGLUtils_1 = require("./WebGLUtils");
 var BlendMode_1 = require("../flash/display/BlendMode");
-var GLUtil_1 = require("../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../GLUtil");
 var gl = this.WebGLRenderingContext || window.WebGLRenderingContext;
 /**
  * The WebGL renderer, main provider of the rendering services.
@@ -294,7 +295,7 @@ var WebGLRenderer = (function () {
         transparent: true
     };
     return WebGLRenderer;
-})();
+}());
 exports.WebGLRenderer = WebGLRenderer;
 var BMS = Object.create(null);
 BMS[BlendMode_1.BlendMode.ADD] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];

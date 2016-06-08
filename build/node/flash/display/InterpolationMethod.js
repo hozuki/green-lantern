@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var InterpolationMethod = (function () {
     function InterpolationMethod() {
     }
@@ -19,7 +20,7 @@ var InterpolationMethod = (function () {
         configurable: true
     });
     return InterpolationMethod;
-})();
+}());
 exports.InterpolationMethod = InterpolationMethod;
 
 //# sourceMappingURL=InterpolationMethod.js.map

@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var ShaderID = (function () {
     function ShaderID() {
     }
@@ -68,7 +69,7 @@ var ShaderID = (function () {
         configurable: true
     });
     return ShaderID;
-})();
+}());
 exports.ShaderID = ShaderID;
 
 //# sourceMappingURL=ShaderID.js.map

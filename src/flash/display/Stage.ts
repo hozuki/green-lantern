@@ -12,7 +12,7 @@ import {StageDisplayState} from "./StageDisplayState";
 import {ColorCorrection} from "./ColorCorrection";
 import {StageAlign} from "./StageAlign";
 import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class Stage extends DisplayObjectContainer {
 

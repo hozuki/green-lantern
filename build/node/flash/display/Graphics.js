@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var SpreadMethod_1 = require("./SpreadMethod");
 var InterpolationMethod_1 = require("./InterpolationMethod");
 var GraphicsPathWinding_1 = require("./GraphicsPathWinding");
@@ -10,8 +11,8 @@ var LineScaleMode_1 = require("./LineScaleMode");
 var BrushType_1 = require("../../webgl/graphics/BrushType");
 var SolidStrokeRenderer_1 = require("../../webgl/graphics/SolidStrokeRenderer");
 var SolidFillRenderer_1 = require("../../webgl/graphics/SolidFillRenderer");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
 var Graphics = (function () {
     function Graphics(attachTo, renderer) {
         this._displayObject = null;
@@ -408,7 +409,6 @@ var Graphics = (function () {
         switch (this._lineType) {
             case BrushType_1.BrushType.SOLID:
                 return new SolidStrokeRenderer_1.SolidStrokeRenderer(this, this._lastPathStartX, this._lastPathStartY, this._currentX, this._currentY, this._lineWidth, this._lineColor, this._lineAlpha);
-                break;
             default:
                 throw new NotImplementedError_1.NotImplementedError();
         }
@@ -428,7 +428,7 @@ var Graphics = (function () {
         this._lineAlpha = 1;
     };
     return Graphics;
-})();
+}());
 exports.Graphics = Graphics;
 function __checkPathCommands(commands, data) {
     if (commands === null || data === null || data.length % 2 !== 0) {

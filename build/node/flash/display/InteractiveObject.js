@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -19,7 +20,7 @@ var InteractiveObject = (function (_super) {
         this.tabIndex = -1;
     }
     return InteractiveObject;
-})(DisplayObject_1.DisplayObject);
+}(DisplayObject_1.DisplayObject));
 exports.InteractiveObject = InteractiveObject;
 
 //# sourceMappingURL=InteractiveObject.js.map

@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var StageScaleMode = (function () {
     function StageScaleMode() {
     }
@@ -33,7 +34,7 @@ var StageScaleMode = (function () {
         configurable: true
     });
     return StageScaleMode;
-})();
+}());
 exports.StageScaleMode = StageScaleMode;
 
 //# sourceMappingURL=StageScaleMode.js.map

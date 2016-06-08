@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var BlendMode = (function () {
     function BlendMode() {
     }
@@ -110,7 +111,7 @@ var BlendMode = (function () {
         configurable: true
     });
     return BlendMode;
-})();
+}());
 exports.BlendMode = BlendMode;
 
 //# sourceMappingURL=BlendMode.js.map

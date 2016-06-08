@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var GridFitType = (function () {
     function GridFitType() {
     }
@@ -26,7 +27,7 @@ var GridFitType = (function () {
         configurable: true
     });
     return GridFitType;
-})();
+}());
 exports.GridFitType = GridFitType;
 
 //# sourceMappingURL=GridFitType.js.map

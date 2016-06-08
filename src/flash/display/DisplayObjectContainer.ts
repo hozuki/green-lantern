@@ -8,8 +8,7 @@ import {WebGLRenderer} from "../../webgl/WebGLRenderer";
 import {DisplayObject} from "./DisplayObject";
 import {Point} from "../geom/Point";
 import {ShaderManager} from "../../webgl/ShaderManager";
-import {ShaderID} from "../../webgl/ShaderID";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export abstract class DisplayObjectContainer extends InteractiveObject {
 

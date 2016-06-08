@@ -7,9 +7,9 @@ import {Stage} from "./flash/display/Stage";
 import {RendererOptions} from "./webgl/RendererOptions";
 import {FlashEvent} from "./flash/events/FlashEvent";
 import {IDisposable} from "./IDisposable";
-import {GLUtil} from "../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "./GLUtil";
 
-export class GLantern implements IDisposable {
+export class EngineBase implements IDisposable {
 
     constructor() {
     }

@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 (function (WebGLDataType) {
     WebGLDataType[WebGLDataType["UUnknown"] = 0] = "UUnknown";
     WebGLDataType[WebGLDataType["UBool"] = 1] = "UBool";

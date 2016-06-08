@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+"use strict";
 var RenderHelper_1 = require("./RenderHelper");
 var FilterManager = (function () {
     function FilterManager(renderer) {
@@ -79,7 +80,7 @@ var FilterManager = (function () {
         }
     };
     return FilterManager;
-})();
+}());
 exports.FilterManager = FilterManager;
 
 //# sourceMappingURL=FilterManager.js.map

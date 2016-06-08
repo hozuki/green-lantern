@@ -6,7 +6,7 @@ import * as os from "os";
 import {TextFormatAlign} from "./TextFormatAlign";
 import {EventDispatcher} from "../events/EventDispatcher";
 import {FlashEvent} from "../events/FlashEvent";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../../GLUtil";
 
 export class TextFormat extends EventDispatcher {
 

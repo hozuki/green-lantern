@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var flash = require("./flash/index");
 exports.flash = flash;
 var webgl = require("./webgl/index");
@@ -9,9 +10,9 @@ var fl = require("./fl/index");
 exports.fl = fl;
 var mx = require("./mx/index");
 exports.mx = mx;
-var GLantern_1 = require("./GLantern");
-exports.GLantern = GLantern_1.GLantern;
-var GLUtil_1 = require("../lib/glantern-utils/src/GLUtil");
+var EngineBase_1 = require("./EngineBase");
+exports.EngineBase = EngineBase_1.EngineBase;
+var GLUtil_1 = require("./GLUtil");
 function injectToGlobal($this) {
     $this["flash"] = flash;
     $this["webgl"] = webgl;

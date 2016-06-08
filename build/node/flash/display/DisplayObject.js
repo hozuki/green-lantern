@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,8 +12,8 @@ var EventDispatcher_1 = require("../events/EventDispatcher");
 var BlendMode_1 = require("./BlendMode");
 var Matrix3D_1 = require("../geom/Matrix3D");
 var Vector3D_1 = require("../geom/Vector3D");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
 var DisplayObject = (function (_super) {
     __extends(DisplayObject, _super);
     function DisplayObject(root, parent) {
@@ -382,7 +383,7 @@ var DisplayObject = (function (_super) {
         return this.filters !== null && this.filters.length > 0;
     };
     return DisplayObject;
-})(EventDispatcher_1.EventDispatcher);
+}(EventDispatcher_1.EventDispatcher));
 exports.DisplayObject = DisplayObject;
 
 //# sourceMappingURL=DisplayObject.js.map

@@ -9,5 +9,6 @@ import * as filters from "./filters/index";
 import * as text from "./text/index";
 import * as utils from "./utils/index";
 import * as media from "./media/index";
+import * as errors from "./errors/index";
 
-export {display, events, geom, filters, text, utils};
+export {display, events, geom, filters, text, utils, media, errors};

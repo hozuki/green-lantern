@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -32,7 +33,7 @@ var FxaaShader = (function (_super) {
     FxaaShader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.fxaa;
     FxaaShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.fxaa;
     return FxaaShader;
-})(BufferedShader_1.BufferedShader);
+}(BufferedShader_1.BufferedShader));
 exports.FxaaShader = FxaaShader;
 
 //# sourceMappingURL=FxaaShader.js.map

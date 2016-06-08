@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -80,7 +81,7 @@ var Primitive2Shader = (function (_super) {
     Primitive2Shader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.primitive;
     Primitive2Shader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.primitive2;
     return Primitive2Shader;
-})(ShaderBase_1.ShaderBase);
+}(ShaderBase_1.ShaderBase));
 exports.Primitive2Shader = Primitive2Shader;
 
 //# sourceMappingURL=Primitive2Shader.js.map

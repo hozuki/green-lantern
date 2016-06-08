@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -38,7 +39,7 @@ var BlurYShader = (function (_super) {
     BlurYShader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.blur;
     BlurYShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.blurY;
     return BlurYShader;
-})(BufferedShader_1.BufferedShader);
+}(BufferedShader_1.BufferedShader));
 exports.BlurYShader = BlurYShader;
 
 //# sourceMappingURL=BlurYShader.js.map

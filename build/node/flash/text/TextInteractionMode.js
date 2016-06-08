@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var TextInteractionMode = (function () {
     function TextInteractionMode() {
     }
@@ -19,7 +20,7 @@ var TextInteractionMode = (function () {
         configurable: true
     });
     return TextInteractionMode;
-})();
+}());
 exports.TextInteractionMode = TextInteractionMode;
 
 //# sourceMappingURL=TextInteractionMode.js.map

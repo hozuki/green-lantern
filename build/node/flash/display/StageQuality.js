@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var StageQuality = (function () {
     function StageQuality() {
     }
@@ -33,7 +34,7 @@ var StageQuality = (function () {
         configurable: true
     });
     return StageQuality;
-})();
+}());
 exports.StageQuality = StageQuality;
 
 //# sourceMappingURL=StageQuality.js.map

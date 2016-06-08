@@ -1,7 +1,8 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+"use strict";
+var GLUtil_1 = require("../../GLUtil");
 var Vector3D = (function () {
     function Vector3D(x, y, z, w) {
         if (x === void 0) { x = 0; }
@@ -147,7 +148,7 @@ var Vector3D = (function () {
         return "[x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", w=" + this.w + "]";
     };
     return Vector3D;
-})();
+}());
 exports.Vector3D = Vector3D;
 
 //# sourceMappingURL=Vector3D.js.map

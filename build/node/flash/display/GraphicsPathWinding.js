@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var GraphicsPathWinding = (function () {
     function GraphicsPathWinding() {
     }
@@ -19,7 +20,7 @@ var GraphicsPathWinding = (function () {
         configurable: true
     });
     return GraphicsPathWinding;
-})();
+}());
 exports.GraphicsPathWinding = GraphicsPathWinding;
 
 //# sourceMappingURL=GraphicsPathWinding.js.map

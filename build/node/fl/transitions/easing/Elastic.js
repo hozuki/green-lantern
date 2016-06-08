@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Elastic = (function () {
     function Elastic() {
     }
@@ -61,7 +62,7 @@ var Elastic = (function () {
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     };
     return Elastic;
-})();
+}());
 exports.Elastic = Elastic;
 
 //# sourceMappingURL=Elastic.js.map

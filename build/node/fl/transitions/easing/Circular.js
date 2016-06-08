@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+"use strict";
 var Circular = (function () {
     function Circular() {
     }
@@ -19,7 +20,7 @@ var Circular = (function () {
         return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
     };
     return Circular;
-})();
+}());
 exports.Circular = Circular;
 
 //# sourceMappingURL=Circular.js.map

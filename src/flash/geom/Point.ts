@@ -4,7 +4,7 @@
 
 import {ICopyable} from "../../ICopyable";
 import {ICloneable} from "../../ICloneable";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../../GLUtil";
 
 export class Point implements ICloneable<Point>, ICopyable<Point> {
 

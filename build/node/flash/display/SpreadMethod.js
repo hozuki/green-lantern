@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+"use strict";
 var SpreadMethod = (function () {
     function SpreadMethod() {
     }
@@ -26,7 +27,7 @@ var SpreadMethod = (function () {
         configurable: true
     });
     return SpreadMethod;
-})();
+}());
 exports.SpreadMethod = SpreadMethod;
 
 //# sourceMappingURL=SpreadMethod.js.map

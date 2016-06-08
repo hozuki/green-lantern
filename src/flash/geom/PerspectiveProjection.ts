@@ -4,8 +4,8 @@
 
 import {Matrix3D} from "./Matrix3D";
 import {Point} from "./Point";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {GLUtil} from "../../GLUtil";
 
 export class PerspectiveProjection {
 

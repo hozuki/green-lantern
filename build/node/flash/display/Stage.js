@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -13,7 +14,7 @@ var StageDisplayState_1 = require("./StageDisplayState");
 var ColorCorrection_1 = require("./ColorCorrection");
 var StageAlign_1 = require("./StageAlign");
 var DisplayObjectContainer_1 = require("./DisplayObjectContainer");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
 var Stage = (function (_super) {
     __extends(Stage, _super);
     function Stage(renderer) {
@@ -152,7 +153,7 @@ var Stage = (function (_super) {
     Stage.prototype.__update = function () {
     };
     return Stage;
-})(DisplayObjectContainer_1.DisplayObjectContainer);
+}(DisplayObjectContainer_1.DisplayObjectContainer));
 exports.Stage = Stage;
 
 //# sourceMappingURL=Stage.js.map

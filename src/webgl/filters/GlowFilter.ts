@@ -10,7 +10,7 @@ import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";
 import {Blur2Filter} from "./Blur2Filter";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../../../lib/glantern-utils/src/GLUtil";
+import {GLUtil} from "../..//GLUtil";
 
 export class GlowFilter extends FilterBase {
 

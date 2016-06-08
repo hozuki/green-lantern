@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var AntiAliasType = (function () {
     function AntiAliasType() {
     }
@@ -19,7 +20,7 @@ var AntiAliasType = (function () {
         configurable: true
     });
     return AntiAliasType;
-})();
+}());
 exports.AntiAliasType = AntiAliasType;
 
 //# sourceMappingURL=AntiAliasType.js.map

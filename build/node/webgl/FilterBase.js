@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var FilterBase = (function () {
     function FilterBase(manager) {
         this._filterManager = null;
@@ -68,7 +69,7 @@ var FilterBase = (function () {
     FilterBase.prototype.__dispose = function () {
     };
     return FilterBase;
-})();
+}());
 exports.FilterBase = FilterBase;
 
 //# sourceMappingURL=FilterBase.js.map

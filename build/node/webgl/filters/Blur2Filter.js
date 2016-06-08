@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/22.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -9,7 +10,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var FilterBase_1 = require("../FilterBase");
 var RenderHelper_1 = require("../RenderHelper");
 var ShaderID_1 = require("../ShaderID");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var GLUtil_1 = require("../../GLUtil");
 var Blur2Filter = (function (_super) {
     __extends(Blur2Filter, _super);
     function Blur2Filter(manager) {
@@ -97,7 +98,7 @@ var Blur2Filter = (function (_super) {
         this._tempTarget = null;
     };
     return Blur2Filter;
-})(FilterBase_1.FilterBase);
+}(FilterBase_1.FilterBase));
 exports.Blur2Filter = Blur2Filter;
 
 //# sourceMappingURL=Blur2Filter.js.map

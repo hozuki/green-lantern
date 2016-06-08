@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var TextLineMetrics = (function () {
     function TextLineMetrics(x, width, height, ascent, descent, leading) {
         this.ascent = 0;
@@ -17,7 +18,7 @@ var TextLineMetrics = (function () {
         this.leading = leading;
     }
     return TextLineMetrics;
-})();
+}());
 exports.TextLineMetrics = TextLineMetrics;
 
 //# sourceMappingURL=TextLineMetrics.js.map

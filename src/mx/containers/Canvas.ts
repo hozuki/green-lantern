@@ -5,7 +5,7 @@
 import {DisplayObjectContainer} from "../../flash/display/DisplayObjectContainer";
 import {Stage} from "../../flash/display/Stage";
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class Canvas extends DisplayObjectContainer {
 

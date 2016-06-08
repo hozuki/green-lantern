@@ -1,9 +1,10 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var Point_1 = require("./Point");
-var NotImplementedError_1 = require("../../../lib/glantern-utils/src/NotImplementedError");
-var GLUtil_1 = require("../../../lib/glantern-utils/src/GLUtil");
+var NotImplementedError_1 = require("../../flash/errors/NotImplementedError");
+var GLUtil_1 = require("../../GLUtil");
 var PerspectiveProjection = (function () {
     function PerspectiveProjection() {
         this.focalLength = 10;
@@ -25,7 +26,7 @@ var PerspectiveProjection = (function () {
         throw new NotImplementedError_1.NotImplementedError();
     };
     return PerspectiveProjection;
-})();
+}());
 exports.PerspectiveProjection = PerspectiveProjection;
 
 //# sourceMappingURL=PerspectiveProjection.js.map

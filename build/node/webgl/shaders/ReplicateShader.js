@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -56,7 +57,7 @@ var ReplicateShader = (function (_super) {
     ReplicateShader.FRAGMENT_SOURCE = FragmentShaders_1.FragmentShaders.buffered;
     ReplicateShader.VERTEX_SOURCE = VertexShaders_1.VertexShaders.replicate;
     return ReplicateShader;
-})(BufferedShader_1.BufferedShader);
+}(BufferedShader_1.BufferedShader));
 exports.ReplicateShader = ReplicateShader;
 
 //# sourceMappingURL=ReplicateShader.js.map

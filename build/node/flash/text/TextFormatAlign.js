@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/12/23.
  */
+"use strict";
 var TextFormatAlign = (function () {
     function TextFormatAlign() {
     }
@@ -47,7 +48,7 @@ var TextFormatAlign = (function () {
         configurable: true
     });
     return TextFormatAlign;
-})();
+}());
 exports.TextFormatAlign = TextFormatAlign;
 
 //# sourceMappingURL=TextFormatAlign.js.map

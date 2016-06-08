@@ -4,7 +4,7 @@
 
 import {EventDispatcher} from "../events/EventDispatcher";
 import {TextFormat} from "./TextFormat";
-import {NotImplementedError} from "../../../lib/glantern-utils/src/NotImplementedError";
+import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class StyleSheet extends EventDispatcher {
 

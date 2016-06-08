@@ -1,6 +1,7 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+"use strict";
 var StageAlign = (function () {
     function StageAlign() {
     }
@@ -61,7 +62,7 @@ var StageAlign = (function () {
         configurable: true
     });
     return StageAlign;
-})();
+}());
 exports.StageAlign = StageAlign;
 
 //# sourceMappingURL=StageAlign.js.map
