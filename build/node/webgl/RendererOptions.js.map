@@ -1,1 +1,0 @@
-{"version":3,"sources":["webgl/RendererOptions.ts"],"names":[],"mappings":"AAAA;;GAEG","file":"webgl/RendererOptions.js","sourcesContent":["/**\r\n * Created by MIC on 2015/11/20.\r\n */\r\n\r\nexport interface RendererOptions {\r\n\r\n    antialias?:boolean;\r\n    depth?:boolean;\r\n    transparent?:boolean;\r\n\r\n}\r\n"],"sourceRoot":"/source/"}

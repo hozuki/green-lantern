@@ -6,9 +6,9 @@ import {Vector3D} from "./Vector3D";
 import {Orientation3D} from "./Orientation3D";
 import {ICopyable} from "../../ICopyable";
 import {ICloneable} from "../../ICloneable";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../GLUtil";
-import {ArgumentError} from "../../flash/errors/ArgumentError";
+import {ArgumentError} from "../errors/ArgumentError";
 import {ApplicationError} from "../errors/ApplicationError";
 
 export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {

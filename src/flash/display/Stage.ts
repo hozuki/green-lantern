@@ -12,7 +12,7 @@ import {StageDisplayState} from "./StageDisplayState";
 import {ColorCorrection} from "./ColorCorrection";
 import {StageAlign} from "./StageAlign";
 import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class Stage extends DisplayObjectContainer {
 

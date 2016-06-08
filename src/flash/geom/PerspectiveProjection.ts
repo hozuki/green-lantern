@@ -4,7 +4,7 @@
 
 import {Matrix3D} from "./Matrix3D";
 import {Point} from "./Point";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../GLUtil";
 
 export class PerspectiveProjection {

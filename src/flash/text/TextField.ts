@@ -20,7 +20,7 @@ import {TextLineMetrics} from "./TextLineMetrics";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../GLUtil";
 
 export class TextField extends InteractiveObject {

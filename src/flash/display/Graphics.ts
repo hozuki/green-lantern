@@ -23,7 +23,7 @@ import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {IDisposable} from "../../IDisposable";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../GLUtil";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {

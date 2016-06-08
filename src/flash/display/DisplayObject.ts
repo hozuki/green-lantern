@@ -12,13 +12,12 @@ import {IBitmapDrawable} from "./IBitmapDrawable";
 import {EventDispatcher} from "../events/EventDispatcher";
 import {BlendMode} from "./BlendMode";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
-import {ShaderID} from "../../webgl/ShaderID";
 import {ShaderManager} from "../../webgl/ShaderManager";
 import {UniformCache} from "../../webgl/UniformCache";
 import {BitmapFilter} from "../filters/BitmapFilter";
 import {Matrix3D} from "../geom/Matrix3D";
 import {Vector3D} from "../geom/Vector3D";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../GLUtil";
 
 export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {

@@ -51,3 +51,10 @@ gulp.task("build-browserify", ["build-compile"], function () {
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("build"));
 });
+
+gulp.task("copy", function() {
+    "use strict";
+    return gulp
+        .src(["./build/GLantern-browser.min.js"])
+        .pipe(gulp.dest("./test/visual"))
+});

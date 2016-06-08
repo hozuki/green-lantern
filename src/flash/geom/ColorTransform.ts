@@ -3,7 +3,7 @@
  */
 
 import {GLUtil} from "../../GLUtil";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class ColorTransform {
 

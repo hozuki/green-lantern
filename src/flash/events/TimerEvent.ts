@@ -4,7 +4,7 @@
 
 import {ICloneable} from "../../ICloneable";
 import {FlashEvent} from "./FlashEvent";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class TimerEvent extends FlashEvent implements ICloneable<TimerEvent> {
 
