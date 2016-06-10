@@ -12,6 +12,7 @@ import {GLUtil} from "./GLUtil";
 export class EngineBase implements IDisposable {
 
     constructor() {
+        this._attachedUpdateFunction = [];
     }
 
     initialize(width:number, height:number, options:RendererOptions = WebGLRenderer.DEFAULT_OPTIONS):void {
@@ -31,6 +32,9 @@ export class EngineBase implements IDisposable {
         this._renderer.dispose();
         this._stage = null;
         this._renderer = null;
+        while (this._attachedUpdateFunction.length > 0) {
+            this._attachedUpdateFunction.pop();
+        }
         this._isInitialized = false;
     }
 
@@ -58,8 +62,13 @@ export class EngineBase implements IDisposable {
             return;
         }
         this._stage.dispatchEvent(FlashEvent.create(FlashEvent.ENTER_FRAME));
-        if (this._attachedUpdateFunction !== null && this._attachedUpdateFunction instanceof Function) {
-            this._attachedUpdateFunction();
+        if (this._attachedUpdateFunction.length > 0) {
+            for (var i = 0; i < this._attachedUpdateFunction.length; ++i) {
+                var func = this._attachedUpdateFunction[i];
+                if (typeof func === "function") {
+                    func();
+                }
+            }
         }
         this._stage.update();
         this._stage.render(this._renderer);
@@ -78,7 +87,9 @@ export class EngineBase implements IDisposable {
     }
 
     attachUpdateFunction(func:() => void):void {
-        this._attachedUpdateFunction = func;
+        if (typeof func === "function" && this._attachedUpdateFunction.indexOf(func) < 0) {
+            this._attachedUpdateFunction.push(func);
+        }
     }
 
     private __mainLoop(time:number):void {
@@ -93,6 +104,6 @@ export class EngineBase implements IDisposable {
     protected _renderer:WebGLRenderer = null;
     protected _stage:Stage = null;
     protected _isInitialized:boolean = false;
-    protected _attachedUpdateFunction:() => void = null;
+    protected _attachedUpdateFunction:(() => void)[] = null;
 
 }

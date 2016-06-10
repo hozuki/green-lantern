@@ -7,7 +7,6 @@ import {Graphics} from "../../flash/display/Graphics";
 import {StrokeRendererBase} from "./StrokeRendererBase";
 import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {RenderHelper} from "../RenderHelper";
-import {RenderTarget2D} from "../RenderTarget2D";
 import {GLUtil} from "../../GLUtil";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
@@ -135,7 +134,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
     lineTo(x:number, y:number):void {
         if (this._w > 0) {
             this._isDirty = true;
-            var vertices = this.__getSimLineVertices(this._currentX, this._currentY, x, y, STD_Z, this._w);
+            var vertices = this._$getSimLineVertices(this._currentX, this._currentY, x, y, STD_Z, this._w);
             if (vertices.length > 0) {
                 // Generated 4 vertices, matching with 6 indices (2 triangles)
                 var cur = this._vertices.length / 3;

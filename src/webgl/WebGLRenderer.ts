@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/17.
  */
 
-import libtess = require("libtess");
+import * as libtess from "libtess";
 
 import {RendererOptions} from "./RendererOptions";
 import {ShaderManager} from "./ShaderManager";
@@ -10,11 +10,10 @@ import {FilterManager} from "./FilterManager";
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLUtils} from "./WebGLUtils";
 import {IDisposable} from "../IDisposable";
-import {RenderHelper} from "./RenderHelper";
 import {BlendMode} from "../flash/display/BlendMode";
 import {GLUtil} from "../GLUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 
 /**
  * The WebGL renderer, main provider of the rendering services.
@@ -236,8 +235,8 @@ export class WebGLRenderer implements IDisposable {
 
         this._screenTarget = this.createRootRenderTarget();
 
-        canvas.addEventListener("webglcontextlost", this.onContextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored", this.onContextRestored.bind(this));
+        canvas.addEventListener("webglcontextlost", this.__onContextLost.bind(this));
+        canvas.addEventListener("webglcontextrestored", this.__onContextRestored.bind(this));
 
         this._tessellator = new libtess.GluTesselator();
         this._shaderManager = new ShaderManager(this);
@@ -283,14 +282,14 @@ export class WebGLRenderer implements IDisposable {
      * The event handler for handling the lost of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private onContextLost(ev:Event):void {
+    private __onContextLost(ev:Event):void {
     }
 
     /**
      * The event handler for handling the restoration of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private onContextRestored(ev:Event):void {
+    private __onContextRestored(ev:Event):void {
     }
 
     private _currentRenderTarget:RenderTarget2D = null;

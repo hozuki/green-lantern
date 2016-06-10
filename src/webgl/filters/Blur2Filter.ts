@@ -82,11 +82,11 @@ export class Blur2Filter extends FilterBase {
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     }

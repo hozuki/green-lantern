@@ -64,7 +64,7 @@ export class BlurFilter extends FilterBase {
         this._blurYFilter.process(renderer, this._tempTarget, output, clearOutput);
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
         this._blurXFilter = new BlurXFilter(this.filterManager);
         this._blurYFilter = new BlurYFilter(this.filterManager);
         this._blurXFilter.initialize();
@@ -77,7 +77,7 @@ export class BlurFilter extends FilterBase {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();

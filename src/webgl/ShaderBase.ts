@@ -11,7 +11,7 @@ import {IDisposable} from "../IDisposable";
 import {WebGLDataType} from "./WebGLDataType";
 import {GLUtil} from "../GLUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 
 export class ShaderBase implements IDisposable {
 
@@ -26,7 +26,7 @@ export class ShaderBase implements IDisposable {
         if (GLUtil.isUndefinedOrNull(uniforms) || GLUtil.isUndefinedOrNull(attributes)) {
             this._uniforms = new Map<string, UniformCache>();
             this._attributes = new Map<string, AttributeCache>();
-            this.__localInit(manager, this._uniforms, this._attributes);
+            this._$localInit(manager, this._uniforms, this._attributes);
         } else {
             this._uniforms = uniforms;
             this._attributes = attributes;
@@ -91,6 +91,10 @@ export class ShaderBase implements IDisposable {
     static SHADER_CLASS_NAME:string = "ShaderBase";
     static FRAGMENT_SOURCE:string = FragmentShaders.buffered;
     static VERTEX_SOURCE:string = VertexShaders.buffered;
+
+
+    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    }
 
     private __initialize(glc:WebGLRenderingContext, vertexSource:string, fragmentSource:string):void {
         this._glc = glc;
@@ -271,9 +275,6 @@ export class ShaderBase implements IDisposable {
         this._attributes.forEach((v, k):void => {
             v.location = glc.getAttribLocation(program, k);
         });
-    }
-
-    protected __localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
     }
 
     protected _shaderManager:ShaderManager = null;

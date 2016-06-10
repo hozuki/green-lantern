@@ -8,7 +8,7 @@ import {WebGLRenderer} from "../WebGLRenderer";
 import {PackedArrayBuffer} from "../PackedArrayBuffer";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 
 export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 
@@ -68,7 +68,7 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 
     update():void {
         // check whether to update the typed buffer
-        this.__syncBuffers();
+        this._$syncBuffers();
     }
 
     render(renderer:WebGLRenderer):void {
@@ -92,16 +92,7 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         return this._hasDrawnAnything;
     }
 
-    private __initializeBuffers():void {
-        this._vertices = [];
-        this._colors = [];
-        this._indices = [];
-        this._vertexBuffer = PackedArrayBuffer.create(this._glc, this._vertices, gl.FLOAT, gl.ARRAY_BUFFER);
-        this._colorBuffer = PackedArrayBuffer.create(this._glc, this._colors, gl.FLOAT, gl.ARRAY_BUFFER);
-        this._indexBuffer = PackedArrayBuffer.create(this._glc, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
-    }
-
-    protected __syncBuffers():void {
+    protected _$syncBuffers():void {
         if (this._isDirty) {
             // When the array buffers become dirty, their values will be updated automatically
             // at next draw call.
@@ -113,6 +104,15 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
             this._indexBuffer.becomeDirty();
             this._isDirty = false;
         }
+    }
+
+    private __initializeBuffers():void {
+        this._vertices = [];
+        this._colors = [];
+        this._indices = [];
+        this._vertexBuffer = PackedArrayBuffer.create(this._glc, this._vertices, gl.FLOAT, gl.ARRAY_BUFFER);
+        this._colorBuffer = PackedArrayBuffer.create(this._glc, this._colors, gl.FLOAT, gl.ARRAY_BUFFER);
+        this._indexBuffer = PackedArrayBuffer.create(this._glc, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
     }
 
     protected _graphics:Graphics = null;

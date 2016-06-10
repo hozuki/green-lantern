@@ -24,7 +24,7 @@ export class SolidFillRenderer extends FillRendererBase {
 
     bezierCurveTo(cx1:number, cy1:number, cx2:number, cy2:number, x:number, y:number):void {
         this._isDirty = true;
-        var currentContour = this.getContourForLines();
+        var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
             currentContour.push(this._currentX, this._currentY, STD_Z);
         }
@@ -52,7 +52,7 @@ export class SolidFillRenderer extends FillRendererBase {
 
     curveTo(cx:number, cy:number, x:number, y:number):void {
         this._isDirty = true;
-        var currentContour = this.getContourForLines();
+        var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
             currentContour.push(this._currentX, this._currentY, STD_Z);
         }
@@ -76,7 +76,7 @@ export class SolidFillRenderer extends FillRendererBase {
     drawCircle(x:number, y:number, radius:number):void {
         this._isDirty = true;
         this.moveTo(x, y);
-        var currentContour = this.getContourForClosedShapes();
+        var currentContour = this._$getContourForClosedShapes();
         var thetaNext:number;
         var thetaBegin:number;
         var x2:number, y2:number;
@@ -104,7 +104,7 @@ export class SolidFillRenderer extends FillRendererBase {
     drawEllipse(x:number, y:number, width:number, height:number):void {
         this._isDirty = true;
         this.moveTo(x, y + height / 2);
-        var currentContour = this.getContourForClosedShapes();
+        var currentContour = this._$getContourForClosedShapes();
         var thetaNext:number;
         var thetaBegin:number;
         var centerX = x + width / 2, centerY = y + height / 2;
@@ -135,7 +135,7 @@ export class SolidFillRenderer extends FillRendererBase {
         this._isDirty = true;
         this.moveTo(x, y);
         // Create a new contour and draw a independent rectangle, should not use lineTo().
-        var currentContour = this.getContourForClosedShapes();
+        var currentContour = this._$getContourForClosedShapes();
         currentContour.push(x, y, STD_Z);
         currentContour.push(x + width, y, STD_Z);
         currentContour.push(x + width, y + height, STD_Z);
@@ -152,7 +152,7 @@ export class SolidFillRenderer extends FillRendererBase {
 
     lineTo(x:number, y:number):void {
         this._isDirty = true;
-        var currentContour = this.getContourForLines();
+        var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
             currentContour.push(this._currentX, this._currentY, STD_Z);
         }

@@ -3,7 +3,6 @@
  */
 
 import {EventDispatcher} from "../events/EventDispatcher";
-import {IDisposable} from "../../IDisposable";
 import {TimerEvent} from "../events/TimerEvent";
 
 export class Timer extends EventDispatcher {
@@ -54,7 +53,7 @@ export class Timer extends EventDispatcher {
 
     start():void {
         if (!this.running && (this.currentCount < this.repeatCount || this.repeatCount === 0)) {
-            this._handle = window.setInterval(this.__timerCallback.bind(this), this.delay);
+            this._handle = window.setInterval(this._$timerCallback.bind(this), this.delay);
             this._running = true;
         }
     }
@@ -72,25 +71,25 @@ export class Timer extends EventDispatcher {
         this.reset();
     }
 
-    protected __timerCallback():void {
+    protected _$timerCallback():void {
         if (this.enabled) {
             this._currentCount++;
             if (this.repeatCount > 0 && this.currentCount > this.repeatCount) {
                 this.stop();
-                this.__raiseTimerCompleteEvent();
+                this._$raiseTimerCompleteEvent();
             } else {
-                this.__raiseTimerEvent();
+                this._$raiseTimerEvent();
             }
         }
     }
 
-    protected __raiseTimerEvent():void {
+    protected _$raiseTimerEvent():void {
         var ev = new TimerEvent(TimerEvent.TIMER);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);
     }
 
-    protected __raiseTimerCompleteEvent():void {
+    protected _$raiseTimerCompleteEvent():void {
         var ev = new TimerEvent(TimerEvent.TIMER_COMPLETE);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);

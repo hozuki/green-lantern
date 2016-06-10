@@ -42,8 +42,8 @@ export class Blur2Shader extends BufferedShader {
     static FRAGMENT_SOURCE:string = FragmentShaders.blur2;
     static VERTEX_SOURCE:string = VertexShaders.blur2;
 
-    protected __localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
-        super.__localInit(manager, uniforms, attributes);
+    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+        super._$localInit(manager, uniforms, attributes);
 
         var u:UniformCache;
 

@@ -87,9 +87,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
         if (hasFiltersNow !== hasFiltersBefore) {
             if (hasFiltersNow) {
-                this.__createFilterTarget(this._root.worldRenderer);
+                this._$createFilterTarget(this._root.worldRenderer);
             } else {
-                this.__releaseFilterTarget();
+                this._$releaseFilterTarget();
             }
         }
     }
@@ -248,18 +248,18 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
 
     update():void {
         if (this._isTransformDirty) {
-            this.__updateTransform();
+            this._$updateTransform();
         }
         if (this.enabled) {
-            this.__update();
+            this._$update();
         }
     }
 
     render(renderer:WebGLRenderer):void {
         if (this.visible && this.alpha > 0) {
-            this.__preprocess(renderer);
-            this.__render(renderer);
-            this.__postprocess(renderer);
+            this._$preprocess(renderer);
+            this._$render(renderer);
+            this._$postprocess(renderer);
         } else {
             //this.outputRenderTarget.clear();
         }
@@ -269,7 +269,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._isTransformDirty = true;
     }
 
-    protected __updateTransform():void {
+    protected _$updateTransform():void {
         var matrix3D:Matrix3D;
         if (this._isRoot) {
             matrix3D = new Matrix3D();
@@ -283,21 +283,21 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this.transform.matrix3D.copyFrom(matrix3D);
     }
 
-    protected abstract __update():void;
+    protected abstract _$update():void;
 
-    protected abstract __render(renderer:WebGLRenderer):void;
+    protected abstract _$render(renderer:WebGLRenderer):void;
 
     /**
      * Override this function to select the proper shader.
      * @param shaderManager {ShaderManager} The shader manager.
      * @example
-     * protected __selectShader(shaderManager: ShaderManager): void {
+     * protected _$selectShader(shaderManager: ShaderManager): void {
      * &nbsp;&nbsp;shaderManager.selectShader(ShaderID.PRIMITIVE);
      * }
      */
-    protected abstract __selectShader(shaderManager:ShaderManager):void;
+    protected abstract _$selectShader(shaderManager:ShaderManager):void;
 
-    protected __preprocess(renderer:WebGLRenderer):void {
+    protected _$preprocess(renderer:WebGLRenderer):void {
         if (this.__shouldProcessFilters()) {
             this._filterTarget.clear();
             renderer.setRenderTarget(this._filterTarget);
@@ -305,7 +305,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
             renderer.setRenderTarget(null);
         }
         var manager = renderer.shaderManager;
-        this.__selectShader(manager);
+        this._$selectShader(manager);
         var shader = manager.currentShader;
         if (!GLUtil.isUndefinedOrNull(shader)) {
             shader.changeValue("uTransformMatrix", (u:UniformCache):void => {
@@ -318,7 +318,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         renderer.setBlendMode(this.blendMode);
     }
 
-    protected __postprocess(renderer:WebGLRenderer):void {
+    protected _$postprocess(renderer:WebGLRenderer):void {
         if (this.__shouldProcessFilters()) {
             var filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
@@ -327,14 +327,14 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    protected __createFilterTarget(renderer:WebGLRenderer):void {
+    protected _$createFilterTarget(renderer:WebGLRenderer):void {
         if (this._filterTarget !== null) {
             return;
         }
         this._filterTarget = renderer.createRenderTarget();
     }
 
-    protected __releaseFilterTarget():void {
+    protected _$releaseFilterTarget():void {
         if (this._filterTarget === null) {
             return;
         }

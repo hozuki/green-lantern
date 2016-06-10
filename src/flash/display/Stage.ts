@@ -115,11 +115,11 @@ export class Stage extends DisplayObjectContainer {
         // TODO: Fully implement this
     }
 
-    protected __render(renderer:WebGLRenderer):void {
-        renderer.currentRenderTarget.clear();
+    protected _$update():void {
     }
 
-    protected __update():void {
+    protected _$render(renderer:WebGLRenderer):void {
+        renderer.currentRenderTarget.clear();
     }
 
     private _allowFullScreen:boolean = true;

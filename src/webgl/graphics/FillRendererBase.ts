@@ -42,7 +42,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     beginIndex:number = -1;
     endIndex:number = -1;
 
-    protected getContourForClosedShapes():number[] {
+    protected _$getContourForClosedShapes():number[] {
         var currentContour:number[];
         if (this._hasDrawnAnything) {
             currentContour = [];
@@ -54,7 +54,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
         return currentContour;
     }
 
-    protected getContourForLines():number[] {
+    protected _$getContourForLines():number[] {
         var currentContour:number[];
         if (this._hasDrawnAnything) {
             if (this._startingNewContour) {

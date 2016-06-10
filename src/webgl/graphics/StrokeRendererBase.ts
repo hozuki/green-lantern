@@ -24,7 +24,7 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
         this._lastPathStartY = y;
     }
 
-    protected __getSimLineVertices(x1:number, y1:number, x2:number, y2:number, z:number, width:number):number[] {
+    protected _$getSimLineVertices(x1:number, y1:number, x2:number, y2:number, z:number, width:number):number[] {
         if (width < 0) {
             return [];
         }

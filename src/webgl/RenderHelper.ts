@@ -14,7 +14,7 @@ import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
 import {GLUtil} from "../GLUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 
 export abstract class RenderHelper {
 
@@ -117,7 +117,7 @@ export abstract class RenderHelper {
 
     static renderBuffered(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, shaderID:number,
                           clearOutput:boolean, shaderInit:(r:WebGLRenderer) => void):void {
-        if (!__checkRenderTargets(source, destination)) {
+        if (!checkRenderTargets(source, destination)) {
             return;
         }
 
@@ -177,7 +177,7 @@ export abstract class RenderHelper {
 
 }
 
-function __checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
+function checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
     if (GLUtil.isUndefinedOrNull(source)) {
         console.warn("Cannot render a null RenderTarget2D onto another RenderTarget2D.");
         return false;

@@ -170,13 +170,13 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
 
     render(renderer:WebGLRenderer):void {
         if (this.visible && this.alpha > 0) {
-            this.__preprocess(renderer);
-            this.__render(renderer);
+            this._$preprocess(renderer);
+            this._$render(renderer);
             for (var i = 0; i < this._children.length; ++i) {
                 var child = this._children[i];
                 child.render(renderer);
             }
-            this.__postprocess(renderer);
+            this._$postprocess(renderer);
         } else {
             //this.outputRenderTarget.clear();
         }
@@ -191,7 +191,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    protected __selectShader(shaderManager:ShaderManager):void {
+    protected _$selectShader(shaderManager:ShaderManager):void {
         // Do nothing
     }
 

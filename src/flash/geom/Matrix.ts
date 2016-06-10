@@ -67,7 +67,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
     }
 
     concat(m:Matrix):void {
-        this._data = Matrix.dotProduct(this._data, m._data);
+        this._data = Matrix.__dotProduct(this._data, m._data);
     }
 
     copyColumnFrom(column:number, vector3D:Vector3D):void {
@@ -134,7 +134,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
     }
 
     rotate(angle:number):void {
-        this._data = Matrix.dotProduct(this._data, [
+        this._data = Matrix.__dotProduct(this._data, [
             Math.cos(angle), -Math.sin(angle), 0,
             Math.sin(angle), Math.cos(angle), 0,
             0, 0, 1
@@ -142,7 +142,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
     }
 
     scale(sx:number, sy:number):void {
-        this._data = Matrix.dotProduct(this._data, [
+        this._data = Matrix.__dotProduct(this._data, [
             sx, 0, 0,
             0, sy, 0,
             0, 0, 1
@@ -150,7 +150,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
     }
 
     skew(skewX:number, skewY:number):void {
-        this._data = Matrix.dotProduct(this._data, [
+        this._data = Matrix.__dotProduct(this._data, [
             0, Math.tan(skewX), 0,
             Math.tan(skewY), 0, 0,
             0, 0, 1
@@ -180,9 +180,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         this.ty += dy;
     }
 
-    private _data:number[];
-
-    private static dotProduct(a:number[], b:number[]):number[] {
+    private static __dotProduct(a:number[], b:number[]):number[] {
         if (b.length != 9) {
             throw new Error('Matrix dot product requires a 3x3 matrix.');
         }
@@ -196,5 +194,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         }
         return result;
     }
+    
+    private _data:number[];
 
 }
