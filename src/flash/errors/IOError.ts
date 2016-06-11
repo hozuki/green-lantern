@@ -1,17 +1,17 @@
 /**
- * Created by MIC on 2015/11/18.
+ * Created by MIC on 2016/6/11.
  */
 
 import {ErrorBase} from "../../glantern/ErrorBase";
 
-export class NotImplementedError extends ErrorBase {
+export class IOError extends ErrorBase {
 
     constructor(message:string = "") {
         super(message);
     }
 
     get name():string {
-        return "NotImplementedError";
+        return "IOError";
     }
 
 }

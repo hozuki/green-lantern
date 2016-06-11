@@ -8,7 +8,7 @@ import {RenderTarget2D} from "../RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class BlurFilter extends FilterBase {
 
@@ -49,7 +49,7 @@ export class BlurFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.limitInto(v, 1, 3) | 0;
         this._pass = v;
         if (this._blurXFilter !== null) {
             this._blurXFilter.pass = v;

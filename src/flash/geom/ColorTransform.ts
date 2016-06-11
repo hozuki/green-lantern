@@ -2,8 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {GLUtil} from "../../GLUtil";
+import {GLUtil} from "../../glantern/GLUtil";
 import {NotImplementedError} from "../errors/NotImplementedError";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class ColorTransform {
 
@@ -34,7 +35,7 @@ export class ColorTransform {
     }
 
     set alphaOffset(v:number) {
-        this._alphaOffset = GLUtil.limitInto(v, -1, 1);
+        this._alphaOffset = MathUtil.limitInto(v, -1, 1);
     }
 
     get redMultiplier():number {
@@ -50,7 +51,7 @@ export class ColorTransform {
     }
 
     set redOffset(v:number) {
-        this._redOffset = GLUtil.limitInto(v, -1, 1);
+        this._redOffset = MathUtil.limitInto(v, -1, 1);
     }
 
     get greenMultiplier():number {
@@ -66,7 +67,7 @@ export class ColorTransform {
     }
 
     set greenOffset(v:number) {
-        this._greenOffset = GLUtil.limitInto(v, -1, 1);
+        this._greenOffset = MathUtil.limitInto(v, -1, 1);
     }
 
     get blueMultiplier():number {
@@ -82,7 +83,7 @@ export class ColorTransform {
     }
 
     set blueOffset(v:number) {
-        this._blueOffset = GLUtil.limitInto(v, -1, 1);
+        this._blueOffset = MathUtil.limitInto(v, -1, 1);
     }
 
     concat(second:ColorTransform):void {

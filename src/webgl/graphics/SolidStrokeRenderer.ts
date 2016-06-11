@@ -7,14 +7,14 @@ import {Graphics} from "../../flash/display/Graphics";
 import {StrokeRendererBase} from "./StrokeRendererBase";
 import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../../GLUtil";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class SolidStrokeRenderer extends StrokeRendererBase {
 
     constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number, lineWidth:number, color:number, alpha:number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
-        this._a = GLUtil.limitInto(alpha, 0, 1);
+        this._a = MathUtil.limitInto(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
         this._g = ((color >>> 8 ) & 0xff) / 0xff;
         this._b = (color & 0xff) / 0xff;

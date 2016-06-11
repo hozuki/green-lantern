@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {IDisposable} from "../../IDisposable";
+import {IDisposable} from "../../glantern/IDisposable";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {RenderTarget2D} from "../RenderTarget2D";
 

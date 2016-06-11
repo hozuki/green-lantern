@@ -12,7 +12,7 @@ import {Matrix3D} from "../flash/geom/Matrix3D";
 import {CopyImageShader} from "./shaders/CopyImageShader";
 import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {GLUtil} from "../GLUtil";
+import {GLUtil} from "../glantern/GLUtil";
 
 const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 

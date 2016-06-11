@@ -4,12 +4,12 @@
 
 import {Vector3D} from "./Vector3D";
 import {Orientation3D} from "./Orientation3D";
-import {ICopyable} from "../../ICopyable";
-import {ICloneable} from "../../ICloneable";
+import {ICopyable} from "../../glantern/ICopyable";
+import {ICloneable} from "../../glantern/ICloneable";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
 import {ArgumentError} from "../errors/ArgumentError";
 import {ApplicationError} from "../errors/ApplicationError";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
@@ -154,7 +154,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     static interpolate(thisMat:Matrix3D, toMat:Matrix3D, percent:number):Matrix3D {
-        percent = GLUtil.limitInto(percent, 0, 1);
+        percent = MathUtil.limitInto(percent, 0, 1);
         var data:number[] = [];
         for (var i = 0; i < 16; i++) {
             data.push(thisMat._data[i] * (1 - percent) + toMat._data[i] * percent);

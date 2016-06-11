@@ -6,10 +6,11 @@ import * as flash from "./flash/index";
 import * as webgl from "./webgl/index";
 import * as fl from "./fl/index";
 import * as mx from "./mx/index";
-import {EngineBase} from "./EngineBase";
-import {GLUtil} from "./GLUtil";
+import * as glantern from "./glantern/index";
+import {EngineBase} from "./glantern/EngineBase";
+import {GLUtil} from "./glantern/GLUtil";
 
-export { flash, webgl, fl, mx, EngineBase};
+export {flash, webgl, fl, mx, glantern, EngineBase};
 
 export function injectToGlobal($this:any):void {
     $this["flash"] = flash;

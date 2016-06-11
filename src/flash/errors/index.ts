@@ -5,3 +5,5 @@
 export * from "./ApplicationError";
 export * from "./ArgumentError";
 export * from "./NotImplementedError";
+export * from "./IOError";
+export * from "./EOFError";

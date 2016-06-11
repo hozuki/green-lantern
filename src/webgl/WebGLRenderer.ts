@@ -9,9 +9,9 @@ import {ShaderManager} from "./ShaderManager";
 import {FilterManager} from "./FilterManager";
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLUtils} from "./WebGLUtils";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 import {BlendMode} from "../flash/display/BlendMode";
-import {GLUtil} from "../GLUtil";
+import {GLUtil} from "../glantern/GLUtil";
 
 const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 

@@ -9,7 +9,7 @@ import {FilterBase} from "../FilterBase";
 import {RenderHelper} from "../RenderHelper";
 import {ShaderID} from "../ShaderID";
 import {Blur2Shader} from "../shaders/Blur2Shader";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Blur2Filter extends FilterBase {
 
@@ -45,7 +45,7 @@ export class Blur2Filter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.limitInto(v, 1, 3) | 0;
         this._pass = v;
     }
 

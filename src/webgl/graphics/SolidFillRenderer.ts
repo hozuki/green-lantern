@@ -9,14 +9,14 @@ import {Graphics} from "../../flash/display/Graphics";
 import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../../GLUtil";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class SolidFillRenderer extends FillRendererBase {
 
     constructor(graphics:Graphics, startX:number, startY:number, color:number, alpha:number) {
         super(graphics, startX, startY);
-        this._a = GLUtil.limitInto(alpha, 0, 1);
+        this._a = MathUtil.limitInto(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
         this._g = ((color >>> 8 ) & 0xff) / 0xff;
         this._b = (color & 0xff) / 0xff;

@@ -5,7 +5,7 @@
 import {Matrix3D} from "./Matrix3D";
 import {Point} from "./Point";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class PerspectiveProjection {
 
@@ -18,7 +18,7 @@ export class PerspectiveProjection {
     }
 
     set fieldOfView(v:number) {
-        this._fieldOfView = GLUtil.limitInto(v, 0, 180);
+        this._fieldOfView = MathUtil.limitInto(v, 0, 180);
     }
 
     focalLength:number = 10;

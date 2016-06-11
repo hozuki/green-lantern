@@ -18,7 +18,8 @@ import {BitmapFilter} from "../filters/BitmapFilter";
 import {Matrix3D} from "../geom/Matrix3D";
 import {Vector3D} from "../geom/Vector3D";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
+import {GLUtil} from "../../glantern/GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
 
@@ -37,7 +38,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set alpha(v:number) {
-        this._alpha = GLUtil.limitInto(v, 0, 1);
+        this._alpha = MathUtil.limitInto(v, 0, 1);
     }
 
     blendMode:string = BlendMode.NORMAL;

@@ -2,12 +2,13 @@
  * Created by MIC on 2015/11/25.
  */
 
-import {WebGLRenderer} from "./webgl/WebGLRenderer";
-import {Stage} from "./flash/display/Stage";
-import {RendererOptions} from "./webgl/RendererOptions";
-import {FlashEvent} from "./flash/events/FlashEvent";
+import {WebGLRenderer} from "../webgl/WebGLRenderer";
+import {Stage} from "../flash/display/Stage";
+import {RendererOptions} from "../webgl/RendererOptions";
+import {FlashEvent} from "../flash/events/FlashEvent";
 import {IDisposable} from "./IDisposable";
 import {GLUtil} from "./GLUtil";
+import {VisualUtil} from "./VisualUtil";
 
 export class EngineBase implements IDisposable {
 
@@ -21,6 +22,7 @@ export class EngineBase implements IDisposable {
         }
         this._renderer = new WebGLRenderer(width, height, options);
         this._stage = new Stage(this._renderer);
+        this._loopFunction = this.__mainLoop.bind(this);
         this._isInitialized = true;
     }
 
@@ -43,7 +45,7 @@ export class EngineBase implements IDisposable {
             return;
         }
         this._isRunning = true;
-        GLUtil.requestAnimationFrame(this.__mainLoop.bind(this));
+        VisualUtil.requestAnimationFrame(this._loopFunction);
     }
 
     stopAnimation():void {
@@ -97,7 +99,7 @@ export class EngineBase implements IDisposable {
             return;
         }
         this.runOneFrame();
-        GLUtil.requestAnimationFrame(this.__mainLoop.bind(this));
+        VisualUtil.requestAnimationFrame(this._loopFunction);
     }
 
     protected _isRunning:boolean = false;
@@ -105,5 +107,6 @@ export class EngineBase implements IDisposable {
     protected _stage:Stage = null;
     protected _isInitialized:boolean = false;
     protected _attachedUpdateFunction:(() => void)[] = null;
+    private _loopFunction:(time:number) => void = null;
 
 }

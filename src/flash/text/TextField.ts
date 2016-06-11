@@ -21,7 +21,7 @@ import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export class TextField extends InteractiveObject {
 

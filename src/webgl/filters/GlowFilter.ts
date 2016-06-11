@@ -10,7 +10,7 @@ import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";
 import {Blur2Filter} from "./Blur2Filter";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../..//GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class GlowFilter extends FilterBase {
 
@@ -51,7 +51,7 @@ export class GlowFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.limitInto(v, 1, 3) | 0;
         this._pass = v;
         if (this._blurFilter !== null) {
             this._blurFilter.pass = v;

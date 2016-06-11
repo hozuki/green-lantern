@@ -4,7 +4,7 @@
 
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLRenderer} from "./WebGLRenderer";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 
 export interface IWebGLElement extends IDisposable {
 

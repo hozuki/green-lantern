@@ -4,8 +4,8 @@
 
 import {Point} from "./Point";
 import {Vector3D} from "./Vector3D";
-import {ICloneable} from "../../ICloneable";
-import {ICopyable} from "../../ICopyable";
+import {ICloneable} from "../../glantern/ICloneable";
+import {ICopyable} from "../../glantern/ICopyable";
 import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {

@@ -15,7 +15,7 @@ export abstract class GLUtil {
      * @returns {Boolean} True if the value is {@link undefined} or {@link null}, and false otherwise.
      */
     static isUndefinedOrNull(value:any):boolean {
-        return value === undefined || value === null;
+        return typeof value === "undefined" || value === null;
     }
 
     /**
@@ -24,7 +24,7 @@ export abstract class GLUtil {
      * @returns {Boolean} True if the value is {@link undefined}, and false otherwise.
      */
     static isUndefined(value:any):boolean {
-        return value === undefined;
+        return typeof value === "undefined";
     }
 
     /**
@@ -56,44 +56,6 @@ export abstract class GLUtil {
     }
 
     /**
-     * Limit a number inside a range specified by min and max (both are reachable).
-     * @param v {Number} The number to limit.
-     * @param min {Number} The lower bound. Numbers strictly less than this bound will be set to the value.
-     * @param max {Number} The upper bound. Numbers strictly greater than this bound will be set to this value.
-     * @returns {Number} The limited value. If the original number is inside the specified range, it will not be
-     * altered. Otherwise, it will be either min or max.
-     */
-    static limitInto(v:number, min:number, max:number):number {
-        v < min && (v = min);
-        v > max && (v = max);
-        return v;
-    }
-
-    /**
-     * Check whether a number is inside a range specified min a max (both are unreachable).
-     * @param v {Number} The number to check.
-     * @param min {Number} The lower bound.
-     * @param max {Number} The upper bound.
-     * @returns {Boolean} True if the number to check is strictly greater than min and strictly less than max, and
-     * false otherwise.
-     */
-    static isValueBetweenNotEquals(v:number, min:number, max:number):boolean {
-        return min < v && v < max;
-    }
-
-    /**
-     * Check whether a number is inside a range specified min a max (both are reachable).
-     * @param v {Number} The number to check.
-     * @param min {Number} The lower bound.
-     * @param max {Number} The upper bound.
-     * @returns {Boolean} True if the number to check is not less than min and not greater than max, and
-     * false otherwise.
-     */
-    static isValueBetweenEquals(v:number, min:number, max:number):boolean {
-        return min <= v && v <= max;
-    }
-
-    /**
      * Generate a string based on the template, and provided values. This function acts similarly to the String.Format()
      * function in CLR.
      * @param format {String} The template string.
@@ -111,7 +73,7 @@ export abstract class GLUtil {
             var indexString = matched.substring(1, matched.length - 1);
             var indexValue = parseInt(indexString);
             if (!replaceWithArrayIsNull && (0 <= indexValue && indexValue < replaceWithArrayLength)) {
-                if (replaceWithArray[indexValue] === undefined) {
+                if (typeof replaceWithArray[indexValue] === "undefined") {
                     return "undefined";
                 } else if (replaceWithArray[indexValue] === null) {
                     return "null";
@@ -141,7 +103,7 @@ export abstract class GLUtil {
     static deepClone<T>(sourceObject:Set<T>):Set<T>;
     static deepClone<T extends Function>(sourceObject:T):T;
     static deepClone(sourceObject:any):any {
-        if (sourceObject === undefined || sourceObject === null || sourceObject === true || sourceObject === false) {
+        if (typeof sourceObject === "undefined" || sourceObject === null || sourceObject === true || sourceObject === false) {
             return sourceObject;
         }
         if (typeof sourceObject === "string" || typeof sourceObject === "number") {
@@ -156,14 +118,14 @@ export abstract class GLUtil {
             return tmpArray;
         }
         /* ES6 classes. Chrome has implemented a part of them so they must be considered. */
-        if ($global.Map !== undefined && sourceObject instanceof Map) {
+        if (typeof $global.Map !== "undefined" && sourceObject instanceof Map) {
             var newMap = new Map<any, any>();
             sourceObject.forEach((v:any, k:any) => {
                 newMap.set(k, v);
             });
             return newMap;
         }
-        if ($global.Set !== undefined && sourceObject instanceof Set) {
+        if (typeof $global.Set !== "undefined" && sourceObject instanceof Set) {
             var newSet = new Set<any>();
             sourceObject.forEach((v:any) => {
                 newSet.add(v);
@@ -202,38 +164,7 @@ export abstract class GLUtil {
             }
             return newObject;
         }
-        return undefined;
-    }
-
-    /**
-     * Test whether a positive number is a power of 2.
-     * @param positiveNumber {Number} The positive number to test.
-     * @returns {Boolean} True if the number is a power of 2, and false otherwise.
-     */
-    static isPowerOfTwo(positiveNumber:number):boolean {
-        var num = positiveNumber | 0;
-        if (num != positiveNumber || isNaN(num) || !isFinite(num)) {
-            return false;
-        } else {
-            return num > 0 && (num & (num - 1)) === 0;
-        }
-    }
-
-    /**
-     * Calculate the smallest power of 2 which is greater than or equals the given positive number.
-     * @param positiveNumber {Number} The positive number as the basis.
-     * @returns {Number} The smallest power of 2 which is greater than or equals the given positive number
-     */
-    static power2Roundup(positiveNumber:number):number {
-        if (positiveNumber < 0)
-            return 0;
-        --positiveNumber;
-        positiveNumber |= positiveNumber >>> 1;
-        positiveNumber |= positiveNumber >>> 2;
-        positiveNumber |= positiveNumber >>> 4;
-        positiveNumber |= positiveNumber >>> 8;
-        positiveNumber |= positiveNumber >>> 16;
-        return positiveNumber + 1;
+        return (void 0);
     }
 
     /**
@@ -242,20 +173,12 @@ export abstract class GLUtil {
      * @param [extra] {*} Extra information.
      */
     static trace(message:string, extra?:any):void {
-        if (extra !== undefined) {
+        if (typeof extra !== "undefined") {
             console.info(message, extra);
         } else {
             console.info(message);
         }
         console.trace();
-    }
-
-    static requestAnimationFrame(f:FrameRequestCallback):number {
-        return window.requestAnimationFrame(f);
-    }
-
-    static cancelAnimationFrame(handle:number):void {
-        window.cancelAnimationFrame(handle);
     }
 
     static colorToCssSharp(color:number):string {

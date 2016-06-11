@@ -4,7 +4,7 @@
 
 import {WebGLRenderer} from "./WebGLRenderer";
 import {RenderTarget2D} from "./RenderTarget2D";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 import {IBitmapFilter} from "./IBitmapFilter";
 import {RenderHelper} from "./RenderHelper";
 

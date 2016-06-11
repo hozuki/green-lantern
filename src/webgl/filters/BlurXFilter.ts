@@ -9,7 +9,7 @@ import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";
 import {ShaderID} from "../ShaderID";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class BlurXFilter extends FilterBase {
 
@@ -33,7 +33,7 @@ export class BlurXFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.limitInto(v, 1, 3) | 0;
         this._pass = v;
     }
 

@@ -2,7 +2,7 @@
  * Created by MIC on 2016/1/7.
  */
 
-import {ICloneable} from "../../ICloneable";
+import {ICloneable} from "../../glantern/ICloneable";
 import {FlashEvent} from "./FlashEvent";
 import {NotImplementedError} from "../errors/NotImplementedError";
 

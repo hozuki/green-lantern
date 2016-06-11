@@ -2,9 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../../IDisposable";
+import {IDisposable} from "../../glantern/IDisposable";
 import {listeners} from "cluster";
-import {GLUtil} from "../../GLUtil";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export abstract class EventDispatcher implements IDisposable {
 

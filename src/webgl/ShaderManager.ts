@@ -12,7 +12,7 @@ import {ColorTransformShader} from "./shaders/ColorTransformShader";
 import {FxaaShader} from "./shaders/FxaaShader";
 import {UniformCache} from "./UniformCache";
 import {AttributeCache} from "./AttributeCache";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 import {ShaderID} from "./ShaderID";
 import {Blur2Shader} from "./shaders/Blur2Shader";
 import {CopyImageShader} from "./shaders/CopyImageShader";

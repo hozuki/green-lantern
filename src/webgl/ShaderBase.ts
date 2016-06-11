@@ -7,9 +7,9 @@ import {UniformCache} from "./UniformCache";
 import {ShaderManager} from "./ShaderManager";
 import {VertexShaders} from "./VertexShaders";
 import {FragmentShaders} from "./FragmentShaders";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 import {WebGLDataType} from "./WebGLDataType";
-import {GLUtil} from "../GLUtil";
+import {GLUtil} from "../glantern/GLUtil";
 
 const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
 
@@ -63,7 +63,7 @@ export class ShaderBase implements IDisposable {
 
     changeValue(name:string, callback:(uniform:UniformCache) => void):void {
         var uniform = this._uniforms.get(name);
-        if (uniform !== undefined && uniform !== null) {
+        if (uniform !== (void 0) && uniform !== null) {
             callback(uniform);
         }
     }

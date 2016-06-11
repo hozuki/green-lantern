@@ -2,9 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ICopyable} from "../../ICopyable";
-import {ICloneable} from "../../ICloneable";
-import {GLUtil} from "../../GLUtil";
+import {ICopyable} from "../../glantern/ICopyable";
+import {ICloneable} from "../../glantern/ICloneable";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3D> {
 
@@ -98,10 +98,10 @@ export class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3D> {
     }
 
     nearEquals(toCompare:Vector3D, tolerance:number, allFour:boolean = false):boolean {
-        return GLUtil.isValueBetweenNotEquals(this.x, toCompare.x - tolerance, toCompare.x + tolerance) &&
-            GLUtil.isValueBetweenNotEquals(this.y, toCompare.y - tolerance, toCompare.y + tolerance) &&
-            GLUtil.isValueBetweenNotEquals(this.z, toCompare.z - tolerance, toCompare.z + tolerance) && !(
-                allFour && !GLUtil.isValueBetweenNotEquals(this.w, toCompare.w - tolerance, toCompare.w + tolerance)
+        return MathUtil.isValueBetweenNotEquals(this.x, toCompare.x - tolerance, toCompare.x + tolerance) &&
+            MathUtil.isValueBetweenNotEquals(this.y, toCompare.y - tolerance, toCompare.y + tolerance) &&
+            MathUtil.isValueBetweenNotEquals(this.z, toCompare.z - tolerance, toCompare.z + tolerance) && !(
+                allFour && !MathUtil.isValueBetweenNotEquals(this.w, toCompare.w - tolerance, toCompare.w + tolerance)
             );
     }
 
