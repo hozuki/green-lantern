@@ -171,7 +171,7 @@ export abstract class BitConverter {
     }
 
     private static __isComplement(bytes:number[], startIndex:number, length:number):boolean {
-        return MathUtil.isInt32Complement(bytes[startIndex + length - 1]);
+        return MathUtil.isByteComplement(bytes[startIndex + length - 1]);
     }
 
 }
