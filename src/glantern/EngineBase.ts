@@ -7,8 +7,8 @@ import {Stage} from "../flash/display/Stage";
 import {RendererOptions} from "../webgl/RendererOptions";
 import {FlashEvent} from "../flash/events/FlashEvent";
 import {IDisposable} from "./IDisposable";
-import {GLUtil} from "./GLUtil";
 import {VisualUtil} from "./VisualUtil";
+import {EventBase} from "./EventBase";
 
 export class EngineBase implements IDisposable {
 
@@ -63,7 +63,7 @@ export class EngineBase implements IDisposable {
         if (!this._isInitialized) {
             return;
         }
-        this._stage.dispatchEvent(FlashEvent.create(FlashEvent.ENTER_FRAME));
+        this._stage.dispatchEvent(EventBase.create(FlashEvent.ENTER_FRAME));
         if (this._attachedUpdateFunction.length > 0) {
             for (var i = 0; i < this._attachedUpdateFunction.length; ++i) {
                 var func = this._attachedUpdateFunction[i];

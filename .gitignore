@@ -1,8 +1,8 @@
 # IntelliJ project files
-.idea
+.idea/
 
 # Node.js modules
-node_modules
+node_modules/
 
 # Build result
-build
+build/

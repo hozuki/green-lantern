@@ -28,11 +28,7 @@ export abstract class EventDispatcher implements IDisposable {
                 try {
                     arr[i].call(null, data);
                 } catch (ex) {
-                    if (ex.hasOwnProperty("stack")) {
-                        GLUtil.trace(ex.stack.toString(), "dispatchEvent: error");
-                    } else {
-                        GLUtil.trace(ex.toString(), "dispatchEvent: error");
-                    }
+                    GLUtil.trace(ex.toString(), "dispatchEvent: error");
                 }
             }
             return true;

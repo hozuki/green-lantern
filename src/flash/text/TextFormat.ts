@@ -5,8 +5,8 @@
 import * as os from "os";
 import {TextFormatAlign} from "./TextFormatAlign";
 import {EventDispatcher} from "../events/EventDispatcher";
-import {FlashEvent} from "../events/FlashEvent";
 import {GLUtil} from "../../glantern/GLUtil";
+import {EventBase} from "../../glantern/EventBase";
 
 export class TextFormat extends EventDispatcher {
 
@@ -268,7 +268,7 @@ export class TextFormat extends EventDispatcher {
     }
 
     private __raiseChange():void {
-        var ev = FlashEvent.create(TextFormat.TEXT_FORMAT_CHANGE);
+        var ev = EventBase.create(TextFormat.TEXT_FORMAT_CHANGE);
         this.dispatchEvent(ev);
     }
 

@@ -1,3 +1,4 @@
+import {SupportCheckResult} from "./SupportCheckResult";
 /**
  * Created by MIC on 2015/11/17.
  */
@@ -8,6 +9,57 @@ const $global = <any>window || <any>self || global || {};
  * The class providing utility functions.
  */
 export abstract class GLUtil {
+
+    static checkSupportStatus():SupportCheckResult {
+        var result:SupportCheckResult = {
+            ok: true,
+            reasons: []
+        };
+        var globalObject = <any>window;
+        if (!globalObject) {
+            result.ok = false;
+            result.reasons.push("'window' object is not found in global scope.");
+        }
+        var notSupportedPrompt = " is not supported by this browser";
+        // GLantern is based on <canvas>, so it should exist.
+        if (!GLUtil.isClassDefinition(globalObject["HTMLCanvasElement"])) {
+            result.ok = false;
+            result.reasons.push("Canvas element" + notSupportedPrompt);
+        }
+        // GLantern uses WebGL, so there should be a corresponding rendering context.
+        if (!GLUtil.isClassDefinition(globalObject["WebGLRenderingContext"])) {
+            result.ok = false;
+            result.reasons.push("WebGL" + notSupportedPrompt);
+        }
+        // Classes related to array buffer.
+        var arrayBufferClasses:string[] = ["ArrayBuffer", "DataView", "Uint8Array", "Int8Array", "Uint16Array", "Int16Array", "Uint32Array", "Int32Array", "Float32Array", "Float64Array"];
+        for (var i = 0; i < arrayBufferClasses.length; ++i) {
+            if (!GLUtil.isClassDefinition(globalObject[arrayBufferClasses[i]])) {
+                result.ok = false;
+                result.reasons.push(`'${arrayBufferClasses[i]}' class${notSupportedPrompt}`);
+            }
+        }
+        // GLantern uses Map and Set class, so they should exist.
+        // Note: Map and Set are ES6 features, but they are implemented on modern browsers.
+        if (!GLUtil.isClassDefinition(globalObject["Map"])) {
+            result.ok = false;
+            result.reasons.push("'Map' class" + notSupportedPrompt);
+        }
+        if (!GLUtil.isClassDefinition(globalObject["Set"])) {
+            result.ok = false;
+            result.reasons.push("'Set' class" + notSupportedPrompt);
+        }
+        // No plans for support of Chrome whose version is under 40, due to a WebGL memory leak problem.
+        if (typeof globalObject["chrome"] === "object") {
+            var chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
+            var chromeVersionInfo = chromeVersionRegExp.exec(window.navigator.appVersion);
+            if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 40) {
+                result.ok = false;
+                result.reasons.push("Chrome under version 40 is not supported due to performance faults.");
+            }
+        }
+        return result;
+    }
 
     /**
      * Check whether a value is {@link undefined} or {@link null}.
