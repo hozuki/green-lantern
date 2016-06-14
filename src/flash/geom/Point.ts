@@ -35,7 +35,7 @@ export class Point implements ICloneable<Point>, ICopyable<Point> {
     }
 
     static interpolate(pt1:Point, pt2:Point, f:number):Point {
-        f = MathUtil.limitInto(f, 0, 1);
+        f = MathUtil.clamp(f, 0, 1);
         return new Point(pt1.x * f + pt2.x * (1 - f), pt1.y * f + pt2.y * (1 - f));
     }
 

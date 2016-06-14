@@ -16,7 +16,7 @@ export class SolidFillRenderer extends FillRendererBase {
 
     constructor(graphics:Graphics, startX:number, startY:number, color:number, alpha:number) {
         super(graphics, startX, startY);
-        this._a = MathUtil.limitInto(alpha, 0, 1);
+        this._a = MathUtil.clamp(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
         this._g = ((color >>> 8 ) & 0xff) / 0xff;
         this._b = (color & 0xff) / 0xff;

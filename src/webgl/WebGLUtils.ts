@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export abstract class WebGLUtils {
 

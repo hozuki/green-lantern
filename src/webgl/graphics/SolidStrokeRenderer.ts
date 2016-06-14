@@ -14,7 +14,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
 
     constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number, lineWidth:number, color:number, alpha:number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
-        this._a = MathUtil.limitInto(alpha, 0, 1);
+        this._a = MathUtil.clamp(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
         this._g = ((color >>> 8 ) & 0xff) / 0xff;
         this._b = (color & 0xff) / 0xff;

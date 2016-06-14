@@ -154,7 +154,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
     }
 
     static interpolate(thisMat:Matrix3D, toMat:Matrix3D, percent:number):Matrix3D {
-        percent = MathUtil.limitInto(percent, 0, 1);
+        percent = MathUtil.clamp(percent, 0, 1);
         var data:number[] = [];
         for (var i = 0; i < 16; i++) {
             data.push(thisMat._data[i] * (1 - percent) + toMat._data[i] * percent);

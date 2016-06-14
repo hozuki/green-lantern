@@ -3,7 +3,6 @@
  */
 
 import {IDisposable} from "../../glantern/IDisposable";
-import {listeners} from "cluster";
 import {GLUtil} from "../../glantern/GLUtil";
 
 export abstract class EventDispatcher implements IDisposable {

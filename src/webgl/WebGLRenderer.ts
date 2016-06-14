@@ -3,7 +3,6 @@
  */
 
 import * as libtess from "libtess";
-
 import {RendererOptions} from "./RendererOptions";
 import {ShaderManager} from "./ShaderManager";
 import {FilterManager} from "./FilterManager";
@@ -12,23 +11,37 @@ import {WebGLUtils} from "./WebGLUtils";
 import {IDisposable} from "../glantern/IDisposable";
 import {BlendMode} from "../flash/display/BlendMode";
 import {GLUtil} from "../glantern/GLUtil";
+import {ArgumentError} from "../flash/errors/ArgumentError";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 /**
  * The WebGL renderer, main provider of the rendering services.
+ * @implements {IDisposable}
  */
 export class WebGLRenderer implements IDisposable {
 
     /**
-     * Instantiates a new {@link WebGLRenderer}.
+     * Creates a new {@link WebGLRenderer} based on specified {@link HTMLCanvasElement}.
+     * @param canvas {HTMLCanvasElement}
+     * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
+     */
+    constructor(canvas:HTMLCanvasElement, options:RendererOptions);
+    /**
+     * Creates a new {@link WebGLRenderer}.
      * @param width {Number} The width for presentation of the renderer.
      * @param height {Number} The height for presentation of the renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
-     * @implements {IDisposable}
      */
-    constructor(width:number, height:number, options:RendererOptions) {
-        this.__initialize(width, height, options);
+    constructor(width:number, height:number, options:RendererOptions);
+    constructor(p1:any, p2:any, p3?:any) {
+        if (typeof p1 === "number") {
+            this.__initialize(p3, null, p1, p2);
+        } else if (p1 instanceof HTMLCanvasElement) {
+            this.__initialize(p2, p1);
+        } else {
+            throw new ArgumentError("Invalid constructor parameters.");
+        }
     }
 
     /**
@@ -202,22 +215,26 @@ export class WebGLRenderer implements IDisposable {
 
     /**
      * Initializes the newly created {@link WebGLRenderer}.
-     * @param width {Number} The width, in pixels.
-     * @param height {Number} The height, in pixels.
      * @param options {RendererOptions} Initialization options.
+     * @param [canvas] {HTMLCanvasElement} Base canvas. If not specified, then a new canvas will be created using
+     *                                     parameters width and height.
+     * @param [width] {Number} The width, in pixels.
+     * @param [height] {Number} The height, in pixels.
      * @private
      */
-    private __initialize(width:number, height:number, options:RendererOptions) {
+    private __initialize(options:RendererOptions, canvas:HTMLCanvasElement = null, width:number = 400, height:number = 300) {
         if (this._isInitialized) {
             return;
         }
         this._isInitialized = true;
         this._options = GLUtil.deepClone(options);
 
-        var canvas:HTMLCanvasElement = window.document.createElement("canvas");
-        canvas.className = "glantern-view";
-        canvas.width = width;
-        canvas.height = height;
+        if (!canvas) {
+            canvas = window.document.createElement("canvas");
+            canvas.className = "glantern-view";
+            canvas.width = width;
+            canvas.height = height;
+        }
 
         var attributes:WebGLContextAttributes = Object.create(null);
         attributes.alpha = options.transparent;

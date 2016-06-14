@@ -5,7 +5,7 @@
 import {IDisposable} from "../glantern/IDisposable";
 import {GLUtil} from "../glantern/GLUtil";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export class PackedArrayBuffer implements IDisposable {
 

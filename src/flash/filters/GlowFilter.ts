@@ -14,7 +14,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
                 strength:number = 2, quality:number = BitmapFilterQuality.LOW, inner:boolean = false, knockout:boolean = false) {
         super(filterManager);
         this.color = color;
-        this.alpha = MathUtil.limitInto(alpha, 0, 1);
+        this.alpha = MathUtil.clamp(alpha, 0, 1);
         this.blurX = blurX;
         this.blurY = blurY;
         this.strength = strength;

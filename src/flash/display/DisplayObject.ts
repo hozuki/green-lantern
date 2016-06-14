@@ -38,7 +38,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set alpha(v:number) {
-        this._alpha = MathUtil.limitInto(v, 0, 1);
+        this._alpha = MathUtil.clamp(v, 0, 1);
     }
 
     blendMode:string = BlendMode.NORMAL;

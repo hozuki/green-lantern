@@ -14,7 +14,7 @@ import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
 import {GLUtil} from "../glantern/GLUtil";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export abstract class RenderHelper {
 
@@ -149,7 +149,7 @@ export abstract class RenderHelper {
             glc.enableVertexAttribArray(attributeLocation);
         }
 
-        // Some shaders, e.g. the blur-2 shader, has no texture coordinates.
+        // Some shaders, e.g. the blur-2 shader, have no texture coordinates.
         attributeLocation = shader.getAttributeLocation("aTextureCoord");
         if (attributeLocation >= 0) {
             var textureCoords = RenderTarget2D.textureCoords;

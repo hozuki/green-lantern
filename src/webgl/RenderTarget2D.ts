@@ -7,7 +7,7 @@ import {IDisposable} from "../glantern/IDisposable";
 import {PackedArrayBuffer} from "./PackedArrayBuffer";
 import {MathUtil} from "../glantern/MathUtil";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 var isInitializedStatically:boolean = false;
 
 /**

@@ -11,7 +11,7 @@ import {IDisposable} from "../glantern/IDisposable";
 import {WebGLDataType} from "./WebGLDataType";
 import {GLUtil} from "../glantern/GLUtil";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export class ShaderBase implements IDisposable {
 

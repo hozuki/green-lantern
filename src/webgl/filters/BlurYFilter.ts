@@ -33,7 +33,7 @@ export class BlurYFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = MathUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.clamp(v, 1, 3) | 0;
         this._pass = v;
     }
 

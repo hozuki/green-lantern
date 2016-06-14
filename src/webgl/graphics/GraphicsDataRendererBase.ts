@@ -8,7 +8,7 @@ import {WebGLRenderer} from "../WebGLRenderer";
 import {PackedArrayBuffer} from "../PackedArrayBuffer";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
-const gl = (<any>window).WebGLRenderingContext || (<any>global).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 

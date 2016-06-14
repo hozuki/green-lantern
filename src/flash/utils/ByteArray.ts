@@ -161,7 +161,7 @@ export class ByteArray {
     readUnsignedInt():number {
         this.__checkPosition(4);
         var value = this._dataView.getUint32(this.position, this.__isLittleEndian());
-        this.position += 3;
+        this.position += 4;
         return value;
     }
 
@@ -248,6 +248,30 @@ export class ByteArray {
         this.__checkPosition(2);
         this._dataView.setUint16(this.position, value, this.__isLittleEndian());
         this.position += 2;
+    }
+
+    // MIC
+    static from(buffer:ArrayBuffer):ByteArray {
+        var arrayBuffer = new ByteArray();
+        arrayBuffer._buffer = buffer;
+        arrayBuffer._dataView = new DataView(buffer);
+        arrayBuffer._length = buffer.byteLength;
+        arrayBuffer._position = 0;
+        return arrayBuffer;
+    }
+
+    // MIC
+    flatten():number[] {
+        this.__ensureBufferExists();
+        var array:number[] = new Array<number>(this.length);
+        for (var i = 0; i < array.length; ++i) {
+            array[i] = this._dataView.getUint8(i);
+        }
+        return array;
+    }
+
+    get rawBuffer():ArrayBuffer {
+        return this._buffer;
     }
 
     private __adjustLength(targetLength:number):void {

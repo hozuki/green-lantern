@@ -1,9 +1,11 @@
-import {SupportCheckResult} from "./SupportCheckResult";
 /**
  * Created by MIC on 2015/11/17.
  */
 
-const $global = <any>window || <any>self || global || {};
+import {SupportCheckResult} from "./SupportCheckResult";
+import {RgbaColor} from "./RgbaColor";
+
+const $global = <any>window;
 
 /**
  * The class providing utility functions.
@@ -173,14 +175,14 @@ export abstract class GLUtil {
         if (typeof $global.Map !== "undefined" && sourceObject instanceof Map) {
             var newMap = new Map<any, any>();
             sourceObject.forEach((v:any, k:any) => {
-                newMap.set(k, v);
+                newMap.set(GLUtil.deepClone(k), GLUtil.deepClone(v));
             });
             return newMap;
         }
         if (typeof $global.Set !== "undefined" && sourceObject instanceof Set) {
             var newSet = new Set<any>();
             sourceObject.forEach((v:any) => {
-                newSet.add(v);
+                newSet.add(GLUtil.deepClone(v));
             });
             return newSet;
         }
@@ -225,7 +227,7 @@ export abstract class GLUtil {
      * @param [extra] {*} Extra information.
      */
     static trace(message:string, extra?:any):void {
-        if (typeof extra !== "undefined") {
+        if (GLUtil.isUndefined(extra)) {
             console.info(message, extra);
         } else {
             console.info(message);
@@ -244,7 +246,34 @@ export abstract class GLUtil {
         var r = (color >> 16) & 0xff;
         var g = (color >> 8) & 0xff;
         var b = color & 0xff;
-        return "rgba(" + [r, g, b, a].join(",") + ")";
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+
+    static rgb(r:number, g:number, b:number):number {
+        return GLUtil.rgba(r, g, b, 0xff);
+    }
+
+    static rgba(r:number, g:number, b:number, a:number):number {
+        return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+    }
+
+    static decomposeRgb(color:number):RgbaColor {
+        var r = (color >> 16) & 0xff;
+        var g = (color >> 8) & 0xff;
+        var b = color & 0xff;
+        return {
+            r: r, g: g, b: b, a: 0xff
+        };
+    }
+
+    static decomposeRgba(color:number):RgbaColor {
+        var a = (color >> 24) & 0xff;
+        var r = (color >> 16) & 0xff;
+        var g = (color >> 8) & 0xff;
+        var b = color & 0xff;
+        return {
+            r: r, g: g, b: b, a: a
+        };
     }
 
     static padLeft(str:string, targetLength:number, padWith:string):string {
@@ -257,4 +286,41 @@ export abstract class GLUtil {
         return str;
     }
 
+    static remove<T>(array:T[], value:T, equalFunc:(t1:T, t2:T) => boolean = null):boolean {
+        var func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
+        for (var i = 0; i < array.length; ++i) {
+            if (func(value, array[i])) {
+                array.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static removeAll<T>(array:T[], value:T, equalFunc:(t1:T, t2:T) => boolean = null):number {
+        var func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
+        var counter = 0;
+        for (var i = 0; i < array.length; ++i) {
+            if (func(value, array[i])) {
+                array.splice(i, 1);
+                ++counter;
+            }
+        }
+        return counter;
+    }
+
+    static removeAt<T>(array:T[], index:number):boolean {
+        index |= 0;
+        if (0 <= index && index < array.length) {
+            array.splice(index, 1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+function simpleEquals<T>(t1:T, t2:T):boolean {
+    return t1 === t2;
 }

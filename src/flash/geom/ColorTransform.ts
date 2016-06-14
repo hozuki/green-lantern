@@ -2,9 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {GLUtil} from "../../glantern/GLUtil";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {MathUtil} from "../../glantern/MathUtil";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export class ColorTransform {
 
@@ -35,7 +35,7 @@ export class ColorTransform {
     }
 
     set alphaOffset(v:number) {
-        this._alphaOffset = MathUtil.limitInto(v, -1, 1);
+        this._alphaOffset = MathUtil.clamp(v, -1, 1);
     }
 
     get redMultiplier():number {
@@ -51,7 +51,7 @@ export class ColorTransform {
     }
 
     set redOffset(v:number) {
-        this._redOffset = MathUtil.limitInto(v, -1, 1);
+        this._redOffset = MathUtil.clamp(v, -1, 1);
     }
 
     get greenMultiplier():number {
@@ -67,7 +67,7 @@ export class ColorTransform {
     }
 
     set greenOffset(v:number) {
-        this._greenOffset = MathUtil.limitInto(v, -1, 1);
+        this._greenOffset = MathUtil.clamp(v, -1, 1);
     }
 
     get blueMultiplier():number {
@@ -83,11 +83,21 @@ export class ColorTransform {
     }
 
     set blueOffset(v:number) {
-        this._blueOffset = MathUtil.limitInto(v, -1, 1);
+        this._blueOffset = MathUtil.clamp(v, -1, 1);
     }
 
     concat(second:ColorTransform):void {
         throw new NotImplementedError();
+    }
+
+    // MIC
+    transform(color:number):number {
+        var rgba = GLUtil.decomposeRgba(color);
+        rgba.r = MathUtil.clamp(rgba.r * this.redMultiplier + this.redOffset, 0, 0xff);
+        rgba.g = MathUtil.clamp(rgba.g * this.greenMultiplier + this.greenOffset, 0, 0xff);
+        rgba.b = MathUtil.clamp(rgba.b * this.blueMultiplier + this.blueOffset, 0, 0xff);
+        rgba.a = MathUtil.clamp(rgba.a * this.alphaMultiplier + this.alphaOffset, 0, 0xff);
+        return GLUtil.rgba(rgba.r, rgba.g, rgba.b, rgba.a);
     }
 
     private _alphaMultiplier:number = 1;

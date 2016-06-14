@@ -12,7 +12,7 @@ export abstract class MathUtil {
      * @returns {Number} The limited value. If the original number is inside the specified range, it will not be
      * altered. Otherwise, it will be either min or max.
      */
-    static limitInto(v:number, min:number, max:number):number {
+    static clamp(v:number, min:number, max:number):number {
         v < min && (v = min);
         v > max && (v = max);
         return v;
@@ -83,6 +83,14 @@ export abstract class MathUtil {
 
     static isInt32Complement(value:number) {
         return ((value & 0xffffffff) & 0x80000000) !== 0;
+    }
+
+    static clampUpper(value:number, upperBound:number):number {
+        return value > upperBound ? upperBound : value;
+    }
+
+    static clampLower(value:number, lowerBound:number):number {
+        return value < lowerBound ? lowerBound : value;
     }
 
 }

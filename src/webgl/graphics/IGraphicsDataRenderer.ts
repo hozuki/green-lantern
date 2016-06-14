@@ -4,7 +4,6 @@
 
 import {IDisposable} from "../../glantern/IDisposable";
 import {WebGLRenderer} from "../WebGLRenderer";
-import {RenderTarget2D} from "../RenderTarget2D";
 
 export interface IGraphicsDataRenderer extends IDisposable {
 

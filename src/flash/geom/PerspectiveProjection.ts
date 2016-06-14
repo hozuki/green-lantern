@@ -18,7 +18,7 @@ export class PerspectiveProjection {
     }
 
     set fieldOfView(v:number) {
-        this._fieldOfView = MathUtil.limitInto(v, 0, 180);
+        this._fieldOfView = MathUtil.clamp(v, 0, 180);
     }
 
     focalLength:number = 10;
