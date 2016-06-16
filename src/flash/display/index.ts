@@ -4,6 +4,7 @@
 
 export * from "./Bitmap";
 export * from "./BitmapData";
+export * from "./BitmapDataChannel";
 export * from "./BlendMode";
 export * from "./CapsStyle";
 export * from "./ColorCorrection";
@@ -18,6 +19,7 @@ export * from "./InteractiveObject";
 export * from "./InterpolationMethod";
 export * from "./JointStyle";
 export * from "./LineScaleMode";
+export * from "./PixelSnapping";
 export * from "./Shader";
 export * from "./Shape";
 export * from "./SpreadMethod";

@@ -3,7 +3,6 @@
  */
 
 import {BitmapFilter} from "./BitmapFilter";
-import {BlurFilter as WebGLBlurFilter} from "../../webgl/filters/BlurFilter";
 import {Blur2Filter as WebGLBlur2Filter} from "../../webgl/filters/Blur2Filter";
 import {BitmapFilterQuality} from "./BitmapFilterQuality";
 import {FilterManager} from "../../webgl/FilterManager";

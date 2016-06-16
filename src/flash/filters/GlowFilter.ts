@@ -6,7 +6,7 @@ import {BitmapFilter} from "./BitmapFilter";
 import {GlowFilter as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
 import {FilterManager} from "../../webgl/FilterManager";
 import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 
@@ -14,7 +14,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
                 strength:number = 2, quality:number = BitmapFilterQuality.LOW, inner:boolean = false, knockout:boolean = false) {
         super(filterManager);
         this.color = color;
-        this.alpha = GLUtil.limitInto(alpha, 0, 1);
+        this.alpha = MathUtil.clamp(alpha, 0, 1);
         this.blurX = blurX;
         this.blurY = blurY;
         this.strength = strength;

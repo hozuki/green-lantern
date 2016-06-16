@@ -22,7 +22,7 @@ export abstract class FilterBase implements IBitmapFilter {
      */
     notifyAdded():void {
         if (this._referenceCount <= 0) {
-            this.__initialize();
+            this._$initialize();
         }
         this._referenceCount++;
     }
@@ -34,16 +34,16 @@ export abstract class FilterBase implements IBitmapFilter {
     notifyRemoved():void {
         this._referenceCount--;
         if (this._referenceCount <= 0) {
-            this.__dispose();
+            this._$dispose();
         }
     }
 
     dispose():void {
-        this.__dispose();
+        this._$dispose();
     }
 
     initialize():void {
-        this.__initialize();
+        this._$initialize();
     }
 
     get filterManager():FilterManager {
@@ -66,10 +66,10 @@ export abstract class FilterBase implements IBitmapFilter {
         this._flipY = v;
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
     }
 
     private _filterManager:FilterManager = null;

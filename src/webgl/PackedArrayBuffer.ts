@@ -2,10 +2,10 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../IDisposable";
-import {GLUtil} from "../GLUtil";
+import {IDisposable} from "../glantern/IDisposable";
+import {GLUtil} from "../glantern/GLUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export class PackedArrayBuffer implements IDisposable {
 

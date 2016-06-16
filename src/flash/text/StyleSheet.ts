@@ -4,7 +4,7 @@
 
 import {EventDispatcher} from "../events/EventDispatcher";
 import {TextFormat} from "./TextFormat";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class StyleSheet extends EventDispatcher {
 

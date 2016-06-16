@@ -12,7 +12,7 @@ import {StageDisplayState} from "./StageDisplayState";
 import {ColorCorrection} from "./ColorCorrection";
 import {StageAlign} from "./StageAlign";
 import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class Stage extends DisplayObjectContainer {
 
@@ -115,11 +115,11 @@ export class Stage extends DisplayObjectContainer {
         // TODO: Fully implement this
     }
 
-    protected __render(renderer:WebGLRenderer):void {
-        renderer.currentRenderTarget.clear();
+    protected _$update():void {
     }
 
-    protected __update():void {
+    protected _$render(renderer:WebGLRenderer):void {
+        renderer.currentRenderTarget.clear();
     }
 
     private _allowFullScreen:boolean = true;

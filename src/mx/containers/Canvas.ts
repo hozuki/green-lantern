@@ -13,11 +13,11 @@ export class Canvas extends DisplayObjectContainer {
         super(root, parent);
     }
 
-    protected __update():void {
+    protected _$update():void {
         throw new NotImplementedError();
     }
 
-    protected __render(renderer:WebGLRenderer):void {
+    protected _$render(renderer:WebGLRenderer):void {
         throw new NotImplementedError();
     }
 

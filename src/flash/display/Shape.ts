@@ -27,15 +27,15 @@ export class Shape extends DisplayObject {
         return this._graphics;
     }
 
-    protected __update():void {
+    protected _$update():void {
         this._graphics.update();
     }
 
-    protected __render(renderer:WebGLRenderer):void {
+    protected _$render(renderer:WebGLRenderer):void {
         this.graphics.render(renderer, renderer.currentRenderTarget, false);
     }
 
-    protected __selectShader(shaderManager:ShaderManager):void {
+    protected _$selectShader(shaderManager:ShaderManager):void {
         // Switched to the new Primitive2Shader. Consider the obsolete of PrimitiveShader.
         shaderManager.selectShader(ShaderID.PRIMITIVE2);
     }

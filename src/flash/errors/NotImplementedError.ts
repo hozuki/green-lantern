@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ErrorBase} from "../../ErrorBase";
+import {ErrorBase} from "../../glantern/ErrorBase";
 
 export class NotImplementedError extends ErrorBase {
 

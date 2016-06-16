@@ -28,11 +28,11 @@ export class ColorTransformFilter extends FilterBase {
         RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.flipY, clearOutput);
     }
 
-    __initialize():void {
+    protected _$initialize():void {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    __dispose():void {
+    protected _$dispose():void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     }

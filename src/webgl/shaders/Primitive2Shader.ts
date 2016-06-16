@@ -45,8 +45,8 @@ export class Primitive2Shader extends ShaderBase {
         this._uniforms.get("uOriginalSize").value = xy.slice();
     }
 
-    protected __localInit(manager:ShaderManager, uniforms:Map<string,UniformCache>, attributes:Map<string, AttributeCache>):void {
-        super.__localInit(manager, uniforms, attributes);
+    protected _$localInit(manager:ShaderManager, uniforms:Map<string,UniformCache>, attributes:Map<string, AttributeCache>):void {
+        super._$localInit(manager, uniforms, attributes);
 
         var u:UniformCache;
         var transformMatrix = new Matrix3D();

@@ -3,7 +3,7 @@
  */
 
 import {FlashEvent} from "../../flash/events/FlashEvent";
-import {ICloneable} from "../../ICloneable";
+import {ICloneable} from "../../glantern/ICloneable";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
 
 export class TweenEvent extends FlashEvent implements ICloneable<TweenEvent> {

@@ -2,9 +2,8 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../../IDisposable";
-import {listeners} from "cluster";
-import {GLUtil} from "../../GLUtil";
+import {IDisposable} from "../../glantern/IDisposable";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export abstract class EventDispatcher implements IDisposable {
 
@@ -28,11 +27,7 @@ export abstract class EventDispatcher implements IDisposable {
                 try {
                     arr[i].call(null, data);
                 } catch (ex) {
-                    if (ex.hasOwnProperty("stack")) {
-                        GLUtil.trace(ex.stack.toString(), "dispatchEvent: error");
-                    } else {
-                        GLUtil.trace(ex.toString(), "dispatchEvent: error");
-                    }
+                    GLUtil.trace(ex.toString(), "dispatchEvent: error");
                 }
             }
             return true;

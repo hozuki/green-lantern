@@ -8,7 +8,7 @@ import {RenderTarget2D} from "../RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class BlurFilter extends FilterBase {
 
@@ -49,7 +49,7 @@ export class BlurFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.clamp(v, 1, 3) | 0;
         this._pass = v;
         if (this._blurXFilter !== null) {
             this._blurXFilter.pass = v;
@@ -64,7 +64,7 @@ export class BlurFilter extends FilterBase {
         this._blurYFilter.process(renderer, this._tempTarget, output, clearOutput);
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
         this._blurXFilter = new BlurXFilter(this.filterManager);
         this._blurYFilter = new BlurYFilter(this.filterManager);
         this._blurXFilter.initialize();
@@ -77,7 +77,7 @@ export class BlurFilter extends FilterBase {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
         this._blurXFilter.dispose();

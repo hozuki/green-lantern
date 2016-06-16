@@ -3,7 +3,7 @@
  */
 
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ICopyable} from "../../ICopyable";
+import {ICopyable} from "../../glantern/ICopyable";
 import {DisplayObject} from "./DisplayObject";
 import {Matrix} from "../geom/Matrix";
 import {SpreadMethod} from "./SpreadMethod";
@@ -22,9 +22,9 @@ import {BitmapData} from "./BitmapData";
 import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
-import {IDisposable} from "../../IDisposable";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
+import {IDisposable} from "../../glantern/IDisposable";
+import {NotImplementedError} from "../errors/NotImplementedError";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {
 

@@ -12,6 +12,7 @@ const gutil = require("gulp-util");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
 const buffer = require("vinyl-buffer");
+const os = require("os");
 
 const tsConfig = {
     target: "es5",
@@ -47,7 +48,24 @@ gulp.task("build-browserify", ["build-compile"], function () {
         .pipe(gulp.dest("build"))
         .pipe(rename({suffix: ".min"}))
         .pipe(uglify())
-        .on("error", gutil.log)
+        .on("error", errorHandler)
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("build"));
 });
+
+gulp.task("copy", function () {
+    "use strict";
+    return gulp
+        .src(["./build/GLantern-browser.min.js"])
+        .pipe(gulp.dest("./test/visual"))
+});
+
+// Consider using stream-combiner2. (http://www.cnblogs.com/giggle/p/5562459.html)
+function errorHandler(err) {
+    "use strict";
+    var colors = gutil.colors;
+    gutil.log(os.EOL);
+    gutil.log(colors.red("Error:") + " " + colors.magenta(err.fileName));
+    gutil.log("    on line " + colors.cyan(err.loc.line) + ": " + colors.red(err.message));
+    gutil.log("    plugin: " + colors.yellow(err.plugin));
+}

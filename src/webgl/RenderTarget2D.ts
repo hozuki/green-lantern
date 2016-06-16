@@ -3,11 +3,11 @@
  */
 
 import {WebGLRenderer} from "./WebGLRenderer";
-import {IDisposable} from "../IDisposable";
+import {IDisposable} from "../glantern/IDisposable";
 import {PackedArrayBuffer} from "./PackedArrayBuffer";
-import {GLUtil} from "../GLUtil";
+import {MathUtil} from "../glantern/MathUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 var isInitializedStatically:boolean = false;
 
 /**
@@ -183,8 +183,8 @@ export class RenderTarget2D implements IDisposable {
         // Find a way to optimize, for example, freeze the size when created, or implement a draw call
         // flexible enough to handle all sort of sizes.
         try {
-            image.width = GLUtil.power2Roundup(image.width);
-            image.height = GLUtil.power2Roundup(image.height);
+            image.width = MathUtil.power2Roundup(image.width);
+            image.height = MathUtil.power2Roundup(image.height);
         } catch (ex) {
         }
         this._originalWidth = this._fitWidth = image.width;
@@ -262,11 +262,11 @@ export class RenderTarget2D implements IDisposable {
             newHeight |= 0;
             this._originalWidth = newWidth;
             this._originalHeight = newHeight;
-            if (!GLUtil.isPowerOfTwo(newWidth)) {
-                newWidth = GLUtil.power2Roundup(newWidth);
+            if (!MathUtil.isPowerOfTwo(newWidth)) {
+                newWidth = MathUtil.power2Roundup(newWidth);
             }
-            if (!GLUtil.isPowerOfTwo(newHeight)) {
-                newHeight = GLUtil.power2Roundup(newHeight);
+            if (!MathUtil.isPowerOfTwo(newHeight)) {
+                newHeight = MathUtil.power2Roundup(newHeight);
             }
             this._fitWidth = newWidth;
             this._fitHeight = newHeight;

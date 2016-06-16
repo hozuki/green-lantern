@@ -8,7 +8,7 @@ import {Matrix} from "./Matrix";
 import {PerspectiveProjection} from "./PerspectiveProjection";
 import {Rectangle} from "./Rectangle";
 import {DisplayObject} from "../display/DisplayObject";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class Transform {
 

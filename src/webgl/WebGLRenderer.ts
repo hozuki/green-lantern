@@ -2,34 +2,46 @@
  * Created by MIC on 2015/11/17.
  */
 
-import libtess = require("libtess");
-
+import * as libtess from "libtess";
 import {RendererOptions} from "./RendererOptions";
 import {ShaderManager} from "./ShaderManager";
 import {FilterManager} from "./FilterManager";
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLUtils} from "./WebGLUtils";
-import {IDisposable} from "../IDisposable";
-import {RenderHelper} from "./RenderHelper";
+import {IDisposable} from "../glantern/IDisposable";
 import {BlendMode} from "../flash/display/BlendMode";
-import {GLUtil} from "../GLUtil";
+import {GLUtil} from "../glantern/GLUtil";
+import {ArgumentError} from "../flash/errors/ArgumentError";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 /**
  * The WebGL renderer, main provider of the rendering services.
+ * @implements {IDisposable}
  */
 export class WebGLRenderer implements IDisposable {
 
     /**
-     * Instantiates a new {@link WebGLRenderer}.
+     * Creates a new {@link WebGLRenderer} based on specified {@link HTMLCanvasElement}.
+     * @param canvas {HTMLCanvasElement}
+     * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
+     */
+    constructor(canvas:HTMLCanvasElement, options:RendererOptions);
+    /**
+     * Creates a new {@link WebGLRenderer}.
      * @param width {Number} The width for presentation of the renderer.
      * @param height {Number} The height for presentation of the renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
-     * @implements {IDisposable}
      */
-    constructor(width:number, height:number, options:RendererOptions) {
-        this.__initialize(width, height, options);
+    constructor(width:number, height:number, options:RendererOptions);
+    constructor(p1:any, p2:any, p3?:any) {
+        if (typeof p1 === "number") {
+            this.__initialize(p3, null, p1, p2);
+        } else if (p1 instanceof HTMLCanvasElement) {
+            this.__initialize(p2, p1);
+        } else {
+            throw new ArgumentError("Invalid constructor parameters.");
+        }
     }
 
     /**
@@ -203,22 +215,26 @@ export class WebGLRenderer implements IDisposable {
 
     /**
      * Initializes the newly created {@link WebGLRenderer}.
-     * @param width {Number} The width, in pixels.
-     * @param height {Number} The height, in pixels.
      * @param options {RendererOptions} Initialization options.
+     * @param [canvas] {HTMLCanvasElement} Base canvas. If not specified, then a new canvas will be created using
+     *                                     parameters width and height.
+     * @param [width] {Number} The width, in pixels.
+     * @param [height] {Number} The height, in pixels.
      * @private
      */
-    private __initialize(width:number, height:number, options:RendererOptions) {
+    private __initialize(options:RendererOptions, canvas:HTMLCanvasElement = null, width:number = 400, height:number = 300) {
         if (this._isInitialized) {
             return;
         }
         this._isInitialized = true;
         this._options = GLUtil.deepClone(options);
 
-        var canvas:HTMLCanvasElement = window.document.createElement("canvas");
-        canvas.className = "glantern-view";
-        canvas.width = width;
-        canvas.height = height;
+        if (!canvas) {
+            canvas = window.document.createElement("canvas");
+            canvas.className = "glantern-view";
+            canvas.width = width;
+            canvas.height = height;
+        }
 
         var attributes:WebGLContextAttributes = Object.create(null);
         attributes.alpha = options.transparent;
@@ -236,8 +252,8 @@ export class WebGLRenderer implements IDisposable {
 
         this._screenTarget = this.createRootRenderTarget();
 
-        canvas.addEventListener("webglcontextlost", this.onContextLost.bind(this));
-        canvas.addEventListener("webglcontextrestored", this.onContextRestored.bind(this));
+        canvas.addEventListener("webglcontextlost", this.__onContextLost.bind(this));
+        canvas.addEventListener("webglcontextrestored", this.__onContextRestored.bind(this));
 
         this._tessellator = new libtess.GluTesselator();
         this._shaderManager = new ShaderManager(this);
@@ -283,14 +299,14 @@ export class WebGLRenderer implements IDisposable {
      * The event handler for handling the lost of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private onContextLost(ev:Event):void {
+    private __onContextLost(ev:Event):void {
     }
 
     /**
      * The event handler for handling the restoration of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private onContextRestored(ev:Event):void {
+    private __onContextRestored(ev:Event):void {
     }
 
     private _currentRenderTarget:RenderTarget2D = null;

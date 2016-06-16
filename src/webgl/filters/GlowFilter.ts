@@ -10,7 +10,7 @@ import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";
 import {Blur2Filter} from "./Blur2Filter";
 import {RenderHelper} from "../RenderHelper";
-import {GLUtil} from "../..//GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class GlowFilter extends FilterBase {
 
@@ -51,7 +51,7 @@ export class GlowFilter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.clamp(v, 1, 3) | 0;
         this._pass = v;
         if (this._blurFilter !== null) {
             this._blurFilter.pass = v;
@@ -72,7 +72,7 @@ export class GlowFilter extends FilterBase {
         RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.flipY, false);
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
         this._blurFilter = new Blur2Filter(this.filterManager);
         this._colorTransformFilter = new ColorTransformFilter(this.filterManager);
         this._blurFilter.initialize();
@@ -85,7 +85,7 @@ export class GlowFilter extends FilterBase {
         this._tempColorTransformedTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
@@ -105,7 +105,7 @@ export class GlowFilter extends FilterBase {
     ];
     /**
      * Use {@link BlurFilter} for better performance, or {@link Blur2Filter} for better quality.
-     * @type {RenderTarget2D}
+     * @type {FilterBase}
      * @private
      */
     private _blurFilter:Blur2Filter = null;

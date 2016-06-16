@@ -30,10 +30,11 @@ var lantern = null;
     };
 
     var caseListElem = document.querySelector("#test-case-selector");
-    if (GLantern.isSupported()) {
+    var checkResult = GLantern.glantern.GLUtil.checkSupportStatus();
+    if (checkResult.ok) {
         initNormal();
     } else {
-        initNotSupported();
+        initNotSupported(checkResult.reasons);
     }
 
     function onClick(ev) {
@@ -85,12 +86,40 @@ var lantern = null;
         }
     }
 
-    function initNotSupported() {
+    /**
+     * Init elements when GLantern is not supported.
+     * @param reasons {String[]}
+     */
+    function initNotSupported(reasons) {
         /**
          * @type {HTMLLIElement}
          */
         var liElem = document.createElement("li");
-        liElem.textContent = "Oops, it seems that EngineBase does not support your browser.";
+        /**
+         * @type {HTMLParagraphElement}
+         */
+        var mainPara = document.createElement("p");
+        mainPara.textContent = "Oops, it seems that GLantern is not support by your browser.";
+        /**
+         * @type {HTMLUListElement}
+         */
+        var reasonList = document.createElement("ul");
+        /**
+         * @type {HTMLParagraphElement}
+         */
+        var reasonPara = document.createElement("p");
+        reasonPara.textContent = "Reason:";
+
+        liElem.appendChild(mainPara);
+        liElem.appendChild(reasonPara);
+        liElem.appendChild(reasonList);
+
+        for (var i = 0; i < reasons.length; ++i) {
+            var li = document.createElement("li");
+            li.textContent = reasons[i];
+            reasonList.appendChild(li);
+        }
+
         caseListElem.appendChild(liElem);
     }
 })();

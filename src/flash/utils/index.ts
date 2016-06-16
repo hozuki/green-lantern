@@ -3,3 +3,6 @@
  */
 
 export * from "./Timer";
+export * from "./ByteArray";
+export * from "./Endian";
+export * from "./CompressionAlgorithm";

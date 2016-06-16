@@ -15,4 +15,4 @@ import * as GLantern from "./index";
     } else {
         ($global).GLantern = GLantern;
     }
-})(window);
+})(window || {});

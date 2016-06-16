@@ -12,9 +12,9 @@ import {Matrix3D} from "../flash/geom/Matrix3D";
 import {CopyImageShader} from "./shaders/CopyImageShader";
 import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {GLUtil} from "../GLUtil";
+import {GLUtil} from "../glantern/GLUtil";
 
-var gl = (<any>this).WebGLRenderingContext || (<any>window).WebGLRenderingContext;
+const gl = (<any>window).WebGLRenderingContext;
 
 export abstract class RenderHelper {
 
@@ -117,7 +117,7 @@ export abstract class RenderHelper {
 
     static renderBuffered(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, shaderID:number,
                           clearOutput:boolean, shaderInit:(r:WebGLRenderer) => void):void {
-        if (!__checkRenderTargets(source, destination)) {
+        if (!checkRenderTargets(source, destination)) {
             return;
         }
 
@@ -149,7 +149,7 @@ export abstract class RenderHelper {
             glc.enableVertexAttribArray(attributeLocation);
         }
 
-        // Some shaders, e.g. the blur-2 shader, has no texture coordinates.
+        // Some shaders, e.g. the blur-2 shader, have no texture coordinates.
         attributeLocation = shader.getAttributeLocation("aTextureCoord");
         if (attributeLocation >= 0) {
             var textureCoords = RenderTarget2D.textureCoords;
@@ -177,7 +177,7 @@ export abstract class RenderHelper {
 
 }
 
-function __checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
+function checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
     if (GLUtil.isUndefinedOrNull(source)) {
         console.warn("Cannot render a null RenderTarget2D onto another RenderTarget2D.");
         return false;

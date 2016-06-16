@@ -2,9 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ICopyable} from "../../ICopyable";
-import {ICloneable} from "../../ICloneable";
-import {GLUtil} from "../../GLUtil";
+import {ICopyable} from "../../glantern/ICopyable";
+import {ICloneable} from "../../glantern/ICloneable";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Point implements ICloneable<Point>, ICopyable<Point> {
 
@@ -35,7 +35,7 @@ export class Point implements ICloneable<Point>, ICopyable<Point> {
     }
 
     static interpolate(pt1:Point, pt2:Point, f:number):Point {
-        f = GLUtil.limitInto(f, 0, 1);
+        f = MathUtil.clamp(f, 0, 1);
         return new Point(pt1.x * f + pt2.x * (1 - f), pt1.y * f + pt2.y * (1 - f));
     }
 

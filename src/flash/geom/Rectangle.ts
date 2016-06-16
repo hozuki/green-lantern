@@ -3,8 +3,8 @@
  */
 
 import {Point} from "./Point";
-import {ICopyable} from "../../ICopyable";
-import {ICloneable} from "../../ICloneable";
+import {ICopyable} from "../../glantern/ICopyable";
+import {ICloneable} from "../../glantern/ICloneable";
 
 export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
 

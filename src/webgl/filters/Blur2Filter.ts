@@ -9,7 +9,7 @@ import {FilterBase} from "../FilterBase";
 import {RenderHelper} from "../RenderHelper";
 import {ShaderID} from "../ShaderID";
 import {Blur2Shader} from "../shaders/Blur2Shader";
-import {GLUtil} from "../../GLUtil";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Blur2Filter extends FilterBase {
 
@@ -45,7 +45,7 @@ export class Blur2Filter extends FilterBase {
     }
 
     set pass(v:number) {
-        v = GLUtil.limitInto(v, 1, 3) | 0;
+        v = MathUtil.clamp(v, 1, 3) | 0;
         this._pass = v;
     }
 
@@ -82,11 +82,11 @@ export class Blur2Filter extends FilterBase {
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
     }
 
-    protected __initialize():void {
+    protected _$initialize():void {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected __dispose():void {
+    protected _$dispose():void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     }

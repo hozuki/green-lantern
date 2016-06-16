@@ -20,15 +20,15 @@ import {TextLineMetrics} from "./TextLineMetrics";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {GLUtil} from "../../GLUtil";
+import {NotImplementedError} from "../errors/NotImplementedError";
+import {GLUtil} from "../../glantern/GLUtil";
 
 export class TextField extends InteractiveObject {
 
     constructor(root:Stage, parent:DisplayObjectContainer) {
         super(root, parent);
         if (root !== null) {
-            this._canvasTarget = this.__createCanvasTarget(root.worldRenderer);
+            this._canvasTarget = this._$createCanvasTarget(root.worldRenderer);
         }
         this._textFormatChangedHandler = this.__textFormatChanged.bind(this);
         this.defaultTextFormat = new TextFormat();
@@ -322,7 +322,7 @@ export class TextField extends InteractiveObject {
         this._context2D = null;
     }
 
-    protected __update():void {
+    protected _$update():void {
         if (!this._isContentChanged) {
             return;
         }
@@ -334,23 +334,23 @@ export class TextField extends InteractiveObject {
         //canvas.width = metrics.width;
 
         this._canvasTarget.updateImageSize();
-        this.__updateCanvasTextStyle(this._context2D);
-        this.__drawTextElements(this._context2D);
+        this._$updateCanvasTextStyle(this._context2D);
+        this._$drawTextElements(this._context2D);
         this._isContentChanged = false;
     }
 
-    protected __render(renderer:WebGLRenderer):void {
+    protected _$render(renderer:WebGLRenderer):void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
             RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         }
     }
 
-    protected __selectShader(shaderManager:ShaderManager):void {
+    protected _$selectShader(shaderManager:ShaderManager):void {
         shaderManager.selectShader(ShaderID.COPY_IMAGE);
     }
 
-    protected __createCanvasTarget(renderer:WebGLRenderer):RenderTarget2D {
+    protected _$createCanvasTarget(renderer:WebGLRenderer):RenderTarget2D {
         if (this._canvas === null) {
             var canvas = window.document.createElement("canvas");
             canvas.width = renderer.view.width;
@@ -361,7 +361,7 @@ export class TextField extends InteractiveObject {
         return renderer.createRenderTarget(this._canvas);
     }
 
-    protected __updateCanvasTextStyle(context2D:CanvasRenderingContext2D):void {
+    protected _$updateCanvasTextStyle(context2D:CanvasRenderingContext2D):void {
         var fontStyles:string[] = [];
         if (this.defaultTextFormat.bold) {
             fontStyles.push("bold");
@@ -374,7 +374,7 @@ export class TextField extends InteractiveObject {
         context2D.font = fontStyles.join(" ");
     }
 
-    protected __drawTextElements(context2D:CanvasRenderingContext2D):void {
+    protected _$drawTextElements(context2D:CanvasRenderingContext2D):void {
         var baseX = this.thickness;
         var baseY = this.thickness;
         var borderThickness = 1;
@@ -398,6 +398,7 @@ export class TextField extends InteractiveObject {
     }
 
     private __textFormatChanged():void {
+        // Cannot be declared as static or TypeScript compilation will fail.
         this._isContentChanged = true;
     }
 
