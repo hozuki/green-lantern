@@ -22,6 +22,8 @@ const tsConfig = {
     removeComments: false
 };
 
+gulp.task("default", ["build"]);
+
 gulp.task("build", ["build-compile", "build-browserify"], copyBuildResults);
 
 gulp.task("build-compile", function () {

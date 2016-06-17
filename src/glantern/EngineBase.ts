@@ -18,7 +18,7 @@ export class EngineBase implements IDisposable {
     }
 
     initialize(width:number, height:number, options:RendererOptions = WebGLRenderer.DEFAULT_OPTIONS):void {
-        if (this._isInitialized) {
+        if (this.isInitialized) {
             return;
         }
         this._renderer = new WebGLRenderer(width, height, options);
@@ -28,7 +28,7 @@ export class EngineBase implements IDisposable {
     }
 
     dispose():void {
-        if (!this._isInitialized) {
+        if (!this.isInitialized) {
             return;
         }
         this._stage.dispose();
@@ -47,7 +47,7 @@ export class EngineBase implements IDisposable {
      * on the frame rate adjuster of the browser window.
      */
     startAnimation():void {
-        if (!this._isInitialized) {
+        if (!this.isInitialized) {
             return;
         }
         if (!this.isAnimationRunning) {
@@ -62,7 +62,7 @@ export class EngineBase implements IDisposable {
      * from last state.
      */
     stopAnimation():void {
-        if (!this._isInitialized) {
+        if (!this.isInitialized) {
             return;
         }
         this.__updateTimeCounters();
@@ -100,7 +100,7 @@ export class EngineBase implements IDisposable {
     }
 
     get view():HTMLCanvasElement {
-        return this._isInitialized ? this._renderer.view : null;
+        return this.isInitialized ? this._renderer.view : null;
     }
 
     /**
@@ -108,7 +108,11 @@ export class EngineBase implements IDisposable {
      * @returns {Boolean}
      */
     get isAnimationRunning():boolean {
-        return this._isInitialized && this._isRunning;
+        return this.isInitialized && this._isRunning;
+    }
+
+    get isInitialized():boolean {
+        return this._isInitialized;
     }
 
     attachUpdateFunction(func:() => void):void {
