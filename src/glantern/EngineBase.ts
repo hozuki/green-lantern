@@ -115,7 +115,7 @@ export class EngineBase implements IDisposable {
         return this._isInitialized;
     }
 
-    attachUpdateFunction(func:() => void):void {
+    attachUpdateFunction(func:(timeInfo:TimeInfo) => void):void {
         if (typeof func === "function" && this._attachedUpdateFunctions.indexOf(func) < 0) {
             this._attachedUpdateFunctions.push(func);
         }
