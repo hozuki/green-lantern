@@ -82,7 +82,7 @@ export class EngineBase implements IDisposable {
             for (var i = 0; i < this._attachedUpdateFunctions.length; ++i) {
                 var func = this._attachedUpdateFunctions[i];
                 if (typeof func === "function") {
-                    func();
+                    func(timeInfo);
                 }
             }
         }
@@ -171,7 +171,7 @@ export class EngineBase implements IDisposable {
     private _renderer:WebGLRenderer = null;
     private _stage:Stage = null;
     private _isInitialized:boolean = false;
-    private _attachedUpdateFunctions:(() => void)[] = null;
+    private _attachedUpdateFunctions:((timeInfo:TimeInfo) => void)[] = null;
     private _loopFunction:(time:number) => void = null;
     private _timeElapsed:number = 0;
     private _fps:number = 0;
