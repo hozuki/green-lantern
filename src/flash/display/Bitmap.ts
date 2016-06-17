@@ -12,6 +12,7 @@ import {ShaderManager} from "../../webgl/ShaderManager";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class Bitmap extends DisplayObject {
 
@@ -55,7 +56,7 @@ export class Bitmap extends DisplayObject {
         super.dispose();
     }
 
-    protected _$update():void {
+    protected _$update(timeInfo:TimeInfo):void {
     }
 
     protected _$render(renderer:WebGLRenderer):void {

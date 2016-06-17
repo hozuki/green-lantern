@@ -9,6 +9,7 @@ import {Graphics} from "./Graphics";
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
 import {ShaderManager} from "../../webgl/ShaderManager";
 import {ShaderID} from "../../webgl/ShaderID";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class Shape extends DisplayObject {
 
@@ -27,8 +28,8 @@ export class Shape extends DisplayObject {
         return this._graphics;
     }
 
-    protected _$update():void {
-        this._graphics.update();
+    protected _$update(timeInfo:TimeInfo):void {
+        this._graphics.update(timeInfo);
     }
 
     protected _$render(renderer:WebGLRenderer):void {

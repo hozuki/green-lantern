@@ -9,6 +9,7 @@ import {DisplayObject} from "./DisplayObject";
 import {Point} from "../geom/Point";
 import {ShaderManager} from "../../webgl/ShaderManager";
 import {NotImplementedError} from "../errors/NotImplementedError";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export abstract class DisplayObjectContainer extends InteractiveObject {
 
@@ -159,11 +160,11 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return r;
     }
 
-    update():void {
-        super.update();
+    update(timeInfo:TimeInfo):void {
+        super.update(timeInfo);
         if (this.enabled) {
             for (var i = 0; i < this._children.length; ++i) {
-                this._children[i].update();
+                this._children[i].update(timeInfo);
             }
         }
     }

@@ -22,6 +22,7 @@ import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../glantern/GLUtil";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class TextField extends InteractiveObject {
 
@@ -322,7 +323,7 @@ export class TextField extends InteractiveObject {
         this._context2D = null;
     }
 
-    protected _$update():void {
+    protected _$update(timeInfo:TimeInfo):void {
         if (!this._isContentChanged) {
             return;
         }

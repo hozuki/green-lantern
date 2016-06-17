@@ -6,6 +6,7 @@ import {DisplayObjectContainer} from "../../flash/display/DisplayObjectContainer
 import {Stage} from "../../flash/display/Stage";
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class Canvas extends DisplayObjectContainer {
 
@@ -13,7 +14,7 @@ export class Canvas extends DisplayObjectContainer {
         super(root, parent);
     }
 
-    protected _$update():void {
+    protected _$update(timeInfo:TimeInfo):void {
         throw new NotImplementedError();
     }
 

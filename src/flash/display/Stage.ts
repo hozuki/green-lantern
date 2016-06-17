@@ -13,6 +13,7 @@ import {ColorCorrection} from "./ColorCorrection";
 import {StageAlign} from "./StageAlign";
 import {DisplayObjectContainer} from "./DisplayObjectContainer";
 import {NotImplementedError} from "../errors/NotImplementedError";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class Stage extends DisplayObjectContainer {
 
@@ -115,7 +116,7 @@ export class Stage extends DisplayObjectContainer {
         // TODO: Fully implement this
     }
 
-    protected _$update():void {
+    protected _$update(timeInfo:TimeInfo):void {
     }
 
     protected _$render(renderer:WebGLRenderer):void {

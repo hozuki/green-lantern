@@ -22,7 +22,7 @@ const tsConfig = {
     removeComments: false
 };
 
-gulp.task("build", ["build-compile", "build-browserify"]);
+gulp.task("build", ["build-compile", "build-browserify"], copyBuildResults);
 
 gulp.task("build-compile", function () {
     "use strict";
@@ -53,12 +53,7 @@ gulp.task("build-browserify", ["build-compile"], function () {
         .pipe(gulp.dest("build"));
 });
 
-gulp.task("copy", function () {
-    "use strict";
-    return gulp
-        .src(["./build/GLantern-browser.min.js"])
-        .pipe(gulp.dest("./test/visual"))
-});
+gulp.task("copy", copyBuildResults);
 
 // Consider using stream-combiner2. (http://www.cnblogs.com/giggle/p/5562459.html)
 function errorHandler(err) {
@@ -68,4 +63,11 @@ function errorHandler(err) {
     gutil.log(colors.red("Error:") + " " + colors.magenta(err.fileName));
     gutil.log("    on line " + colors.cyan(err.loc.line) + ": " + colors.red(err.message));
     gutil.log("    plugin: " + colors.yellow(err.plugin));
+}
+
+function copyBuildResults() {
+    "use strict";
+    return gulp
+        .src(["./build/GLantern-browser.min.js"])
+        .pipe(gulp.dest("./test/visual"));
 }

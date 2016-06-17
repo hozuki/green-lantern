@@ -20,6 +20,7 @@ import {Vector3D} from "../geom/Vector3D";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../glantern/GLUtil";
 import {MathUtil} from "../../glantern/MathUtil";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
 
@@ -247,12 +248,12 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         throw new NotImplementedError();
     }
 
-    update():void {
+    update(timeInfo:TimeInfo):void {
         if (this._isTransformDirty) {
             this._$updateTransform();
         }
         if (this.enabled) {
-            this._$update();
+            this._$update(timeInfo);
         }
     }
 
@@ -284,7 +285,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this.transform.matrix3D.copyFrom(matrix3D);
     }
 
-    protected abstract _$update():void;
+    protected abstract _$update(timeInfo:TimeInfo):void;
 
     protected abstract _$render(renderer:WebGLRenderer):void;
 

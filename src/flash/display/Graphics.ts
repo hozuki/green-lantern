@@ -25,6 +25,7 @@ import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {IDisposable} from "../../glantern/IDisposable";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../glantern/GLUtil";
+import {TimeInfo} from "../../glantern/TimeInfo";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {
 
@@ -346,7 +347,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    update():void {
+    update(timeInfo:TimeInfo):void {
         if (this._isDirty) {
             var j = 0, fillLen = this._fillRenderers.length;
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
