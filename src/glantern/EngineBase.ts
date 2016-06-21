@@ -125,8 +125,8 @@ export class EngineBase implements IDisposable {
      * Gets total time elapsed in handling the animation loop, in milliseconds.
      * @returns {Number}
      */
-    get timeElapsed():number {
-        return this._timeElapsed;
+    get elapsedMillis():number {
+        return this._elapsedMillis;
     }
 
     /**
@@ -140,14 +140,14 @@ export class EngineBase implements IDisposable {
     private __updateTimeCounters():void {
         if (this._lastTimeUpdated > 0) {
             var now = Date.now();
-            this._timeElapsed += now - this._lastTimeUpdated;
+            this._elapsedMillis += now - this._lastTimeUpdated;
             this._lastTimeUpdated = now;
         }
         ++this._fpsCounter;
-        if (this.timeElapsed - this._lastTimeFpsUpdated > 1000) {
-            this._fps = this._fpsCounter / (this.timeElapsed - this._lastTimeFpsUpdated) * 1000;
+        if (this.elapsedMillis - this._lastTimeFpsUpdated > 1000) {
+            this._fps = this._fpsCounter / (this.elapsedMillis - this._lastTimeFpsUpdated) * 1000;
             this._fpsCounter = 0;
-            this._lastTimeFpsUpdated = this.timeElapsed;
+            this._lastTimeFpsUpdated = this.elapsedMillis;
         }
     }
 
@@ -162,7 +162,7 @@ export class EngineBase implements IDisposable {
             return;
         }
         this.__updateTimeCounters();
-        var timeInfo:TimeInfo = {millisFromStartup: this.timeElapsed};
+        var timeInfo:TimeInfo = {millisFromStartup: this.elapsedMillis};
         this.runOneFrame(timeInfo);
         VisualUtil.requestAnimationFrame(this._loopFunction);
     }
@@ -173,7 +173,7 @@ export class EngineBase implements IDisposable {
     private _isInitialized:boolean = false;
     private _attachedUpdateFunctions:((timeInfo:TimeInfo) => void)[] = null;
     private _loopFunction:(time:number) => void = null;
-    private _timeElapsed:number = 0;
+    private _elapsedMillis:number = 0;
     private _fps:number = 0;
     private _fpsCounter:number = 0;
     private _lastTimeFpsUpdated:number = 0;
