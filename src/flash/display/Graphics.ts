@@ -26,6 +26,7 @@ import {IDisposable} from "../../glantern/IDisposable";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {GLUtil} from "../../glantern/GLUtil";
 import {TimeInfo} from "../../glantern/TimeInfo";
+import {MathUtil} from "../../glantern/MathUtil";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {
 
@@ -235,7 +236,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight:number = NaN):void {
-        if (isNaN(ellipseHeight)) {
+        if (MathUtil.isNaN(ellipseHeight)) {
             ellipseHeight = ellipseWidth;
         }
         throw new NotImplementedError();
@@ -318,7 +319,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
               scaleMode:string = LineScaleMode.NORMAL, caps:string = null, joints:string = null, miterLimit:number = 3):void {
         if (this._lineType !== BrushType.SOLID || this._lineWidth !== thickness || this._lineColor !== color || this._lineAlpha !== alpha) {
             this._lineType = BrushType.SOLID;
-            if (!isNaN(thickness)) {
+            if (!MathUtil.isNaN(thickness)) {
                 this._lineWidth = thickness;
             }
             this._lineColor = color;

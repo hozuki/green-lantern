@@ -49,7 +49,7 @@ export abstract class MathUtil {
      */
     static isPowerOfTwo(positiveNumber:number):boolean {
         var num = positiveNumber | 0;
-        if (num != positiveNumber || isNaN(num) || !isFinite(num)) {
+        if (num != positiveNumber || MathUtil.isNaN(num) || !isFinite(num)) {
             return false;
         } else {
             return num > 0 && (num & (num - 1)) === 0;
@@ -91,6 +91,10 @@ export abstract class MathUtil {
 
     static clampLower(value:number, lowerBound:number):number {
         return value < lowerBound ? lowerBound : value;
+    }
+
+    static isNaN(value:any):boolean {
+        return value !== value;
     }
 
 }
