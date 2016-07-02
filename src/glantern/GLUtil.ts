@@ -287,9 +287,17 @@ export abstract class GLUtil {
     }
 
     static remove<T>(array:T[], value:T, equalFunc:(t1:T, t2:T) => boolean = null):boolean {
-        var func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
+        if (typeof equalFunc !== "function") {
+            var searchIndex = array.indexOf(value);
+            if (searchIndex >= 0) {
+                array.splice(searchIndex, 1);
+                return true;
+            } else {
+                return false;
+            }
+        }
         for (var i = 0; i < array.length; ++i) {
-            if (func(value, array[i])) {
+            if (equalFunc(value, array[i])) {
                 array.splice(i, 1);
                 return true;
             }
@@ -300,9 +308,12 @@ export abstract class GLUtil {
     static removeAll<T>(array:T[], value:T, equalFunc:(t1:T, t2:T) => boolean = null):number {
         var func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
         var counter = 0;
-        for (var i = 0; i < array.length; ++i) {
+        var arrayLength = array.length;
+        for (var i = 0; i < arrayLength; ++i) {
             if (func(value, array[i])) {
                 array.splice(i, 1);
+                --i;
+                --arrayLength;
                 ++counter;
             }
         }
