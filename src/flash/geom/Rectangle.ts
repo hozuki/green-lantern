@@ -138,7 +138,7 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
             rect1 = toIntersect;
             rect2 = this;
         }
-        return rect1.bottom < rect2.top
+        return rect1.bottom >= rect2.top
     }
 
     isEmpty():boolean {
