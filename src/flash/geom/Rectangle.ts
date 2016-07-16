@@ -83,62 +83,21 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
     }
 
     intersection(toIntersect:Rectangle):Rectangle {
-        var x:number;
-        var y:number;
-        var w:number;
-        var h:number;
-        var rect1:Rectangle;
-        var rect2:Rectangle;
-        if (this.left < toIntersect.left) {
-            rect1 = this;
-            rect2 = toIntersect;
+        var areIntersect = this.intersects(toIntersect);
+        if (areIntersect) {
+            var r1 = this, r2 = toIntersect;
+            var x0 = Math.max(r1.x, r2.x),
+                y1 = Math.max(r1.bottom, r2.bottom),
+                x1 = Math.min(r1.right, r2.right),
+                y0 = Math.min(r1.y, r2.y);
+            return new Rectangle(x0, y0, x1 - x0, y1 - y0);
         } else {
-            rect1 = toIntersect;
-            rect2 = this;
+            return Rectangle.empty;
         }
-        if (rect1.right < rect2.left) {
-            return new Rectangle(); // Does not intersect
-        } else {
-            x = rect2.left;
-            w = Math.min(rect1.right, rect2.right) - x;
-        }
-        if (this.top < toIntersect.top) {
-            rect1 = this;
-            rect2 = toIntersect;
-        } else {
-            rect1 = toIntersect;
-            rect2 = this;
-        }
-        if (rect1.bottom < rect2.top) {
-            return new Rectangle(); // Does not intersect
-        } else {
-            y = rect2.top;
-            h = Math.min(rect1.bottom, rect2.bottom) - y;
-        }
-        return new Rectangle(x, y, w, h);
     }
 
     intersects(toIntersect:Rectangle):boolean {
-        var rect1:Rectangle;
-        var rect2:Rectangle;
-        if (this.left < toIntersect.left) {
-            rect1 = this;
-            rect2 = toIntersect;
-        } else {
-            rect1 = toIntersect;
-            rect2 = this;
-        }
-        if (rect1.right < rect2.left) {
-            return false;
-        }
-        if (this.top < toIntersect.top) {
-            rect1 = this;
-            rect2 = toIntersect;
-        } else {
-            rect1 = toIntersect;
-            rect2 = this;
-        }
-        return rect1.bottom >= rect2.top
+        return Rectangle.testIntersection(this, toIntersect);
     }
 
     isEmpty():boolean {
@@ -250,9 +209,34 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         this._y = v;
     }
 
+    // Bulletproof
+    static get empty():Rectangle {
+        return emptyRectangle.clone();
+    }
+
+    // Bulletproof
+    /**
+     * Test intersection between two rectangles.
+     * @param rect1 {Rectangle}
+     * @param rect2 {Rectangle}
+     * @param [strict] {Boolean} In strict mode, edge contact is regarded as intersection.
+     * @returns {Boolean}
+     */
+    static testIntersection(rect1:Rectangle, rect2:Rectangle, strict:boolean = true):boolean {
+        var areSeparate:boolean;
+        if (strict) {
+            areSeparate = rect1.right < rect2.left || rect1.left > rect2.right || rect1.top < rect2.bottom || rect1.bottom > rect2.top;
+        } else {
+            areSeparate = rect1.right <= rect2.left || rect1.left >= rect2.right || rect1.top <= rect2.bottom || rect1.bottom >= rect2.top;
+        }
+        return !areSeparate;
+    }
+
     private _x:number = 0;
     private _y:number = 0;
     private _w:number = 0;
     private _h:number = 0;
 
 }
+
+const emptyRectangle = new Rectangle();
