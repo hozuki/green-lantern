@@ -71,5 +71,5 @@ function copyBuildResults() {
     "use strict";
     return gulp
         .src(["./build/GLantern-browser.min.js"])
-        .pipe(gulp.dest("./test/visual"));
+        .pipe(gulp.dest("./tests/visual"));
 }

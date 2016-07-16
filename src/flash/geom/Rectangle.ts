@@ -225,9 +225,9 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
     static testIntersection(rect1:Rectangle, rect2:Rectangle, strict:boolean = true):boolean {
         var areSeparate:boolean;
         if (strict) {
-            areSeparate = rect1.right < rect2.left || rect1.left > rect2.right || rect1.top < rect2.bottom || rect1.bottom > rect2.top;
+            areSeparate = rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom;
         } else {
-            areSeparate = rect1.right <= rect2.left || rect1.left >= rect2.right || rect1.top <= rect2.bottom || rect1.bottom >= rect2.top;
+            areSeparate = rect1.right <= rect2.left || rect1.left >= rect2.right || rect1.bottom <= rect2.top || rect1.top >= rect2.bottom;
         }
         return !areSeparate;
     }
