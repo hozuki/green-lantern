@@ -2,6 +2,8 @@
  * Created by MIC on 2015/11/19.
  */
 
+"use strict";
+
 const gulp = require("gulp");
 const ts = require("gulp-typescript");
 const sourcemaps = require("gulp-sourcemaps");
@@ -14,33 +16,48 @@ const source = require("vinyl-source-stream");
 const buffer = require("vinyl-buffer");
 const os = require("os");
 
-const tsConfig = {
-    target: "es5",
-    module: "commonjs",
-    noImplicitAny: true,
-    noEmitOnError: true,
-    removeComments: false
+const tsConfigs = {
+    "build": {
+        target: "es5",
+        module: "commonjs",
+        noImplicitAny: true,
+        noEmitOnError: true,
+        removeComments: false
+    },
+    "tests": {
+        target: "es5",
+        module: "commonjs",
+        noImplicitAny: true,
+        noEmitOnError: true,
+        removeComments: false
+    }
 };
+
+const incDirs = {
+    "base": ["chalk", "libtess.js", "node", "pako"]
+};
+incDirs.tests = incDirs.base;
+incDirs.build = incDirs.base.concat("es2015");
+incDirToRel(incDirs.tests);
+incDirToRel(incDirs.build);
 
 gulp.task("default", ["build"]);
 
 gulp.task("build", ["build-compile", "build-browserify"], copyBuildResults);
 
 gulp.task("build-compile", function () {
-    "use strict";
     return gulp
-        .src(["src/**/*.ts", "inc/**/*.ts"])
+        .src(["src/gl/**/*.ts"].concat(incDirs.build))
         .pipe(sourcemaps.init())
-        .pipe(ts(tsConfig))
+        .pipe(ts(tsConfigs.build))
         .js
         .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest("build/node"))
+        .pipe(gulp.dest("build/node/gl"))
 });
 
 gulp.task("build-browserify", ["build-compile"], function () {
-    "use strict";
     return browserify({
-        entries: "build/node/browser-bootstrap.js",
+        entries: "build/node/gl/browser-bootstrap.js",
         debug: true
     })
         .bundle()
@@ -57,9 +74,18 @@ gulp.task("build-browserify", ["build-compile"], function () {
 
 gulp.task("copy", copyBuildResults);
 
+gulp.task("transform-tests", ["build-compile"], function () {
+    return gulp
+        .src(["src/tests/logical/**/*.ts"].concat(incDirs.tests))
+        .pipe(sourcemaps.init())
+        .pipe(ts(tsConfigs.tests))
+        .js
+        .pipe(sourcemaps.write("."))
+        .pipe(gulp.dest("build/node/tests/logical"))
+});
+
 // Consider using stream-combiner2. (http://www.cnblogs.com/giggle/p/5562459.html)
 function errorHandler(err) {
-    "use strict";
     var colors = gutil.colors;
     gutil.log(os.EOL);
     gutil.log(colors.red("Error:") + " " + colors.magenta(err.fileName));
@@ -68,8 +94,17 @@ function errorHandler(err) {
 }
 
 function copyBuildResults() {
-    "use strict";
     return gulp
         .src(["./build/GLantern-browser.min.js"])
-        .pipe(gulp.dest("./tests/visual"));
+        .pipe(gulp.dest("src/tests/visual"));
+}
+
+/**
+ *
+ * @param arr {String[]}
+ */
+function incDirToRel(arr) {
+    for (var i = 0; i < arr.length; ++i) {
+        arr[i] = "inc/" + arr[i] + "/**/*.ts";
+    }
 }
