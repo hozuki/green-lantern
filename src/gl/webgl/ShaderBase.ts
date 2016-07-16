@@ -23,13 +23,13 @@ export class ShaderBase implements IDisposable {
         this._id = manager.getNextAvailableID();
         this.__initialize(manager.context, vertexSource, fragmentSource);
         this.select();
-        if (GLUtil.isUndefinedOrNull(uniforms) || GLUtil.isUndefinedOrNull(attributes)) {
+        if (GLUtil.ptr(uniforms) && GLUtil.ptr(attributes)) {
+            this._uniforms = uniforms;
+            this._attributes = attributes;
+        } else {
             this._uniforms = new Map<string, UniformCache>();
             this._attributes = new Map<string, AttributeCache>();
             this._$localInit(manager, this._uniforms, this._attributes);
-        } else {
-            this._uniforms = uniforms;
-            this._attributes = attributes;
         }
         this.__cacheUniformLocations();
         this.__cacheAttributeLocations();

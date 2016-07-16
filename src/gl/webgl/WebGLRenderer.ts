@@ -78,15 +78,11 @@ export class WebGLRenderer implements IDisposable {
      * render target of the {@link WebGLRenderer}. The default value is null.
      */
     setRenderTarget(target:RenderTarget2D = null):void {
-        if (target === this._currentRenderTarget && target !== null) {
+        if (target === this._currentRenderTarget && GLUtil.ptr(target)) {
             return;
         }
-        if (GLUtil.isUndefinedOrNull(target)) {
-            this._currentRenderTarget = this._screenTarget;
-        } else {
-            this._currentRenderTarget = target;
-        }
-        this._currentRenderTarget.activate();
+        var t = this._currentRenderTarget = GLUtil.ptr(target) ? target : this._screenTarget;
+        t.activate();
     }
 
     /**

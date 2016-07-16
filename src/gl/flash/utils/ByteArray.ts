@@ -279,7 +279,7 @@ export class ByteArray {
         var oldDataView = this._dataView;
         var newBuffer = new ArrayBuffer(targetLength);
         var newDataView = new DataView(newBuffer);
-        if (!GLUtil.isUndefinedOrNull(oldBuffer)) {
+        if (GLUtil.ptr(oldBuffer)) {
             var copyLength = targetLength > this.length ? oldBuffer.byteLength : newBuffer.byteLength;
             for (var i = 0; i < copyLength; ++i) {
                 newDataView.setUint8(i, oldDataView.getUint8(i));

@@ -68,8 +68,8 @@ export abstract class GLUtil {
      * @param value {*} The value to check.
      * @returns {Boolean} True if the value is {@link undefined} or {@link null}, and false otherwise.
      */
-    static isUndefinedOrNull(value:any):boolean {
-        return typeof value === "undefined" || value === null;
+    static isUndefinedOrNull<T>(value:T):boolean {
+        return value === void(0) || value === null;
     }
 
     /**
@@ -77,8 +77,17 @@ export abstract class GLUtil {
      * @param value {*} The value to check.
      * @returns {Boolean} True if the value is {@link undefined}, and false otherwise.
      */
-    static isUndefined(value:any):boolean {
-        return typeof value === "undefined";
+    static isUndefined<T>(value:T):boolean {
+        return value === void(0);
+    }
+
+    /**
+     * Check whether a value is logically true.
+     * @param value {*} The value to check.
+     * @returns {Boolean}
+     */
+    static ptr<T>(value:T):boolean {
+        return !!value;
     }
 
     /**
@@ -120,7 +129,7 @@ export abstract class GLUtil {
      * @returns {String} The generated string, with valid placeholders replaced by values matched.
      */
     static formatString(format:string, ...replaceWithArray:any[]):string {
-        var replaceWithArrayIsNull = GLUtil.isUndefinedOrNull(replaceWithArray);
+        var replaceWithArrayIsNull = !GLUtil.ptr(replaceWithArray);
         var replaceWithArrayLength = replaceWithArrayIsNull ? -1 : replaceWithArray.length;
 
         function __stringFormatter(matched:string):string {
@@ -226,11 +235,11 @@ export abstract class GLUtil {
      * @param message {String} The message to print.
      * @param [extra] {*} Extra information.
      */
-    static trace(message:string, extra?:any):void {
+    static trace(message:string, extra:any = void(0)):void {
         if (GLUtil.isUndefined(extra)) {
-            console.info(message, extra);
-        } else {
             console.info(message);
+        } else {
+            console.info(message, extra);
         }
         console.trace();
     }

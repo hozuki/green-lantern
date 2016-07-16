@@ -309,7 +309,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         var manager = renderer.shaderManager;
         this._$selectShader(manager);
         var shader = manager.currentShader;
-        if (!GLUtil.isUndefinedOrNull(shader)) {
+        if (GLUtil.ptr(shader)) {
             shader.changeValue("uTransformMatrix", (u:UniformCache):void => {
                 u.value = this.transform.matrix3D.toArray();
             });

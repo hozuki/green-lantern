@@ -210,7 +210,7 @@ export class TextFormat extends EventDispatcher {
     }
 
     set tabStops(v:number[]) {
-        if (GLUtil.isUndefinedOrNull(v)) {
+        if (!GLUtil.ptr(v)) {
             v = [];
         }
         var b = false;

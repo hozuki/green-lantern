@@ -51,11 +51,7 @@ export class PackedArrayBuffer implements IDisposable {
     }
 
     setNewData(data:number[]):void {
-        if (GLUtil.isUndefinedOrNull(data)) {
-            this._array = [];
-        } else {
-            this._array = data.slice();
-        }
+        this._array = GLUtil.ptr(data) ? data.slice() : [];
     }
 
     becomeDirty():void {

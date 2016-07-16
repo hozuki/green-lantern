@@ -109,7 +109,7 @@ export class TextField extends InteractiveObject {
         if (this._defaultTextFormat !== null) {
             this._defaultTextFormat.removeEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
         }
-        this._defaultTextFormat = !GLUtil.isUndefinedOrNull(v) ? v : new TextFormat();
+        this._defaultTextFormat = GLUtil.ptr(v) ? v : new TextFormat();
         this._defaultTextFormat.addEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
     }
 
@@ -188,7 +188,7 @@ export class TextField extends InteractiveObject {
     htmlText:string = null;
 
     get length():number {
-        return !GLUtil.isUndefinedOrNull(this.text) ? this.text.length : 0;
+        return GLUtil.ptr(this.text) ? this.text.length : 0;
     }
 
     maxChars:number = 0;

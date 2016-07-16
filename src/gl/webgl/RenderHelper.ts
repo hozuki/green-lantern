@@ -178,7 +178,7 @@ export abstract class RenderHelper {
 }
 
 function checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
-    if (GLUtil.isUndefinedOrNull(source)) {
+    if (!GLUtil.ptr(source)) {
         console.warn("Cannot render a null RenderTarget2D onto another RenderTarget2D.");
         return false;
     }
