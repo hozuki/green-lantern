@@ -4,6 +4,6 @@
 
 export interface TimeInfo {
 
-    millisFromStartup?:number;
+    millisFromStartup?: number;
 
 }

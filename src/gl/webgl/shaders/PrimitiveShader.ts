@@ -13,30 +13,30 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class PrimitiveShader extends ShaderBase {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, PrimitiveShader.VERTEX_SOURCE, PrimitiveShader.FRAGMENT_SOURCE, null, null);
     }
 
-    static SHADER_CLASS_NAME:string = "PrimitiveShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.primitive;
-    static VERTEX_SOURCE:string = VertexShaders.primitive;
+    static SHADER_CLASS_NAME: string = "PrimitiveShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.primitive;
+    static VERTEX_SOURCE: string = VertexShaders.primitive;
 
-    setProjection(matrix:Matrix3D):void {
+    setProjection(matrix: Matrix3D): void {
         this._uniforms.get("uProjectionMatrix").value = matrix.toArray();
     }
 
-    setTransform(matrix:Matrix3D):void {
+    setTransform(matrix: Matrix3D): void {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
     }
 
-    setAlpha(alpha:number):void {
+    setAlpha(alpha: number): void {
         this._uniforms.get("uAlpha").value = alpha;
     }
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string,UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string,UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
         var transformMatrix = new Matrix3D();
         var projectionMatrix = new Matrix3D();
         var w = manager.renderer.view.width;

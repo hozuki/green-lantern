@@ -4,11 +4,11 @@
 
 export abstract class TextFieldType {
 
-    static get DYNAMIC():string {
+    static get DYNAMIC(): string {
         return "dynamic";
     }
 
-    static get INPUT():string {
+    static get INPUT(): string {
         return "input";
     }
 

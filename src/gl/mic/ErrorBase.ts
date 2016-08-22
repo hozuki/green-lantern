@@ -4,18 +4,18 @@
 
 export class ErrorBase implements Error {
 
-    constructor(message:string = "") {
+    constructor(message: string = "") {
         this._message = message;
     }
 
-    get message():string {
+    get message(): string {
         return this._message;
     }
 
-    get name():string {
+    get name(): string {
         return "ErrorBase";
     }
 
-    private _message:string = null;
+    private _message: string = null;
 
 }

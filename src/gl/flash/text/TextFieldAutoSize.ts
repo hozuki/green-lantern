@@ -4,19 +4,19 @@
 
 export abstract class TextFieldAutoSize {
 
-    static get CENTER():string {
+    static get CENTER(): string {
         return "center";
     }
 
-    static get LEFT():string {
+    static get LEFT(): string {
         return "left";
     }
 
-    static get NONE():string {
+    static get NONE(): string {
         return "none";
     }
 
-    static get RIGHT():string {
+    static get RIGHT(): string {
         return "right";
     }
 

@@ -4,15 +4,15 @@
 
 export abstract class CapsStyle {
 
-    static get NONE():string {
+    static get NONE(): string {
         return "none";
     }
 
-    static get ROUND():string {
+    static get ROUND(): string {
         return "round";
     }
 
-    static get SQUARE():string {
+    static get SQUARE(): string {
         return "square";
     }
 

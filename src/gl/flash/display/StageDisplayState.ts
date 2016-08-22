@@ -4,15 +4,15 @@
 
 export abstract class StageDisplayState {
 
-    static get FULL_SCREEN():string {
+    static get FULL_SCREEN(): string {
         return 'fullScreen';
     }
 
-    static get FULL_SCREEN_INTERACTIVE():string {
+    static get FULL_SCREEN_INTERACTIVE(): string {
         return 'fullScreenInteractive';
     }
 
-    static get NORMAL():string {
+    static get NORMAL(): string {
         return 'normal';
     }
 

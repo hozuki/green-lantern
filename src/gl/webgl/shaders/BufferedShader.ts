@@ -13,23 +13,23 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class BufferedShader extends ShaderBase {
 
-    constructor(manager:ShaderManager, vertexSource:string, fragmentSource:string) {
+    constructor(manager: ShaderManager, vertexSource: string, fragmentSource: string) {
         super(manager, vertexSource, fragmentSource, null, null);
     }
 
-    setTexture(texture:WebGLTexture):void {
+    setTexture(texture: WebGLTexture): void {
         // Must contains a "uSampler" uniform.
         this._uniforms.get("uSampler").texture = texture;
     }
 
-    static SHADER_CLASS_NAME:string = "BufferedShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.buffered;
-    static VERTEX_SOURCE:string = VertexShaders.buffered;
+    static SHADER_CLASS_NAME: string = "BufferedShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.buffered;
+    static VERTEX_SOURCE: string = VertexShaders.buffered;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
         var projectionMatrix = new Matrix3D();
         var w = manager.renderer.view.width;
         var h = manager.renderer.view.height;

@@ -4,15 +4,15 @@
 
 export abstract class SpreadMethod {
 
-    static get PAD():string {
+    static get PAD(): string {
         return "pad";
     }
 
-    static get REFLECT():string {
+    static get REFLECT(): string {
         return "reflect";
     }
 
-    static get REPEAT():string {
+    static get REPEAT(): string {
         return "repeat";
     }
 

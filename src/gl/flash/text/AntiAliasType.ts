@@ -4,11 +4,11 @@
 
 export abstract class AntiAliasType {
 
-    static get ADVANCED():string {
+    static get ADVANCED(): string {
         return "advanced";
     }
 
-    static get NORMAL():string {
+    static get NORMAL(): string {
         return "normal";
     }
 

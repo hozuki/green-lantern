@@ -12,11 +12,11 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class ColorTransformShader extends BufferedShader {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, ColorTransformShader.VERTEX_SOURCE, ColorTransformShader.FRAGMENT_SOURCE);
     }
 
-    setColorMatrix(r4c5:number[]):void {
+    setColorMatrix(r4c5: number[]): void {
         if (r4c5.length < 20) {
             console.warn("ColorTransformShader.setColorMatrix needs a 4x5 matrix.");
             return;
@@ -24,14 +24,14 @@ export class ColorTransformShader extends BufferedShader {
         this._uniforms.get("uColorMatrix").value = r4c5.slice();
     }
 
-    static SHADER_CLASS_NAME:string = "ColorTransformShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.colorTransform;
-    static VERTEX_SOURCE:string = VertexShaders.buffered;
+    static SHADER_CLASS_NAME: string = "ColorTransformShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.colorTransform;
+    static VERTEX_SOURCE: string = VertexShaders.buffered;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
         var defaultColorMatrix = [
             1, 0, 0, 0, 0,
             0, 1, 0, 0, 0,

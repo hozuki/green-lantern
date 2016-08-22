@@ -12,7 +12,7 @@ export abstract class MathUtil {
      * @returns {Number} The limited value. If the original number is inside the specified range, it will not be
      * altered. Otherwise, it will be either min or max.
      */
-    static clamp(v:number, min:number, max:number):number {
+    static clamp(v: number, min: number, max: number): number {
         v < min && (v = min);
         v > max && (v = max);
         return v;
@@ -26,7 +26,7 @@ export abstract class MathUtil {
      * @returns {Boolean} True if the number to check is strictly greater than min and strictly less than max, and
      * false otherwise.
      */
-    static isValueBetweenNotEquals(v:number, min:number, max:number):boolean {
+    static isValueBetweenNotEquals(v: number, min: number, max: number): boolean {
         return min < v && v < max;
     }
 
@@ -38,7 +38,7 @@ export abstract class MathUtil {
      * @returns {Boolean} True if the number to check is not less than min and not greater than max, and
      * false otherwise.
      */
-    static isValueBetweenEquals(v:number, min:number, max:number):boolean {
+    static isValueBetweenEquals(v: number, min: number, max: number): boolean {
         return min <= v && v <= max;
     }
 
@@ -47,7 +47,7 @@ export abstract class MathUtil {
      * @param positiveNumber {Number} The positive number to test.
      * @returns {Boolean} True if the number is a power of 2, and false otherwise.
      */
-    static isPowerOfTwo(positiveNumber:number):boolean {
+    static isPowerOfTwo(positiveNumber: number): boolean {
         var num = positiveNumber | 0;
         if (num != positiveNumber || MathUtil.isNaN(num) || !isFinite(num)) {
             return false;
@@ -61,7 +61,7 @@ export abstract class MathUtil {
      * @param positiveNumber {Number} The positive number as the basis.
      * @returns {Number} The smallest power of 2 which is greater than or equals the given positive number
      */
-    static power2Roundup(positiveNumber:number):number {
+    static power2Roundup(positiveNumber: number): number {
         if (positiveNumber < 0)
             return 0;
         --positiveNumber;
@@ -73,27 +73,27 @@ export abstract class MathUtil {
         return positiveNumber + 1;
     }
 
-    static complementToNegative(complement:number):number {
+    static complementToNegative(complement: number): number {
         return -((~complement) + 1);
     }
 
-    static isByteComplement(value:number) {
+    static isByteComplement(value: number) {
         return ((value & 0xff) & 0x80) !== 0;
     }
 
-    static isInt32Complement(value:number) {
+    static isInt32Complement(value: number) {
         return ((value & 0xffffffff) & 0x80000000) !== 0;
     }
 
-    static clampUpper(value:number, upperBound:number):number {
+    static clampUpper(value: number, upperBound: number): number {
         return value > upperBound ? upperBound : value;
     }
 
-    static clampLower(value:number, lowerBound:number):number {
+    static clampLower(value: number, lowerBound: number): number {
         return value < lowerBound ? lowerBound : value;
     }
 
-    static isNaN(value:any):boolean {
+    static isNaN(value: any): boolean {
         return value !== value;
     }
 

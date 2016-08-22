@@ -4,11 +4,11 @@
 
 export abstract class GradientType {
 
-    static get LINEAR():string {
+    static get LINEAR(): string {
         return "linear";
     }
 
-    static get RADIAL():string {
+    static get RADIAL(): string {
         return "radial";
     }
 

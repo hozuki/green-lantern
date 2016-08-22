@@ -4,19 +4,19 @@
 
 import {WebGLRenderer} from "./WebGLRenderer";
 import {RenderTarget2D} from "./RenderTarget2D";
-import {IDisposable} from "../glantern/IDisposable";
+import {IDisposable} from "../mic/IDisposable";
 import {IBitmapFilter} from "./IBitmapFilter";
 import {RenderHelper} from "./RenderHelper";
 
 export class FilterManager implements IDisposable {
 
-    constructor(renderer:WebGLRenderer) {
+    constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;
         this._filterGroups = [];
         this._tempTarget = renderer.createRenderTarget();
     }
 
-    dispose():void {
+    dispose(): void {
         this._renderer.releaseRenderTarget(this._tempTarget);
         this.clearFilterGroups();
         this._tempTarget = null;
@@ -24,8 +24,8 @@ export class FilterManager implements IDisposable {
         this._renderer = null;
     }
 
-    clearFilterGroups():void {
-        var filterGroup:IBitmapFilter[];
+    clearFilterGroups(): void {
+        var filterGroup: IBitmapFilter[];
         var filterGroups = this._filterGroups;
         if (filterGroups.length > 0) {
             for (var i = 0; i < filterGroups.length; ++i) {
@@ -40,34 +40,34 @@ export class FilterManager implements IDisposable {
         }
     }
 
-    pushFilterGroup(group:IBitmapFilter[]):void {
+    pushFilterGroup(group: IBitmapFilter[]): void {
         this._filterGroups.push(group.slice());
     }
 
-    popFilterGroup():IBitmapFilter[] {
+    popFilterGroup(): IBitmapFilter[] {
         return this.hasFilterGroups ? this._filterGroups.pop() : null;
     }
 
-    get hasFilterGroups():boolean {
+    get hasFilterGroups(): boolean {
         return this._filterGroups.length > 0;
     }
 
-    get renderer():WebGLRenderer {
+    get renderer(): WebGLRenderer {
         return this._renderer;
     }
 
-    processFilters(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
+    processFilters(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
         if (input === output) {
             console.warn("Filter alert: input and output are the same, processing aborted.");
             return;
         }
 
         if (this.hasFilterGroups) {
-            var filterGroup:IBitmapFilter[] = this._filterGroups[this._filterGroups.length - 1];
-            var filter:IBitmapFilter;
+            var filterGroup: IBitmapFilter[] = this._filterGroups[this._filterGroups.length - 1];
+            var filter: IBitmapFilter;
             var t1 = input, t2 = this._tempTarget;
             t2.clear();
-            var t:RenderTarget2D;
+            var t: RenderTarget2D;
             for (var i = 0; i < filterGroup.length; i++) {
                 filter = filterGroup[i];
                 if (filter !== null) {
@@ -83,8 +83,8 @@ export class FilterManager implements IDisposable {
         }
     }
 
-    private _tempTarget:RenderTarget2D = null;
-    private _renderer:WebGLRenderer = null;
-    private _filterGroups:IBitmapFilter[][] = null;
+    private _tempTarget: RenderTarget2D = null;
+    private _renderer: WebGLRenderer = null;
+    private _filterGroups: IBitmapFilter[][] = null;
 
 }

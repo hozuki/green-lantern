@@ -4,11 +4,11 @@
 
 export abstract class InterpolationMethod {
 
-    public static get LINEAR_RGB():string {
+    public static get LINEAR_RGB(): string {
         return 'linearRGB';
     }
 
-    public static get RGB():string {
+    public static get RGB(): string {
         return 'rgb';
     }
 

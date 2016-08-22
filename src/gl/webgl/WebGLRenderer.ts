@@ -8,12 +8,13 @@ import {ShaderManager} from "./ShaderManager";
 import {FilterManager} from "./FilterManager";
 import {RenderTarget2D} from "./RenderTarget2D";
 import {WebGLUtils} from "./WebGLUtils";
-import {IDisposable} from "../glantern/IDisposable";
+import {IDisposable} from "../mic/IDisposable";
 import {BlendMode} from "../flash/display/BlendMode";
-import {GLUtil} from "../glantern/GLUtil";
 import {ArgumentError} from "../flash/errors/ArgumentError";
+import {VirtualDom} from "../mic/VirtualDom";
+import {CommonUtil} from "../mic/CommonUtil";
 
-const gl = (<any>window).WebGLRenderingContext;
+const gl = VirtualDom.WebGLRenderingContext;
 
 /**
  * The WebGL renderer, main provider of the rendering services.
@@ -26,15 +27,15 @@ export class WebGLRenderer implements IDisposable {
      * @param canvas {HTMLCanvasElement}
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
      */
-    constructor(canvas:HTMLCanvasElement, options:RendererOptions);
+    constructor(canvas: HTMLCanvasElement, options: RendererOptions);
     /**
      * Creates a new {@link WebGLRenderer}.
      * @param width {Number} The width for presentation of the renderer.
      * @param height {Number} The height for presentation of the renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
      */
-    constructor(width:number, height:number, options:RendererOptions);
-    constructor(p1:any, p2:any, p3?:any) {
+    constructor(width: number, height: number, options: RendererOptions);
+    constructor(p1: any, p2: any, p3?: any) {
         if (typeof p1 === "number") {
             this.__initialize(p3, null, p1, p2);
         } else if (p1 instanceof HTMLCanvasElement) {
@@ -47,7 +48,7 @@ export class WebGLRenderer implements IDisposable {
     /**
      * Clear the screen.
      */
-    clear():void {
+    clear(): void {
         if (this._screenTarget !== null) {
             this._screenTarget.clear();
         }
@@ -56,7 +57,7 @@ export class WebGLRenderer implements IDisposable {
     /**
      * Disposes the {@link WebGLRenderer} and related resources.
      */
-    dispose():void {
+    dispose(): void {
         if (this._isInitialized) {
             this._screenTarget.dispose();
             this._filterManager.dispose();
@@ -77,11 +78,11 @@ export class WebGLRenderer implements IDisposable {
      * @param [target] {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
      * render target of the {@link WebGLRenderer}. The default value is null.
      */
-    setRenderTarget(target:RenderTarget2D = null):void {
-        if (target === this._currentRenderTarget && GLUtil.ptr(target)) {
+    setRenderTarget(target: RenderTarget2D = null): void {
+        if (target === this._currentRenderTarget && CommonUtil.ptr(target)) {
             return;
         }
-        var t = this._currentRenderTarget = GLUtil.ptr(target) ? target : this._screenTarget;
+        var t = this._currentRenderTarget = CommonUtil.ptr(target) ? target : this._screenTarget;
         t.activate();
     }
 
@@ -89,7 +90,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns current render target of the {@link WebGLRenderer}.
      * @returns {RenderTarget2D} Current render target of the {@link WebGLRenderer}.
      */
-    get currentRenderTarget():RenderTarget2D {
+    get currentRenderTarget(): RenderTarget2D {
         return this._currentRenderTarget;
     }
 
@@ -97,7 +98,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns the output &lt;canvas&gt; for displaying the contents rendered.
      * @returns {HTMLCanvasElement} The output &lt;canvas&gt;.
      */
-    get view():HTMLCanvasElement {
+    get view(): HTMLCanvasElement {
         return this._view;
     }
 
@@ -105,7 +106,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns the {@link WebGLRenderingContext} attached to the {@link WebGLRenderer}.
      * @returns {WebGLRenderingContext} The {@link WebGLRenderingContext} attached to the {@link WebGLRenderer}.
      */
-    get context():WebGLRenderingContext {
+    get context(): WebGLRenderingContext {
         return this._context;
     }
 
@@ -113,7 +114,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns the {@link ShaderManager} used by the {@link WebGLRenderer}.
      * @returns {ShaderManager} The {@link ShaderManager} used by the {@link WebGLRenderer}.
      */
-    get shaderManager():ShaderManager {
+    get shaderManager(): ShaderManager {
         return this._shaderManager;
     }
 
@@ -121,7 +122,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns the {@link FilterManager} used by the {@link WebGLRenderer}.
      * @returns {FilterManager} The {@link FilterManager} used by the {@link WebGLRenderer}.
      */
-    get filterManager():FilterManager {
+    get filterManager(): FilterManager {
         return this._filterManager;
     }
 
@@ -129,7 +130,7 @@ export class WebGLRenderer implements IDisposable {
      * Returns the tessellator used by the {@link WebGLRenderer}.
      * @returns {libtess.GluTesselator} The tessellator used by the {@link WebGLRenderer}.
      */
-    get tessellator():libtess.GluTesselator {
+    get tessellator(): libtess.GluTesselator {
         return this._tessellator;
     }
 
@@ -139,7 +140,7 @@ export class WebGLRenderer implements IDisposable {
      * to this target performs a FXAA filtering. If not, it is a simple replicating process.
      * @returns {RenderTarget2D} The output of the {@link WebGLRenderer}.
      */
-    get screenTarget():RenderTarget2D {
+    get screenTarget(): RenderTarget2D {
         return this._screenTarget;
     }
 
@@ -150,7 +151,7 @@ export class WebGLRenderer implements IDisposable {
      * for more information.
      * @returns {RenderTarget2D} The created {@link RenderTarget2D}.
      */
-    createRenderTarget(image:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null):RenderTarget2D {
+    createRenderTarget(image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null): RenderTarget2D {
         return new RenderTarget2D(this, image, false);
     }
 
@@ -161,7 +162,7 @@ export class WebGLRenderer implements IDisposable {
      * for more information.
      * @returns {RenderTarget2D} The created {@link RenderTarget2D}.
      */
-    createRootRenderTarget(image:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null):RenderTarget2D {
+    createRootRenderTarget(image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null): RenderTarget2D {
         return new RenderTarget2D(this, image, true);
     }
 
@@ -169,7 +170,7 @@ export class WebGLRenderer implements IDisposable {
      * Releases a {@link RenderTarget2D} created by the {@link WebGLRenderer}.
      * @param target {RenderTarget2D} The {@link RenderTarget2D} to be released.
      */
-    releaseRenderTarget(target:RenderTarget2D):void {
+    releaseRenderTarget(target: RenderTarget2D): void {
         if (target !== null && target !== undefined) {
             target.dispose();
         }
@@ -180,7 +181,7 @@ export class WebGLRenderer implements IDisposable {
      * @param blendMode {String} See {@link BlendMode} for more information.
      * @see {@link BlendMode}
      */
-    setBlendMode(blendMode:string):void {
+    setBlendMode(blendMode: string): void {
         if (!this._isInitialized) {
             return;
         }
@@ -188,7 +189,7 @@ export class WebGLRenderer implements IDisposable {
             return;
         }
 
-        var config:number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
+        var config: number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
         var glc = this._context;
         if (config[0] >= 0) {
             glc.blendEquation(gl.FUNC_ADD);
@@ -203,7 +204,7 @@ export class WebGLRenderer implements IDisposable {
      * The default {@link RendererOptions} for instantiating a {@link WebGLRenderer}.
      * @type {RendererOptions}
      */
-    static DEFAULT_OPTIONS:RendererOptions = {
+    static DEFAULT_OPTIONS: RendererOptions = {
         antialias: true,
         depth: false,
         transparent: true
@@ -218,21 +219,21 @@ export class WebGLRenderer implements IDisposable {
      * @param [height] {Number} The height, in pixels.
      * @private
      */
-    private __initialize(options:RendererOptions, canvas:HTMLCanvasElement = null, width:number = 400, height:number = 300) {
+    private __initialize(options: RendererOptions, canvas: HTMLCanvasElement = null, width: number = 400, height: number = 300) {
         if (this._isInitialized) {
             return;
         }
         this._isInitialized = true;
-        this._options = GLUtil.deepClone(options);
+        this._options = CommonUtil.deepClone(options);
 
         if (!canvas) {
-            canvas = window.document.createElement("canvas");
+            canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
             canvas.className = "glantern-view";
             canvas.width = width;
             canvas.height = height;
         }
 
-        var attributes:WebGLContextAttributes = Object.create(null);
+        var attributes: WebGLContextAttributes = Object.create(null);
         attributes.alpha = options.transparent;
         attributes.antialias = options.antialias;
         attributes.premultipliedAlpha = true;
@@ -264,29 +265,29 @@ export class WebGLRenderer implements IDisposable {
      * Initializes the tessellator.
      * @private
      */
-    private __initializeTessellator():void {
+    private __initializeTessellator(): void {
         var tess = this._tessellator;
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_VERTEX_DATA,
-            (data:number[], polyVertArray:number[][]):void => {
+            (data: number[], polyVertArray: number[][]): void => {
                 polyVertArray[polyVertArray.length - 1].push(data[0], data[1], data[2]);
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_BEGIN_DATA,
-            (type:number, vertexArrays:number[][]):void => {
+            (type: number, vertexArrays: number[][]): void => {
                 if (type !== libtess.primitiveType.GL_TRIANGLES) {
                     console.warn('{TESS} expected TRIANGLES but got type: ' + type);
                 }
                 vertexArrays.push([]);
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_ERROR,
-            (errorCode:number):void => {
+            (errorCode: number): void => {
                 console.warn('{TESS} error number: ', errorCode);
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_COMBINE,
-            (coords:number[], data:any, weight:number):number[] => {
+            (coords: number[], data: any, weight: number): number[] => {
                 return [coords[0], coords[1], coords[2]];
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_EDGE_FLAG,
-            (flag:any):void => {
+            (flag: any): void => {
                 // Do nothing
             });
     }
@@ -295,30 +296,30 @@ export class WebGLRenderer implements IDisposable {
      * The event handler for handling the lost of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private __onContextLost(ev:Event):void {
+    private __onContextLost(ev: Event): void {
     }
 
     /**
      * The event handler for handling the restoration of active {@link WebGLRenderingContext}.
      * @param ev {Event} Event parameters.
      */
-    private __onContextRestored(ev:Event):void {
+    private __onContextRestored(ev: Event): void {
     }
 
-    private _currentRenderTarget:RenderTarget2D = null;
-    private _currentBlendMode:string = null;
-    private _screenTarget:RenderTarget2D = null;
-    private _filterManager:FilterManager = null;
-    private _shaderManager:ShaderManager = null;
-    private _tessellator:libtess.GluTesselator = null;
-    private _context:WebGLRenderingContext = null;
-    private _view:HTMLCanvasElement;
-    private _options:RendererOptions = null;
-    private _isInitialized:boolean = false;
+    private _currentRenderTarget: RenderTarget2D = null;
+    private _currentBlendMode: string = null;
+    private _screenTarget: RenderTarget2D = null;
+    private _filterManager: FilterManager = null;
+    private _shaderManager: ShaderManager = null;
+    private _tessellator: libtess.GluTesselator = null;
+    private _context: WebGLRenderingContext = null;
+    private _view: HTMLCanvasElement;
+    private _options: RendererOptions = null;
+    private _isInitialized: boolean = false;
 
 }
 
-var BMS:{[k:string]:number[]} = Object.create(null);
+var BMS: {[k: string]: number[]} = Object.create(null);
 BMS[BlendMode.ADD] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.ALPHA] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.DARKEN] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];

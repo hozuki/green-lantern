@@ -4,7 +4,7 @@
 
 export default class Assert {
 
-    static areEqual<T>(v1:T, v2:T, customComparator:(v1:T, v2:T) => boolean = null):boolean {
+    static areEqual<T>(v1: T, v2: T, customComparator: (v1: T, v2: T) => boolean = null): boolean {
         if (typeof customComparator !== "function") {
             customComparator = defaultEqualityComparator;
         }
@@ -13,6 +13,6 @@ export default class Assert {
 
 }
 
-function defaultEqualityComparator<T>(v1:T, v2:T):boolean {
+function defaultEqualityComparator<T>(v1: T, v2: T): boolean {
     return v1 === v2;
 }

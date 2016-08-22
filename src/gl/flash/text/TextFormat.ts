@@ -5,14 +5,14 @@
 import * as os from "os";
 import {TextFormatAlign} from "./TextFormatAlign";
 import {EventDispatcher} from "../events/EventDispatcher";
-import {GLUtil} from "../../glantern/GLUtil";
-import {EventBase} from "../../glantern/EventBase";
+import {EventBase} from "../../mic/EventBase";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export class TextFormat extends EventDispatcher {
 
-    constructor(font:string = null, size:number = 12, color:number = 0x000000, bold:boolean = false, italic:boolean = false,
-                underline:boolean = false, url:string = null, target:string = null, align:string = TextFormatAlign.LEFT,
-                leftMargin:number = 0, rightMargin:number = 0, indent:number = 0, leading:number = 0) {
+    constructor(font: string = null, size: number = 12, color: number = 0x000000, bold: boolean = false, italic: boolean = false,
+                underline: boolean = false, url: string = null, target: string = null, align: string = TextFormatAlign.LEFT,
+                leftMargin: number = 0, rightMargin: number = 0, indent: number = 0, leading: number = 0) {
         super();
         if (font === null) {
             this.font = os.type().toLowerCase().indexOf("osx") >= 0 ? "Times" : "Times New Roman";
@@ -33,15 +33,15 @@ export class TextFormat extends EventDispatcher {
         this.leading = leading;
     }
 
-    static get TEXT_FORMAT_CHANGE():string {
+    static get TEXT_FORMAT_CHANGE(): string {
         return "textFormatChange";
     }
 
-    get align():string {
+    get align(): string {
         return this._align;
     }
 
-    set align(v:string) {
+    set align(v: string) {
         var b = this._align !== v;
         if (b) {
             this._align = v;
@@ -49,11 +49,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get blockIndent():number {
+    get blockIndent(): number {
         return this._blockIndent;
     }
 
-    set blockIndent(v:number) {
+    set blockIndent(v: number) {
         var b = this._blockIndent !== v;
         if (b) {
             this._blockIndent = v;
@@ -61,11 +61,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get bold():boolean {
+    get bold(): boolean {
         return this._bold;
     }
 
-    set bold(v:boolean) {
+    set bold(v: boolean) {
         var b = this._bold !== v;
         if (b) {
             this._bold = v;
@@ -73,11 +73,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get bullet():boolean {
+    get bullet(): boolean {
         return this._bullet;
     }
 
-    set bullet(v:boolean) {
+    set bullet(v: boolean) {
         var b = this._bullet !== v;
         if (b) {
             this._bullet = v;
@@ -85,11 +85,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get color():number {
+    get color(): number {
         return this._color;
     }
 
-    set color(v:number) {
+    set color(v: number) {
         var b = this._color !== v;
         if (b) {
             this._color = v;
@@ -97,11 +97,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get font():string {
+    get font(): string {
         return this._font;
     }
 
-    set font(v:string) {
+    set font(v: string) {
         var b = this._font !== v;
         if (b) {
             this._font = v;
@@ -109,11 +109,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get indent():number {
+    get indent(): number {
         return this._indent;
     }
 
-    set indent(v:number) {
+    set indent(v: number) {
         var b = this._indent !== v;
         if (b) {
             this._indent = v;
@@ -121,11 +121,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get italic():boolean {
+    get italic(): boolean {
         return this._italic;
     }
 
-    set italic(v:boolean) {
+    set italic(v: boolean) {
         var b = this._italic !== v;
         if (b) {
             this._italic = v;
@@ -133,11 +133,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get kerning():boolean {
+    get kerning(): boolean {
         return this._kerning;
     }
 
-    set kerning(v:boolean) {
+    set kerning(v: boolean) {
         var b = this._kerning !== v;
         if (b) {
             this._kerning = v;
@@ -145,11 +145,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get leading():number {
+    get leading(): number {
         return this._indent;
     }
 
-    set leading(v:number) {
+    set leading(v: number) {
         var b = this._leading !== v;
         if (b) {
             this._leading = v;
@@ -157,11 +157,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get leftMargin():number {
+    get leftMargin(): number {
         return this._leftMargin;
     }
 
-    set leftMargin(v:number) {
+    set leftMargin(v: number) {
         var b = this._leftMargin !== v;
         if (b) {
             this._leftMargin = v;
@@ -169,11 +169,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get letterSpacing():number {
+    get letterSpacing(): number {
         return this._letterSpacing;
     }
 
-    set letterSpacing(v:number) {
+    set letterSpacing(v: number) {
         var b = this._letterSpacing !== v;
         if (b) {
             this._letterSpacing = v;
@@ -181,11 +181,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get rightMargin():number {
+    get rightMargin(): number {
         return this._rightMargin;
     }
 
-    set rightMargin(v:number) {
+    set rightMargin(v: number) {
         var b = this._rightMargin !== v;
         if (b) {
             this._rightMargin = v;
@@ -193,11 +193,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get size():number {
+    get size(): number {
         return this._size;
     }
 
-    set size(v:number) {
+    set size(v: number) {
         var b = this._size !== v;
         if (b) {
             this._size = v;
@@ -205,12 +205,12 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get tabStops():number[] {
+    get tabStops(): number[] {
         return this._tabStops;
     }
 
-    set tabStops(v:number[]) {
-        if (!GLUtil.ptr(v)) {
+    set tabStops(v: number[]) {
+        if (!CommonUtil.ptr(v)) {
             v = [];
         }
         var b = false;
@@ -231,11 +231,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get target():string {
+    get target(): string {
         return this._target;
     }
 
-    set target(v:string) {
+    set target(v: string) {
         var b = this._target !== v;
         if (b) {
             this._target = v;
@@ -243,11 +243,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get underline():boolean {
+    get underline(): boolean {
         return this._underline;
     }
 
-    set underline(v:boolean) {
+    set underline(v: boolean) {
         var b = this._underline !== v;
         if (b) {
             this._underline = v;
@@ -255,11 +255,11 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    get url():string {
+    get url(): string {
         return this._url;
     }
 
-    set url(v:string) {
+    set url(v: string) {
         var b = this._url !== v;
         if (b) {
             this._url = v;
@@ -267,28 +267,28 @@ export class TextFormat extends EventDispatcher {
         }
     }
 
-    private __raiseChange():void {
+    private __raiseChange(): void {
         var ev = EventBase.create(TextFormat.TEXT_FORMAT_CHANGE);
         this.dispatchEvent(ev);
     }
 
-    private _align:string = TextFormatAlign.LEFT;
-    private _blockIndent:number = 0;
-    private _bold:boolean = false;
-    private _bullet:boolean = false;
-    private _color:number = 0x000000;
-    private _font:string = null;
-    private _indent:number = 0;
-    private _italic:boolean = false;
-    private _kerning:boolean = false;
-    private _leading:number = 0;
-    private _leftMargin:number = 0;
-    private _letterSpacing:number = 0;
-    private _rightMargin:number = 0;
-    private _size:number = 12;
-    private _tabStops:number[] = [];
-    private _target:string = null;
-    private _underline:boolean = false;
-    private _url:string = null;
+    private _align: string = TextFormatAlign.LEFT;
+    private _blockIndent: number = 0;
+    private _bold: boolean = false;
+    private _bullet: boolean = false;
+    private _color: number = 0x000000;
+    private _font: string = null;
+    private _indent: number = 0;
+    private _italic: boolean = false;
+    private _kerning: boolean = false;
+    private _leading: number = 0;
+    private _leftMargin: number = 0;
+    private _letterSpacing: number = 0;
+    private _rightMargin: number = 0;
+    private _size: number = 12;
+    private _tabStops: number[] = [];
+    private _target: string = null;
+    private _underline: boolean = false;
+    private _url: string = null;
 
 }

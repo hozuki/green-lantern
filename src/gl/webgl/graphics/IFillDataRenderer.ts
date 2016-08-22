@@ -6,7 +6,7 @@ import {IGraphicsDataRenderer} from "./IGraphicsDataRenderer";
 
 export interface IFillDataRenderer extends IGraphicsDataRenderer {
 
-    beginIndex:number;
-    endIndex:number;
+    beginIndex: number;
+    endIndex: number;
 
 }

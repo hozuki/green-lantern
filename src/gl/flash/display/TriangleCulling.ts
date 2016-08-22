@@ -4,15 +4,15 @@
 
 export abstract class TriangleCulling {
 
-    static get NEGATIVE():string {
+    static get NEGATIVE(): string {
         return "negative";
     }
 
-    static get NONE():string {
+    static get NONE(): string {
         return "none";
     }
 
-    static get POSITIVE():string {
+    static get POSITIVE(): string {
         return "positive";
     }
 

@@ -4,74 +4,75 @@
 
 import {EventDispatcher} from "../events/EventDispatcher";
 import {TimerEvent} from "../events/TimerEvent";
+import {VirtualDom} from "../../mic/VirtualDom";
 
 export class Timer extends EventDispatcher {
 
-    constructor(delay:number, repeatCount:number = 0) {
+    constructor(delay: number, repeatCount: number = 0) {
         super();
         this.delay = delay;
         this.repeatCount = repeatCount;
         this.start();
     }
 
-    get currentCount():number {
+    get currentCount(): number {
         return this._currentCount;
     }
 
-    get delay():number {
+    get delay(): number {
         return this._delay;
     }
 
-    set delay(v:number) {
+    set delay(v: number) {
         v = Math.floor(v);
         this._delay = v >= 0 ? v : 0;
     }
 
-    enabled:boolean = true;
+    enabled: boolean = true;
 
-    get repeatCount():number {
+    get repeatCount(): number {
         return this._repeatCount;
     }
 
-    set repeatCount(v:number) {
+    set repeatCount(v: number) {
         v = Math.floor(v);
         this._repeatCount = v >= 0 ? v : 0;
     }
 
-    get running():boolean {
+    get running(): boolean {
         return this._running;
     }
 
-    reset():void {
+    reset(): void {
         if (this.running) {
-            window.clearInterval(this._handle);
+            VirtualDom.clearInterval(this._handle);
             this._handle = 0;
             this._running = false;
             this._currentCount = 0;
         }
     }
 
-    start():void {
+    start(): void {
         if (!this.running && (this.currentCount < this.repeatCount || this.repeatCount === 0)) {
-            this._handle = window.setInterval(this._$timerCallback.bind(this), this.delay);
+            this._handle = VirtualDom.setInterval(this._$timerCallback.bind(this), this.delay);
             this._running = true;
         }
     }
 
-    stop():void {
+    stop(): void {
         if (this.running) {
-            window.clearInterval(this._handle);
+            VirtualDom.clearInterval(this._handle);
             this._handle = 0;
             this._running = false;
         }
     }
 
-    dispose():void {
+    dispose(): void {
         super.dispose();
         this.reset();
     }
 
-    protected _$timerCallback():void {
+    protected _$timerCallback(): void {
         if (this.enabled) {
             this._currentCount++;
             if (this.repeatCount > 0 && this.currentCount > this.repeatCount) {
@@ -83,22 +84,22 @@ export class Timer extends EventDispatcher {
         }
     }
 
-    protected _$raiseTimerEvent():void {
+    protected _$raiseTimerEvent(): void {
         var ev = new TimerEvent(TimerEvent.TIMER);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);
     }
 
-    protected _$raiseTimerCompleteEvent():void {
+    protected _$raiseTimerCompleteEvent(): void {
         var ev = new TimerEvent(TimerEvent.TIMER_COMPLETE);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);
     }
 
-    private _currentCount:number = 0;
-    private _delay:number = 1000;
-    private _repeatCount:number = 0;
-    private _running:boolean = false;
-    private _handle:number = 0;
+    private _currentCount: number = 0;
+    private _delay: number = 1000;
+    private _repeatCount: number = 0;
+    private _running: boolean = false;
+    private _handle: number = 0;
 
 }

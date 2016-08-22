@@ -12,37 +12,37 @@ import {ShaderID} from "../ShaderID";
 
 export class ColorTransformFilter extends FilterBase {
 
-    constructor(manager:FilterManager) {
+    constructor(manager: FilterManager) {
         super(manager);
     }
 
-    setColorMatrix(r4c5:number[]):void {
+    setColorMatrix(r4c5: number[]): void {
         this._colorMatrix = r4c5.slice();
     }
 
-    process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void {
-        RenderHelper.renderBuffered(renderer, input, this._tempTarget, ShaderID.COLOR_TRANSFORM, true, (renderer:WebGLRenderer):void => {
+    process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
+        RenderHelper.renderBuffered(renderer, input, this._tempTarget, ShaderID.COLOR_TRANSFORM, true, (renderer: WebGLRenderer): void => {
             var shader = <ColorTransformShader>renderer.shaderManager.currentShader;
             shader.setColorMatrix(this._colorMatrix);
         });
         RenderHelper.copyTargetContent(renderer, this._tempTarget, output, this.flipX, this.flipY, clearOutput);
     }
 
-    protected _$initialize():void {
+    protected _$initialize(): void {
         this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
-    protected _$dispose():void {
+    protected _$dispose(): void {
         this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
         this._tempTarget = null;
     }
 
-    private _colorMatrix:number[] = [
+    private _colorMatrix: number[] = [
         1, 0, 0, 0, 0,
         0, 1, 0, 0, 0,
         0, 0, 1, 0, 0,
         0, 0, 0, 1, 0
     ];
-    private _tempTarget:RenderTarget2D = null;
+    private _tempTarget: RenderTarget2D = null;
 
 }

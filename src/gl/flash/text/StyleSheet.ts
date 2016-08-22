@@ -13,32 +13,32 @@ export class StyleSheet extends EventDispatcher {
         throw new NotImplementedError();
     }
 
-    clear():void {
+    clear(): void {
         throw new NotImplementedError();
     }
 
-    getStyle(styleName:string):any {
+    getStyle(styleName: string): any {
         throw new NotImplementedError();
     }
 
-    parseCSS(cssText:string):void {
+    parseCSS(cssText: string): void {
         throw new NotImplementedError();
     }
 
-    setStyle(styleName:string, styleObject:any):void {
+    setStyle(styleName: string, styleObject: any): void {
         throw new NotImplementedError();
     }
 
-    transform(formatObject:any):TextFormat {
+    transform(formatObject: any): TextFormat {
         throw new NotImplementedError();
     }
 
-    dispose():void {
+    dispose(): void {
         super.dispose();
         throw new NotImplementedError();
     }
 
-    get styleNames():string[] {
+    get styleNames(): string[] {
         throw new NotImplementedError();
     }
 

@@ -4,15 +4,15 @@
 
 export abstract class BitmapFilterQuality {
 
-    static get HIGH():number {
+    static get HIGH(): number {
         return 3;
     }
 
-    static get LOW():number {
+    static get LOW(): number {
         return 1;
     }
 
-    static get MEDIUM():number {
+    static get MEDIUM(): number {
         return 2;
     }
 

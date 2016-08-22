@@ -13,119 +13,119 @@ import {ColorCorrection} from "./ColorCorrection";
 import {StageAlign} from "./StageAlign";
 import {DisplayObjectContainer} from "./DisplayObjectContainer";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {TimeInfo} from "../../glantern/TimeInfo";
+import {TimeInfo} from "../../mic/TimeInfo";
 
 export class Stage extends DisplayObjectContainer {
 
-    constructor(renderer:WebGLRenderer) {
+    constructor(renderer: WebGLRenderer) {
         super(null, null);
         this._root = this;
         this._worldRenderer = renderer;
         this.resize(renderer.view.width, renderer.view.height);
     }
 
-    align:string = StageAlign.TOP_LEFT;
+    align: string = StageAlign.TOP_LEFT;
 
-    get allowFullScreen():boolean {
+    get allowFullScreen(): boolean {
         return this._allowFullScreen;
     }
 
-    get allowFullScreenInteractive():boolean {
+    get allowFullScreenInteractive(): boolean {
         return this._allowFullScreenInteractive;
     }
 
-    color:number = 0x000000;
-    colorCorrection:string = ColorCorrection.DEFAULT;
+    color: number = 0x000000;
+    colorCorrection: string = ColorCorrection.DEFAULT;
 
-    get colorCorrectionSupport():string {
+    get colorCorrectionSupport(): string {
         return this._colorCorrectionSupport;
     }
 
-    displayState:string = StageDisplayState.NORMAL;
-    focus:InteractiveObject = null;
-    frameRate:number = 60;
+    displayState: string = StageDisplayState.NORMAL;
+    focus: InteractiveObject = null;
+    frameRate: number = 60;
 
-    get fullScreenHeight():number {
+    get fullScreenHeight(): number {
         return screen.height;
     }
 
-    fullScreenSourceRect:Rectangle = null;
+    fullScreenSourceRect: Rectangle = null;
 
-    get fullScreenWidth():number {
+    get fullScreenWidth(): number {
         return screen.width;
     }
 
-    mouseChildren:boolean = true;
-    quality:string = StageQuality.HIGH;
-    scaleMode:string = StageScaleMode.NO_SCALE;
-    showDefaultContextMenu:boolean = true;
+    mouseChildren: boolean = true;
+    quality: string = StageQuality.HIGH;
+    scaleMode: string = StageScaleMode.NO_SCALE;
+    showDefaultContextMenu: boolean = true;
 
-    get softKeyboardRect():Rectangle {
+    get softKeyboardRect(): Rectangle {
         throw new NotImplementedError();
     }
 
-    get stageHeight():number {
+    get stageHeight(): number {
         return this.worldRenderer.view.height;
     }
 
-    set stageHeight(v:number) {
+    set stageHeight(v: number) {
         throw new NotImplementedError();
     }
 
-    get stageWidth():number {
+    get stageWidth(): number {
         return this.worldRenderer.view.width;
     }
 
-    set stageWidth(v:number) {
+    set stageWidth(v: number) {
         throw new NotImplementedError();
     }
 
-    tabChildren:boolean = true;
+    tabChildren: boolean = true;
 
-    get x():number {
+    get x(): number {
         return 0;
     }
 
-    get y():number {
+    get y(): number {
         return 0;
     }
 
-    get width():number {
+    get width(): number {
         return this.worldRenderer.view.width;
     }
 
-    get height():number {
+    get height(): number {
         return this.worldRenderer.view.height;
     }
 
-    invalidate():void {
+    invalidate(): void {
         throw new NotImplementedError();
     }
 
-    isFocusInaccessible():boolean {
+    isFocusInaccessible(): boolean {
         throw new NotImplementedError();
     }
 
-    get worldRenderer():WebGLRenderer {
+    get worldRenderer(): WebGLRenderer {
         return this._worldRenderer;
     }
 
-    resize(width:number, height:number):void {
+    resize(width: number, height: number): void {
         this._width = width;
         this._height = height;
         // TODO: Fully implement this
     }
 
-    protected _$update(timeInfo:TimeInfo):void {
+    protected _$update(timeInfo: TimeInfo): void {
     }
 
-    protected _$render(renderer:WebGLRenderer):void {
+    protected _$render(renderer: WebGLRenderer): void {
         renderer.currentRenderTarget.clear();
     }
 
-    private _allowFullScreen:boolean = true;
-    private _allowFullScreenInteractive:boolean = true;
-    private _colorCorrectionSupport:string = ColorCorrectionSupport.DEFAULT_OFF;
-    private _worldRenderer:WebGLRenderer = null;
+    private _allowFullScreen: boolean = true;
+    private _allowFullScreenInteractive: boolean = true;
+    private _colorCorrectionSupport: string = ColorCorrectionSupport.DEFAULT_OFF;
+    private _worldRenderer: WebGLRenderer = null;
 
 }

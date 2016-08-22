@@ -13,42 +13,42 @@ import {Matrix3D} from "../../flash/geom/Matrix3D";
 
 export class CopyImageShader extends BufferedShader {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, CopyImageShader.VERTEX_SOURCE, CopyImageShader.FRAGMENT_SOURCE);
     }
 
-    setFlipX(flip:boolean):void {
+    setFlipX(flip: boolean): void {
         this._uniforms.get("uFlipX").value = flip;
     }
 
-    setFlipY(flip:boolean):void {
+    setFlipY(flip: boolean): void {
         this._uniforms.get("uFlipY").value = flip;
     }
 
-    setOriginalSize(xy:number[]):void {
+    setOriginalSize(xy: number[]): void {
         this._uniforms.get("uOriginalSize").value = xy.slice();
     }
 
-    setFitSize(xy:number[]):void {
+    setFitSize(xy: number[]): void {
         this._uniforms.get("uFitSize").value = xy.slice();
     }
 
-    setAlpha(alpha:number):void {
+    setAlpha(alpha: number): void {
         this._uniforms.get("uAlpha").value = alpha;
     }
 
-    setTransform(matrix:Matrix3D):void {
+    setTransform(matrix: Matrix3D): void {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
     }
 
-    static SHADER_CLASS_NAME:string = "CopyImageShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.copyImage;
-    static VERTEX_SOURCE:string = VertexShaders.copyImage;
+    static SHADER_CLASS_NAME: string = "CopyImageShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.copyImage;
+    static VERTEX_SOURCE: string = VertexShaders.copyImage;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
         var transformMatrix = new Matrix3D();
         transformMatrix.identity();
 

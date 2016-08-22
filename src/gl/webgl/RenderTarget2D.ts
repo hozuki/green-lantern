@@ -3,12 +3,13 @@
  */
 
 import {WebGLRenderer} from "./WebGLRenderer";
-import {IDisposable} from "../glantern/IDisposable";
+import {IDisposable} from "../mic/IDisposable";
 import {PackedArrayBuffer} from "./PackedArrayBuffer";
-import {MathUtil} from "../glantern/MathUtil";
+import {MathUtil} from "../mic/MathUtil";
+import {VirtualDom} from "../mic/VirtualDom";
 
-const gl = (<any>window).WebGLRenderingContext;
-var isInitializedStatically:boolean = false;
+const gl = VirtualDom.WebGLRenderingContext;
+var isInitializedStatically: boolean = false;
 
 /**
  * Represents a 2D render target based on WebGL texture.
@@ -24,7 +25,7 @@ export class RenderTarget2D implements IDisposable {
      * for more information. The default value is false.
      * @implements {IDisposable}
      */
-    constructor(renderer:WebGLRenderer, image:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null, isRoot:boolean = false) {
+    constructor(renderer: WebGLRenderer, image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null, isRoot: boolean = false) {
         if (!isInitializedStatically) {
             initStaticFields(renderer.context);
         }
@@ -35,7 +36,7 @@ export class RenderTarget2D implements IDisposable {
     /**
      * Disposes the {@link RenderTarget2D} and related resources.
      */
-    dispose():void {
+    dispose(): void {
         var glc = this._glc;
         glc.deleteTexture(this._texture);
         glc.deleteFramebuffer(this._frameBuffer);
@@ -60,7 +61,7 @@ export class RenderTarget2D implements IDisposable {
      * @see {@link RenderTarget2D.fitHeight}
      * @returns {Number} The original width of the {@link RenderTarget2D}.
      */
-    get originalWidth():number {
+    get originalWidth(): number {
         return this._originalWidth;
     }
 
@@ -71,7 +72,7 @@ export class RenderTarget2D implements IDisposable {
      * @see {@link RenderTarget2D.fitHeight}
      * @returns {number}
      */
-    get originalHeight():number {
+    get originalHeight(): number {
         return this._originalHeight;
     }
 
@@ -82,7 +83,7 @@ export class RenderTarget2D implements IDisposable {
      * @see {@link RenderTarget2D.fitHeight}
      * @returns {Number} The fit width of the {@link RenderTarget2D}.
      */
-    get fitWidth():number {
+    get fitWidth(): number {
         return this._fitWidth;
     }
 
@@ -93,7 +94,7 @@ export class RenderTarget2D implements IDisposable {
      * @see {@link RenderTarget2D.fitHeight}
      * @returns {number}
      */
-    get fitHeight():number {
+    get fitHeight(): number {
         return this._fitHeight;
     }
 
@@ -101,7 +102,7 @@ export class RenderTarget2D implements IDisposable {
      * Returns the underlying {@link WebGLTexture} of the {@link RenderTarget2D}. May be null if the target is a root target.
      * @returns {WebGLTexture} The underlying texture.
      */
-    get texture():WebGLTexture {
+    get texture(): WebGLTexture {
         return this._texture;
     }
 
@@ -110,7 +111,7 @@ export class RenderTarget2D implements IDisposable {
      * rendering image sequences from {@link HTMLVideoElement}s. Null means this is a blank {@link RenderTarget2D}.
      * @returns {ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement}
      */
-    get image():ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement {
+    get image(): ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement {
         return this._image;
     }
 
@@ -120,14 +121,14 @@ export class RenderTarget2D implements IDisposable {
      * {@link WebGLRenderer}. So they must be used as final render target, not buffers.
      * @returns {Boolean} True if the {@link RenderTarget2D} is a root target, and false otherwise.
      */
-    get isRoot():boolean {
+    get isRoot(): boolean {
         return this._isRoot;
     }
 
     /**
      * Activates the {@link RenderTarget2D}, and all the rendering after the activation will be done on this target.
      */
-    activate():void {
+    activate(): void {
         var glc = this._glc;
         glc.bindFramebuffer(gl.FRAMEBUFFER, this._frameBuffer);
     }
@@ -135,7 +136,7 @@ export class RenderTarget2D implements IDisposable {
     /**
      * Clears the content on the {@link RenderTarget2D}.
      */
-    clear():void {
+    clear(): void {
         this.activate();
         var glc = this._glc;
         glc.viewport(0, 0, this._fitWidth, this._fitHeight);
@@ -150,7 +151,7 @@ export class RenderTarget2D implements IDisposable {
      * @param newWidth {Number} The new width, in pixels.
      * @param newHeight {Number} The new height, in pixels.
      */
-    resize(newWidth:number, newHeight:number):void {
+    resize(newWidth: number, newHeight: number): void {
         this.__resize(newWidth, newHeight, true);
     }
 
@@ -160,7 +161,7 @@ export class RenderTarget2D implements IDisposable {
      * current image (a snapshot if it is a dynamic canvas or image sequence) and draw it on this
      * {@link RenderTarget2D}.
      */
-    updateImageContent():void {
+    updateImageContent(): void {
         var image = this._image;
         if (this._texture === null || image === null) {
             return;
@@ -174,7 +175,7 @@ export class RenderTarget2D implements IDisposable {
     /**
      * Update image size to fit the whole scene.
      */
-    updateImageSize():void {
+    updateImageSize(): void {
         var image = this._image;
         if (this._texture === null || image === null) {
             return;
@@ -201,13 +202,13 @@ export class RenderTarget2D implements IDisposable {
      * @param isRoot {Boolean} See {@link RenderTarget2D.isRoot} for more information.
      * @private
      */
-    private __initialize(glc:WebGLRenderingContext, width:number, height:number,
-                         image:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement, isRoot:boolean):void {
+    private __initialize(glc: WebGLRenderingContext, width: number, height: number,
+                         image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement, isRoot: boolean): void {
         this._glc = glc;
         this._isRoot = isRoot;
         this._image = image;
 
-        function error(message:string) {
+        function error(message: string) {
             glc.deleteFramebuffer(this._frameBuffer);
             glc.deleteRenderbuffer(this._depthBuffer);
             glc.deleteTexture(this._texture);
@@ -251,7 +252,7 @@ export class RenderTarget2D implements IDisposable {
      * initialization, but should be done during custom resizing.
      * @private
      */
-    private __resize(newWidth:number, newHeight:number, unbind:boolean):void {
+    private __resize(newWidth: number, newHeight: number, unbind: boolean): void {
         var glc = this._glc;
         var image = this._image;
         var isRoot = this._isRoot;
@@ -307,24 +308,24 @@ export class RenderTarget2D implements IDisposable {
         }
     }
 
-    protected _glc:WebGLRenderingContext = null;
-    protected _renderer:WebGLRenderer = null;
-    protected _frameBuffer:WebGLFramebuffer = null;
-    protected _depthBuffer:WebGLRenderbuffer = null;
-    protected _texture:WebGLTexture = null;
-    protected _originalWidth:number = 0;
-    protected _originalHeight:number = 0;
-    protected _fitWidth:number = 0;
-    protected _fitHeight:number = 0;
-    protected _image:ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null;
-    private _isRoot:boolean = false;
+    protected _glc: WebGLRenderingContext = null;
+    protected _renderer: WebGLRenderer = null;
+    protected _frameBuffer: WebGLFramebuffer = null;
+    protected _depthBuffer: WebGLRenderbuffer = null;
+    protected _texture: WebGLTexture = null;
+    protected _originalWidth: number = 0;
+    protected _originalHeight: number = 0;
+    protected _fitWidth: number = 0;
+    protected _fitHeight: number = 0;
+    protected _image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null;
+    private _isRoot: boolean = false;
 
-    static textureCoords:PackedArrayBuffer = null;
-    static textureIndices:PackedArrayBuffer = null;
+    static textureCoords: PackedArrayBuffer = null;
+    static textureIndices: PackedArrayBuffer = null;
 
 }
 
-function initStaticFields(glc:WebGLRenderingContext) {
+function initStaticFields(glc: WebGLRenderingContext) {
     if (isInitializedStatically) {
         return;
     }

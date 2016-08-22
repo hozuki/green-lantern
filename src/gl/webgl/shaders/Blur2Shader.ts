@@ -12,40 +12,40 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class Blur2Shader extends BufferedShader {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, Blur2Shader.VERTEX_SOURCE, Blur2Shader.FRAGMENT_SOURCE);
     }
 
-    setStrength(strength:number):void {
+    setStrength(strength: number): void {
         if (strength < 0) {
             strength = 1;
         }
         this._uniforms.get("uStrength").value = strength;
     }
 
-    getStrength():number {
+    getStrength(): number {
         return this._uniforms.get("uStrength").value;
     }
 
-    setResolution(resolution:number):void {
+    setResolution(resolution: number): void {
         if (resolution < 0) {
             resolution = 1;
         }
         this._uniforms.get("uResolution").value = resolution;
     }
 
-    setBlurDirection(direction:number[]):void {
+    setBlurDirection(direction: number[]): void {
         this._uniforms.get("uBlurDirection").value = [direction[0], direction[1]];
     }
 
-    static SHADER_CLASS_NAME:string = "Blur2Shader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.blur2;
-    static VERTEX_SOURCE:string = VertexShaders.blur2;
+    static SHADER_CLASS_NAME: string = "Blur2Shader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.blur2;
+    static VERTEX_SOURCE: string = VertexShaders.blur2;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
 
         u = new UniformCache();
         u.name = "uStrength";

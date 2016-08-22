@@ -4,11 +4,11 @@
 
 export abstract class Endian {
 
-    static get BIG_ENDIAN():string {
+    static get BIG_ENDIAN(): string {
         return "bigEndian";
     }
 
-    static get LITTLE_ENDIAN():string {
+    static get LITTLE_ENDIAN(): string {
         return "littleEndian";
     }
 

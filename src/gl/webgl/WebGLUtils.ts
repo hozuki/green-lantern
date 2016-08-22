@@ -33,16 +33,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {GLUtil} from "../glantern/GLUtil";
-const gl = (<any>window).WebGLRenderingContext;
+import {VirtualDom} from "../mic/VirtualDom";
+import {CommonUtil} from "../mic/CommonUtil";
+const gl = VirtualDom.WebGLRenderingContext;
 
-const GET_A_WEBGL_BROWSER:string = `This page requires a browser that supports WebGL.<br/><a href="http://get.webgl.org">Click here to upgrade your browser.</a>`;
-const OTHER_PROBLEM:string = `It appears your computer may not support WebGL.<br/><a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>`;
+const GET_A_WEBGL_BROWSER: string = `This page requires a browser that supports WebGL.<br/><a href="http://get.webgl.org">Click here to upgrade your browser.</a>`;
+const OTHER_PROBLEM: string = `It appears your computer may not support WebGL.<br/><a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>`;
 
 export abstract class WebGLUtils {
 
-    static setupWebGL(canvas:HTMLCanvasElement, optionalAttributes:any):WebGLRenderingContext {
-        if (GLUtil.isUndefined(gl)) {
+    static setupWebGL(canvas: HTMLCanvasElement, optionalAttributes: any): WebGLRenderingContext {
+        if (CommonUtil.isUndefined(gl)) {
             showLink(canvas.parentElement, GET_A_WEBGL_BROWSER);
             return null;
         }
@@ -55,7 +56,7 @@ export abstract class WebGLUtils {
 
 }
 
-function showLink(container:HTMLElement, str:string):void {
+function showLink(container: HTMLElement, str: string): void {
     var failHtml = makeFailHtml(str);
     console.error(failHtml);
     if (container) {
@@ -63,7 +64,7 @@ function showLink(container:HTMLElement, str:string):void {
     }
 }
 
-function makeFailHtml(message:string):string {
+function makeFailHtml(message: string): string {
     return `
 <table style="background-color: #8CE; width: 100%; height: 100%;"><tr>
 <td align="center">
@@ -73,9 +74,9 @@ function makeFailHtml(message:string):string {
 </td></tr></table>`;
 }
 
-function create3DContext(canvas:HTMLCanvasElement, optionalAttributes:any):WebGLRenderingContext {
+function create3DContext(canvas: HTMLCanvasElement, optionalAttributes: any): WebGLRenderingContext {
     var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
-    var context:WebGLRenderingContext = null;
+    var context: WebGLRenderingContext = null;
     for (var i = 0; i < names.length; ++i) {
         try {
             context = <WebGLRenderingContext>canvas.getContext(names[i], optionalAttributes);

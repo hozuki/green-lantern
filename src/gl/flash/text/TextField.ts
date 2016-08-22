@@ -21,12 +21,14 @@ import {RenderTarget2D} from "../../webgl/RenderTarget2D";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../glantern/GLUtil";
-import {TimeInfo} from "../../glantern/TimeInfo";
+import {GLUtil} from "../../mic/glantern/GLUtil";
+import {TimeInfo} from "../../mic/TimeInfo";
+import {VirtualDom} from "../../mic/VirtualDom";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export class TextField extends InteractiveObject {
 
-    constructor(root:Stage, parent:DisplayObjectContainer) {
+    constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
         if (root !== null) {
             this._canvasTarget = this._$createCanvasTarget(root.worldRenderer);
@@ -35,19 +37,19 @@ export class TextField extends InteractiveObject {
         this.defaultTextFormat = new TextFormat();
     }
 
-    appendText(newText:string):void {
+    appendText(newText: string): void {
         this.text += newText;
     }
 
-    alwaysShowSelection:boolean = false;
-    antiAliasType:string = AntiAliasType.NORMAL;
-    autoSize:string = TextFieldAutoSize.NONE;
+    alwaysShowSelection: boolean = false;
+    antiAliasType: string = AntiAliasType.NORMAL;
+    autoSize: string = TextFieldAutoSize.NONE;
 
-    get background():boolean {
+    get background(): boolean {
         return this._background;
     }
 
-    set background(v:boolean) {
+    set background(v: boolean) {
         var b = v !== this._background;
         if (b) {
             this._background = v;
@@ -55,11 +57,11 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    get backgroundColor():number {
+    get backgroundColor(): number {
         return this._backgroundColor;
     }
 
-    set backgroundColor(v:number) {
+    set backgroundColor(v: number) {
         var b = v !== this._backgroundColor;
         if (b) {
             this._backgroundColor = v;
@@ -67,11 +69,11 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    get border():boolean {
+    get border(): boolean {
         return this._border;
     }
 
-    set border(v:boolean) {
+    set border(v: boolean) {
         var b = v !== this._border;
         if (b) {
             this._border = v;
@@ -79,11 +81,11 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    get borderColor():number {
+    get borderColor(): number {
         return this._borderColor;
     }
 
-    set borderColor(v:number) {
+    set borderColor(v: number) {
         var b = v !== this._borderColor;
         if (b) {
             this._borderColor = v;
@@ -91,144 +93,144 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    get bottomScrollV():number {
+    get bottomScrollV(): number {
         throw new NotImplementedError();
     }
 
-    get caretIndex():number {
+    get caretIndex(): number {
         throw new NotImplementedError();
     }
 
-    condenseWhite:boolean = false;
+    condenseWhite: boolean = false;
 
-    get defaultTextFormat():TextFormat {
+    get defaultTextFormat(): TextFormat {
         return this._defaultTextFormat;
     }
 
-    set defaultTextFormat(v:TextFormat) {
+    set defaultTextFormat(v: TextFormat) {
         if (this._defaultTextFormat !== null) {
             this._defaultTextFormat.removeEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
         }
-        this._defaultTextFormat = GLUtil.ptr(v) ? v : new TextFormat();
+        this._defaultTextFormat = CommonUtil.ptr(v) ? v : new TextFormat();
         this._defaultTextFormat.addEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
     }
 
-    displayAsPassword:boolean = false;
-    embedFonts:boolean = false;
+    displayAsPassword: boolean = false;
+    embedFonts: boolean = false;
 
-    getCharBoundaries():Rectangle {
+    getCharBoundaries(): Rectangle {
         throw new NotImplementedError();
     }
 
-    getCharIndexAtPoint(x:number, y:number):number {
+    getCharIndexAtPoint(x: number, y: number): number {
         throw new NotImplementedError();
     }
 
-    getFirstCharInParagraph(charIndex:number):number {
+    getFirstCharInParagraph(charIndex: number): number {
         throw new NotImplementedError();
     }
 
-    getImageReference(id:string):DisplayObject {
+    getImageReference(id: string): DisplayObject {
         throw new NotImplementedError();
     }
 
-    getLineIndexAtPoint(x:number, y:number):number {
+    getLineIndexAtPoint(x: number, y: number): number {
         throw new NotImplementedError();
     }
 
-    getLineIndexOfChar(charIndex:number):number {
+    getLineIndexOfChar(charIndex: number): number {
         throw new NotImplementedError();
     }
 
-    getLineLength(lineIndex:number):number {
+    getLineLength(lineIndex: number): number {
         throw new NotImplementedError();
     }
 
-    getLineMetrics(lineIndex:number):TextLineMetrics {
+    getLineMetrics(lineIndex: number): TextLineMetrics {
         throw new NotImplementedError();
     }
 
-    getLineOffset(lineIndex:number):number {
+    getLineOffset(lineIndex: number): number {
         throw new NotImplementedError();
     }
 
-    getLineText(lineIndex:number):string {
+    getLineText(lineIndex: number): string {
         throw new NotImplementedError();
     }
 
-    getParagraphLength(charIndex:number):number {
+    getParagraphLength(charIndex: number): number {
         throw new NotImplementedError();
     }
 
-    getTextFormat(beginIndex:number = -1, endIndex:number = -1):TextFormat {
+    getTextFormat(beginIndex: number = -1, endIndex: number = -1): TextFormat {
         throw new NotImplementedError();
     }
 
-    isFontCompatible(fontName:string, fontStyle:number):boolean {
+    isFontCompatible(fontName: string, fontStyle: number): boolean {
         throw new NotImplementedError();
     }
 
-    replaceSelectedText(value:string):void {
+    replaceSelectedText(value: string): void {
         throw new NotImplementedError();
     }
 
-    replaceText(beginIndex:number, endIndex:number, newText:string):void {
+    replaceText(beginIndex: number, endIndex: number, newText: string): void {
         throw new NotImplementedError();
     }
 
-    setSelection(beginIndex:number, endIndex:number):void {
+    setSelection(beginIndex: number, endIndex: number): void {
         throw new NotImplementedError();
     }
 
-    setTextFormat(format:TextFormat, beginIndex:number = -1, endIndex:number = -1):void {
+    setTextFormat(format: TextFormat, beginIndex: number = -1, endIndex: number = -1): void {
         throw new NotImplementedError();
     }
 
-    gridFitType:string = GridFitType.PIXEL;
-    htmlText:string = null;
+    gridFitType: string = GridFitType.PIXEL;
+    htmlText: string = null;
 
-    get length():number {
-        return GLUtil.ptr(this.text) ? this.text.length : 0;
+    get length(): number {
+        return CommonUtil.ptr(this.text) ? this.text.length : 0;
     }
 
-    maxChars:number = 0;
+    maxChars: number = 0;
 
-    get maxScrollH():number {
+    get maxScrollH(): number {
         throw new NotImplementedError();
     }
 
-    get maxScrollV():number {
+    get maxScrollV(): number {
         throw new NotImplementedError();
     }
 
-    mouseWheelEnabled:boolean = true;
-    multiline:boolean = true;
+    mouseWheelEnabled: boolean = true;
+    multiline: boolean = true;
 
-    get numLines():number {
+    get numLines(): number {
         throw new NotImplementedError();
     }
 
-    restrict:string = null;
-    scrollH:number = 0;
-    scrollV:number = 1;
-    selectable:boolean = true;
+    restrict: string = null;
+    scrollH: number = 0;
+    scrollV: number = 1;
+    selectable: boolean = true;
 
-    get selectionBeginIndex():number {
+    get selectionBeginIndex(): number {
         throw new NotImplementedError();
     }
 
-    get selectionEndIndex():number {
+    get selectionEndIndex(): number {
         throw new NotImplementedError();
     }
 
-    sharpness:number = 0;
-    styleSheet:StyleSheet = null;
+    sharpness: number = 0;
+    styleSheet: StyleSheet = null;
 
-    get text():string {
+    get text(): string {
         return this._text;
     }
 
-    set text(v:string) {
+    set text(v: string) {
         var b = this._text !== v;
         if (b) {
             this._text = v;
@@ -236,11 +238,11 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    get textColor():number {
+    get textColor(): number {
         return this.defaultTextFormat.color;
     }
 
-    set textColor(v:number) {
+    set textColor(v: number) {
         var b = this.defaultTextFormat.color !== v;
         this.defaultTextFormat.color = v;
         if (b && !this.customOutlineEnabled) {
@@ -252,7 +254,7 @@ export class TextField extends InteractiveObject {
      * Non-standard extension.
      * @returns {Number}
      */
-    get textOutlineColor():number {
+    get textOutlineColor(): number {
         return this._textOutlineColor;
     }
 
@@ -260,7 +262,7 @@ export class TextField extends InteractiveObject {
      * Non-standard extension.
      * @param v {Number}
      */
-    set textOutlineColor(v:number) {
+    set textOutlineColor(v: number) {
         var b = this._textOutlineColor !== v;
         if (b) {
             this._textOutlineColor = v;
@@ -274,9 +276,9 @@ export class TextField extends InteractiveObject {
      * Non-standard extension.
      * @type {Boolean}
      */
-    customOutlineEnabled:boolean = false;
+    customOutlineEnabled: boolean = false;
 
-    get textHeight():number {
+    get textHeight(): number {
         // TODO: This only works under single line circumstances.
         var height = this.defaultTextFormat.size * 1.5;
         if (this.thickness > 0) {
@@ -285,11 +287,11 @@ export class TextField extends InteractiveObject {
         return height;
     }
 
-    textInteractionMode:string = TextInteractionMode.NORMAL;
+    textInteractionMode: string = TextInteractionMode.NORMAL;
 
-    get textWidth():number {
+    get textWidth(): number {
         // TODO: This only works under single line circumstances.
-        var metrics:TextMetrics = this._context2D.measureText(this.text);
+        var metrics: TextMetrics = this._context2D.measureText(this.text);
         var width = metrics.width;
         if (this.thickness > 0) {
             width += this.thickness * 2;
@@ -297,11 +299,11 @@ export class TextField extends InteractiveObject {
         return width;
     }
 
-    get thickness():number {
+    get thickness(): number {
         return this._thickness;
     }
 
-    set thickness(v:number) {
+    set thickness(v: number) {
         var b = this._thickness !== v;
         if (b) {
             this._thickness = v;
@@ -309,11 +311,11 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    type:string = TextFieldType.DYNAMIC;
-    useRichTextClipboard:boolean = false;
-    wordWrap:boolean = false;
+    type: string = TextFieldType.DYNAMIC;
+    useRichTextClipboard: boolean = false;
+    wordWrap: boolean = false;
 
-    dispose():void {
+    dispose(): void {
         super.dispose();
         // TODO: WARNING: HACK!
         var renderer = (<Stage>this.root).worldRenderer;
@@ -323,7 +325,7 @@ export class TextField extends InteractiveObject {
         this._context2D = null;
     }
 
-    protected _$update(timeInfo:TimeInfo):void {
+    protected _$update(timeInfo: TimeInfo): void {
         if (!this._isContentChanged) {
             return;
         }
@@ -340,20 +342,20 @@ export class TextField extends InteractiveObject {
         this._isContentChanged = false;
     }
 
-    protected _$render(renderer:WebGLRenderer):void {
+    protected _$render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
             RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
         }
     }
 
-    protected _$selectShader(shaderManager:ShaderManager):void {
+    protected _$selectShader(shaderManager: ShaderManager): void {
         shaderManager.selectShader(ShaderID.COPY_IMAGE);
     }
 
-    protected _$createCanvasTarget(renderer:WebGLRenderer):RenderTarget2D {
+    protected _$createCanvasTarget(renderer: WebGLRenderer): RenderTarget2D {
         if (this._canvas === null) {
-            var canvas = window.document.createElement("canvas");
+            var canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
             canvas.width = renderer.view.width;
             canvas.height = renderer.view.height;
             this._canvas = canvas;
@@ -362,8 +364,8 @@ export class TextField extends InteractiveObject {
         return renderer.createRenderTarget(this._canvas);
     }
 
-    protected _$updateCanvasTextStyle(context2D:CanvasRenderingContext2D):void {
-        var fontStyles:string[] = [];
+    protected _$updateCanvasTextStyle(context2D: CanvasRenderingContext2D): void {
+        var fontStyles: string[] = [];
         if (this.defaultTextFormat.bold) {
             fontStyles.push("bold");
         }
@@ -375,7 +377,7 @@ export class TextField extends InteractiveObject {
         context2D.font = fontStyles.join(" ");
     }
 
-    protected _$drawTextElements(context2D:CanvasRenderingContext2D):void {
+    protected _$drawTextElements(context2D: CanvasRenderingContext2D): void {
         var baseX = this.thickness;
         var baseY = this.thickness;
         var borderThickness = 1;
@@ -398,24 +400,24 @@ export class TextField extends InteractiveObject {
         }
     }
 
-    private __textFormatChanged():void {
+    private __textFormatChanged(): void {
         // Cannot be declared as static or TypeScript compilation will fail.
         this._isContentChanged = true;
     }
 
-    private _textFormatChangedHandler:Function = null;
-    protected _defaultTextFormat:TextFormat = null;
-    protected _isContentChanged:boolean = true;
-    protected _canvasTarget:RenderTarget2D = null;
-    protected _canvas:HTMLCanvasElement = null;
-    protected _context2D:CanvasRenderingContext2D = null;
-    protected _text:string = null;
-    protected _background:boolean = false;
-    protected _backgroundColor:number = 0xffffff;
-    protected _border:boolean = false;
-    protected _borderColor:number = 0x000000;
-    protected _textColor:number = 0x000000;
-    protected _textOutlineColor:number = 0x000000;
-    protected _thickness:number = 0;
+    private _textFormatChangedHandler: Function = null;
+    protected _defaultTextFormat: TextFormat = null;
+    protected _isContentChanged: boolean = true;
+    protected _canvasTarget: RenderTarget2D = null;
+    protected _canvas: HTMLCanvasElement = null;
+    protected _context2D: CanvasRenderingContext2D = null;
+    protected _text: string = null;
+    protected _background: boolean = false;
+    protected _backgroundColor: number = 0xffffff;
+    protected _border: boolean = false;
+    protected _borderColor: number = 0x000000;
+    protected _textColor: number = 0x000000;
+    protected _textOutlineColor: number = 0x000000;
+    protected _thickness: number = 0;
 
 }

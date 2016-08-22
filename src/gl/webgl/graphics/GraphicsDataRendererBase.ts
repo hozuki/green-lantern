@@ -7,12 +7,13 @@ import {IGraphicsDataRenderer} from "./IGraphicsDataRenderer";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {PackedArrayBuffer} from "../PackedArrayBuffer";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import {VirtualDom} from "../../mic/VirtualDom";
 
-const gl = (<any>window).WebGLRenderingContext;
+const gl = VirtualDom.WebGLRenderingContext;
 
 export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 
-    constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number) {
+    constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         this._graphics = graphics;
         this._glc = graphics.renderer.context;
         this.__initializeBuffers();
@@ -23,11 +24,11 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._isDirty = true;
     }
 
-    bezierCurveTo(cx1:number, cy1:number, cx2:number, cy2:number, x:number, y:number):void {
+    bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         throw new NotImplementedError();
     }
 
-    closePath():void {
+    closePath(): void {
         // TODO: Consider the sample
         // g.beginFill(0xff0000); g.drawRect(100, 100, 100, 100); g.lineStyle(0xff0000, 1);
         // g.lineTo(400, 100); g.lineTo(200, 300); g.endFill();
@@ -36,46 +37,46 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         }
     }
 
-    curveTo(cx:number, cy:number, x:number, y:number):void {
+    curveTo(cx: number, cy: number, x: number, y: number): void {
         throw new NotImplementedError();
     }
 
-    drawCircle(x:number, y:number, radius:number):void {
+    drawCircle(x: number, y: number, radius: number): void {
         throw new NotImplementedError();
     }
 
-    drawEllipse(x:number, y:number, width:number, height:number):void {
+    drawEllipse(x: number, y: number, width: number, height: number): void {
         throw new NotImplementedError();
     }
 
-    drawRect(x:number, y:number, width:number, height:number):void {
+    drawRect(x: number, y: number, width: number, height: number): void {
         throw new NotImplementedError();
     }
 
-    drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight:number = NaN):void {
+    drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight: number = NaN): void {
         throw new NotImplementedError();
     }
 
-    lineTo(x:number, y:number):void {
+    lineTo(x: number, y: number): void {
         throw new NotImplementedError();
     }
 
-    moveTo(x:number, y:number):void {
+    moveTo(x: number, y: number): void {
         // Multiple movements are combined into one, which will be flushed at each
         // IGraphicsDataRenderer call that draws concrete elements
         throw new NotImplementedError();
     }
 
-    update():void {
+    update(): void {
         // check whether to update the typed buffer
         this._$syncBuffers();
     }
 
-    render(renderer:WebGLRenderer):void {
+    render(renderer: WebGLRenderer): void {
         console.warn("Do not call GraphicsDataRendererBase.render().");
     }
 
-    dispose():void {
+    dispose(): void {
         this._vertexBuffer.dispose();
         this._colorBuffer.dispose();
         this._indexBuffer.dispose();
@@ -84,15 +85,15 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._glc = null;
     }
 
-    becomeDirty():void {
+    becomeDirty(): void {
         this._isDirty = true;
     }
 
-    get hasDrawnAnything():boolean {
+    get hasDrawnAnything(): boolean {
         return this._hasDrawnAnything;
     }
 
-    protected _$syncBuffers():void {
+    protected _$syncBuffers(): void {
         if (this._isDirty) {
             // When the array buffers become dirty, their values will be updated automatically
             // at next draw call.
@@ -106,7 +107,7 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         }
     }
 
-    private __initializeBuffers():void {
+    private __initializeBuffers(): void {
         this._vertices = [];
         this._colors = [];
         this._indices = [];
@@ -115,22 +116,22 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._indexBuffer = PackedArrayBuffer.create(this._glc, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
     }
 
-    protected _graphics:Graphics = null;
-    protected _glc:WebGLRenderingContext = null;
-    protected _isDirty:boolean = true;
+    protected _graphics: Graphics = null;
+    protected _glc: WebGLRenderingContext = null;
+    protected _isDirty: boolean = true;
     // Local points buffer, format: X, Y, Z(=STD_Z)
-    protected _vertices:number[] = null;
+    protected _vertices: number[] = null;
     // Colors of points, format: R, G, B, A
-    protected _colors:number[] = null;
+    protected _colors: number[] = null;
     // Local indices (for points) buffer
-    protected _indices:number[] = null;
-    protected _vertexBuffer:PackedArrayBuffer = null;
-    protected _colorBuffer:PackedArrayBuffer = null;
-    protected _indexBuffer:PackedArrayBuffer = null;
-    protected _currentX:number = 0;
-    protected _currentY:number = 0;
-    protected _hasDrawnAnything:boolean = false;
-    protected _lastPathStartX:number = 0;
-    protected _lastPathStartY:number = 0;
+    protected _indices: number[] = null;
+    protected _vertexBuffer: PackedArrayBuffer = null;
+    protected _colorBuffer: PackedArrayBuffer = null;
+    protected _indexBuffer: PackedArrayBuffer = null;
+    protected _currentX: number = 0;
+    protected _currentY: number = 0;
+    protected _hasDrawnAnything: boolean = false;
+    protected _lastPathStartX: number = 0;
+    protected _lastPathStartY: number = 0;
 
 }

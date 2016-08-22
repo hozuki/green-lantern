@@ -4,15 +4,15 @@
 
 export abstract class GridFitType {
 
-    static get NONE():string {
+    static get NONE(): string {
         return "none";
     }
 
-    static get PIXEL():string {
+    static get PIXEL(): string {
         return "pixel";
     }
 
-    static get SUBPIXEL():string {
+    static get SUBPIXEL(): string {
         return "subpixel";
     }
 

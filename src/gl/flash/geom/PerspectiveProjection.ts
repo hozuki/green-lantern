@@ -5,7 +5,7 @@
 import {Matrix3D} from "./Matrix3D";
 import {Point} from "./Point";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../glantern/MathUtil";
+import {MathUtil} from "../../mic/MathUtil";
 
 export class PerspectiveProjection {
 
@@ -13,21 +13,21 @@ export class PerspectiveProjection {
         this.projectionCenter = new Point();
     }
 
-    get fieldOfView():number {
+    get fieldOfView(): number {
         return this._fieldOfView;
     }
 
-    set fieldOfView(v:number) {
+    set fieldOfView(v: number) {
         this._fieldOfView = MathUtil.clamp(v, 0, 180);
     }
 
-    focalLength:number = 10;
-    projectionCenter:Point = null;
+    focalLength: number = 10;
+    projectionCenter: Point = null;
 
-    toMatrix3D():Matrix3D {
+    toMatrix3D(): Matrix3D {
         throw new NotImplementedError();
     }
 
-    _fieldOfView:number = 90;
+    _fieldOfView: number = 90;
 
 }

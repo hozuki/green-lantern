@@ -4,11 +4,11 @@
 
 export abstract class Bounce {
 
-    static easeIn(t:number, b:number, c:number, d:number):number {
+    static easeIn(t: number, b: number, c: number, d: number): number {
         return c - Bounce.easeOut(d - t, 0, c, d) + b;
     }
 
-    static easeInOut(t:number, b:number, c:number, d:number):number {
+    static easeInOut(t: number, b: number, c: number, d: number): number {
         if (t < d / 2) {
             return Bounce.easeIn(t * 2, 0, c, d) * .5 + b;
         } else {
@@ -16,7 +16,7 @@ export abstract class Bounce {
         }
     }
 
-    static easeOut(t:number, b:number, c:number, d:number):number {
+    static easeOut(t: number, b: number, c: number, d: number): number {
         if ((t /= d) < (1 / 2.75)) {
             return c * (7.5625 * t * t) + b;
         } else if (t < (2 / 2.75)) {

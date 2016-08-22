@@ -6,12 +6,12 @@ import {BitmapFilter} from "./BitmapFilter";
 import {GlowFilter as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
 import {FilterManager} from "../../webgl/FilterManager";
 import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {MathUtil} from "../../glantern/MathUtil";
+import {MathUtil} from "../../mic/MathUtil";
 
 export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 
-    constructor(filterManager:FilterManager, color:number = 0xff0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0,
-                strength:number = 2, quality:number = BitmapFilterQuality.LOW, inner:boolean = false, knockout:boolean = false) {
+    constructor(filterManager: FilterManager, color: number = 0xff0000, alpha: number = 1.0, blurX: number = 6.0, blurY: number = 6.0,
+                strength: number = 2, quality: number = BitmapFilterQuality.LOW, inner: boolean = false, knockout: boolean = false) {
         super(filterManager);
         this.color = color;
         this.alpha = MathUtil.clamp(alpha, 0, 1);
@@ -23,11 +23,11 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
         this.knockout = knockout;
     }
 
-    get alpha():number {
+    get alpha(): number {
         return this._alpha;
     }
 
-    set alpha(v:number) {
+    set alpha(v: number) {
         var b = v !== this.alpha;
         this._alpha = v;
         if (b) {
@@ -35,27 +35,27 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
         }
     }
 
-    get blurX():number {
+    get blurX(): number {
         return this.strengthX;
     }
 
-    set blurX(v:number) {
+    set blurX(v: number) {
         this.strengthX = v;
     }
 
-    get blurY():number {
+    get blurY(): number {
         return this.strengthY;
     }
 
-    set blurY(v:number) {
+    set blurY(v: number) {
         this.strengthY = v;
     }
 
-    get color():number {
+    get color(): number {
         return this._color;
     }
 
-    set color(v:number) {
+    set color(v: number) {
         v |= 0;
         var b = v !== this._color;
         this._color = v;
@@ -64,25 +64,25 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
         }
     }
 
-    inner:boolean = false;
-    knockout:boolean = false;
+    inner: boolean = false;
+    knockout: boolean = false;
 
-    get quality():number {
+    get quality(): number {
         return this.pass;
     }
 
-    set quality(v:number) {
+    set quality(v: number) {
         this.pass = v;
     }
 
-    strength:number = 2;
+    strength: number = 2;
 
-    clone():GlowFilter {
+    clone(): GlowFilter {
         return new GlowFilter(this.filterManager, this.color, this.alpha, this.blurX, this.blurY,
             this.strength, this.quality, this.inner, this.knockout);
     }
 
-    private __updateColorMatrix():void {
+    private __updateColorMatrix(): void {
         var r = ((this._color >>> 16) & 0xff) / 0xff;
         var g = ((this._color >>> 8) & 0xff) / 0xff;
         var b = (this._color & 0xff) / 0xff;
@@ -96,7 +96,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
         this.setColorMatrix(cm);
     }
 
-    private _color:number = 0x000000;
-    private _alpha:number = 1;
+    private _color: number = 0x000000;
+    private _alpha: number = 1;
 
 }

@@ -30,7 +30,7 @@ var lantern = null;
     };
 
     var caseListElem = document.querySelector("#test-case-selector");
-    var checkResult = GLantern.glantern.GLUtil.checkSupportStatus();
+    var checkResult = GLantern.checkSupportStatus();
     if (checkResult.ok) {
         initNormal();
     } else {

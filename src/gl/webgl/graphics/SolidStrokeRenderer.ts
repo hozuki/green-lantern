@@ -8,11 +8,11 @@ import {StrokeRendererBase} from "./StrokeRendererBase";
 import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {RenderHelper} from "../RenderHelper";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {MathUtil} from "../../glantern/MathUtil";
+import {MathUtil} from "../../mic/MathUtil";
 
 export class SolidStrokeRenderer extends StrokeRendererBase {
 
-    constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number, lineWidth:number, color:number, alpha:number) {
+    constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number, lineWidth: number, color: number, alpha: number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
         this._a = MathUtil.clamp(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
@@ -21,14 +21,14 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._w = lineWidth;
     }
 
-    bezierCurveTo(cx1:number, cy1:number, cx2:number, cy2:number, x:number, y:number):void {
+    bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         if (this._w > 0) {
             this._isDirty = true;
-            var dt1:number, dt2:number, dt3:number;
-            var t2:number, t3:number;
+            var dt1: number, dt2: number, dt3: number;
+            var t2: number, t3: number;
             var fromX = this._currentX, fromY = this._currentY;
-            var xa:number, ya:number;
-            var j:number;
+            var xa: number, ya: number;
+            var j: number;
             for (var i = 1; i <= CURVE_ACCURACY; i++) {
                 j = i / CURVE_ACCURACY;
                 dt1 = 1 - j;
@@ -45,12 +45,12 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._currentY = y;
     }
 
-    curveTo(cx:number, cy:number, x:number, y:number):void {
+    curveTo(cx: number, cy: number, x: number, y: number): void {
         if (this._w > 0) {
             this._isDirty = true;
-            var j:number;
+            var j: number;
             var fromX = this._currentX, fromY = this._currentY;
-            var xa:number, ya:number;
+            var xa: number, ya: number;
             for (var i = 1; i <= CURVE_ACCURACY; i++) {
                 j = i / CURVE_ACCURACY;
                 xa = fromX + (cx - fromX) * j;
@@ -64,13 +64,13 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._currentY = y;
     }
 
-    drawCircle(x:number, y:number, radius:number):void {
+    drawCircle(x: number, y: number, radius: number): void {
         this.moveTo(x - radius, y);
         if (this._w > 0) {
             this._isDirty = true;
-            var thetaNext:number;
-            var thetaBegin:number;
-            var x2:number, y2:number;
+            var thetaNext: number;
+            var thetaBegin: number;
+            var x2: number, y2: number;
             var halfPi = Math.PI / 2;
             thetaBegin = Math.PI;
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
@@ -90,14 +90,14 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._lastPathStartY = y;
     }
 
-    drawEllipse(x:number, y:number, width:number, height:number):void {
+    drawEllipse(x: number, y: number, width: number, height: number): void {
         this.moveTo(x, y + height / 2);
         if (this._w > 0) {
             this._isDirty = true;
-            var thetaNext:number;
-            var thetaBegin:number;
+            var thetaNext: number;
+            var thetaBegin: number;
             var centerX = x + width / 2, centerY = y + height / 2;
-            var x2:number, y2:number;
+            var x2: number, y2: number;
             var halfPi = Math.PI / 2;
             thetaBegin = Math.PI;
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
@@ -118,7 +118,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._lastPathStartY = y + height / 2;
     }
 
-    drawRect(x:number, y:number, width:number, height:number):void {
+    drawRect(x: number, y: number, width: number, height: number): void {
         this._isDirty = true;
         this.moveTo(x, y);
         this.lineTo(x, y + height);
@@ -127,11 +127,11 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this.lineTo(x, y);
     }
 
-    drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight:number = NaN):void {
+    drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight: number = NaN): void {
         throw new NotImplementedError();
     }
 
-    lineTo(x:number, y:number):void {
+    lineTo(x: number, y: number): void {
         if (this._w > 0) {
             this._isDirty = true;
             var vertices = this._$getSimLineVertices(this._currentX, this._currentY, x, y, STD_Z, this._w);
@@ -152,17 +152,17 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
         this._currentY = y;
     }
 
-    render(renderer:WebGLRenderer):void {
+    render(renderer: WebGLRenderer): void {
         if (this._vertices.length > 0) {
             var target = renderer.currentRenderTarget;
             RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
         }
     }
 
-    private _r:number = 0;
-    private _g:number = 0;
-    private _b:number = 0;
-    private _a:number = 1;
-    private _w:number = 1;
+    private _r: number = 0;
+    private _g: number = 0;
+    private _b: number = 0;
+    private _a: number = 1;
+    private _w: number = 1;
 
 }

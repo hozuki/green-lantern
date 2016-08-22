@@ -11,9 +11,9 @@ export default class TestRunner {
     constructor() {
     }
 
-    run(entry:TestEntry):void {
+    run(entry: TestEntry): void {
         var result = entry.func();
-        var str:string;
+        var str: string;
         if (result) {
             str = `[${chalk.green("PASSED")}]`;
         } else {

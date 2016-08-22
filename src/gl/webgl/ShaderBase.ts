@@ -7,23 +7,24 @@ import {UniformCache} from "./UniformCache";
 import {ShaderManager} from "./ShaderManager";
 import {VertexShaders} from "./VertexShaders";
 import {FragmentShaders} from "./FragmentShaders";
-import {IDisposable} from "../glantern/IDisposable";
+import {IDisposable} from "../mic/IDisposable";
 import {WebGLDataType} from "./WebGLDataType";
-import {GLUtil} from "../glantern/GLUtil";
+import {VirtualDom} from "../mic/VirtualDom";
+import {CommonUtil} from "../mic/CommonUtil";
 
-const gl = (<any>window).WebGLRenderingContext;
+const gl = <any>VirtualDom.WebGLRenderingContext;
 
 export class ShaderBase implements IDisposable {
 
-    constructor(manager:ShaderManager, vertexSource:string, fragmentSource:string,
-                uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>) {
+    constructor(manager: ShaderManager, vertexSource: string, fragmentSource: string,
+                uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>) {
         this._shaderManager = manager;
         this._vertexSource = vertexSource;
         this._fragmentSource = fragmentSource;
         this._id = manager.getNextAvailableID();
         this.__initialize(manager.context, vertexSource, fragmentSource);
         this.select();
-        if (GLUtil.ptr(uniforms) && GLUtil.ptr(attributes)) {
+        if (CommonUtil.ptr(uniforms) && CommonUtil.ptr(attributes)) {
             this._uniforms = uniforms;
             this._attributes = attributes;
         } else {
@@ -36,11 +37,11 @@ export class ShaderBase implements IDisposable {
         this.syncUniforms();
     }
 
-    get id():number {
+    get id(): number {
         return this._id;
     }
 
-    dispose():void {
+    dispose(): void {
         var glc = this._glc;
         glc.deleteProgram(this._program);
         glc.deleteShader(this._vertexShader);
@@ -55,51 +56,51 @@ export class ShaderBase implements IDisposable {
         this._shaderManager = null;
     }
 
-    syncUniforms():void {
-        this._uniforms.forEach((v):void => {
+    syncUniforms(): void {
+        this._uniforms.forEach((v): void => {
             this.__syncUniform(v);
         });
     }
 
-    changeValue(name:string, callback:(uniform:UniformCache) => void):void {
+    changeValue(name: string, callback: (uniform: UniformCache) => void): void {
         var uniform = this._uniforms.get(name);
         if (uniform !== (void 0) && uniform !== null) {
             callback(uniform);
         }
     }
 
-    select():void {
+    select(): void {
         this._glc.useProgram(this._program);
     }
 
-    getUniformLocation(name:string):WebGLUniformLocation {
+    getUniformLocation(name: string): WebGLUniformLocation {
         return this._program !== null ? this._glc.getUniformLocation(this._program, name) : null;
     }
 
-    getAttributeLocation(name:string):number {
+    getAttributeLocation(name: string): number {
         return this._program !== null ? this._glc.getAttribLocation(this._program, name) : -1;
     }
 
-    get vertexSource():string {
+    get vertexSource(): string {
         return this._vertexSource
     }
 
-    get fragmentSource():string {
+    get fragmentSource(): string {
         return this._fragmentSource;
     }
 
-    static SHADER_CLASS_NAME:string = "ShaderBase";
-    static FRAGMENT_SOURCE:string = FragmentShaders.buffered;
-    static VERTEX_SOURCE:string = VertexShaders.buffered;
+    static SHADER_CLASS_NAME: string = "ShaderBase";
+    static FRAGMENT_SOURCE: string = FragmentShaders.buffered;
+    static VERTEX_SOURCE: string = VertexShaders.buffered;
 
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
     }
 
-    private __initialize(glc:WebGLRenderingContext, vertexSource:string, fragmentSource:string):void {
+    private __initialize(glc: WebGLRenderingContext, vertexSource: string, fragmentSource: string): void {
         this._glc = glc;
 
-        function error(message:string, extra?:any):void {
+        function error(message: string, extra?: any): void {
             if (this._vertexShader !== null) {
                 glc.deleteShader(this._vertexShader);
             }
@@ -138,7 +139,7 @@ export class ShaderBase implements IDisposable {
         }
     }
 
-    private __syncUniform(uniform:UniformCache):void {
+    private __syncUniform(uniform: UniformCache): void {
         var location = uniform.location;
         var value = uniform.value;
         var glc = this._glc;
@@ -261,36 +262,36 @@ export class ShaderBase implements IDisposable {
         }
     }
 
-    private __cacheUniformLocations():void {
+    private __cacheUniformLocations(): void {
         var glc = this._glc;
         var program = this._program;
-        this._uniforms.forEach((v, k):void => {
+        this._uniforms.forEach((v, k): void => {
             v.location = glc.getUniformLocation(program, k);
         });
     }
 
-    private __cacheAttributeLocations():void {
+    private __cacheAttributeLocations(): void {
         var glc = this._glc;
         var program = this._program;
-        this._attributes.forEach((v, k):void => {
+        this._attributes.forEach((v, k): void => {
             v.location = glc.getAttribLocation(program, k);
         });
     }
 
-    protected _shaderManager:ShaderManager = null;
-    protected _vertexSource:string = null;
-    protected _fragmentSource:string = null;
-    protected _vertexShader:WebGLShader = null;
-    protected _fragmentShader:WebGLShader = null;
-    protected _program:WebGLProgram = null;
-    protected _uniforms:Map<string, UniformCache> = null;
-    protected _attributes:Map<string, AttributeCache> = null;
-    protected _id:number = -1;
-    protected _glc:WebGLRenderingContext = null;
+    protected _shaderManager: ShaderManager = null;
+    protected _vertexSource: string = null;
+    protected _fragmentSource: string = null;
+    protected _vertexShader: WebGLShader = null;
+    protected _fragmentShader: WebGLShader = null;
+    protected _program: WebGLProgram = null;
+    protected _uniforms: Map<string, UniformCache> = null;
+    protected _attributes: Map<string, AttributeCache> = null;
+    protected _id: number = -1;
+    protected _glc: WebGLRenderingContext = null;
 
 }
 
-function createShaderFromSource(glc:WebGLRenderingContext, source:string, type:number):WebGLShader {
+function createShaderFromSource(glc: WebGLRenderingContext, source: string, type: number): WebGLShader {
     var shader = glc.createShader(type);
     if (shader === null) {
         console.warn("Cannot create shader.");

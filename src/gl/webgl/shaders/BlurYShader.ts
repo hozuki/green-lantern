@@ -12,29 +12,29 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class BlurYShader extends BufferedShader {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, BlurYShader.VERTEX_SOURCE, BlurYShader.FRAGMENT_SOURCE);
     }
 
-    setStrength(strength:number):void {
+    setStrength(strength: number): void {
         if (strength < 0) {
             strength = 1;
         }
         this._uniforms.get("uStrength").value = strength;
     }
 
-    getStrength():number {
+    getStrength(): number {
         return this._uniforms.get("uStrength").value;
     }
 
-    static SHADER_CLASS_NAME:string = "BlurYShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.blur;
-    static VERTEX_SOURCE:string = VertexShaders.blurY;
+    static SHADER_CLASS_NAME: string = "BlurYShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.blur;
+    static VERTEX_SOURCE: string = VertexShaders.blurY;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
 
         u = new UniformCache();
         u.name = "uStrength";

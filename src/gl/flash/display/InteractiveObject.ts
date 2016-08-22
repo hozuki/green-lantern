@@ -8,15 +8,15 @@ import {DisplayObjectContainer} from "./DisplayObjectContainer";
 
 export abstract class InteractiveObject extends DisplayObject {
 
-    constructor(root:Stage, parent:DisplayObjectContainer) {
+    constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
     }
 
-    doubleClickEnabled:boolean = true;
-    focusRect:boolean = true;
-    mouseEnabled:boolean = true;
-    needsSoftKeyboard:boolean = false;
-    tabEnabled:boolean = true;
-    tabIndex:number = -1;
+    doubleClickEnabled: boolean = true;
+    focusRect: boolean = true;
+    mouseEnabled: boolean = true;
+    needsSoftKeyboard: boolean = false;
+    tabEnabled: boolean = true;
+    tabIndex: number = -1;
 
 }

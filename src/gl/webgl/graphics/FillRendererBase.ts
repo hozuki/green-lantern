@@ -8,7 +8,7 @@ import {Graphics} from "../../flash/display/Graphics";
 
 export abstract class FillRendererBase extends GraphicsDataRendererBase implements IFillDataRenderer {
 
-    constructor(graphics:Graphics, currentX:number, currentY:number) {
+    constructor(graphics: Graphics, currentX: number, currentY: number) {
         super(graphics, currentX, currentY, currentX, currentY);
         this._contours = [[]];
         this.beginIndex = -1;
@@ -17,7 +17,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
         this._startingNewContour = true;
     }
 
-    moveTo(x:number, y:number):void {
+    moveTo(x: number, y: number): void {
         // Consider the code sample:
         // g.beginFill(0xff0000, 1);
         // g.lineStyle(1, 0xffffff);
@@ -39,11 +39,11 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     }
 
     // Use to track the relative rendering order, based on stroke renderers' orders
-    beginIndex:number = -1;
-    endIndex:number = -1;
+    beginIndex: number = -1;
+    endIndex: number = -1;
 
-    protected _$getContourForClosedShapes():number[] {
-        var currentContour:number[];
+    protected _$getContourForClosedShapes(): number[] {
+        var currentContour: number[];
         if (this._hasDrawnAnything) {
             currentContour = [];
             this._contours.push(currentContour);
@@ -54,8 +54,8 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
         return currentContour;
     }
 
-    protected _$getContourForLines():number[] {
-        var currentContour:number[];
+    protected _$getContourForLines(): number[] {
+        var currentContour: number[];
         if (this._hasDrawnAnything) {
             if (this._startingNewContour) {
                 currentContour = [];
@@ -71,7 +71,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     }
 
     // See libtess.js Degenerate Hourglass test.
-    protected _contours:number[][] = null;
-    protected _startingNewContour:boolean = true;
+    protected _contours: number[][] = null;
+    protected _startingNewContour: boolean = true;
 
 }

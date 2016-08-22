@@ -7,9 +7,9 @@ import {Stage} from "../flash/display/Stage";
 import {RendererOptions} from "../webgl/RendererOptions";
 import {FlashEvent} from "../flash/events/FlashEvent";
 import {IDisposable} from "./IDisposable";
-import {VisualUtil} from "./VisualUtil";
 import {EventBase} from "./EventBase";
 import {TimeInfo} from "./TimeInfo";
+import {VirtualDom} from "./VirtualDom";
 
 export class EngineBase implements IDisposable {
 
@@ -17,7 +17,7 @@ export class EngineBase implements IDisposable {
         this._attachedUpdateFunctions = [];
     }
 
-    initialize(width:number, height:number, options:RendererOptions = WebGLRenderer.DEFAULT_OPTIONS):void {
+    initialize(width: number, height: number, options: RendererOptions = WebGLRenderer.DEFAULT_OPTIONS): void {
         if (this.isInitialized) {
             return;
         }
@@ -27,7 +27,7 @@ export class EngineBase implements IDisposable {
         this._isInitialized = true;
     }
 
-    dispose():void {
+    dispose(): void {
         if (!this.isInitialized) {
             return;
         }
@@ -46,7 +46,7 @@ export class EngineBase implements IDisposable {
      * By default, {@link startAnimation} uses {@link window.requestAnimationFrame} function and relies
      * on the frame rate adjuster of the browser window.
      */
-    startAnimation():void {
+    startAnimation(): void {
         if (!this.isInitialized) {
             return;
         }
@@ -54,14 +54,14 @@ export class EngineBase implements IDisposable {
             this._lastTimeUpdated = Date.now();
         }
         this._isRunning = true;
-        VisualUtil.requestAnimationFrame(this._loopFunction);
+        VirtualDom.requestAnimationFrame(this._loopFunction);
     }
 
     /**
      * Stops the animation loop. Internal state is preserved, and the next {@link startAnimation} call resumes
      * from last state.
      */
-    stopAnimation():void {
+    stopAnimation(): void {
         if (!this.isInitialized) {
             return;
         }
@@ -70,11 +70,11 @@ export class EngineBase implements IDisposable {
         this._isRunning = false;
     }
 
-    clear():void {
+    clear(): void {
         this._renderer.clear();
     }
 
-    runOneFrame(timeInfo:TimeInfo):void {
+    runOneFrame(timeInfo: TimeInfo): void {
         if (!this._isInitialized) {
             return;
         }
@@ -91,15 +91,15 @@ export class EngineBase implements IDisposable {
         this._stage.render(this._renderer);
     }
 
-    get stage():Stage {
+    get stage(): Stage {
         return this._stage;
     }
 
-    get renderer():WebGLRenderer {
+    get renderer(): WebGLRenderer {
         return this._renderer;
     }
 
-    get view():HTMLCanvasElement {
+    get view(): HTMLCanvasElement {
         return this.isInitialized ? this._renderer.view : null;
     }
 
@@ -107,15 +107,15 @@ export class EngineBase implements IDisposable {
      * Gets a boolean flag indicating whether the animation loop is running.
      * @returns {Boolean}
      */
-    get isAnimationRunning():boolean {
+    get isAnimationRunning(): boolean {
         return this.isInitialized && this._isRunning;
     }
 
-    get isInitialized():boolean {
+    get isInitialized(): boolean {
         return this._isInitialized;
     }
 
-    attachUpdateFunction(func:(timeInfo:TimeInfo) => void):void {
+    attachUpdateFunction(func: (timeInfo: TimeInfo) => void): void {
         if (typeof func === "function" && this._attachedUpdateFunctions.indexOf(func) < 0) {
             this._attachedUpdateFunctions.push(func);
         }
@@ -125,7 +125,7 @@ export class EngineBase implements IDisposable {
      * Gets total time elapsed in handling the animation loop, in milliseconds.
      * @returns {Number}
      */
-    get elapsedMillis():number {
+    get elapsedMillis(): number {
         return this._elapsedMillis;
     }
 
@@ -133,11 +133,11 @@ export class EngineBase implements IDisposable {
      * Gets the average FPS (frame per second) of last second.
      * @returns {Number}
      */
-    get fps():number {
+    get fps(): number {
         return this._fps;
     }
 
-    private __updateTimeCounters():void {
+    private __updateTimeCounters(): void {
         if (this._lastTimeUpdated > 0) {
             var now = Date.now();
             this._elapsedMillis += now - this._lastTimeUpdated;
@@ -157,26 +157,26 @@ export class EngineBase implements IDisposable {
      * does not invoke with this argument.
      * @private
      */
-    private __mainLoop(time:number):void {
+    private __mainLoop(time: number): void {
         if (!this.isAnimationRunning) {
             return;
         }
         this.__updateTimeCounters();
-        var timeInfo:TimeInfo = {millisFromStartup: this.elapsedMillis};
+        var timeInfo: TimeInfo = {millisFromStartup: this.elapsedMillis};
         this.runOneFrame(timeInfo);
-        VisualUtil.requestAnimationFrame(this._loopFunction);
+        VirtualDom.requestAnimationFrame(this._loopFunction);
     }
 
-    private _isRunning:boolean = false;
-    private _renderer:WebGLRenderer = null;
-    private _stage:Stage = null;
-    private _isInitialized:boolean = false;
-    private _attachedUpdateFunctions:((timeInfo:TimeInfo) => void)[] = null;
-    private _loopFunction:(time:number) => void = null;
-    private _elapsedMillis:number = 0;
-    private _fps:number = 0;
-    private _fpsCounter:number = 0;
-    private _lastTimeFpsUpdated:number = 0;
-    private _lastTimeUpdated:number = -1;
+    private _isRunning: boolean = false;
+    private _renderer: WebGLRenderer = null;
+    private _stage: Stage = null;
+    private _isInitialized: boolean = false;
+    private _attachedUpdateFunctions: ((timeInfo: TimeInfo) => void)[] = null;
+    private _loopFunction: (time: number) => void = null;
+    private _elapsedMillis: number = 0;
+    private _fps: number = 0;
+    private _fpsCounter: number = 0;
+    private _lastTimeFpsUpdated: number = 0;
+    private _lastTimeUpdated: number = -1;
 
 }

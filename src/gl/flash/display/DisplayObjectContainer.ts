@@ -9,24 +9,24 @@ import {DisplayObject} from "./DisplayObject";
 import {Point} from "../geom/Point";
 import {ShaderManager} from "../../webgl/ShaderManager";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {TimeInfo} from "../../glantern/TimeInfo";
+import {TimeInfo} from "../../mic/TimeInfo";
 
 export abstract class DisplayObjectContainer extends InteractiveObject {
 
-    constructor(root:Stage, parent:DisplayObjectContainer) {
+    constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
         this._children = [];
     }
 
-    mouseChildren:boolean = true;
+    mouseChildren: boolean = true;
 
-    get numChildren():number {
+    get numChildren(): number {
         return this._children.length;
     }
 
-    tabChildren:boolean = true;
+    tabChildren: boolean = true;
 
-    addChild(child:DisplayObject):DisplayObject {
+    addChild(child: DisplayObject): DisplayObject {
         if (this._children.indexOf(child) < 0) {
             this._children.push(child);
         }
@@ -34,7 +34,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return child;
     }
 
-    addChildAt(child:DisplayObject, index:number):DisplayObject {
+    addChildAt(child: DisplayObject, index: number): DisplayObject {
         if (this._children.indexOf(child) < 0) {
             if (index === 0) {
                 this._children.unshift(child);
@@ -48,11 +48,11 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return child;
     }
 
-    areInaccessibleObjectsUnderPoint(point:Point):boolean {
+    areInaccessibleObjectsUnderPoint(point: Point): boolean {
         throw new NotImplementedError();
     }
 
-    contains(child:DisplayObject):boolean {
+    contains(child: DisplayObject): boolean {
         var result = false;
         for (var i = 0; i < this._children.length; ++i) {
             if (this._children[i] === child) {
@@ -68,7 +68,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return false;
     }
 
-    getChildAt(index:number):DisplayObject {
+    getChildAt(index: number): DisplayObject {
         if (index < 0 || index > this._children.length - 1) {
             return null;
         } else {
@@ -76,11 +76,11 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    getChildByName(name:string):DisplayObject {
+    getChildByName(name: string): DisplayObject {
         if (this._children.length === 0) {
             return null;
         }
-        var result:DisplayObject = null;
+        var result: DisplayObject = null;
         for (var i = 0; i < this._children.length; ++i) {
             if (this._children[i].name === name) {
                 return this._children[i];
@@ -95,15 +95,15 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return null;
     }
 
-    getChildIndex(child:DisplayObject):number {
+    getChildIndex(child: DisplayObject): number {
         return this._children.indexOf(child);
     }
 
-    getObjectsUnderPoint(point:Point):DisplayObject[] {
+    getObjectsUnderPoint(point: Point): DisplayObject[] {
         throw new NotImplementedError();
     }
 
-    removeChild(child:DisplayObject):DisplayObject {
+    removeChild(child: DisplayObject): DisplayObject {
         var childIndex = this._children.indexOf(child);
         if (childIndex >= 0) {
             return this.removeChildAt(childIndex);
@@ -112,7 +112,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    removeChildAt(index:number):DisplayObject {
+    removeChildAt(index: number): DisplayObject {
         if (index < 0 || index >= this.numChildren) {
             return null;
         }
@@ -124,35 +124,35 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return child;
     }
 
-    setChildIndex(child:DisplayObject, index:number):void {
+    setChildIndex(child: DisplayObject, index: number): void {
         throw new NotImplementedError();
     }
 
-    swapChildren(child1:DisplayObject, child2:DisplayObject):void {
+    swapChildren(child1: DisplayObject, child2: DisplayObject): void {
         throw new NotImplementedError();
     }
 
-    swapChildrenAt(index1:number, index2:number):void {
+    swapChildrenAt(index1: number, index2: number): void {
         throw new NotImplementedError();
     }
 
-    get width():number {
+    get width(): number {
         throw new NotImplementedError();
     }
 
-    set width(v:number) {
+    set width(v: number) {
         throw new NotImplementedError();
     }
 
-    get height():number {
+    get height(): number {
         throw new NotImplementedError();
     }
 
-    set height(v:number) {
+    set height(v: number) {
         throw new NotImplementedError();
     }
 
-    dispatchEvent(event:Event, data?:any):boolean {
+    dispatchEvent(event: Event, data?: any): boolean {
         var r = super.dispatchEvent(event, data);
         for (var i = 0; i < this._children.length; i++) {
             this._children[i].dispatchEvent(event, data);
@@ -160,7 +160,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         return r;
     }
 
-    update(timeInfo:TimeInfo):void {
+    update(timeInfo: TimeInfo): void {
         super.update(timeInfo);
         if (this.enabled) {
             for (var i = 0; i < this._children.length; ++i) {
@@ -169,7 +169,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    render(renderer:WebGLRenderer):void {
+    render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0) {
             this._$preprocess(renderer);
             this._$render(renderer);
@@ -183,7 +183,7 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    requestUpdateTransform():void {
+    requestUpdateTransform(): void {
         this._isTransformDirty = true;
         if (this._children !== null && this._children.length > 0) {
             for (var i = 0; i < this._children.length; ++i) {
@@ -192,10 +192,10 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         }
     }
 
-    protected _$selectShader(shaderManager:ShaderManager):void {
+    protected _$selectShader(shaderManager: ShaderManager): void {
         // Do nothing
     }
 
-    protected _children:DisplayObject[] = null;
+    protected _children: DisplayObject[] = null;
 
 }

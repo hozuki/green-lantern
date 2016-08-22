@@ -3,5 +3,5 @@
  */
 
 export interface ICopyable<T> {
-    copyFrom(source:T):void;
+    copyFrom(source: T): void;
 }

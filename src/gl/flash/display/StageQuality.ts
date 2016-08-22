@@ -4,19 +4,19 @@
 
 export abstract class StageQuality {
 
-    static get BEST():string {
+    static get BEST(): string {
         return 'best';
     }
 
-    static get HIGH():string {
+    static get HIGH(): string {
         return 'high';
     }
 
-    static get LOW():string {
+    static get LOW(): string {
         return 'low';
     }
 
-    static get MEDIUM():string {
+    static get MEDIUM(): string {
         return 'medium';
     }
 

@@ -4,19 +4,19 @@
 
 export abstract class BitmapDataChannel {
 
-    static get ALPHA():number {
+    static get ALPHA(): number {
         return 8;
     }
 
-    static get BLUE():number {
+    static get BLUE(): number {
         return 4;
     }
 
-    static get GREEN():number {
+    static get GREEN(): number {
         return 2;
     }
 
-    static get RED():number {
+    static get RED(): number {
         return 1;
     }
 

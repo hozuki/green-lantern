@@ -6,21 +6,22 @@ import {IBitmapDrawable} from "./IBitmapDrawable";
 import {Rectangle} from "../geom/Rectangle";
 import {Point} from "../geom/Point";
 import {BitmapFilter} from "../filters/BitmapFilter";
-import {ICloneable} from "../../glantern/ICloneable";
+import {ICloneable} from "../../mic/ICloneable";
 import {ColorTransform} from "../geom/ColorTransform";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {ByteArray} from "../utils/ByteArray";
-import {IDisposable} from "../../glantern/IDisposable";
+import {IDisposable} from "../../mic/IDisposable";
 import {Matrix} from "../geom/Matrix";
-import {GLUtil} from "../../glantern/GLUtil";
-import {MathUtil} from "../../glantern/MathUtil";
+import {GLUtil} from "../../mic/glantern/GLUtil";
+import {MathUtil} from "../../mic/MathUtil";
 import {ArgumentError} from "../errors/ArgumentError";
 import {StageQuality} from "./StageQuality";
 import {DisplayObject} from "./DisplayObject";
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
 import {BlendMode} from "./BlendMode";
-import {RgbaColor} from "../../glantern/RgbaColor";
+import {RgbaColor} from "../../mic/RgbaColor";
 import {EOFError} from "../errors/EOFError";
+import {VirtualDom} from "../../mic/VirtualDom";
 
 // TODO: Endian matters.
 // On Windows (x86/x86-64, little endian), the conversion of 32-bit RGBA to 8-bit bytes are correct. When retrieving
@@ -29,8 +30,8 @@ import {EOFError} from "../errors/EOFError";
 
 export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<BitmapData> {
 
-    constructor(width:number, height:number, transparent:boolean = true, fillColor:number = 0xffffffff) {
-        var canvas = window.document.createElement("canvas");
+    constructor(width: number, height: number, transparent: boolean = true, fillColor: number = 0xffffffff) {
+        var canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
         canvas.width = width;
         canvas.height = height;
         var context = canvas.getContext("2d");
@@ -41,17 +42,17 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this._supportsTransparent = transparent;
     }
 
-    applyFilter(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, filter:BitmapFilter):void {
+    applyFilter(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, filter: BitmapFilter): void {
         throw new NotImplementedError();
     }
 
-    clone():BitmapData {
+    clone(): BitmapData {
         var bitmapData = new BitmapData(this.width, this.height, this._supportsTransparent);
         bitmapData._context.putImageData(this.__getArea(0, 0, this.width, this.height), 0, 0);
         return bitmapData;
     }
 
-    colorTransform(rect:Rectangle, colorTransform:ColorTransform):void {
+    colorTransform(rect: Rectangle, colorTransform: ColorTransform): void {
         var realRect = rect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, this.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, this.height - realRect.y);
@@ -63,9 +64,9 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this.__setArea(imageData, realRect.x, realRect.y);
     }
 
-    compare(otherBitmapData:BitmapData):BitmapData;
-    compare(otherBitmapData:BitmapData):number;
-    compare(otherBitmapData:BitmapData):BitmapData|number {
+    compare(otherBitmapData: BitmapData): BitmapData;
+    compare(otherBitmapData: BitmapData): number;
+    compare(otherBitmapData: BitmapData): BitmapData|number {
         if (this.width !== otherBitmapData.width) {
             return -3;
         }
@@ -75,11 +76,11 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         var thisData = this.__getArea(0, 0, this.width, this.height);
         var thatData = otherBitmapData.__getArea(0, 0, otherBitmapData.width, otherBitmapData.height);
         var thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
-        var imageData:ImageData = null;
-        var imageArray:Uint32Array = null;
+        var imageData: ImageData = null;
+        var imageArray: Uint32Array = null;
         for (var i = 0; i < thisArray.length; ++i) {
             var thisColor = GLUtil.decomposeRgba(thisArray[i]), thatColor = GLUtil.decomposeRgba(thatArray[i]);
-            var colorDiff:RgbaColor = {
+            var colorDiff: RgbaColor = {
                 r: Math.abs(thisColor.r - thatColor.r),
                 g: Math.abs(thisColor.g - thatColor.g),
                 b: Math.abs(thisColor.b - thatColor.b),
@@ -95,7 +96,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
         return imageData !== null ? BitmapData.fromImageData(imageData) : 0;
 
-        function initImageData():void {
+        function initImageData(): void {
             if (imageData) {
                 return;
             }
@@ -104,7 +105,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    copyChannel(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, sourceChannel:number, destChannel:number):void {
+    copyChannel(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, sourceChannel: number, destChannel: number): void {
         var realRect = sourceRect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, sourceBitmapData.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, sourceBitmapData.height - realRect.y);
@@ -121,8 +122,8 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this.__setArea(thisData, destPoint.x, destPoint.y);
     }
 
-    copyPixels(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, alphaBitmapData:BitmapData = null,
-               alphaPoint:Point = null, mergeAlpha:boolean = false):void {
+    copyPixels(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, alphaBitmapData: BitmapData = null,
+               alphaPoint: Point = null, mergeAlpha: boolean = false): void {
         var realRect = sourceRect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, sourceBitmapData.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, sourceBitmapData.height - realRect.y);
@@ -138,7 +139,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         var thisData = new ImageData(realRect.width, realRect.height);
         var thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
         var thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
-        var alphaData:ImageData = null, alphaArray:Uint8ClampedArray = null;
+        var alphaData: ImageData = null, alphaArray: Uint8ClampedArray = null;
         if (alphaBitmapData) {
             alphaData = alphaBitmapData.__getArea(alphaPoint.x, alphaPoint.y, realRect.width, realRect.height);
             alphaArray = new Uint32Array(alphaData.data.buffer);
@@ -156,7 +157,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this.__setArea(thisData, destPoint.x, destPoint.y);
     }
 
-    copyPixelsToByteArray(rect:Rectangle, data:ByteArray):void {
+    copyPixelsToByteArray(rect: Rectangle, data: ByteArray): void {
         var expectedLength = rect.width * rect.height * 4;
         if (data.bytesAvailable < expectedLength) {
             data.length = data.position + expectedLength;
@@ -168,7 +169,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    dispose():void {
+    dispose(): void {
         this._canvas = null;
         this._context = null;
         if (this._cachedRenderer !== null) {
@@ -177,13 +178,13 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    draw(source:IBitmapDrawable, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:string = null,
-         clipRect:Rectangle = null, smoothing:boolean = false):void {
+    draw(source: IBitmapDrawable, matrix: Matrix = null, colorTransform: ColorTransform = null, blendMode: string = null,
+         clipRect: Rectangle = null, smoothing: boolean = false): void {
         this.drawWithQuality(source, matrix, colorTransform, blendMode, clipRect, smoothing, StageQuality.MEDIUM);
     }
 
-    drawWithQuality(source:IBitmapDrawable, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:string = null,
-                    clipRect:Rectangle = null, smoothing:boolean = false, quality:string = null):void {
+    drawWithQuality(source: IBitmapDrawable, matrix: Matrix = null, colorTransform: ColorTransform = null, blendMode: string = null,
+                    clipRect: Rectangle = null, smoothing: boolean = false, quality: string = null): void {
         if (source instanceof DisplayObject) {
             var displayObject = <DisplayObject>source;
             this.__buildRenderer();
@@ -195,116 +196,116 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    encode(rect:Rectangle, compressor:Object, byteArray:ByteArray = null):ByteArray {
+    encode(rect: Rectangle, compressor: Object, byteArray: ByteArray = null): ByteArray {
         throw new NotImplementedError();
     }
 
-    fillRect(rect:Rectangle, color:number):void {
+    fillRect(rect: Rectangle, color: number): void {
         var context = this._context;
         context.fillStyle = GLUtil.colorToCssSharp(color);
         context.fillRect(rect.x, rect.y, rect.width, rect.height);
     }
 
-    floodFill(x:number, y:number, color:number):void {
+    floodFill(x: number, y: number, color: number): void {
         if (this.isLocked) {
             return;
         }
         floodFill(this, this.__getArea, this.__setArea, x, y, color);
     }
 
-    generateFilterRect(sourceRect:Rectangle, filter:BitmapFilter):Rectangle {
+    generateFilterRect(sourceRect: Rectangle, filter: BitmapFilter): Rectangle {
         throw new NotImplementedError();
     }
 
-    getColorBoundsRect(mask:number, color:number, findColor:boolean = true):Rectangle {
+    getColorBoundsRect(mask: number, color: number, findColor: boolean = true): Rectangle {
         throw new NotImplementedError();
     }
 
-    getPixel(x:number, y:number):number {
+    getPixel(x: number, y: number): number {
         var imageData = this.__getArea(x, y, 1, 1);
         var dataBuffer = imageData.data;
         // ImageData order: r,g,b,a
         return GLUtil.rgb(dataBuffer[0], dataBuffer[1], dataBuffer[2]);
     }
 
-    getPixel32(x:number, y:number):number {
+    getPixel32(x: number, y: number): number {
         var imageData = this.__getArea(x, y, 1, 1);
         var dataBuffer = imageData.data;
         return GLUtil.rgba(dataBuffer[0], dataBuffer[1], dataBuffer[2], dataBuffer[3]);
     }
 
-    getPixels(rect:Rectangle):ByteArray {
+    getPixels(rect: Rectangle): ByteArray {
         var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
         var dataBuffer = imageData.data;
         return ByteArray.from(dataBuffer.buffer);
     }
 
-    getVector(rect:Rectangle):number[] {
+    getVector(rect: Rectangle): number[] {
         var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
         var dataBuffer = imageData.data;
         var uint32Array = new Uint32Array(dataBuffer.buffer);
-        var result:number[] = new Array<number>(uint32Array.length);
+        var result: number[] = new Array<number>(uint32Array.length);
         for (var i = 0; i < result.length; ++i) {
             result[i] = uint32Array[i];
         }
         return result;
     }
 
-    get height():number {
+    get height(): number {
         return this._canvas.height;
     }
 
-    histogram(hRect:Rectangle = null):number[][] {
+    histogram(hRect: Rectangle = null): number[][] {
         throw new NotImplementedError();
     }
 
-    hitTest(firstPoint:Point, firstAlphaThreshold:number, secondObject:Object, secondBitmapDataPoint:Point = null,
-            secondAlphaThreshold:number = 1):boolean {
+    hitTest(firstPoint: Point, firstAlphaThreshold: number, secondObject: Object, secondBitmapDataPoint: Point = null,
+            secondAlphaThreshold: number = 1): boolean {
         throw new NotImplementedError();
     }
 
-    lock():void {
+    lock(): void {
         this._isLocked = true;
         this._cachedImageData = this._context.getImageData(0, 0, this.width, this.height);
     }
 
-    merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, redMultiplier:number, greenMultiplier:number,
-          blueMultiplier:number, alphaMultiplier:number):void {
+    merge(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, redMultiplier: number, greenMultiplier: number,
+          blueMultiplier: number, alphaMultiplier: number): void {
         throw new NotImplementedError();
     }
 
-    noise(randomSeed:number, low:number = 0, high:number = 255, channelOptions:number = 7, greyScale:boolean = false):void {
+    noise(randomSeed: number, low: number = 0, high: number = 255, channelOptions: number = 7, greyScale: boolean = false): void {
         throw new NotImplementedError();
     }
 
-    paletteMap(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, redArray:number[] = null,
-               greenArray:number[] = null, blueArray:number[] = null, alphaArray:number[] = null):void {
+    paletteMap(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, redArray: number[] = null,
+               greenArray: number[] = null, blueArray: number[] = null, alphaArray: number[] = null): void {
         throw new NotImplementedError();
     }
 
-    perlinNoise(baseX:number, baseY:number, numOctaves:number, randomSeed:number, stitch:boolean, fractalNoise:boolean,
-                channelOptions:number = 7, grayScale:boolean = false, offsets:number[] = null):void {
+    perlinNoise(baseX: number, baseY: number, numOctaves: number, randomSeed: number, stitch: boolean, fractalNoise: boolean,
+                channelOptions: number = 7, grayScale: boolean = false, offsets: number[] = null): void {
         throw new NotImplementedError();
     }
 
-    pixelDissolve(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, randomSeed:number = 0,
-                  numPixels:number = 0, fillColor:number = 0):number {
+    pixelDissolve(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, randomSeed: number = 0,
+                  numPixels: number = 0, fillColor: number = 0): number {
         throw new NotImplementedError();
     }
 
-    get rect():Rectangle {
+    get rect(): Rectangle {
         return new Rectangle(0, 0, this.width, this.height);
     }
 
-    scroll(x:number, y:number):void {
+    scroll(x: number, y: number): void {
         throw new NotImplementedError();
     }
 
-    setPixel(x:number, y:number, color:number):void {
+    setPixel(x: number, y: number, color: number): void {
         this.setPixel32(x, y, color | 0xff000000);
     }
 
-    setPixel32(x:number, y:number, color:number):void {
+    setPixel32(x: number, y: number, color: number): void {
         color &= 0xffffffff;
         var imageData = new ImageData(1, 1);
         var rgba = GLUtil.decomposeRgba(color);
@@ -321,7 +322,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
      * @param rect {Rectangle}
      * @param inputByteArray {ByteArray}
      */
-    setPixels(rect:Rectangle, inputByteArray:ByteArray):void {
+    setPixels(rect: Rectangle, inputByteArray: ByteArray): void {
         var r = rect.clone();
         r.width = MathUtil.clampUpper(r.width, this.width - r.x);
         r.height = MathUtil.clampUpper(r.height, this.height - r.y);
@@ -341,7 +342,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this.__setArea(imageData, rect.x, rect.y);
     }
 
-    setVector(rect:Rectangle, inputVector:number[]):void {
+    setVector(rect: Rectangle, inputVector: number[]): void {
         var r = rect.clone();
         r.width = MathUtil.clampUpper(r.width, this.width - r.x);
         r.height = MathUtil.clampUpper(r.height, this.height - r.y);
@@ -358,16 +359,16 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this.__setArea(imageData, rect.x, rect.y);
     }
 
-    threshold(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, operation:string, threshold:number,
-              color:number = 0, mask:number = 0xffffffff, copySource:boolean = false):number {
+    threshold(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, operation: string, threshold: number,
+              color: number = 0, mask: number = 0xffffffff, copySource: boolean = false): number {
         throw new NotImplementedError();
     }
 
-    get transparent():boolean {
+    get transparent(): boolean {
         return this._supportsTransparent;
     }
 
-    unlock():void {
+    unlock(): void {
         if (this._isDataChangedDuringLockDown) {
             this._context.putImageData(this._cachedImageData, 0, 0);
         }
@@ -376,28 +377,28 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         this._isDataChangedDuringLockDown = false;
     }
 
-    get width():number {
+    get width(): number {
         return this._canvas.width;
     }
 
     // Bulletproof
-    get isLocked():boolean {
+    get isLocked(): boolean {
         return this._isLocked;
     }
 
     // Bulletproof
-    get canvas():HTMLCanvasElement {
+    get canvas(): HTMLCanvasElement {
         return this._canvas;
     }
 
     // Bulletproof
-    static fromImageData(imageData:ImageData):BitmapData {
+    static fromImageData(imageData: ImageData): BitmapData {
         var bitmapData = new BitmapData(imageData.width, imageData.height, true, 0x00000000);
         bitmapData._context.putImageData(imageData, 0, 0);
         return bitmapData;
     }
 
-    private __getArea(x:number, y:number, width:number, height:number):ImageData {
+    private __getArea(x: number, y: number, width: number, height: number): ImageData {
         if (this.isLocked) {
             var imageData = this._cachedImageData;
             var imageArray = new Uint32Array(imageData.data.buffer);
@@ -427,7 +428,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    private __setArea(imageData:ImageData, x:number, y:number):void {
+    private __setArea(imageData: ImageData, x: number, y: number): void {
         if (this.isLocked) {
             var cachedData = this._cachedImageData;
             var cachedArray = new Uint32Array(cachedData.data.buffer);
@@ -456,52 +457,52 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         }
     }
 
-    private __buildRenderer():void {
+    private __buildRenderer(): void {
         if (this._cachedRenderer !== null) {
             return;
         }
         this._cachedRenderer = new WebGLRenderer(this._canvas, WebGLRenderer.DEFAULT_OPTIONS);
     }
 
-    private _canvas:HTMLCanvasElement = null;
-    private _context:CanvasRenderingContext2D = null;
-    private _supportsTransparent:boolean = true;
-    private _isLocked:boolean = false;
-    private _cachedImageData:ImageData = null;
-    private _cachedRenderer:WebGLRenderer = null;
-    private _isDataChangedDuringLockDown:boolean = false;
+    private _canvas: HTMLCanvasElement = null;
+    private _context: CanvasRenderingContext2D = null;
+    private _supportsTransparent: boolean = true;
+    private _isLocked: boolean = false;
+    private _cachedImageData: ImageData = null;
+    private _cachedRenderer: WebGLRenderer = null;
+    private _isDataChangedDuringLockDown: boolean = false;
 
 }
 
-function floodFill(bitmapData:BitmapData, getCall:(x:number, y:number, w:number, h:number) => ImageData, setCall:(data:ImageData, x:number, y:number) => void,
-                   x:number, y:number, color:number):void {
+function floodFill(bitmapData: BitmapData, getCall: (x: number, y: number, w: number, h: number) => ImageData, setCall: (data: ImageData, x: number, y: number) => void,
+                   x: number, y: number, color: number): void {
     var imageData = getCall(0, 0, bitmapData.width, bitmapData.height);
     var dataBuffer = imageData.data.buffer;
     var u32 = new Uint32Array(dataBuffer);
     var lineWidth = bitmapData.width;
 
-    function point2Index(x:number, y:number):number {
+    function point2Index(x: number, y: number): number {
         return x + y * lineWidth;
     }
 
-    function getColor(x:number, y:number):number {
+    function getColor(x: number, y: number): number {
         return u32[point2Index(x, y)];
     }
 
-    function setColor(x:number, y:number, c:number):void {
+    function setColor(x: number, y: number, c: number): void {
         u32[point2Index(x, y)] = c;
     }
 
     // The core flood-fill algorithm, based on a queue.
-    type Coordinate = {x:number, y:number};
-    var queue:Coordinate[] = [{x: x, y: y}];
-    var visited:boolean[] = new Array<boolean>(u32.length);
+    type Coordinate = {x: number, y: number};
+    var queue: Coordinate[] = [{x: x, y: y}];
+    var visited: boolean[] = new Array<boolean>(u32.length);
     var refColor = getColor(x, y);
     visited[point2Index(x, y)] = true;
     while (queue.length > 0) {
         var coord = queue.shift();
         setColor(coord.x, coord.y, color);
-        var index:number;
+        var index: number;
         // Top
         if (coord.y > 0) {
             index = point2Index(coord.x, coord.y - 1);

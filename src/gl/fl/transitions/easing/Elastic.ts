@@ -4,8 +4,8 @@
 
 export abstract class Elastic {
 
-    static easeIn(t:number, b:number, c:number, d:number, a:number = 0, p:number = 0):number {
-        var s:number;
+    static easeIn(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
+        var s: number;
         if (t == 0) return b;
         if ((t /= d) == 1) return b + c;
         //if (typeof p == "undefined") p = d * .3;
@@ -18,8 +18,8 @@ export abstract class Elastic {
         return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
     }
 
-    static easeInOut(t:number, b:number, c:number, d:number, a:number = 0, p:number = 0):number {
-        var s:number;
+    static easeInOut(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
+        var s: number;
         if (t == 0) return b;
         if ((t /= d / 2) == 2) return b + c;
         //if (typeof p == "undefined") p = d * (.3 * 1.5);
@@ -33,8 +33,8 @@ export abstract class Elastic {
         return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
     }
 
-    static easeOut(t:number, b:number, c:number, d:number, a:number = 0, p:number = 0):number {
-        var s:number;
+    static easeOut(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
+        var s: number;
         if (t == 0) return b;
         if ((t /= d) == 1) return b + c;
         //if (typeof p == "undefined") p = d * .3;

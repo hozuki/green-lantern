@@ -4,8 +4,8 @@
 
 export interface RendererOptions {
 
-    antialias?:boolean;
-    depth?:boolean;
-    transparent?:boolean;
+    antialias?: boolean;
+    depth?: boolean;
+    transparent?: boolean;
 
 }

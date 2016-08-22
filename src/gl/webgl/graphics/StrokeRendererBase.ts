@@ -8,12 +8,12 @@ import {IStrokeDataRenderer} from "./IStrokeDataRenderer";
 
 export abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
 
-    constructor(graphics:Graphics, lastPathStartX:number, lastPathStartY:number, currentX:number, currentY:number) {
+    constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
         this._lineVerticesStorage = [[0, 0], [0, 0], [0, 0], [0, 0]];
     }
 
-    moveTo(x:number, y:number):void {
+    moveTo(x: number, y: number): void {
         // This action seems weird...
         if (this._graphics.isFilling) {
             this.closePath();
@@ -24,7 +24,7 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
         this._lastPathStartY = y;
     }
 
-    protected _$getSimLineVertices(x1:number, y1:number, x2:number, y2:number, z:number, width:number):number[] {
+    protected _$getSimLineVertices(x1: number, y1: number, x2: number, y2: number, z: number, width: number): number[] {
         if (width < 0) {
             return [];
         }
@@ -90,6 +90,6 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
         ];
     }
 
-    private _lineVerticesStorage:number[][] = null;
+    private _lineVerticesStorage: number[][] = null;
 
 }

@@ -4,73 +4,73 @@
 
 import {Point} from "./Point";
 import {Vector3D} from "./Vector3D";
-import {ICloneable} from "../../glantern/ICloneable";
-import {ICopyable} from "../../glantern/ICopyable";
+import {ICloneable} from "../../mic/ICloneable";
+import {ICopyable} from "../../mic/ICopyable";
 import {NotImplementedError} from "../errors/NotImplementedError";
 
 export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
 
-    constructor(a:number = 1, b:number = 0, c:number = 1, d:number = 1, tx:number = 0, ty:number = 0) {
+    constructor(a: number = 1, b: number = 0, c: number = 1, d: number = 1, tx: number = 0, ty: number = 0) {
         this._data = [a, c, tx, b, d, ty, 0, 0, 1];
     }
 
-    get a():number {
+    get a(): number {
         return this._data[0];
     }
 
-    set a(v:number) {
+    set a(v: number) {
         this._data[0] = v;
     }
 
-    get b():number {
+    get b(): number {
         return this._data[3];
     }
 
-    set b(v:number) {
+    set b(v: number) {
         this._data[3] = v;
     }
 
-    get c():number {
+    get c(): number {
         return this._data[1];
     }
 
-    set c(v:number) {
+    set c(v: number) {
         this._data[1] = v;
     }
 
-    get d():number {
+    get d(): number {
         return this._data[4];
     }
 
-    set d(v:number) {
+    set d(v: number) {
         this._data[4] = v;
     }
 
-    get tx():number {
+    get tx(): number {
         return this._data[2];
     }
 
-    set tx(v:number) {
+    set tx(v: number) {
         this._data[2] = v;
     }
 
-    get ty():number {
+    get ty(): number {
         return this._data[5];
     }
 
-    set ty(v:number) {
+    set ty(v: number) {
         this._data[5] = v;
     }
 
-    clone():Matrix {
+    clone(): Matrix {
         return new Matrix(this.a, this.b, this.c, this.d, this.tx, this.ty);
     }
 
-    concat(m:Matrix):void {
+    concat(m: Matrix): void {
         this._data = Matrix.__dotProduct(this._data, m._data);
     }
 
-    copyColumnFrom(column:number, vector3D:Vector3D):void {
+    copyColumnFrom(column: number, vector3D: Vector3D): void {
         if (column < 0 || column > 2) {
             throw new RangeError('Column must be 0, 1, or 2.');
         }
@@ -79,7 +79,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         this._data[2 + column * 3] = vector3D.z;
     }
 
-    copyColumnTo(column:number, vector3D:Vector3D):void {
+    copyColumnTo(column: number, vector3D: Vector3D): void {
         if (column < 0 || column > 2) {
             throw new RangeError('Column must be 0, 1, or 2.');
         }
@@ -88,11 +88,11 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         vector3D.z = this._data[2 + column * 3];
     }
 
-    copyFrom(sourceMatrix:Matrix):void {
+    copyFrom(sourceMatrix: Matrix): void {
         this._data = sourceMatrix._data.slice();
     }
 
-    copyRowFrom(row:number, vector3D:Vector3D):void {
+    copyRowFrom(row: number, vector3D: Vector3D): void {
         if (row < 0 || row > 2) {
             throw new RangeError('Row must be 0, 1, or 2.');
         }
@@ -101,7 +101,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         this._data[row + 6] = vector3D.z;
     }
 
-    copyRowTo(row:number, vector3D:Vector3D):void {
+    copyRowTo(row: number, vector3D: Vector3D): void {
         if (row < 0 || row > 2) {
             throw new RangeError('Column must be 0, 1, or 2.');
         }
@@ -110,30 +110,30 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         vector3D.z = this._data[6 + row];
     }
 
-    createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+    createBox(scaleX: number, scaleY: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
         this.identity();
         this.rotate(rotation);
         this.scale(scaleX, scaleY);
         this.translate(tx, ty);
     }
 
-    createGradientBox(width:number, height:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+    createGradientBox(width: number, height: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
         this.createBox(width, height, rotation, tx, ty);
     }
 
-    deltaTransformPoint(point:Point):Point {
+    deltaTransformPoint(point: Point): Point {
         throw new NotImplementedError();
     }
 
-    identity():void {
+    identity(): void {
         this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
     }
 
-    invert():boolean {
+    invert(): boolean {
         throw new NotImplementedError();
     }
 
-    rotate(angle:number):void {
+    rotate(angle: number): void {
         this._data = Matrix.__dotProduct(this._data, [
             Math.cos(angle), -Math.sin(angle), 0,
             Math.sin(angle), Math.cos(angle), 0,
@@ -141,7 +141,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         ]);
     }
 
-    scale(sx:number, sy:number):void {
+    scale(sx: number, sy: number): void {
         this._data = Matrix.__dotProduct(this._data, [
             sx, 0, 0,
             0, sy, 0,
@@ -149,7 +149,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         ]);
     }
 
-    skew(skewX:number, skewY:number):void {
+    skew(skewX: number, skewY: number): void {
         this._data = Matrix.__dotProduct(this._data, [
             0, Math.tan(skewX), 0,
             Math.tan(skewY), 0, 0,
@@ -157,15 +157,15 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         ]);
     }
 
-    setTo(aa:number, ba:number, ca:number, da:number, txa:number, tya:number):void {
+    setTo(aa: number, ba: number, ca: number, da: number, txa: number, tya: number): void {
         this._data = [aa, ca, txa, ba, da, tya, 0, 0, 1];
     }
 
-    toString():string {
+    toString(): string {
         return `[${this.a} ${this.b} 0\r\n${this.c} ${this.d} 0\r\n${this.tx} ${this.ty} 1]`;
     }
 
-    transformPoint(point:Point):Point {
+    transformPoint(point: Point): Point {
         // 由于 Flash 所用的矩阵是转置过的，所以这里变成了行×行
         //var pointVector = [point.x, point.y, 1];
         //var x = pointVector[0] * this._data[0] + pointVector[1] * this._data[1] + pointVector[2] * this._data[2];
@@ -175,12 +175,12 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
             point.x * this._data[3] + point.y * this._data[4] + this._data[5]);
     }
 
-    translate(dx:number, dy:number):void {
+    translate(dx: number, dy: number): void {
         this.tx += dx;
         this.ty += dy;
     }
 
-    private static __dotProduct(a:number[], b:number[]):number[] {
+    private static __dotProduct(a: number[], b: number[]): number[] {
         if (b.length != 9) {
             throw new Error('Matrix dot product requires a 3x3 matrix.');
         }
@@ -194,7 +194,7 @@ export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
         }
         return result;
     }
-    
-    private _data:number[];
+
+    private _data: number[];
 
 }

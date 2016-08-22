@@ -12,22 +12,22 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class FxaaShader extends BufferedShader {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, FxaaShader.VERTEX_SOURCE, FxaaShader.FRAGMENT_SOURCE);
     }
 
-    setResolutionXY(xy:number[]):void {
+    setResolutionXY(xy: number[]): void {
         this._uniforms.get("uResolution").value = xy.slice();
     }
 
-    static SHADER_CLASS_NAME:string = "FxaaShader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.fxaa;
-    static VERTEX_SOURCE:string = VertexShaders.fxaa;
+    static SHADER_CLASS_NAME: string = "FxaaShader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.fxaa;
+    static VERTEX_SOURCE: string = VertexShaders.fxaa;
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string, UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
 
         u = new UniformCache();
         u.name = "uResolution";

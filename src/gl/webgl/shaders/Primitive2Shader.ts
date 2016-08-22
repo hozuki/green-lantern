@@ -13,42 +13,42 @@ import {WebGLDataType} from "../WebGLDataType";
 
 export class Primitive2Shader extends ShaderBase {
 
-    constructor(manager:ShaderManager) {
+    constructor(manager: ShaderManager) {
         super(manager, Primitive2Shader.VERTEX_SOURCE, Primitive2Shader.FRAGMENT_SOURCE, null, null);
     }
 
-    static SHADER_CLASS_NAME:string = "Primitive2Shader";
-    static FRAGMENT_SOURCE:string = FragmentShaders.primitive;
-    static VERTEX_SOURCE:string = VertexShaders.primitive2;
+    static SHADER_CLASS_NAME: string = "Primitive2Shader";
+    static FRAGMENT_SOURCE: string = FragmentShaders.primitive;
+    static VERTEX_SOURCE: string = VertexShaders.primitive2;
 
-    setProjection(matrix:Matrix3D):void {
+    setProjection(matrix: Matrix3D): void {
         this._uniforms.get("uProjectionMatrix").value = matrix.toArray();
     }
 
-    setTransform(matrix:Matrix3D):void {
+    setTransform(matrix: Matrix3D): void {
         this._uniforms.get("uTransformMatrix").value = matrix.toArray();
     }
 
-    setAlpha(alpha:number):void {
+    setAlpha(alpha: number): void {
         this._uniforms.get("uAlpha").value = alpha;
     }
 
-    setFlipX(flip:boolean):void {
+    setFlipX(flip: boolean): void {
         this._uniforms.get("uFlipX").value = flip;
     }
 
-    setFlipY(flip:boolean):void {
+    setFlipY(flip: boolean): void {
         this._uniforms.get("uFlipY").value = flip;
     }
 
-    setOriginalSize(xy:number[]):void {
+    setOriginalSize(xy: number[]): void {
         this._uniforms.get("uOriginalSize").value = xy.slice();
     }
 
-    protected _$localInit(manager:ShaderManager, uniforms:Map<string,UniformCache>, attributes:Map<string, AttributeCache>):void {
+    protected _$localInit(manager: ShaderManager, uniforms: Map<string,UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u:UniformCache;
+        var u: UniformCache;
         var transformMatrix = new Matrix3D();
         var projectionMatrix = new Matrix3D();
         var w = manager.renderer.view.width;

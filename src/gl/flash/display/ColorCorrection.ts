@@ -4,15 +4,15 @@
 
 export abstract class ColorCorrection {
 
-    static get DEFAULT():string {
+    static get DEFAULT(): string {
         return 'default';
     }
 
-    static get OFF():string {
+    static get OFF(): string {
         return 'off';
     }
 
-    static get ON():string {
+    static get ON(): string {
         return 'on';
     }
 

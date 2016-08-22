@@ -9,18 +9,18 @@ import {IBitmapFilter} from "./IBitmapFilter";
 
 export abstract class FilterBase implements IBitmapFilter {
 
-    constructor(manager:FilterManager) {
+    constructor(manager: FilterManager) {
         this._filterManager = manager;
     }
 
-    abstract process(renderer:WebGLRenderer, input:RenderTarget2D, output:RenderTarget2D, clearOutput:boolean):void;
+    abstract process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void;
 
     /**
      * Called when it is added to a {@link DisplayObject.filters} array.
      * Notice that it may be called multiple times, but a filter should only be initialized once
      * if its output buffer is null.
      */
-    notifyAdded():void {
+    notifyAdded(): void {
         if (this._referenceCount <= 0) {
             this._$initialize();
         }
@@ -31,50 +31,50 @@ export abstract class FilterBase implements IBitmapFilter {
      * Called when it is removed from a {@link DisplayObject.filters} array.
      * Notice that it may be called multiple times, but should do nothing if its output is already null.
      */
-    notifyRemoved():void {
+    notifyRemoved(): void {
         this._referenceCount--;
         if (this._referenceCount <= 0) {
             this._$dispose();
         }
     }
 
-    dispose():void {
+    dispose(): void {
         this._$dispose();
     }
 
-    initialize():void {
+    initialize(): void {
         this._$initialize();
     }
 
-    get filterManager():FilterManager {
+    get filterManager(): FilterManager {
         return this._filterManager;
     }
 
-    get flipX():boolean {
+    get flipX(): boolean {
         return this._flipX;
     }
 
-    set flipX(v:boolean) {
+    set flipX(v: boolean) {
         this._flipX = v;
     }
 
-    get flipY():boolean {
+    get flipY(): boolean {
         return this._flipY;
     }
 
-    set flipY(v:boolean) {
+    set flipY(v: boolean) {
         this._flipY = v;
     }
 
-    protected _$initialize():void {
+    protected _$initialize(): void {
     }
 
-    protected _$dispose():void {
+    protected _$dispose(): void {
     }
 
-    private _filterManager:FilterManager = null;
-    private _flipY:boolean = false;
-    private _flipX:boolean = false;
-    private _referenceCount:number = 0;
+    private _filterManager: FilterManager = null;
+    private _flipY: boolean = false;
+    private _flipX: boolean = false;
+    private _referenceCount: number = 0;
 
 }

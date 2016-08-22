@@ -18,13 +18,13 @@ import {BitmapFilter} from "../filters/BitmapFilter";
 import {Matrix3D} from "../geom/Matrix3D";
 import {Vector3D} from "../geom/Vector3D";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../glantern/GLUtil";
-import {MathUtil} from "../../glantern/MathUtil";
-import {TimeInfo} from "../../glantern/TimeInfo";
+import {MathUtil} from "../../mic/MathUtil";
+import {TimeInfo} from "../../mic/TimeInfo";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
 
-    constructor(root:Stage, parent:DisplayObjectContainer) {
+    constructor(root: Stage, parent: DisplayObjectContainer) {
         super();
         this._root = root;
         this._stage = root;
@@ -34,46 +34,46 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._isRoot = root === null;
     }
 
-    get alpha():number {
+    get alpha(): number {
         return this._alpha;
     }
 
-    set alpha(v:number) {
+    set alpha(v: number) {
         this._alpha = MathUtil.clamp(v, 0, 1);
     }
 
-    blendMode:string = BlendMode.NORMAL;
+    blendMode: string = BlendMode.NORMAL;
 
-    get cacheAsBitmap():boolean {
+    get cacheAsBitmap(): boolean {
         throw new NotImplementedError();
     }
 
-    set cacheAsBitmap(v:boolean) {
+    set cacheAsBitmap(v: boolean) {
         throw new NotImplementedError();
     }
 
-    get childIndex():number {
+    get childIndex(): number {
         return this._childIndex;
     }
 
     // DO NOT call manually
-    set childIndex(v:number) {
+    set childIndex(v: number) {
         this._childIndex = v;
     }
 
-    dispose():void {
+    dispose(): void {
         super.dispose();
         this.filters = [];
     }
 
-    enabled:boolean = true;
+    enabled: boolean = true;
 
-    get filters():BitmapFilter[] {
+    get filters(): BitmapFilter[] {
         return this._filters.slice();
     }
 
-    set filters(v:BitmapFilter[]) {
-        var i:number;
+    set filters(v: BitmapFilter[]) {
+        var i: number;
         var hasFiltersBefore = this.__shouldProcessFilters();
         if (hasFiltersBefore) {
             for (i = 0; i < this._filters.length; ++i) {
@@ -96,45 +96,45 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    get height():number {
+    get height(): number {
         return this._height;
     }
 
-    set height(v:number) {
+    set height(v: number) {
         this._height = v;
     }
 
-    mask:DisplayObject = null;
+    mask: DisplayObject = null;
 
-    get mouseX():number {
+    get mouseX(): number {
         throw new NotImplementedError();
     }
 
-    get mouseY():number {
+    get mouseY(): number {
         throw new NotImplementedError();
     }
 
-    get name():string {
+    get name(): string {
         return this._name;
     }
 
-    set name(v:string) {
+    set name(v: string) {
         this._name = v;
     }
 
-    get parent():DisplayObjectContainer {
+    get parent(): DisplayObjectContainer {
         return this._parent;
     }
 
-    get root():DisplayObject {
+    get root(): DisplayObject {
         return this._root;
     }
 
-    get rotation():number {
+    get rotation(): number {
         return this._rotation;
     }
 
-    set rotation(v:number) {
+    set rotation(v: number) {
         while (v < -180) {
             v += 360;
         }
@@ -144,11 +144,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._rotation = v;
     }
 
-    get rotationX():number {
+    get rotationX(): number {
         return this._rotationX;
     }
 
-    set rotationX(v:number) {
+    set rotationX(v: number) {
         while (v < -180) {
             v += 360;
         }
@@ -158,11 +158,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._rotationX = v;
     }
 
-    get rotationY():number {
+    get rotationY(): number {
         return this._rotationY;
     }
 
-    set rotationY(v:number) {
+    set rotationY(v: number) {
         while (v < -180) {
             v += 360;
         }
@@ -172,11 +172,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._rotationY = v;
     }
 
-    get rotationZ():number {
+    get rotationZ(): number {
         return this._rotationZ;
     }
 
-    set rotationZ(v:number) {
+    set rotationZ(v: number) {
         while (v < -180) {
             v += 360;
         }
@@ -186,29 +186,29 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._rotationZ = v;
     }
 
-    get stage():Stage {
+    get stage(): Stage {
         return this._stage;
     }
 
-    get transform():Transform {
+    get transform(): Transform {
         return this._transform;
     }
 
-    visible:boolean = true;
+    visible: boolean = true;
 
-    get width():number {
+    get width(): number {
         return this._width;
     }
 
-    set width(v:number) {
+    set width(v: number) {
         this._width = v;
     }
 
-    get x():number {
+    get x(): number {
         return this._x;
     }
 
-    set x(v:number) {
+    set x(v: number) {
         var b = this._x !== v;
         this._x = v;
         if (b) {
@@ -216,11 +216,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    get y():number {
+    get y(): number {
         return this._y;
     }
 
-    set y(v:number) {
+    set y(v: number) {
         var b = this._y !== v;
         this._y = v;
         if (b) {
@@ -228,11 +228,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    get z():number {
+    get z(): number {
         return this._z;
     }
 
-    set z(v:number) {
+    set z(v: number) {
         var b = this._z !== v;
         this._z = v;
         if (b) {
@@ -240,15 +240,15 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    getBounds(targetCoordinateSpace:DisplayObject):Rectangle {
+    getBounds(targetCoordinateSpace: DisplayObject): Rectangle {
         throw new NotImplementedError();
     }
 
-    getRect(targetCoordinateSpace:DisplayObject):Rectangle {
+    getRect(targetCoordinateSpace: DisplayObject): Rectangle {
         throw new NotImplementedError();
     }
 
-    update(timeInfo:TimeInfo):void {
+    update(timeInfo: TimeInfo): void {
         if (this._isTransformDirty) {
             this._$updateTransform();
         }
@@ -257,7 +257,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    render(renderer:WebGLRenderer):void {
+    render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0) {
             this._$preprocess(renderer);
             this._$render(renderer);
@@ -267,12 +267,12 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    requestUpdateTransform():void {
+    requestUpdateTransform(): void {
         this._isTransformDirty = true;
     }
 
-    protected _$updateTransform():void {
-        var matrix3D:Matrix3D;
+    protected _$updateTransform(): void {
+        var matrix3D: Matrix3D;
         if (this._isRoot) {
             matrix3D = new Matrix3D();
         } else {
@@ -285,9 +285,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this.transform.matrix3D.copyFrom(matrix3D);
     }
 
-    protected abstract _$update(timeInfo:TimeInfo):void;
+    protected abstract _$update(timeInfo: TimeInfo): void;
 
-    protected abstract _$render(renderer:WebGLRenderer):void;
+    protected abstract _$render(renderer: WebGLRenderer): void;
 
     /**
      * Override this function to select the proper shader.
@@ -297,9 +297,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
      * &nbsp;&nbsp;shaderManager.selectShader(ShaderID.PRIMITIVE);
      * }
      */
-    protected abstract _$selectShader(shaderManager:ShaderManager):void;
+    protected abstract _$selectShader(shaderManager: ShaderManager): void;
 
-    protected _$preprocess(renderer:WebGLRenderer):void {
+    protected _$preprocess(renderer: WebGLRenderer): void {
         if (this.__shouldProcessFilters()) {
             this._filterTarget.clear();
             renderer.setRenderTarget(this._filterTarget);
@@ -309,18 +309,18 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         var manager = renderer.shaderManager;
         this._$selectShader(manager);
         var shader = manager.currentShader;
-        if (GLUtil.ptr(shader)) {
-            shader.changeValue("uTransformMatrix", (u:UniformCache):void => {
+        if (CommonUtil.ptr(shader)) {
+            shader.changeValue("uTransformMatrix", (u: UniformCache): void => {
                 u.value = this.transform.matrix3D.toArray();
             });
-            shader.changeValue("uAlpha", (u:UniformCache):void => {
+            shader.changeValue("uAlpha", (u: UniformCache): void => {
                 u.value = this.alpha;
             });
         }
         renderer.setBlendMode(this.blendMode);
     }
 
-    protected _$postprocess(renderer:WebGLRenderer):void {
+    protected _$postprocess(renderer: WebGLRenderer): void {
         if (this.__shouldProcessFilters()) {
             var filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
@@ -329,14 +329,14 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
     }
 
-    protected _$createFilterTarget(renderer:WebGLRenderer):void {
+    protected _$createFilterTarget(renderer: WebGLRenderer): void {
         if (this._filterTarget !== null) {
             return;
         }
         this._filterTarget = renderer.createRenderTarget();
     }
 
-    protected _$releaseFilterTarget():void {
+    protected _$releaseFilterTarget(): void {
         if (this._filterTarget === null) {
             return;
         }
@@ -344,32 +344,32 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         this._filterTarget = null;
     }
 
-    private __shouldProcessFilters():boolean {
+    private __shouldProcessFilters(): boolean {
         return this.filters !== null && this.filters.length > 0;
     }
 
-    protected _parent:DisplayObjectContainer = null;
-    protected _root:Stage = null;
-    protected _name:string = "";
-    protected _rotation:number = 0;
-    protected _rotationX:number = 0;
-    protected _rotationY:number = 0;
-    protected _rotationZ:number = 0;
-    protected _scaleX:number = 1;
-    protected _scaleY:number = 1;
-    protected _scaleZ:number = 1;
-    protected _stage:Stage = null;
-    protected _height:number = 0;
-    protected _width:number = 0;
-    protected _x:number = 0;
-    protected _y:number = 0;
-    protected _z:number = 0;
-    protected _childIndex:number = -1;
-    protected _alpha:number = 1;
-    protected _filters:BitmapFilter[] = null;
-    protected _filterTarget:RenderTarget2D = null;
-    protected _transform:Transform = null;
-    protected _isTransformDirty:boolean = true;
-    private _isRoot:boolean = false;
+    protected _parent: DisplayObjectContainer = null;
+    protected _root: Stage = null;
+    protected _name: string = "";
+    protected _rotation: number = 0;
+    protected _rotationX: number = 0;
+    protected _rotationY: number = 0;
+    protected _rotationZ: number = 0;
+    protected _scaleX: number = 1;
+    protected _scaleY: number = 1;
+    protected _scaleZ: number = 1;
+    protected _stage: Stage = null;
+    protected _height: number = 0;
+    protected _width: number = 0;
+    protected _x: number = 0;
+    protected _y: number = 0;
+    protected _z: number = 0;
+    protected _childIndex: number = -1;
+    protected _alpha: number = 1;
+    protected _filters: BitmapFilter[] = null;
+    protected _filterTarget: RenderTarget2D = null;
+    protected _transform: Transform = null;
+    protected _isTransformDirty: boolean = true;
+    private _isRoot: boolean = false;
 
 }

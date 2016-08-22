@@ -4,35 +4,35 @@
 
 export abstract class StageAlign {
 
-    static get BOTTOM():string {
+    static get BOTTOM(): string {
         return 'B';
     }
 
-    static get BOTTOM_LEFT():string {
+    static get BOTTOM_LEFT(): string {
         return 'BL';
     }
 
-    static get BOTTOM_RIGHT():string {
+    static get BOTTOM_RIGHT(): string {
         return 'BR';
     }
 
-    static get LEFT():string {
+    static get LEFT(): string {
         return 'L';
     }
 
-    static get RIGHT():string {
+    static get RIGHT(): string {
         return 'R';
     }
 
-    static get TOP():string {
+    static get TOP(): string {
         return 'T';
     }
 
-    static get TOP_LEFT():string {
+    static get TOP_LEFT(): string {
         return 'TL';
     }
 
-    static get TOP_RIGHT():string {
+    static get TOP_RIGHT(): string {
         return 'TR';
     }
 

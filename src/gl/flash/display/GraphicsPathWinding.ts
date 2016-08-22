@@ -4,11 +4,11 @@
 
 export abstract class GraphicsPathWinding {
 
-    public static get EVEN_ODD():string {
+    public static get EVEN_ODD(): string {
         return "evenOdd";
     }
 
-    public static get NON_ZERO():string {
+    public static get NON_ZERO(): string {
         return "nonZero";
     }
 

@@ -4,15 +4,15 @@
 
 export abstract class CompressionAlgorithm {
 
-    static get DEFLATE():string {
+    static get DEFLATE(): string {
         return "deflate";
     }
 
-    static get LZMA():string {
+    static get LZMA(): string {
         return "lzma";
     }
 
-    static get ZLIB():string {
+    static get ZLIB(): string {
         return "zlib";
     }
 

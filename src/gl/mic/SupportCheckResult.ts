@@ -4,7 +4,7 @@
 
 export interface SupportCheckResult {
 
-    ok:boolean;
-    reasons?:string[];
+    ok: boolean;
+    reasons?: string[];
 
 }

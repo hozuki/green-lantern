@@ -3,7 +3,7 @@
  */
 
 import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ICopyable} from "../../glantern/ICopyable";
+import {ICopyable} from "../../mic/ICopyable";
 import {DisplayObject} from "./DisplayObject";
 import {Matrix} from "../geom/Matrix";
 import {SpreadMethod} from "./SpreadMethod";
@@ -22,15 +22,15 @@ import {BitmapData} from "./BitmapData";
 import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
 import {RenderTarget2D} from "../../webgl/RenderTarget2D";
-import {IDisposable} from "../../glantern/IDisposable";
+import {IDisposable} from "../../mic/IDisposable";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../glantern/GLUtil";
-import {TimeInfo} from "../../glantern/TimeInfo";
-import {MathUtil} from "../../glantern/MathUtil";
+import {TimeInfo} from "../../mic/TimeInfo";
+import {MathUtil} from "../../mic/MathUtil";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export class Graphics implements ICopyable<Graphics>, IDisposable {
 
-    constructor(attachTo:DisplayObject, renderer:WebGLRenderer) {
+    constructor(attachTo: DisplayObject, renderer: WebGLRenderer) {
         this._displayObject = attachTo;
         this._renderer = renderer;
         this._isDirty = true;
@@ -42,11 +42,11 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this.clear();
     }
 
-    beginBitmapFill(bitmap:BitmapData, matrix:Matrix = null, repeat:boolean = false, smooth:boolean = false):void {
+    beginBitmapFill(bitmap: BitmapData, matrix: Matrix = null, repeat: boolean = false, smooth: boolean = false): void {
         throw new NotImplementedError();
     }
 
-    beginFill(color:number, alpha:number = 1.0):void {
+    beginFill(color: number, alpha: number = 1.0): void {
         if (this._isFilling) {
             this.endFill();
         }
@@ -59,18 +59,18 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[],
-                      matrix:Matrix = null, spreadMethod:string = SpreadMethod.PAD,
-                      interpolationMethod:string = InterpolationMethod.RGB, focalPointRatio:number = 0):void {
+    beginGradientFill(type: string, colors: number[], alphas: number[], ratios: number[],
+                      matrix: Matrix = null, spreadMethod: string = SpreadMethod.PAD,
+                      interpolationMethod: string = InterpolationMethod.RGB, focalPointRatio: number = 0): void {
         throw new NotImplementedError();
     }
 
-    beginShaderFill(shader:Shader, matrix:Matrix = null):void {
+    beginShaderFill(shader: Shader, matrix: Matrix = null): void {
         throw new NotImplementedError();
     }
 
-    clear():void {
-        var i:number;
+    clear(): void {
+        var i: number;
         if (this._strokeRenderers !== null) {
             for (i = 0; i < this._strokeRenderers.length; ++i) {
                 this._strokeRenderers[i].dispose();
@@ -103,11 +103,11 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isFilling = false;
     }
 
-    copyFrom(sourceGraphics:Graphics):void {
+    copyFrom(sourceGraphics: Graphics): void {
         throw new NotImplementedError();
     }
 
-    curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+    curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.curveTo(controlX, controlY, anchorX, anchorY);
         }
@@ -116,7 +116,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    drawCircle(x:number, y:number, radius:number):void {
+    drawCircle(x: number, y: number, radius: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.drawCircle(x, y, radius);
         }
@@ -126,7 +126,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    drawEllipse(x:number, y:number, width:number, height:number):void {
+    drawEllipse(x: number, y: number, width: number, height: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.drawEllipse(x, y, width, height);
         }
@@ -136,7 +136,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    drawGraphicsData(graphicsData:IGraphicsData[]):void {
+    drawGraphicsData(graphicsData: IGraphicsData[]): void {
         throw new NotImplementedError();
     }
 
@@ -147,7 +147,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
      * @param winding
      * @param checkCommands Bulletproof
      */
-    drawPath(commands:number[], data:number[], winding:string = GraphicsPathWinding.EVEN_ODD, checkCommands:boolean = true):void {
+    drawPath(commands: number[], data: number[], winding: string = GraphicsPathWinding.EVEN_ODD, checkCommands: boolean = true): void {
         if (checkCommands && !__checkPathCommands(commands, data)) {
             return;
         }
@@ -156,7 +156,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         var isInFill = this._isFilling;
         var sr = this._currentStrokeRenderer;
         var fr = this._currentFillRenderer;
-        var newX:number, newY:number;
+        var newX: number, newY: number;
         for (var i = 0; i < commandLength; ++i) {
             switch (commands[i]) {
                 case GraphicsPathCommand.CUBIC_CURVE_TO:
@@ -225,7 +225,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    drawRect(x:number, y:number, width:number, height:number):void {
+    drawRect(x: number, y: number, width: number, height: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.drawRect(x, y, width, height);
         }
@@ -235,14 +235,14 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight:number = NaN):void {
+    drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight: number = NaN): void {
         if (MathUtil.isNaN(ellipseHeight)) {
             ellipseHeight = ellipseWidth;
         }
         throw new NotImplementedError();
     }
 
-    drawTriangles(vectors:number[], indices:number[] = null, uvtData:number[] = null, culling:string = TriangleCulling.NONE):void {
+    drawTriangles(vectors: number[], indices: number[] = null, uvtData: number[] = null, culling: string = TriangleCulling.NONE): void {
         // jabbany, mostly
         if (indices === null) {
             indices = [];
@@ -253,7 +253,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
             indices = indices.slice(0);
         }
         if (indices.length % 3 !== 0) {
-            GLUtil.trace("Graphics.drawTriangles malformed indices count. Must be multiple of 3.", "err");
+            CommonUtil.trace("Graphics.drawTriangles malformed indices count. Must be multiple of 3.", "err");
             return;
         }
         /** Do culling of triangles here to lessen work later **/
@@ -272,7 +272,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                 }
             }
         }
-        var commands:number[] = [], data:number[] = [];
+        var commands: number[] = [], data: number[] = [];
         for (var i = 0; i < indices.length / 3; i++) {
             var a = indices[3 * i],
                 b = indices[3 * i + 1],
@@ -287,7 +287,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this.drawPath(commands, data, void(0), false);
     }
 
-    endFill():void {
+    endFill(): void {
         if (this._isFilling) {
             this._isFilling = false;
             this._currentFillRenderer.endIndex = this._strokeRenderers.length - 1;
@@ -301,22 +301,22 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    lineBitmapStyle(bitmap:BitmapData, matrix:Matrix = null, repeat:boolean = true, smooth:boolean = false):void {
+    lineBitmapStyle(bitmap: BitmapData, matrix: Matrix = null, repeat: boolean = true, smooth: boolean = false): void {
         throw new NotImplementedError();
     }
 
-    lineGradientStyle(type:string, colors:number[], alphas:number[], ratios:number[],
-                      matrix:Matrix = null, spreadMethod:string = SpreadMethod.PAD,
-                      interpolationMethod:string = InterpolationMethod.RGB, focalPointRatio:number = 0):void {
+    lineGradientStyle(type: string, colors: number[], alphas: number[], ratios: number[],
+                      matrix: Matrix = null, spreadMethod: string = SpreadMethod.PAD,
+                      interpolationMethod: string = InterpolationMethod.RGB, focalPointRatio: number = 0): void {
         throw new NotImplementedError();
     }
 
-    lineShaderStyle(shader:Shader, matrix:Matrix = null):void {
+    lineShaderStyle(shader: Shader, matrix: Matrix = null): void {
         throw new NotImplementedError();
     }
 
-    lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false,
-              scaleMode:string = LineScaleMode.NORMAL, caps:string = null, joints:string = null, miterLimit:number = 3):void {
+    lineStyle(thickness: number = NaN, color: number = 0, alpha: number = 1.0, pixelHinting: boolean = false,
+              scaleMode: string = LineScaleMode.NORMAL, caps: string = null, joints: string = null, miterLimit: number = 3): void {
         if (this._lineType !== BrushType.SOLID || this._lineWidth !== thickness || this._lineColor !== color || this._lineAlpha !== alpha) {
             this._lineType = BrushType.SOLID;
             if (!MathUtil.isNaN(thickness)) {
@@ -329,7 +329,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    lineTo(x:number, y:number):void {
+    lineTo(x: number, y: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.lineTo(x, y);
         }
@@ -338,7 +338,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    moveTo(x:number, y:number):void {
+    moveTo(x: number, y: number): void {
         if (this._isFilling) {
             this._currentFillRenderer.moveTo(x, y);
         }
@@ -348,7 +348,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    update(timeInfo:TimeInfo):void {
+    update(timeInfo: TimeInfo): void {
         if (this._isDirty) {
             var j = 0, fillLen = this._fillRenderers.length;
             for (var i = 0; i < this._strokeRenderers.length; ++i) {
@@ -363,7 +363,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = false;
     }
 
-    render(renderer:WebGLRenderer, target:RenderTarget2D, clearOutput:boolean):void {
+    render(renderer: WebGLRenderer, target: RenderTarget2D, clearOutput: boolean): void {
         var j = 0, fillLen = this._fillRenderers.length;
         // TODO: Extend texture copy shader.
         // When _shouldUpdateRenderTarget and _bufferTarget are enabled, content of Graphics
@@ -383,7 +383,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    dispose():void {
+    dispose(): void {
         this.clear();
         this._strokeRenderers.pop();
         this._currentStrokeRenderer.dispose();
@@ -392,15 +392,15 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._bufferTarget = null;
     }
 
-    get renderer():WebGLRenderer {
+    get renderer(): WebGLRenderer {
         return this._renderer;
     }
 
-    get isFilling():boolean {
+    get isFilling(): boolean {
         return this._isFilling;
     }
 
-    private __createStrokeRendererWithCurrentSettings():StrokeRendererBase {
+    private __createStrokeRendererWithCurrentSettings(): StrokeRendererBase {
         switch (this._lineType) {
             case BrushType.SOLID:
                 return new SolidStrokeRenderer(this, this._lastPathStartX, this._lastPathStartY, this._currentX, this._currentY, this._lineWidth, this._lineColor, this._lineAlpha);
@@ -409,47 +409,47 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
     }
 
-    private __updateCurrentPoint(x:number, y:number):void {
+    private __updateCurrentPoint(x: number, y: number): void {
         this._currentX = x;
         this._currentY = y;
     }
 
-    private __updateLastPathStartPoint(x:number, y:number):void {
+    private __updateLastPathStartPoint(x: number, y: number): void {
         this._lastPathStartX = x;
         this._lastPathStartY = y;
     }
 
-    private __resetStyles():void {
+    private __resetStyles(): void {
         this._lineType = BrushType.SOLID;
         this._lineWidth = 1;
         this._lineColor = 0x000000;
         this._lineAlpha = 1;
     }
 
-    private _displayObject:DisplayObject = null;
-    private _isFilling:boolean = false;
-    private _renderer:WebGLRenderer = null;
-    private _bufferTarget:RenderTarget2D = null;
-    private _isDirty:boolean = true;
-    private _shouldUpdateRenderTarget:boolean = false;
+    private _displayObject: DisplayObject = null;
+    private _isFilling: boolean = false;
+    private _renderer: WebGLRenderer = null;
+    private _bufferTarget: RenderTarget2D = null;
+    private _isDirty: boolean = true;
+    private _shouldUpdateRenderTarget: boolean = false;
 
-    private _lineType:BrushType = BrushType.SOLID;
-    private _lineWidth:number = 1;
-    private _lineAlpha:number = 1;
-    private _lineColor:number = 0;
-    private _currentX:number = 0;
-    private _currentY:number = 0;
-    private _lastPathStartX:number = 0;
-    private _lastPathStartY:number = 0;
+    private _lineType: BrushType = BrushType.SOLID;
+    private _lineWidth: number = 1;
+    private _lineAlpha: number = 1;
+    private _lineColor: number = 0;
+    private _currentX: number = 0;
+    private _currentY: number = 0;
+    private _lastPathStartX: number = 0;
+    private _lastPathStartY: number = 0;
 
-    private _currentStrokeRenderer:IStrokeDataRenderer = null;
-    private _currentFillRenderer:IFillDataRenderer = null;
-    private _strokeRenderers:IStrokeDataRenderer[] = null;
-    private _fillRenderers:IFillDataRenderer[] = null;
+    private _currentStrokeRenderer: IStrokeDataRenderer = null;
+    private _currentFillRenderer: IFillDataRenderer = null;
+    private _strokeRenderers: IStrokeDataRenderer[] = null;
+    private _fillRenderers: IFillDataRenderer[] = null;
 
 }
 
-function __checkPathCommands(commands:number[], data:number[]):boolean {
+function __checkPathCommands(commands: number[], data: number[]): boolean {
     if (commands === null || data === null || data.length % 2 !== 0) {
         return false;
     }

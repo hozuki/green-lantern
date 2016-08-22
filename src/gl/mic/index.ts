@@ -1,10 +1,12 @@
 /**
- * Created by MIC on 2016/6/11.
+ * Created by MIC on 2016/8/22.
  */
 
 export * from "./EngineBase";
 export * from "./ErrorBase";
-export * from "./GLUtil";
 export * from "./MathUtil";
-export * from "./VisualUtil";
 export * from "./BitConverter";
+
+import * as glantern from "./glantern/index";
+
+export {glantern};

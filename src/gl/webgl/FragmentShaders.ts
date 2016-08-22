@@ -3,44 +3,44 @@
  */
 
 interface FragmentShadersObject {
-    buffered?:string;
-    blur?:string;
-    primitive?:string;
-    colorTransform?:string;
-    fxaa?:string;
-    blur2?:string;
-    copyImage?:string;
+    buffered?: string;
+    blur?: string;
+    primitive?: string;
+    colorTransform?: string;
+    fxaa?: string;
+    blur2?: string;
+    copyImage?: string;
 }
 
-var Values:FragmentShadersObject = Object.create(null);
+var Values: FragmentShadersObject = Object.create(null);
 
 export abstract class FragmentShaders {
 
-    static get buffered():string {
+    static get buffered(): string {
         return Values.buffered;
     }
 
-    static get blur():string {
+    static get blur(): string {
         return Values.blur;
     }
 
-    static get primitive():string {
+    static get primitive(): string {
         return Values.primitive;
     }
 
-    static get colorTransform():string {
+    static get colorTransform(): string {
         return Values.colorTransform;
     }
 
-    static get fxaa():string {
+    static get fxaa(): string {
         return Values.fxaa;
     }
 
-    static get blur2():string {
+    static get blur2(): string {
         return Values.blur2;
     }
 
-    static get copyImage():string {
+    static get copyImage(): string {
         return Values.copyImage;
     }
 

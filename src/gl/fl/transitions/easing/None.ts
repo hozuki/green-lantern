@@ -4,19 +4,19 @@
 
 export abstract class None {
 
-    static easeIn(t:number, b:number, c:number, d:number):number {
+    static easeIn(t: number, b: number, c: number, d: number): number {
         return c * t / d + b;
     }
 
-    static easeInOut(t:number, b:number, c:number, d:number):number {
+    static easeInOut(t: number, b: number, c: number, d: number): number {
         return c * t / d + b;
     }
 
-    static easeNone(t:number, b:number, c:number, d:number):number {
+    static easeNone(t: number, b: number, c: number, d: number): number {
         return t < d ? b : b + c;
     }
 
-    static easeOut(t:number, b:number, c:number, d:number):number {
+    static easeOut(t: number, b: number, c: number, d: number): number {
         return c * t / d + b;
     }
 

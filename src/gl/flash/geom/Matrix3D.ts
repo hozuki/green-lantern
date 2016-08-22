@@ -4,16 +4,16 @@
 
 import {Vector3D} from "./Vector3D";
 import {Orientation3D} from "./Orientation3D";
-import {ICopyable} from "../../glantern/ICopyable";
-import {ICloneable} from "../../glantern/ICloneable";
+import {ICopyable} from "../../mic/ICopyable";
+import {ICloneable} from "../../mic/ICloneable";
 import {NotImplementedError} from "../errors/NotImplementedError";
 import {ArgumentError} from "../errors/ArgumentError";
 import {ApplicationError} from "../errors/ApplicationError";
-import {MathUtil} from "../../glantern/MathUtil";
+import {MathUtil} from "../../mic/MathUtil";
 
 export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
-    constructor(v:number[] = null) {
+    constructor(v: number[] = null) {
         if (v === null || v.length <= 0) {
             v = [
                 1, 0, 0, 0,
@@ -25,26 +25,26 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         this.rawData = v;
     }
 
-    get determinant():number {
+    get determinant(): number {
         throw new NotImplementedError();
     }
 
-    get rawData():number[] {
+    get rawData(): number[] {
         return this._data;
     }
 
-    set rawData(v:number[]) {
+    set rawData(v: number[]) {
         if (v.length < 16) {
             throw new Error("Data length of Matrix3D must be no less than 16.");
         }
         this._data = v.slice();
     }
 
-    append(lhs:Matrix3D):void {
+    append(lhs: Matrix3D): void {
         this._data = Matrix3D.__dotProduct(lhs._data, this._data);
     }
 
-    appendRotation(degrees:number, axis:Vector3D, pivotPoint:Vector3D = null):void {
+    appendRotation(degrees: number, axis: Vector3D, pivotPoint: Vector3D = null): void {
         if (pivotPoint !== null) {
             this.appendTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
@@ -54,7 +54,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         }
     }
 
-    appendScale(xScale:number, yScale:number, zScale:number):void {
+    appendScale(xScale: number, yScale: number, zScale: number): void {
         this._data = Matrix3D.__dotProduct([
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
@@ -63,7 +63,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ], this._data);
     }
 
-    appendTranslation(x:number, y:number, z:number):void {
+    appendTranslation(x: number, y: number, z: number): void {
         this._data = Matrix3D.__dotProduct([
             1, 0, 0, x,
             0, 1, 0, y,
@@ -72,13 +72,13 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ], this._data);
     }
 
-    clone():Matrix3D {
-        var m:Matrix3D = new Matrix3D(this.rawData);
+    clone(): Matrix3D {
+        var m: Matrix3D = new Matrix3D(this.rawData);
         m.position = this.position !== null ? this.position.clone() : null;
         return m;
     }
 
-    copyColumnFrom(column:number, vector3D:Vector3D):void {
+    copyColumnFrom(column: number, vector3D: Vector3D): void {
         if (column < 0 || column > 3) {
             throw new RangeError("Column must be 0, 1, 2 or 3.");
         }
@@ -88,7 +88,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         this._data[column * 4 + 3] = vector3D.w;
     }
 
-    copyColumnTo(column:number, vector3D:Vector3D):void {
+    copyColumnTo(column: number, vector3D: Vector3D): void {
         if (column < 0 || column > 3) {
             throw new RangeError("Column must be 0, 1, 2 or 3.");
         }
@@ -98,20 +98,20 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         vector3D.w = this._data[column * 4 + 3];
     }
 
-    copyFrom(sourceMatrix3D:Matrix3D):void {
+    copyFrom(sourceMatrix3D: Matrix3D): void {
         this.position = sourceMatrix3D.position !== null ? sourceMatrix3D.position.clone() : null;
         this.rawData = sourceMatrix3D.rawData;
     }
 
-    copyRawDataFrom(vector:number[], index:number = 0, transpose:boolean = false):void {
+    copyRawDataFrom(vector: number[], index: number = 0, transpose: boolean = false): void {
         throw new NotImplementedError();
     }
 
-    copyRawDataTo(vector:number[], index:number = 0, transpose:boolean = false):void {
+    copyRawDataTo(vector: number[], index: number = 0, transpose: boolean = false): void {
         throw new NotImplementedError();
     }
 
-    copyRowFrom(row:number, vector3D:Vector3D):void {
+    copyRowFrom(row: number, vector3D: Vector3D): void {
         if (row < 0 || row > 3) {
             throw new RangeError("Row must be 0, 1, 2 or 3.");
         }
@@ -121,7 +121,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         this._data[row + 12] = vector3D.w;
     }
 
-    copyRowTo(row:number, vector3D:Vector3D):void {
+    copyRowTo(row: number, vector3D: Vector3D): void {
         if (row < 0 || row > 3) {
             throw new RangeError("Row must be 0, 1, 2 or 3.");
         }
@@ -131,20 +131,20 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         vector3D.w = this._data[row + 12];
     }
 
-    copyToMatrix3D(dest:Matrix3D):void {
+    copyToMatrix3D(dest: Matrix3D): void {
         dest.position = this.position !== null ? this.position.clone() : null;
         dest.rawData = this.rawData;
     }
 
-    decompose(orientationStyle:string = Orientation3D.EULER_ANGLES):Vector3D[] {
+    decompose(orientationStyle: string = Orientation3D.EULER_ANGLES): Vector3D[] {
         throw new NotImplementedError();
     }
 
-    deltaTransformVector(v:Vector3D):Vector3D {
+    deltaTransformVector(v: Vector3D): Vector3D {
         throw new NotImplementedError();
     }
 
-    identity():void {
+    identity(): void {
         this._data = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -153,24 +153,24 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ];
     }
 
-    static interpolate(thisMat:Matrix3D, toMat:Matrix3D, percent:number):Matrix3D {
+    static interpolate(thisMat: Matrix3D, toMat: Matrix3D, percent: number): Matrix3D {
         percent = MathUtil.clamp(percent, 0, 1);
-        var data:number[] = [];
+        var data: number[] = [];
         for (var i = 0; i < 16; i++) {
             data.push(thisMat._data[i] * (1 - percent) + toMat._data[i] * percent);
         }
         return new Matrix3D(data);
     }
 
-    interpolateTo(toMat:Matrix3D, percent:number):Matrix3D {
+    interpolateTo(toMat: Matrix3D, percent: number): Matrix3D {
         return Matrix3D.interpolate(this, toMat, percent);
     }
 
-    invert():boolean {
+    invert(): boolean {
         throw new NotImplementedError();
     }
 
-    pointAt(pos:Vector3D, at:Vector3D = Vector3D.ORIGIN, up:Vector3D = Vector3D.Z_AXIS):void {
+    pointAt(pos: Vector3D, at: Vector3D = Vector3D.ORIGIN, up: Vector3D = Vector3D.Z_AXIS): void {
         var fx = at.x - pos.x;
         var fy = at.y - pos.y;
         var fz = at.z - pos.z;
@@ -213,11 +213,11 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         d[15] += d[12] * x + d[13] * y + d[14] * z;
     }
 
-    prepend(rhs:Matrix3D):void {
+    prepend(rhs: Matrix3D): void {
         this._data = Matrix3D.__dotProduct(this._data, rhs._data);
     }
 
-    prependRotation(degrees:number, axis:Vector3D, pivotPoint:Vector3D = null):void {
+    prependRotation(degrees: number, axis: Vector3D, pivotPoint: Vector3D = null): void {
         if (pivotPoint !== null) {
             this.prependTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
         }
@@ -227,7 +227,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         }
     }
 
-    prependScale(xScale:number, yScale:number, zScale:number):void {
+    prependScale(xScale: number, yScale: number, zScale: number): void {
         this._data = Matrix3D.__dotProduct(this._data, [
             xScale, 0, 0, 0,
             0, yScale, 0, 0,
@@ -236,7 +236,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
-    prependTranslation(x:number, y:number, z:number):void {
+    prependTranslation(x: number, y: number, z: number): void {
         this._data = Matrix3D.__dotProduct(this._data, [
             1, 0, 0, x,
             0, 1, 0, y,
@@ -245,11 +245,11 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
-    recompose(components:Vector3D[], orientationStyle:string = Orientation3D.EULER_ANGLES):boolean {
+    recompose(components: Vector3D[], orientationStyle: string = Orientation3D.EULER_ANGLES): boolean {
         throw new NotImplementedError();
     }
 
-    transformVector(v:Vector3D):Vector3D {
+    transformVector(v: Vector3D): Vector3D {
         var x = this._data[0] * v.x + this._data[1] * v.y + this._data[2] * v.z + this._data[3] * v.w;
         var y = this._data[4] * v.x + this._data[5] * v.y + this._data[6] * v.z + this._data[7] * v.w;
         var z = this._data[8] * v.x + this._data[9] * v.y + this._data[10] * v.z + this._data[11] * v.w;
@@ -257,7 +257,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         return new Vector3D(x, y, z, w);
     }
 
-    transformVectors(vin:number[], vout:number[]):void {
+    transformVectors(vin: number[], vout: number[]): void {
         if (vin.length % 3 !== 0) {
             throw new ApplicationError("Matrix3D.transformVectors needs 2 arrays, size of the input array must be multiple of 3.");
         }
@@ -270,7 +270,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         }
     }
 
-    transpose():void {
+    transpose(): void {
         var d = this._data;
         this._data = [
             d[0], d[4], d[8], d[12],
@@ -280,7 +280,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ];
     }
 
-    toArray():Float32Array {
+    toArray(): Float32Array {
         var d = this._data;
         // Matrix3D is stored in row-major order, while WebGL is in column-major order.
         return new Float32Array([
@@ -291,7 +291,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
-    setOrthographicProjection(left:number, right:number, top:number, bottom:number, near:number, far:number):void {
+    setOrthographicProjection(left: number, right: number, top: number, bottom: number, near: number, far: number): void {
         if (left === right || top === bottom || near === far) {
             throw new ArgumentError("Null frustum");
         }
@@ -317,7 +317,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         d[15] = 1;
     }
 
-    setPerspectiveProjection(fov:number, aspect:number, near:number, far:number):void {
+    setPerspectiveProjection(fov: number, aspect: number, near: number, far: number): void {
         if (near === far || aspect === 0) {
             throw new ArgumentError("Null frustum");
         }
@@ -353,13 +353,13 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         d[15] = 0;
     }
 
-    position:Vector3D = null;
+    position: Vector3D = null;
 
-    private static __dotProduct(a:number[], b:number[]):number[] {
+    private static __dotProduct(a: number[], b: number[]): number[] {
         if (a.length !== 16 || b.length !== 16) {
             throw new Error("Matrix3D dot product needs a array of 16 elements.");
         }
-        var res:number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var res: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
                 for (var k = 0; k < 4; k++) {
@@ -370,9 +370,9 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         return res;
     }
 
-    private static __getRotationMatrix(angle:number, axis:Vector3D):number[] {
+    private static __getRotationMatrix(angle: number, axis: Vector3D): number[] {
         // jabbany
-        var sT:number = Math.sin(angle), cT:number = Math.cos(angle);
+        var sT: number = Math.sin(angle), cT: number = Math.cos(angle);
         return [
             cT + axis.x * axis.x * (1 - cT), axis.x * axis.y * (1 - cT) - axis.z * sT, axis.x * axis.z * (1 - cT) + axis.y * sT, 0,
             axis.x * axis.y * (1 - cT) + axis.z * sT, cT + axis.y * axis.y * (1 - cT), axis.y * axis.z * (1 - cT) - axis.x * sT, 0,
@@ -381,6 +381,6 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ];
     }
 
-    private _data:number[] = null;
+    private _data: number[] = null;
 
 }

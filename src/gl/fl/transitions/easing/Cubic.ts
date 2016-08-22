@@ -4,11 +4,11 @@
 
 export abstract class Cubic {
 
-    static easeIn(t:number, b:number, c:number, d:number):number {
+    static easeIn(t: number, b: number, c: number, d: number): number {
         return c * (t /= d) * t * t + b;
     }
 
-    static easeInOut(t:number, b:number, c:number, d:number):number {
+    static easeInOut(t: number, b: number, c: number, d: number): number {
         if ((t /= d / 2) < 1) {
             return c / 2 * t * t * t + b;
         } else {
@@ -16,7 +16,7 @@ export abstract class Cubic {
         }
     }
 
-    static easeOut(t:number, b:number, c:number, d:number):number {
+    static easeOut(t: number, b: number, c: number, d: number): number {
         return c * ((t = t / d - 1) * t * t + 1) + b;
     }
 

@@ -3,54 +3,54 @@
  */
 
 interface VertexShadersObject {
-    buffered?:string;
-    blurX?:string;
-    blurY?:string;
-    primitive?:string;
-    replicate?:string;
-    fxaa?:string;
-    blur2?:string;
-    copyImage?:string;
-    primitive2?:string;
+    buffered?: string;
+    blurX?: string;
+    blurY?: string;
+    primitive?: string;
+    replicate?: string;
+    fxaa?: string;
+    blur2?: string;
+    copyImage?: string;
+    primitive2?: string;
 }
 
-var Values:VertexShadersObject = Object.create(null);
+var Values: VertexShadersObject = Object.create(null);
 
 export abstract class VertexShaders {
 
-    static get buffered():string {
+    static get buffered(): string {
         return Values.buffered;
     }
 
-    static get blurX():string {
+    static get blurX(): string {
         return Values.blurX;
     }
 
-    static get blurY():string {
+    static get blurY(): string {
         return Values.blurY;
     }
 
-    static get primitive():string {
+    static get primitive(): string {
         return Values.primitive;
     }
 
-    static get replicate():string {
+    static get replicate(): string {
         return Values.replicate;
     }
 
-    static get fxaa():string {
+    static get fxaa(): string {
         return Values.fxaa;
     }
 
-    static get blur2():string {
+    static get blur2(): string {
         return Values.blur2;
     }
 
-    static get copyImage():string {
+    static get copyImage(): string {
         return Values.copyImage;
     }
 
-    static get primitive2():string {
+    static get primitive2(): string {
         return Values.primitive2;
     }
 

@@ -4,19 +4,19 @@
 
 export abstract class StageScaleMode {
 
-    static get EXACT_FIT():string {
+    static get EXACT_FIT(): string {
         return 'exactFit';
     }
 
-    static get NO_BORDER():string {
+    static get NO_BORDER(): string {
         return 'noBorder';
     }
 
-    static get NO_SCALE():string {
+    static get NO_SCALE(): string {
         return 'noScale';
     }
 
-    static get SHOW_ALL():string {
+    static get SHOW_ALL(): string {
         return 'showAll';
     }
 

@@ -12,18 +12,19 @@ import {Matrix3D} from "../flash/geom/Matrix3D";
 import {CopyImageShader} from "./shaders/CopyImageShader";
 import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {GLUtil} from "../glantern/GLUtil";
+import {VirtualDom} from "../mic/VirtualDom";
+import {CommonUtil} from "../mic/CommonUtil";
 
-const gl = (<any>window).WebGLRenderingContext;
+const gl = VirtualDom.WebGLRenderingContext;
 
 export abstract class RenderHelper {
 
-    static renderPrimitives(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer, clearOutput:boolean):void {
+    static renderPrimitives(renderer: WebGLRenderer, renderTo: RenderTarget2D, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
 
         var shader = <PrimitiveShader>renderer.shaderManager.currentShader;
         var glc = renderer.context;
-        var attributeLocation:number;
+        var attributeLocation: number;
 
         renderTo.activate();
         shader.syncUniforms();
@@ -47,13 +48,13 @@ export abstract class RenderHelper {
         glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
     }
 
-    static renderPrimitives2(renderer:WebGLRenderer, renderTo:RenderTarget2D, vertices:PackedArrayBuffer, colors:PackedArrayBuffer, indices:PackedArrayBuffer,
-                             flipX:boolean, flipY:boolean, clearOutput:boolean):void {
+    static renderPrimitives2(renderer: WebGLRenderer, renderTo: RenderTarget2D, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer,
+                             flipX: boolean, flipY: boolean, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE2);
 
         var shader = <Primitive2Shader>renderer.shaderManager.currentShader;
         var glc = renderer.context;
-        var attributeLocation:number;
+        var attributeLocation: number;
 
         renderTo.activate();
         shader.setOriginalSize([renderTo.originalWidth, renderTo.originalHeight]);
@@ -81,8 +82,8 @@ export abstract class RenderHelper {
     }
 
 
-    static copyTargetContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, clearOutput:boolean):void {
-        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r:WebGLRenderer):void => {
+    static copyTargetContent(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, flipX: boolean, flipY: boolean, clearOutput: boolean): void {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <ReplicateShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
             shader.setFlipY(flipY);
@@ -93,8 +94,8 @@ export abstract class RenderHelper {
         });
     }
 
-    static copyImageContent(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, flipX:boolean, flipY:boolean, transform:Matrix3D, alpha:number, clearOutput:boolean):void {
-        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r:WebGLRenderer):void => {
+    static copyImageContent(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, flipX: boolean, flipY: boolean, transform: Matrix3D, alpha: number, clearOutput: boolean): void {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
             shader.setFlipY(flipY);
@@ -107,16 +108,16 @@ export abstract class RenderHelper {
         });
     }
 
-    static renderImage(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, clearOutput:boolean):void {
-        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r:WebGLRenderer):void => {
+    static renderImage(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, clearOutput: boolean): void {
+        RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(false);
             shader.setFlipY(false);
         });
     }
 
-    static renderBuffered(renderer:WebGLRenderer, source:RenderTarget2D, destination:RenderTarget2D, shaderID:number,
-                          clearOutput:boolean, shaderInit:(r:WebGLRenderer) => void):void {
+    static renderBuffered(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, shaderID: number,
+                          clearOutput: boolean, shaderInit: (r: WebGLRenderer) => void): void {
         if (!checkRenderTargets(source, destination)) {
             return;
         }
@@ -139,7 +140,7 @@ export abstract class RenderHelper {
             RenderHelper._glVertexPositionBuffer = PackedArrayBuffer.create(glc, vertexPositions, gl.FLOAT, gl.ARRAY_BUFFER);
         }
 
-        var attributeLocation:number;
+        var attributeLocation: number;
 
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         if (attributeLocation >= 0) {
@@ -173,12 +174,12 @@ export abstract class RenderHelper {
     }
 
     // Be careful! Manually dispose it when the whole module is finalizing.
-    private static _glVertexPositionBuffer:PackedArrayBuffer = null;
+    private static _glVertexPositionBuffer: PackedArrayBuffer = null;
 
 }
 
-function checkRenderTargets(source:RenderTarget2D, destination:RenderTarget2D):boolean {
-    if (!GLUtil.ptr(source)) {
+function checkRenderTargets(source: RenderTarget2D, destination: RenderTarget2D): boolean {
+    if (!CommonUtil.ptr(source)) {
         console.warn("Cannot render a null RenderTarget2D onto another RenderTarget2D.");
         return false;
     }

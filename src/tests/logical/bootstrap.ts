@@ -9,11 +9,11 @@ import TestRunner from "./TestRunner";
 
 runTests(tests);
 
-type KV<T, U> = {key:T, value:U};
+type KV<T, U> = {key: T, value: U};
 
-function runTests(testObject:any):void {
-    var searchQueue:KV<string, any>[] = [];
-    var testsQueue:TestEntry[] = [];
+function runTests(testObject: any): void {
+    var searchQueue: KV<string, any>[] = [];
+    var testsQueue: TestEntry[] = [];
     searchQueue.push({key: null, value: testObject});
     while (searchQueue.length > 0) {
         var obj = searchQueue.shift();

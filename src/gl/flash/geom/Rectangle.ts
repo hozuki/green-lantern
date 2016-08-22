@@ -3,74 +3,74 @@
  */
 
 import {Point} from "./Point";
-import {ICopyable} from "../../glantern/ICopyable";
-import {ICloneable} from "../../glantern/ICloneable";
+import {ICopyable} from "../../mic/ICopyable";
+import {ICloneable} from "../../mic/ICloneable";
 
 export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
 
-    constructor(x:number = 0, y:number = 0, width:number = 0, height:number = 0) {
+    constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this._x = x >= 0 ? x : 0;
         this._y = y >= 0 ? y : 0;
         this._w = width >= 0 ? width : 0;
         this._h = height >= 0 ? height : 0;
     }
 
-    get bottom():number {
+    get bottom(): number {
         return this._y + this._h;
     }
 
-    set bottom(v:number) {
+    set bottom(v: number) {
         if (v < this._y) {
             v = this._y;
         }
         this._h = v - this._y;
     }
 
-    get bottomRight():Point {
+    get bottomRight(): Point {
         return new Point(this._x + this._w, this._y + this._h);
     }
 
-    set bottomRight(v:Point) {
+    set bottomRight(v: Point) {
         this.right = v.x;
         this.bottom = v.y;
     }
 
-    clone():Rectangle {
+    clone(): Rectangle {
         return new Rectangle(this._x, this._y, this._w, this._h);
     }
 
-    contains(x:number, y:number):boolean {
+    contains(x: number, y: number): boolean {
         return this.left <= x && x <= this.right && this.top <= y && y <= this.bottom;
     }
 
-    containsPoint(point:Point):boolean {
+    containsPoint(point: Point): boolean {
         return this.contains(point.x, point.y);
     }
 
-    containsRect(rect:Rectangle):boolean {
+    containsRect(rect: Rectangle): boolean {
         return this.containsPoint(rect.topLeft) && this.containsPoint(rect.bottomRight);
     }
 
-    copyFrom(sourceRect:Rectangle):void {
+    copyFrom(sourceRect: Rectangle): void {
         this._x = sourceRect._x;
         this._y = sourceRect._y;
         this._w = sourceRect._w;
         this._h = sourceRect._h;
     }
 
-    equals(toCompare:Rectangle):boolean {
+    equals(toCompare: Rectangle): boolean {
         return this._x == toCompare._x && this._y == toCompare._y && this._w == toCompare._w && this._h == toCompare._h;
     }
 
-    get height():number {
+    get height(): number {
         return this._h;
     }
 
-    set height(v:number) {
+    set height(v: number) {
         this._h = v >= 0 ? v : 0;
     }
 
-    inflate(dx:number, dy:number):void {
+    inflate(dx: number, dy: number): void {
         // TODO: bug when dx or dy is less than 0
         this.x -= dx;
         this.width += dx + dx;
@@ -78,11 +78,11 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         this.height += dy + dy;
     }
 
-    inflatePoint(point:Point):void {
+    inflatePoint(point: Point): void {
         this.inflate(point.x, point.y);
     }
 
-    intersection(toIntersect:Rectangle):Rectangle {
+    intersection(toIntersect: Rectangle): Rectangle {
         var areIntersect = this.intersects(toIntersect);
         if (areIntersect) {
             var r1 = this, r2 = toIntersect;
@@ -96,67 +96,67 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         }
     }
 
-    intersects(toIntersect:Rectangle):boolean {
+    intersects(toIntersect: Rectangle): boolean {
         return Rectangle.testIntersection(this, toIntersect);
     }
 
-    isEmpty():boolean {
+    isEmpty(): boolean {
         return this._w <= 0 || this._h <= 0;
     }
 
-    get left():number {
+    get left(): number {
         return this._x;
     }
 
-    set left(v:number) {
+    set left(v: number) {
         this._x = v >= 0 ? v : 0;
     }
 
-    offset(dx:number, dy:number):void {
+    offset(dx: number, dy: number): void {
         this.x += dx;
         this.y += dy;
     }
 
-    offsetPoint(point:Point):void {
+    offsetPoint(point: Point): void {
         this.offset(point.x, point.y);
     }
 
-    get right():number {
+    get right(): number {
         return this._x + this._w;
     }
 
-    set right(v:number) {
+    set right(v: number) {
         if (v < this._x) {
             v = this._x;
         }
         this._w = v - this._x;
     }
 
-    setEmpty():void {
+    setEmpty(): void {
         this._x = this._y = this._w = this._h = 0;
     }
 
-    setTo(xa:number, ya:number, widtha:number, heighta:number):void {
+    setTo(xa: number, ya: number, widtha: number, heighta: number): void {
         this.x = xa;
         this.y = ya;
         this.width = widtha;
         this.height = heighta;
     }
 
-    get size():Point {
+    get size(): Point {
         return new Point(this._w, this._h);
     }
 
-    set size(v:Point) {
+    set size(v: Point) {
         this._w = v.x;
         this._h = v.y;
     }
 
-    get top():number {
+    get top(): number {
         return this._y;
     }
 
-    set top(v:number) {
+    set top(v: number) {
         if (v > this._y + this._h) {
             v = this._y + this._h;
         }
@@ -164,20 +164,20 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         this._y = v;
     }
 
-    get topLeft():Point {
+    get topLeft(): Point {
         return new Point(this._x, this._y);
     }
 
-    set topLeft(v:Point) {
+    set topLeft(v: Point) {
         this.left = v.x;
         this.top = v.y;
     }
 
-    toString():string {
+    toString(): string {
         return `(x=${this.x}, y=${this.y}, w=${this.width}, h=${this.height})`;
     }
 
-    union(toUnion:Rectangle):Rectangle {
+    union(toUnion: Rectangle): Rectangle {
         var x = Math.min(this.x, toUnion.x);
         var y = Math.min(this.y, toUnion.y);
         var r = Math.max(this.right, toUnion.right);
@@ -185,32 +185,32 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         return new Rectangle(x, y, r - x, b - y);
     }
 
-    get width():number {
+    get width(): number {
         return this._w;
     }
 
-    set width(v:number) {
+    set width(v: number) {
         this._w = v >= 0 ? v : 0;
     }
 
-    get x():number {
+    get x(): number {
         return this._x;
     }
 
-    set x(v:number) {
+    set x(v: number) {
         this._x = v;
     }
 
-    get y():number {
+    get y(): number {
         return this._y;
     }
 
-    set y(v:number) {
+    set y(v: number) {
         this._y = v;
     }
 
     // Bulletproof
-    static get empty():Rectangle {
+    static get empty(): Rectangle {
         return emptyRectangle.clone();
     }
 
@@ -222,8 +222,8 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
      * @param [strict] {Boolean} In strict mode, edge contact is regarded as intersection.
      * @returns {Boolean}
      */
-    static testIntersection(rect1:Rectangle, rect2:Rectangle, strict:boolean = true):boolean {
-        var areSeparate:boolean;
+    static testIntersection(rect1: Rectangle, rect2: Rectangle, strict: boolean = true): boolean {
+        var areSeparate: boolean;
         if (strict) {
             areSeparate = rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom;
         } else {
@@ -232,10 +232,10 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
         return !areSeparate;
     }
 
-    private _x:number = 0;
-    private _y:number = 0;
-    private _w:number = 0;
-    private _h:number = 0;
+    private _x: number = 0;
+    private _y: number = 0;
+    private _w: number = 0;
+    private _h: number = 0;
 
 }
 

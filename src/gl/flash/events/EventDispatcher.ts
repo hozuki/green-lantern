@@ -2,8 +2,8 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../../glantern/IDisposable";
-import {GLUtil} from "../../glantern/GLUtil";
+import {IDisposable} from "../../mic/IDisposable";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export abstract class EventDispatcher implements IDisposable {
 
@@ -11,7 +11,7 @@ export abstract class EventDispatcher implements IDisposable {
         this._listeners = new Map<string, Function[]>();
     }
 
-    addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+    addEventListener(type: string, listener: Function, useCapture: boolean = false): void {
         // jabbany
         if (!this._listeners.has(type)) {
             this._listeners.set(type, []);
@@ -19,7 +19,7 @@ export abstract class EventDispatcher implements IDisposable {
         this._listeners.get(type).push(listener);
     }
 
-    dispatchEvent(event:Event, data?:any):boolean {
+    dispatchEvent(event: Event, data?: any): boolean {
         // jabbany
         if (this._listeners.has(event.type) && this._listeners.get(event.type) !== null) {
             var arr = this._listeners.get(event.type);
@@ -27,7 +27,7 @@ export abstract class EventDispatcher implements IDisposable {
                 try {
                     arr[i].call(null, data);
                 } catch (ex) {
-                    GLUtil.trace(ex.toString(), "dispatchEvent: error");
+                    CommonUtil.trace(ex.toString(), "dispatchEvent: error");
                 }
             }
             return true;
@@ -36,7 +36,7 @@ export abstract class EventDispatcher implements IDisposable {
         }
     }
 
-    removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+    removeEventListener(type: string, listener: Function, useCapture: boolean = false): void {
         // jabbany
         if (!this._listeners.has(type) || this._listeners.get(type).length === 0) {
             return;
@@ -47,16 +47,16 @@ export abstract class EventDispatcher implements IDisposable {
         }
     }
 
-    hasEventListener(type:string):boolean {
+    hasEventListener(type: string): boolean {
         return this._listeners.has(type);
     }
 
-    willTrigger(type:string):boolean {
+    willTrigger(type: string): boolean {
         return this.hasEventListener(type) && this._listeners.get(type).length > 0;
     }
 
-    dispose():void {
-        this._listeners.forEach((listeners:Function[]):void => {
+    dispose(): void {
+        this._listeners.forEach((listeners: Function[]): void => {
             while (listeners.length > 0) {
                 listeners.pop();
             }
@@ -64,6 +64,6 @@ export abstract class EventDispatcher implements IDisposable {
         this._listeners.clear();
     }
 
-    private _listeners:Map<string, Function[]> = null;
+    private _listeners: Map<string, Function[]> = null;
 
 }

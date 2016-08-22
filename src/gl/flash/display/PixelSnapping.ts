@@ -4,15 +4,15 @@
 
 export abstract class PixelSnapping {
 
-    static get ALWAYS():string {
+    static get ALWAYS(): string {
         return "always";
     }
 
-    static get AUTO():string {
+    static get AUTO(): string {
         return "auto";
     }
 
-    static get NEVER():string {
+    static get NEVER(): string {
         return "never";
     }
 

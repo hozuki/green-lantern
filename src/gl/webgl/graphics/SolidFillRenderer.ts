@@ -10,11 +10,11 @@ import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {RenderHelper} from "../RenderHelper";
 import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {MathUtil} from "../../glantern/MathUtil";
+import {MathUtil} from "../../mic/MathUtil";
 
 export class SolidFillRenderer extends FillRendererBase {
 
-    constructor(graphics:Graphics, startX:number, startY:number, color:number, alpha:number) {
+    constructor(graphics: Graphics, startX: number, startY: number, color: number, alpha: number) {
         super(graphics, startX, startY);
         this._a = MathUtil.clamp(alpha, 0, 1);
         this._r = ((color >>> 16) & 0xff) / 0xff;
@@ -22,17 +22,17 @@ export class SolidFillRenderer extends FillRendererBase {
         this._b = (color & 0xff) / 0xff;
     }
 
-    bezierCurveTo(cx1:number, cy1:number, cx2:number, cy2:number, x:number, y:number):void {
+    bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         this._isDirty = true;
         var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
             currentContour.push(this._currentX, this._currentY, STD_Z);
         }
-        var dt1:number, dt2:number, dt3:number;
-        var t2:number, t3:number;
+        var dt1: number, dt2: number, dt3: number;
+        var t2: number, t3: number;
         var fromX = this._currentX, fromY = this._currentY;
-        var xa:number, ya:number;
-        var j:number;
+        var xa: number, ya: number;
+        var j: number;
         for (var i = 1; i <= CURVE_ACCURACY; i++) {
             j = i / CURVE_ACCURACY;
             dt1 = 1 - j;
@@ -50,15 +50,15 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    curveTo(cx:number, cy:number, x:number, y:number):void {
+    curveTo(cx: number, cy: number, x: number, y: number): void {
         this._isDirty = true;
         var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
             currentContour.push(this._currentX, this._currentY, STD_Z);
         }
-        var j:number;
+        var j: number;
         var fromX = this._currentX, fromY = this._currentY;
-        var xa:number, ya:number;
+        var xa: number, ya: number;
         for (var i = 1; i <= CURVE_ACCURACY; i++) {
             j = i / CURVE_ACCURACY;
             xa = fromX + (cx - fromX) * j;
@@ -73,13 +73,13 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    drawCircle(x:number, y:number, radius:number):void {
+    drawCircle(x: number, y: number, radius: number): void {
         this._isDirty = true;
         this.moveTo(x, y);
         var currentContour = this._$getContourForClosedShapes();
-        var thetaNext:number;
-        var thetaBegin:number;
-        var x2:number, y2:number;
+        var thetaNext: number;
+        var thetaBegin: number;
+        var x2: number, y2: number;
         var halfPi = Math.PI / 2;
         currentContour.push(this._currentX + radius, this._currentY, STD_Z);
         thetaBegin = 0;
@@ -101,14 +101,14 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    drawEllipse(x:number, y:number, width:number, height:number):void {
+    drawEllipse(x: number, y: number, width: number, height: number): void {
         this._isDirty = true;
         this.moveTo(x, y + height / 2);
         var currentContour = this._$getContourForClosedShapes();
-        var thetaNext:number;
-        var thetaBegin:number;
+        var thetaNext: number;
+        var thetaBegin: number;
         var centerX = x + width / 2, centerY = y + height / 2;
-        var x2:number, y2:number;
+        var x2: number, y2: number;
         var halfPi = Math.PI / 2;
         currentContour.push(this._currentX, this._currentY, STD_Z);
         thetaBegin = Math.PI;
@@ -131,7 +131,7 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    drawRect(x:number, y:number, width:number, height:number):void {
+    drawRect(x: number, y: number, width: number, height: number): void {
         this._isDirty = true;
         this.moveTo(x, y);
         // Create a new contour and draw a independent rectangle, should not use lineTo().
@@ -146,11 +146,11 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight:number = NaN):void {
+    drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight: number = NaN): void {
         throw new NotImplementedError();
     }
 
-    lineTo(x:number, y:number):void {
+    lineTo(x: number, y: number): void {
         this._isDirty = true;
         var currentContour = this._$getContourForLines();
         if (!this._hasDrawnAnything || this._startingNewContour) {
@@ -163,15 +163,15 @@ export class SolidFillRenderer extends FillRendererBase {
         this._startingNewContour = false;
     }
 
-    update():void {
+    update(): void {
         if (this._isDirty) {
             // Triangulate first
             var tess = this._graphics.renderer.tessellator;
             tess.gluTessProperty(libtess.gluEnum.GLU_TESS_WINDING_RULE, libtess.windingRule.GLU_TESS_WINDING_ODD);
             tess.gluTessNormal(0, 0, 1);
-            var resultArray:number[][] = [];
+            var resultArray: number[][] = [];
             tess.gluTessBeginPolygon(resultArray);
-            var contour:number[];
+            var contour: number[];
             for (var i = 0; i < this._contours.length; i++) {
                 contour = this._contours[i];
                 if (contour.length > 0) {
@@ -192,7 +192,7 @@ export class SolidFillRenderer extends FillRendererBase {
             var indices = this._indices;
             var vertices = this._vertices;
             j = 0;
-            var tempArray:number[];
+            var tempArray: number[];
             for (var i = 0; i < resultArray.length; i++) {
                 tempArray = resultArray[i];
                 for (var j = 0; j < tempArray.length; j++) {
@@ -211,16 +211,16 @@ export class SolidFillRenderer extends FillRendererBase {
         super.update();
     }
 
-    render(renderer:WebGLRenderer):void {
+    render(renderer: WebGLRenderer): void {
         if (this._vertices.length > 0) {
             var target = renderer.currentRenderTarget;
             RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
         }
     }
 
-    private _r:number = 0;
-    private _g:number = 0;
-    private _b:number = 0;
-    private _a:number = 1;
+    private _r: number = 0;
+    private _g: number = 0;
+    private _b: number = 0;
+    private _a: number = 1;
 
 }

@@ -19,28 +19,28 @@ export class Transform {
         this.perspectiveProjection = new PerspectiveProjection();
     }
 
-    colorTransform:ColorTransform = null;
+    colorTransform: ColorTransform = null;
 
-    get concatenatedColorTransform():ColorTransform {
+    get concatenatedColorTransform(): ColorTransform {
         throw new NotImplementedError();
     }
 
-    get concatenatedMatrix():Matrix {
+    get concatenatedMatrix(): Matrix {
         throw new NotImplementedError();
     }
 
-    matrix:Matrix = null;
-    matrix3D:Matrix3D = null;
-    perspectiveProjection:PerspectiveProjection = null;
+    matrix: Matrix = null;
+    matrix3D: Matrix3D = null;
+    perspectiveProjection: PerspectiveProjection = null;
 
-    get pixelBounds():Rectangle {
+    get pixelBounds(): Rectangle {
         return this._pixelBounds;
     }
 
-    getRelativeMatrix3D(relativeTo:DisplayObject):Matrix3D {
+    getRelativeMatrix3D(relativeTo: DisplayObject): Matrix3D {
         throw new NotImplementedError();
     }
 
-    private _pixelBounds:Rectangle = null;
+    private _pixelBounds: Rectangle = null;
 
 }

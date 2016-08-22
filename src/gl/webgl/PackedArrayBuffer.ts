@@ -2,18 +2,19 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../glantern/IDisposable";
-import {GLUtil} from "../glantern/GLUtil";
+import {IDisposable} from "../mic/IDisposable";
+import {VirtualDom} from "../mic/VirtualDom";
+import {CommonUtil} from "../mic/CommonUtil";
 
-const gl = (<any>window).WebGLRenderingContext;
+const gl = VirtualDom.WebGLRenderingContext;
 
 export class PackedArrayBuffer implements IDisposable {
 
     constructor() {
     }
 
-    static create(context:WebGLRenderingContext, data:number[], elementGLType:number, bufferType:number):PackedArrayBuffer {
-        var T:any = PackedArrayBuffer.getTypedArrayType(elementGLType);
+    static create(context: WebGLRenderingContext, data: number[], elementGLType: number, bufferType: number): PackedArrayBuffer {
+        var T: any = PackedArrayBuffer.getTypedArrayType(elementGLType);
         if (T === null) {
             console.warn("Failed to create typed array whose elements are of WebGL type 0x" + elementGLType.toString(16));
             return null;
@@ -34,33 +35,33 @@ export class PackedArrayBuffer implements IDisposable {
         return wab;
     }
 
-    get webglBuffer():WebGLBuffer {
+    get webglBuffer(): WebGLBuffer {
         return this._webglBuffer;
     }
 
-    get elementSize():number {
+    get elementSize(): number {
         return this._typedArray.BYTES_PER_ELEMENT;
     }
 
-    get elementCount():number {
+    get elementCount(): number {
         return this._typedArray.length;
     }
 
-    get elementGLType():number {
+    get elementGLType(): number {
         return this._elementGLType;
     }
 
-    setNewData(data:number[]):void {
-        this._array = GLUtil.ptr(data) ? data.slice() : [];
+    setNewData(data: number[]): void {
+        this._array = CommonUtil.ptr(data) ? data.slice() : [];
     }
 
-    becomeDirty():void {
+    becomeDirty(): void {
         this._isDirty = true;
     }
 
-    syncBufferData():void {
+    syncBufferData(): void {
         if (this._isDirty) {
-            var T:any = this._arrayType;
+            var T: any = this._arrayType;
             this._typedArray = new T(this._array);
             this._isDirty = false;
         }
@@ -70,7 +71,7 @@ export class PackedArrayBuffer implements IDisposable {
         this._glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
     }
 
-    dispose():void {
+    dispose(): void {
         this._glc.deleteBuffer(this._webglBuffer);
         this._array = null;
         this._typedArray = null;
@@ -78,7 +79,7 @@ export class PackedArrayBuffer implements IDisposable {
         this._glc = null;
     }
 
-    static getTypedArrayType(glType:number):Function {
+    static getTypedArrayType(glType: number): Function {
         switch (glType) {
             case gl.FLOAT:
                 return Float32Array;
@@ -99,13 +100,13 @@ export class PackedArrayBuffer implements IDisposable {
         }
     }
 
-    private _glc:WebGLRenderingContext = null;
-    private _isDirty:boolean = true;
-    private _bufferType:number = 0;
-    private _elementGLType:number = 0;
-    private _webglBuffer:WebGLBuffer = null;
-    private _array:number[] = null;
-    private _arrayType:Function = null;
-    private _typedArray:Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array = null;
+    private _glc: WebGLRenderingContext = null;
+    private _isDirty: boolean = true;
+    private _bufferType: number = 0;
+    private _elementGLType: number = 0;
+    private _webglBuffer: WebGLBuffer = null;
+    private _array: number[] = null;
+    private _arrayType: Function = null;
+    private _typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array = null;
 
 }

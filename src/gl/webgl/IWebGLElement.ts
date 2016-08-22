@@ -3,12 +3,12 @@
  */
 
 import {WebGLRenderer} from "./WebGLRenderer";
-import {IDisposable} from "../glantern/IDisposable";
-import {TimeInfo} from "../glantern/TimeInfo";
+import {IDisposable} from "../mic/IDisposable";
+import {TimeInfo} from "../mic/TimeInfo";
 
 export interface IWebGLElement extends IDisposable {
 
-    update(timeInfo:TimeInfo):void;
-    render(renderer:WebGLRenderer):void;
+    update(timeInfo: TimeInfo): void;
+    render(renderer: WebGLRenderer): void;
 
 }

@@ -4,8 +4,8 @@
 
 export class AttributeCache {
 
-    name:string = null;
-    value:any = undefined;
-    location:number = -1;
+    name: string = null;
+    value: any = undefined;
+    location: number = -1;
 
 }

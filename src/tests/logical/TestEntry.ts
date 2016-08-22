@@ -3,8 +3,8 @@
  */
 
 export type TestEntry = {
-    func:() => boolean,
-    funcName:string,
-    desc:string,
-    moduleName:string
+    func: () => boolean,
+    funcName: string,
+    desc: string,
+    moduleName: string
 };
