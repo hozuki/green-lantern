@@ -1,3 +1,4 @@
+import {CommonUtil} from "./CommonUtil";
 /**
  * Created by MIC on 2016/8/22.
  */
@@ -75,9 +76,15 @@ function init(): void {
         if (!$g.$raf) {
             $g.$raf = win[webkit + raf] || win[ms + raf] || win[moz + raf] || win[o + raf];
         }
+        if (CommonUtil.isFunction($g.$raf)) {
+            $g.$raf = $g.$raf.bind($g.$env);
+        }
         $g.$caf = win.cancelAnimationFrame;
         if (!$g.$caf) {
             $g.$raf = win[webkit + caf] || win[ms + caf] || win[moz + caf] || win[o + caf];
+        }
+        if (CommonUtil.isFunction($g.$caf)) {
+            $g.$caf = $g.$caf.bind($g.$env);
         }
     } else {
         $g.$raf = $g.$caf = null;
