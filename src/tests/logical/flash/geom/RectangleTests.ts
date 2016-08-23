@@ -4,6 +4,7 @@
 
 import {Rectangle} from "../../../../gl/flash/geom/Rectangle";
 import Assert from "../../Assert";
+import GLTestHelper from "../../GLTestHelper";
 
 export function shouldIntersect(): boolean {
     /* Rectangle.intersects() - should intersect: (0,0,100,100)-(-10,-10,20,20) */
@@ -32,3 +33,5 @@ export function shouldIntersectStrict2(): boolean {
     var result = Rectangle.testIntersection(r1, r2, true);
     return Assert.areEqual(result, true);
 }
+
+GLTestHelper.defineTestCollection(module.exports);

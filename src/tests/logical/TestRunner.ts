@@ -19,7 +19,7 @@ export default class TestRunner {
         } else {
             str = `[${chalk.red("FAILED")}]`;
         }
-        str = str + chalk.yellow(` ${entry.funcName} @ ${entry.moduleName}`);
+        str = str + chalk.yellow(` ${entry.funcName} @ ${entry.path}`);
         str = str + os.EOL + `${entry.desc}`;
         console.log(str);
     }

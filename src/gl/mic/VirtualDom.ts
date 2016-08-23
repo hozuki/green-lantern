@@ -22,7 +22,7 @@ export abstract class VirtualDom {
     }
 
     static setStyle(element: HTMLElement, name: string, value: string) {
-        element.style[name] = value;
+        (<any>element.style)[name] = value;
     }
 
     static setInterval(fn: Function, millis: number, ...params: any[]): number {

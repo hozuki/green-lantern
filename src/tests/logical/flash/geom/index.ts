@@ -7,5 +7,4 @@ import GLTestHelper from "../../GLTestHelper";
 
 export {RectangleTests};
 
-GLTestHelper.defineTestModule(exports);
-GLTestHelper.defineTestCollection(RectangleTests);
+GLTestHelper.defineTestModule(module.exports);

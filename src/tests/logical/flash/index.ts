@@ -7,4 +7,4 @@ import GLTestHelper from "../GLTestHelper";
 
 export {geom};
 
-GLTestHelper.defineTestModule(exports);
+GLTestHelper.defineTestModule(module.exports);

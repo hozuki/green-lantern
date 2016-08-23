@@ -7,4 +7,5 @@ export type TestEntry = {
     funcName: string,
     desc: string,
     moduleName: string
+    path: string;
 };

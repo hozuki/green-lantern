@@ -7,4 +7,4 @@ import GLTestHelper from "./GLTestHelper";
 
 export {flash};
 
-GLTestHelper.defineTestModule(exports);
+GLTestHelper.defineTestModule(module.exports);
