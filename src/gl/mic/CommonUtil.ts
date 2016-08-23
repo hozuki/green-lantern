@@ -24,7 +24,7 @@ export abstract class CommonUtil {
             result.reasons.push("Canvas element" + notSupportedPrompt);
         }
         // rAF and cAF provide animation support for GLantern.
-        if (!CommonUtil.isFunction(VirtualDom.requestAnimationFrame) || !CommonUtil.isFunction(VirtualDom.cancelAnimationFrame)){
+        if (!CommonUtil.isFunction(VirtualDom.requestAnimationFrame) || !CommonUtil.isFunction(VirtualDom.cancelAnimationFrame)) {
             result.ok = false;
             result.reasons.push("requestAnimationFrame and/or cancelAnimationFrame are not supported by this browser.");
         }
@@ -82,21 +82,29 @@ export abstract class CommonUtil {
     }
 
     /**
-     * Check whether a value is logically true.
-     * @param value {*} The value to check.
-     * @returns {Boolean}
-     */
-    static ptr<T>(value: T): boolean {
-        return !!value;
-    }
-
-    /**
      * Check whether a value is a function.
      * @param value {*} The value to check.
      * @returns {Boolean} True if the value is a function, and false otherwise.
      */
     static isFunction(value: any): boolean {
         return typeof value === "function";
+    }
+
+    static isNumber(value: any): boolean {
+        return typeof value === "number";
+    }
+
+    static isArray(value: any): boolean {
+        return ({}).toString.apply(value) === "[object Array]";
+    }
+
+    /**
+     * Check whether a value is logically true.
+     * @param value {*} The value to check.
+     * @returns {Boolean}
+     */
+    static ptr<T>(value: T): boolean {
+        return !!value;
     }
 
     /**

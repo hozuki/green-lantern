@@ -21,6 +21,10 @@ export abstract class VirtualDom {
         return <T>window.document.createElement(tagName);
     }
 
+    static setStyle(element: HTMLElement, name: string, value: string) {
+        element.style[name] = value;
+    }
+
     static setInterval(fn: Function, millis: number, ...params: any[]): number {
         return $g.$env.setInterval.apply($g.$env, arguments);
     }
