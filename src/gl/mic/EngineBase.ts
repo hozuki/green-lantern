@@ -6,14 +6,16 @@ import {WebGLRenderer} from "../webgl/WebGLRenderer";
 import {Stage} from "../flash/display/Stage";
 import {RendererOptions} from "../webgl/RendererOptions";
 import {FlashEvent} from "../flash/events/FlashEvent";
-import {IDisposable} from "./IDisposable";
 import {EventBase} from "./EventBase";
 import {TimeInfo} from "./TimeInfo";
 import {VirtualDom} from "./VirtualDom";
+import {EventDispatcher} from "../flash/events/EventDispatcher";
+import {CommonUtil} from "./CommonUtil";
 
-export class EngineBase implements IDisposable {
+export class EngineBase extends EventDispatcher {
 
     constructor() {
+        super();
         this._attachedUpdateFunctions = [];
     }
 
@@ -31,14 +33,16 @@ export class EngineBase implements IDisposable {
         if (!this.isInitialized) {
             return;
         }
-        this._stage.dispose();
-        this._renderer.dispose();
+        this.stage.dispose();
+        this.renderer.dispose();
         this._stage = null;
         this._renderer = null;
-        while (this._attachedUpdateFunctions.length > 0) {
-            this._attachedUpdateFunctions.pop();
+        var attachedFunctions = this._attachedUpdateFunctions;
+        while (attachedFunctions.length > 0) {
+            attachedFunctions.pop();
         }
         this._isInitialized = false;
+        super.dispose();
     }
 
     /**
@@ -71,24 +75,26 @@ export class EngineBase implements IDisposable {
     }
 
     clear(): void {
-        this._renderer.clear();
+        this.renderer.clear();
     }
 
     runOneFrame(timeInfo: TimeInfo): void {
         if (!this._isInitialized) {
             return;
         }
-        if (this._attachedUpdateFunctions.length > 0) {
-            for (var i = 0; i < this._attachedUpdateFunctions.length; ++i) {
-                var func = this._attachedUpdateFunctions[i];
-                if (typeof func === "function") {
+        var attachedFunctions = this._attachedUpdateFunctions;
+        if (attachedFunctions.length > 0) {
+            for (var i = 0; i < attachedFunctions.length; ++i) {
+                var func = attachedFunctions[i];
+                if (CommonUtil.isFunction(func)) {
                     func(timeInfo);
                 }
             }
         }
-        this._stage.dispatchEvent(EventBase.create(FlashEvent.ENTER_FRAME));
-        this._stage.update(timeInfo);
-        this._stage.render(this._renderer);
+        var stage = this.stage;
+        stage.dispatchEvent(EventBase.create(FlashEvent.ENTER_FRAME));
+        stage.update(timeInfo);
+        stage.render(this.renderer);
     }
 
     get stage(): Stage {
@@ -116,8 +122,9 @@ export class EngineBase implements IDisposable {
     }
 
     attachUpdateFunction(func: (timeInfo: TimeInfo) => void): void {
-        if (typeof func === "function" && this._attachedUpdateFunctions.indexOf(func) < 0) {
-            this._attachedUpdateFunctions.push(func);
+        var attachedFunctions = this._attachedUpdateFunctions;
+        if (CommonUtil.isFunction(func) && attachedFunctions.indexOf(func) < 0) {
+            attachedFunctions.push(func);
         }
     }
 
