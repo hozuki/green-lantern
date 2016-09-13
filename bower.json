@@ -1,0 +1,26 @@
+{
+  "name": "glantern",
+  "description": "A library as a Flash-HTML5 shim layer.",
+  "main": "build/node/index.js",
+  "authors": [
+    "George Wu <uiharu@buaa.edu.cn>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "webgl",
+    "flash",
+    "graphics"
+  ],
+  "homepage": "https://github.com/hozuki/GLantern",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "devDependencies": {
+    "html5shiv": "^3.7.3"
+  }
+}
