@@ -118,6 +118,9 @@ See [QA.md](QA.md).
 
 You will also find a copy in [`LICENSE.md`](LICENSE.md).
 
+Part of GLantern uses modifications based on [`webgl-utils.js`](//github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js). Its license file
+can be found [here](docs/license/webgl-utils.txt).
+
 ## Other Resources
 
 - Adobe Flash CC is able to export Flash project as WebGL projects. The tutorial and
