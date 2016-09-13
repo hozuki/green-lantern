@@ -3,3 +3,6 @@
  */
 
 export * from "./Sound";
+export * from "./SoundChannel";
+export * from "./SoundLoaderContext"
+export * from "./SoundTransform";
