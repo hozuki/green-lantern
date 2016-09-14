@@ -49,6 +49,14 @@ export abstract class VirtualDom {
         return $g.$caf;
     }
 
+    static get screenWidth(): number {
+        return window.screen.width;
+    }
+
+    static get screenHeight(): number {
+        return window.screen.height;
+    }
+
     /*
      * Do NOT change the definition. Use auto inference well.
      */

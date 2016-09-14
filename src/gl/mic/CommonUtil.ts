@@ -81,6 +81,10 @@ export abstract class CommonUtil {
         return value === void(0);
     }
 
+    static isNull(value: any): boolean {
+        return value === null;
+    }
+
     /**
      * Check whether a value is a function.
      * @param value {*} The value to check.
@@ -95,7 +99,16 @@ export abstract class CommonUtil {
     }
 
     static isArray(value: any): boolean {
-        return ({}).toString.apply(value) === "[object Array]";
+        //return ({}).toString.apply(value) === "[object Array]";
+        return Array.isArray(value);
+    }
+
+    static isString(value: any): boolean {
+        return typeof value === "string";
+    }
+
+    static isObject(value: any): boolean {
+        return typeof value === "object";
     }
 
     /**
@@ -181,7 +194,7 @@ export abstract class CommonUtil {
             return sourceObject;
         }
         /* Arrays */
-        if (Array.isArray(sourceObject)) {
+        if (CommonUtil.isArray(sourceObject)) {
             var tmpArray: any[] = [];
             for (var i = 0; i < sourceObject.length; ++i) {
                 tmpArray.push(CommonUtil.deepClone(sourceObject[i]));
@@ -205,7 +218,7 @@ export abstract class CommonUtil {
             return newSet;
         }
         /* Classic ES5 functions. */
-        if (sourceObject instanceof Function || typeof sourceObject === "function") {
+        if (CommonUtil.isFunction(sourceObject)) {
             var sourceFunctionObject = <Function>sourceObject;
             var fn = (function (): Function {
                 return function () {
@@ -221,7 +234,7 @@ export abstract class CommonUtil {
             return fn;
         }
         /* Classic ES5 objects. */
-        if (sourceObject instanceof Object || typeof sourceObject === "object") {
+        if (CommonUtil.isObject(sourceObject)) {
             var newObject = Object.create(null);
             if (typeof sourceObject.hasOwnProperty === "function") {
                 for (var key in sourceObject) {
@@ -236,7 +249,33 @@ export abstract class CommonUtil {
             }
             return newObject;
         }
-        return (void 0);
+        return void(0);
+    }
+
+    static simpleClone(source: any): any {
+        if (CommonUtil.isUndefined(source)) {
+            return void(0);
+        }
+        if (CommonUtil.isNull(source)) {
+            return null;
+        }
+        if (CommonUtil.isArray(source)) {
+            return new Array(source);
+        }
+        if (CommonUtil.isObject(source)) {
+            var obj = Object.create(null);
+            for (var key in source) {
+                if (source.hasOwnProperty(key)) {
+                    (<any>obj)[key] = source[key];
+                }
+            }
+            return obj;
+        }
+        return void(0);
+    }
+
+    static shallowClone<T>(value: T): T {
+        return value;
     }
 
     /**
