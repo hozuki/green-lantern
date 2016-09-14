@@ -2,15 +2,6 @@
  * Created by MIC on 2015/12/23.
  */
 
-var Display = Object.create({
-    "createText": function (alpha) {
-        var s = new GLantern.flash.text.TextField(lantern.stage, lantern.stage);
-        lantern.stage.addChild(s);
-        s.alpha = alpha;
-        return s;
-    }
-});
-
 var t = Display.createText(1);
 //t.text = "Hello\nWorld"; // Multiline is not supported in 0.2.0-alpha, so the text will be in one line.
 t.text = "the quick brown fox jumps over the lazy dog";

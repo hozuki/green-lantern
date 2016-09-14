@@ -4,15 +4,6 @@
 
 // Test case 2, provided by akaza-akari@github
 
-var Display = Object.create({
-    "createShape": function (alpha) {
-        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
-        lantern.stage.addChild(s);
-        s.alpha = alpha;
-        return s;
-    }
-});
-
 var s = Display.createShape(1);
 var g = s.graphics;
 

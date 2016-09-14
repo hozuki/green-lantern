@@ -1,7 +1,4 @@
-GLantern.injectToGlobal(window);
-
-var s = new flash.display.Shape(lantern.stage, lantern.stage);
-lantern.stage.addChild(s);
+var s = Display.createShape();
 var g = s.graphics;
 
 g.lineStyle(6, 0xff0000);
@@ -46,10 +43,8 @@ var added = 0;
 lantern.runOneFrame();
 
 function addNewShape(a) {
-    var s = new flash.display.Shape(lantern.stage, lantern.stage);
-    lantern.stage.addChild(s);
+    var s = Display.createShape();
     var g = s.graphics;
-
     switch (a) {
         case 0:
             g.lineStyle(0);
