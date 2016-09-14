@@ -1,4 +1,3 @@
-import {CommonUtil} from "./CommonUtil";
 /**
  * Created by MIC on 2016/8/22.
  */
@@ -91,9 +90,13 @@ function windowExists(): boolean {
     return $g.$env === window;
 }
 
+function globalExists(): boolean {
+    return $g.$env === global;
+}
+
 function init(): void {
     var we = windowExists();
-    var ge = CommonUtil.isObject(global) && !CommonUtil.isNull(global);
+    var ge = globalExists();
     if (!we) {
         console.warn("Some critical functions need a window to execute.");
         return;
