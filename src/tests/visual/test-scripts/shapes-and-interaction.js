@@ -10,28 +10,36 @@ g.drawRect(0, 0, 200, 200);
 g.endFill();
 g.drawCircle(50, 50, 70);
 
-document.body.addEventListener("mousedown", function (ev) {
-    s.x += (ev.button === 0 ? 1 : -1) * 10;
-    if (added < 2) {
-        addNewShape(added);
-        added++;
-    }
-    lantern.runOneFrame();
-});
+document.body.addEventListener("mousedown",
+    /**
+     * @param ev {MouseEvent}
+     */
+    function (ev) {
+        s.x += (ev.button === 0 ? 1 : -1) * 10;
+        if (added < 2) {
+            addNewShape(added);
+            added++;
+        }
+        lantern.runOneFrame();
+    });
 
-document.body.addEventListener("keydown", function (ev) {
-    switch (ev.keyCode) {
-        case "w".charCodeAt(0):
-        case "W".charCodeAt(0):
-            s.alpha += 0.1;
-            break;
-        case "s".charCodeAt(0):
-        case "S".charCodeAt(0):
-            s.alpha -= 0.1;
-            break;
-    }
-    lantern.runOneFrame();
-});
+document.body.addEventListener("keydown",
+    /**
+     * @param ev {KeyboardEvent}
+     */
+    function (ev) {
+        switch (ev.keyCode) {
+            case "w".charCodeAt(0):
+            case "W".charCodeAt(0):
+                s.alpha += 0.1;
+                break;
+            case "s".charCodeAt(0):
+            case "S".charCodeAt(0):
+                s.alpha -= 0.1;
+                break;
+        }
+        lantern.runOneFrame();
+    });
 
 var added = 0;
 

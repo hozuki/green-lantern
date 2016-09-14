@@ -62,6 +62,7 @@ var lantern = null;
          */
         var script = document.createElement("script");
         script.src = fileName;
+        script.defer = true;
         document.body.appendChild(script);
     }
 
