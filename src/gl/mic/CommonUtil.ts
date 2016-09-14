@@ -264,10 +264,9 @@ export abstract class CommonUtil {
         }
         if (CommonUtil.isObject(source)) {
             var obj = Object.create(null);
-            for (var key in source) {
-                if (source.hasOwnProperty(key)) {
-                    (<any>obj)[key] = source[key];
-                }
+            var keys = Object.keys(source);
+            for (var i = 0; i < keys.length; ++i) {
+                obj[keys[i]] = source[keys[i]];
             }
             return obj;
         }
