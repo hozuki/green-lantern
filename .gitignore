@@ -6,3 +6,6 @@
 
 # Build result
 /build/
+
+/src/tests/visual/build/
+!/src/tests/visual/build/GLantern-browser.min.js

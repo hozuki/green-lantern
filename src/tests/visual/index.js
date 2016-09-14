@@ -26,7 +26,8 @@ var lantern = null;
         "Madoka": "raw-madoka-group.js",
         "Shapes and Interaction": "shapes-and-interaction.js",
         "TT Test Case #2": "tt-test-case-2.js",
-        "Simple Text": "draw-text.js"
+        "Simple Text": "draw-text.js",
+        "Object Masking": "object-masking.js"
     };
 
     var caseListElem = document.querySelector("#test-case-selector");
