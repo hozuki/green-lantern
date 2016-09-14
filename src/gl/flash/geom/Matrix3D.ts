@@ -10,11 +10,12 @@ import {NotImplementedError} from "../errors/NotImplementedError";
 import {ArgumentError} from "../errors/ArgumentError";
 import {ApplicationError} from "../errors/ApplicationError";
 import {MathUtil} from "../../mic/MathUtil";
+import {CommonUtil} from "../../mic/CommonUtil";
 
 export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
-    constructor(v: number[] = null) {
-        if (v === null || v.length <= 0) {
+    constructor(v: number[] | Float32Array = null) {
+        if (CommonUtil.isNull(v) || v.length <= 0) {
             v = [
                 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -22,7 +23,14 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
                 0, 0, 0, 1
             ];
         }
-        this.rawData = v;
+        if (CommonUtil.isArray(v)) {
+            this.rawData = <number[]>v.slice();
+        } else {
+            this.rawData = new Array<number>((<Float32Array>v).length);
+            for (var i = 0; i < (<Float32Array>v).length; ++i) {
+                this.rawData[i] = (<Float32Array>v)[i];
+            }
+        }
     }
 
     get determinant(): number {
@@ -61,6 +69,34 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
             0, 0, zScale, 0,
             0, 0, 0, 1
         ], this._data);
+    }
+
+    /**
+     * Appends an incremental skew change along the x, y, and z axes to a {@link Matrix3D} object.
+     */
+    // AwayJS
+    public appendSkew(xSkew: number, ySkew: number, zSkew: number) {
+        if (xSkew === 0 && ySkew === 0 && zSkew === 0) {
+            return;
+        }
+        var raw = TEMP_MATRIX_RAW_DATA;
+        raw[0] = 1;
+        raw[1] = 0;
+        raw[2] = 0;
+        raw[3] = 0;
+        raw[4] = xSkew;
+        raw[5] = 1;
+        raw[6] = 0;
+        raw[7] = 0;
+        raw[8] = ySkew;
+        raw[9] = zSkew;
+        raw[10] = 1;
+        raw[11] = 0;
+        raw[12] = 0;
+        raw[13] = 0;
+        raw[14] = 0;
+        raw[15] = 1;
+        this.append(TEMP_MATRIX);
     }
 
     appendTranslation(x: number, y: number, z: number): void {
@@ -103,12 +139,32 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         this.rawData = sourceMatrix3D.rawData;
     }
 
-    copyRawDataFrom(vector: number[], index: number = 0, transpose: boolean = false): void {
-        throw new NotImplementedError();
+    // AwayJS
+    copyRawDataFrom(vector: number[] | Float32Array, index: number = 0, transpose: boolean = false) {
+        if (transpose) {
+            this.transpose();
+        }
+        var length = vector.length - index;
+        for (var i = 0; i < length; i++) {
+            this.rawData[i] = vector[i + index];
+        }
+        if (transpose) {
+            this.transpose();
+        }
     }
 
-    copyRawDataTo(vector: number[], index: number = 0, transpose: boolean = false): void {
-        throw new NotImplementedError();
+    // AwayJS
+    copyRawDataTo(vector: number[] | Float32Array, index: number = 0, transpose: boolean = false) {
+        if (transpose) {
+            this.transpose();
+        }
+        var length = this.rawData.length;
+        for (var i = 0; i < length; i++) {
+            vector[i + index] = this.rawData[i];
+        }
+        if (transpose) {
+            this.transpose();
+        }
     }
 
     copyRowFrom(row: number, vector3D: Vector3D): void {
@@ -136,8 +192,100 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         dest.rawData = this.rawData;
     }
 
+    // AwayJS
     decompose(orientationStyle: string = Orientation3D.EULER_ANGLES): Vector3D[] {
-        throw new NotImplementedError();
+        var components: Vector3D[] = [new Vector3D(), new Vector3D(), new Vector3D(), new Vector3D()];
+        var colX = new Vector3D(this.rawData[0], this.rawData[1], this.rawData[2]);
+        var colY = new Vector3D(this.rawData[4], this.rawData[5], this.rawData[6]);
+        var colZ = new Vector3D(this.rawData[8], this.rawData[9], this.rawData[10]);
+
+        var translation = components[0];
+        translation.x = this.rawData[12];
+        translation.y = this.rawData[13];
+        translation.z = this.rawData[14];
+
+        var scale = components[3];
+        var skew = components[2];
+
+        //compute X scale factor and normalise colX
+        scale.x = colX.length;
+        colX.scaleBy(1 / scale.x);
+
+        //compute XY shear factor and make colY orthogonal to colX
+        skew.x = colX.dotProduct(colY);
+        colY = __combineVector(colY, colX, 1, -skew.x);
+
+        //compute Y scale factor and normalise colY
+        scale.y = colY.length;
+        colY.scaleBy(1 / scale.y);
+        skew.x /= scale.y;
+
+        //compute XZ and YZ shears and make colZ orthogonal to colX and colY
+        skew.y = colX.dotProduct(colZ);
+        colZ = __combineVector(colZ, colX, 1, -skew.y);
+        skew.z = colY.dotProduct(colZ);
+        colZ = __combineVector(colZ, colY, 1, -skew.z);
+
+        //compute Z scale and normalise colZ
+        scale.z = colZ.length;
+        colZ.scaleBy(1 / scale.z);
+        skew.y /= scale.z;
+        skew.z /= scale.z;
+
+        //at this point, the matrix (in cols) is orthonormal
+        //check for a coordinate system flip. If the determinant is -1, negate the z scaling factor
+        if (colX.dotProduct(colY.crossProduct(colZ)) < 0) {
+            scale.z = -scale.z;
+            colZ.x = -colZ.x;
+            colZ.y = -colZ.y;
+            colZ.z = -colZ.z;
+        }
+
+        var rotation = components[1];
+        switch (orientationStyle) {
+            case Orientation3D.AXIS_ANGLE:
+                rotation.w = Math.acos((colX.x + colY.y + colZ.z - 1) / 2);
+                var len = Math.sqrt((colY.z - colZ.y) * (colY.z - colZ.y) + (colZ.x - colX.z) * (colZ.x - colX.z) + (colX.y - colY.x) * (colX.y - colY.x));
+                rotation.x = (colY.z - colZ.y) / len;
+                rotation.y = (colZ.x - colX.z) / len;
+                rotation.z = (colX.y - colY.x) / len;
+                break;
+            case Orientation3D.QUATERNION:
+                var tr = colX.x + colY.y + colZ.z;
+                if (tr > 0) {
+                    rotation.w = Math.sqrt(1 + tr) / 2;
+                    rotation.x = (colY.z - colZ.y) / (4 * rotation.w);
+                    rotation.y = (colZ.x - colX.z) / (4 * rotation.w);
+                    rotation.z = (colX.y - colY.x) / (4 * rotation.w);
+                } else if ((colX.x > colY.y) && (colX.x > colZ.z)) {
+                    rotation.x = Math.sqrt(1 + colX.x - colY.y - colZ.z) / 2;
+                    rotation.w = (colY.z - colZ.y) / (4 * rotation.x);
+                    rotation.y = (colX.y + colY.x) / (4 * rotation.x);
+                    rotation.z = (colZ.x + colX.z) / (4 * rotation.x);
+                } else if (colY.y > colZ.z) {
+                    rotation.y = Math.sqrt(1 + colY.y - colX.x - colZ.z) / 2;
+                    rotation.x = (colX.y + colY.x) / (4 * rotation.y);
+                    rotation.w = (colZ.x - colX.z) / (4 * rotation.y);
+                    rotation.z = (colY.z + colZ.y) / (4 * rotation.y);
+                } else {
+                    rotation.z = Math.sqrt(1 + colZ.z - colX.x - colY.y) / 2;
+                    rotation.x = (colZ.x + colX.z) / (4 * rotation.z);
+                    rotation.y = (colY.z + colZ.y) / (4 * rotation.z);
+                    rotation.w = (colX.y - colY.x) / (4 * rotation.z);
+                }
+                break;
+            case Orientation3D.EULER_ANGLES:
+                rotation.y = Math.asin(-colX.z);
+                if (colX.z != 1 && colX.z != -1) {
+                    rotation.x = Math.atan2(colY.z, colZ.z);
+                    rotation.z = Math.atan2(colX.y, colX.x);
+                } else {
+                    rotation.z = 0;
+                    rotation.x = Math.atan2(colY.x, colY.y);
+                }
+                break;
+        }
+        return components;
     }
 
     deltaTransformVector(v: Vector3D): Vector3D {
@@ -236,6 +384,34 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
+    /**
+     * Prepends an incremental skew change along the x, y, and z axes to a {@link Matrix3D} object.
+     */
+    // AwayJS
+    public prependSkew(xSkew: number, ySkew: number, zSkew: number) {
+        if (xSkew === 0 && ySkew === 0 && zSkew === 0) {
+            return;
+        }
+        var raw = TEMP_MATRIX_RAW_DATA;
+        raw[0] = 1;
+        raw[1] = 0;
+        raw[2] = 0;
+        raw[3] = 0;
+        raw[4] = xSkew;
+        raw[5] = 1;
+        raw[6] = 0;
+        raw[7] = 0;
+        raw[8] = ySkew;
+        raw[9] = zSkew;
+        raw[10] = 1;
+        raw[11] = 0;
+        raw[12] = 0;
+        raw[13] = 0;
+        raw[14] = 0;
+        raw[15] = 1;
+        this.prepend(TEMP_MATRIX);
+    }
+
     prependTranslation(x: number, y: number, z: number): void {
         this._data = Matrix3D.__dotProduct(this._data, [
             1, 0, 0, x,
@@ -245,8 +421,102 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
         ]);
     }
 
+    // AwayJS
+    // TODO: orientationStyle
     recompose(components: Vector3D[], orientationStyle: string = Orientation3D.EULER_ANGLES): boolean {
-        throw new NotImplementedError();
+        if (orientationStyle != Orientation3D.EULER_ANGLES) {
+            throw new NotImplementedError();
+        }
+
+        if (!CommonUtil.isArray(components)) {
+            return false;
+        }
+        for (var i = 0; i < components.length; ++i) {
+            if (CommonUtil.isUndefinedOrNull(components[i]) || !(components[i] instanceof Vector3D)) {
+                return false;
+            }
+        }
+
+        var translation = CommonUtil.ptr(components[0]) ? components[0] : this.position;
+        this.identity();
+        var scale = components[3];
+        if (CommonUtil.ptr(scale) && (scale.x !== 1 || scale.y !== 1 || scale.z !== 1)) {
+            this.appendScale(scale.x, scale.y, scale.z);
+        }
+
+        var skew = components[2];
+        if (CommonUtil.ptr(skew) && (skew.x !== 0 || skew.y !== 0 || skew.z !== 0)) {
+            this.appendSkew(skew.x, skew.y, skew.z);
+        }
+
+        var sin: number;
+        var cos: number;
+        var raw = TEMP_MATRIX_RAW_DATA;
+        raw[12] = 0;
+        raw[13] = 0;
+        raw[14] = 0;
+        raw[15] = 0;
+
+        var rotation = components[1];
+        if (rotation) {
+            var angle = -rotation.x;
+            if (angle != 0) {
+                sin = Math.sin(angle);
+                cos = Math.cos(angle);
+                raw[0] = 1;
+                raw[1] = 0;
+                raw[2] = 0;
+                raw[3] = 0;
+                raw[4] = 0;
+                raw[5] = cos;
+                raw[6] = -sin;
+                raw[7] = 0;
+                raw[8] = 0;
+                raw[9] = sin;
+                raw[10] = cos;
+                raw[11] = 0;
+                this.append(TEMP_MATRIX);
+            }
+            angle = -rotation.y;
+            if (angle != 0) {
+                sin = Math.sin(angle);
+                cos = Math.cos(angle);
+                raw[0] = cos;
+                raw[1] = 0;
+                raw[2] = sin;
+                raw[3] = 0;
+                raw[4] = 0;
+                raw[5] = 1;
+                raw[6] = 0;
+                raw[7] = 0;
+                raw[8] = -sin;
+                raw[9] = 0;
+                raw[10] = cos;
+                raw[11] = 0;
+                this.append(TEMP_MATRIX);
+            }
+            angle = -rotation.z;
+            if (angle != 0) {
+                sin = Math.sin(angle);
+                cos = Math.cos(angle);
+                raw[0] = cos;
+                raw[1] = -sin;
+                raw[2] = 0;
+                raw[3] = 0;
+                raw[4] = sin;
+                raw[5] = cos;
+                raw[6] = 0;
+                raw[7] = 0;
+                raw[8] = 0;
+                raw[9] = 0;
+                raw[10] = 1;
+                raw[11] = 0;
+                this.append(TEMP_MATRIX);
+            }
+        }
+        this.position = translation;
+        this.rawData[15] = 1;
+        return true;
     }
 
     transformVector(v: Vector3D): Vector3D {
@@ -383,4 +653,12 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
     private _data: number[] = null;
 
+}
+
+const TEMP_MATRIX = new Matrix3D();
+const TEMP_MATRIX_RAW_DATA = TEMP_MATRIX.rawData;
+
+// AwayJS
+function __combineVector(a: Vector3D, b: Vector3D, ascl: number, bscl: number): Vector3D {
+    return new Vector3D(a.x * ascl + b.x * bscl, a.y * ascl + b.y * bscl, a.z * ascl + b.z * bscl);
 }

@@ -25,6 +25,8 @@ import {GLUtil} from "../../mic/glantern/GLUtil";
 import {TimeInfo} from "../../mic/TimeInfo";
 import {VirtualDom} from "../../mic/VirtualDom";
 import {CommonUtil} from "../../mic/CommonUtil";
+import {Vector3D} from "../geom/Vector3D";
+import {Matrix3D} from "../geom/Matrix3D";
 
 export class TextField extends InteractiveObject {
 
@@ -345,7 +347,11 @@ export class TextField extends InteractiveObject {
     protected _$render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
             this._canvasTarget.updateImageContent();
-            RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, this.transform.matrix3D, this.alpha, false);
+            var decomposed = this.transform.matrix3D.decompose();
+            var matrix3D = new Matrix3D();
+            // translation, rotation, skew, scale
+            matrix3D.recompose([Vector3D.ORIGIN, decomposed[1], decomposed[2], decomposed[3]]);
+            RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, matrix3D, this.alpha, false);
         }
     }
 
@@ -378,25 +384,32 @@ export class TextField extends InteractiveObject {
     }
 
     protected _$drawTextElements(context2D: CanvasRenderingContext2D): void {
+        // TextField is a special class that do not actually draw vertices, so we have to calculate the transform
+        // ourselves.
+        // TODO: What about clipping bounds?
+        var matrix3D = this.transform.matrix3D;
+        var positionVector3 = new Vector3D(this.x, this.y, this.z);
+        positionVector3 = matrix3D.transformVector(positionVector3);
+        var x = positionVector3.x, y = positionVector3.y;
         var baseX = this.thickness;
         var baseY = this.thickness;
         var borderThickness = 1;
         context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
         if (this.background) {
             context2D.fillStyle = GLUtil.colorToCssSharp(this.backgroundColor);
-            context2D.fillRect(0, 0, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
+            context2D.fillRect(x, y, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
         context2D.fillStyle = GLUtil.colorToCssSharp(this.textColor);
-        context2D.fillText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
+        context2D.fillText(this.text, x + baseX + borderThickness, y + this.textHeight * 0.75 + borderThickness);
         if (this.thickness > 0) {
             context2D.lineWidth = this.thickness;
             context2D.strokeStyle = GLUtil.colorToCssSharp(this.textOutlineColor);
-            context2D.strokeText(this.text, baseX + borderThickness, this.textHeight * 0.75 + borderThickness);
+            context2D.strokeText(this.text, x + baseX + borderThickness, y + this.textHeight * 0.75 + borderThickness);
         }
         if (this.border) {
             context2D.lineWidth = 1;
             context2D.strokeStyle = GLUtil.colorToCssSharp(this.borderColor);
-            context2D.strokeRect(borderThickness, borderThickness, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
+            context2D.strokeRect(x + borderThickness, y + borderThickness, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }
     }
 

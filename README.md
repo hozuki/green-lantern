@@ -118,9 +118,6 @@ See [QA.md](QA.md).
 
 You will also find a copy in [`LICENSE.md`](LICENSE.md).
 
-Part of GLantern uses modifications based on [`webgl-utils.js`](//github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js). Its license file
-can be found [here](docs/license/webgl-utils.txt).
-
 ## Other Resources
 
 - Adobe Flash CC is able to export Flash project as WebGL projects. The tutorial and
@@ -129,3 +126,11 @@ However, it has recently be announced that [Flash is replaced by Animate](http:/
 So fellas, you may want to give a warm welcome to that new solution.
 - Mozilla has started a project, [Shumway](https://wiki.mozilla.org/Shumway), which is intended to
 provide Flash-like support by using HTML 5 features on Firefox.
+
+## Credits
+
+Part of GLantern uses modifications based on [`webgl-utils.js`](//github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js). Its license file
+can be found [here](docs/license/webgl-utils.txt).
+
+Part of GLantern uses modifications based on [`AwayJS.Core.geom`](//github.com/awayjs/core/blob/master/lib/geom/). Its license file can be found
+[here](docs/license/awayjs-core.txt).
