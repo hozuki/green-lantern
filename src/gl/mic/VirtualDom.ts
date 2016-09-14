@@ -1,3 +1,4 @@
+import {CommonUtil} from "./CommonUtil";
 /**
  * Created by MIC on 2016/8/22.
  */
@@ -5,7 +6,9 @@
 const $g: {
     $env: Window | NodeJS.Global,
     $raf: (callback: FrameRequestCallback) => number,
-    $caf: (handle: number) => void
+    $caf: (handle: number) => void,
+    $setTimeout: (handler: any, timeout?: any, ...args: any[]) => NodeJS.Timer | number,
+    $clearTimeout: (handle: NodeJS.Timer | number) => void
 } = Object.create(null);
 $g.$env = <any>(window || self || global || {});
 
@@ -57,6 +60,14 @@ export abstract class VirtualDom {
         return window.screen.height;
     }
 
+    static get setTimeout(): (handler: any, timeout?: any, ...args: any[]) => NodeJS.Timer | number {
+        return $g.$setTimeout;
+    }
+
+    static get clearTimeout(): (handle: NodeJS.Timer | number) => void {
+        return $g.$clearTimeout;
+    }
+
     /*
      * Do NOT change the definition. Use auto inference well.
      */
@@ -71,11 +82,16 @@ function windowExists(): boolean {
 }
 
 function init(): void {
-    if (!windowExists()) {
+    var we = windowExists();
+    var ge = CommonUtil.isObject(global) && !CommonUtil.isNull(global);
+    if (!we) {
         console.warn("requestAnimationFrame and cancelAnimationFrame need a window to execute.");
         return;
     }
-    if (windowExists()) {
+    // We have a preference for the more accurate Node.js timers.
+    $g.$setTimeout = ge ? global.setTimeout : (we ? window.setTimeout : null);
+    $g.$clearTimeout = ge ? global.clearTimeout : (we ? window.clearTimeout : null);
+    if (we) {
         const raf = "RequestAnimationFrame",
             caf = "CancelAnimationFrame",
             webkit = "webkit",
