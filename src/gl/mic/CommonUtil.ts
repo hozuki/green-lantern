@@ -282,13 +282,12 @@ export abstract class CommonUtil {
      * @param message {String} The message to print.
      * @param [extra] {*} Extra information.
      */
-    static trace(message: string, extra: any = void(0)): void {
+    static trace(message: string, extra?: any): void {
         if (CommonUtil.isUndefined(extra)) {
             console.info(message);
         } else {
             console.info(message, extra);
         }
-        console.trace();
     }
 
     static padLeft(str: string, targetLength: number, padWith: string): string {
