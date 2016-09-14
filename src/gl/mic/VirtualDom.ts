@@ -8,7 +8,9 @@ const $g: {
     $raf: (callback: FrameRequestCallback) => number,
     $caf: (handle: number) => void,
     $setTimeout: (handler: any, timeout?: any, ...args: any[]) => NodeJS.Timer | number,
-    $clearTimeout: (handle: NodeJS.Timer | number) => void
+    $clearTimeout: (handle: NodeJS.Timer | number) => void,
+    $openWindow: (url?: string, target?: string, features?: string, replace?: boolean) => Window,
+    $assignLocation: (url: string) => void
 } = Object.create(null);
 $g.$env = <any>(window || self || global || {});
 
@@ -68,6 +70,14 @@ export abstract class VirtualDom {
         return $g.$clearTimeout;
     }
 
+    static get openWindow(): (url?: string, target?: string, features?: string, replace?: boolean) => Window {
+        return $g.$openWindow;
+    }
+
+    static get assignLocation(): (url: string) => void {
+        return $g.$assignLocation;
+    }
+
     /*
      * Do NOT change the definition. Use auto inference well.
      */
@@ -85,7 +95,7 @@ function init(): void {
     var we = windowExists();
     var ge = CommonUtil.isObject(global) && !CommonUtil.isNull(global);
     if (!we) {
-        console.warn("requestAnimationFrame and cancelAnimationFrame need a window to execute.");
+        console.warn("Some critical functions need a window to execute.");
         return;
     }
     // We have a preference for the more accurate Node.js timers.
@@ -113,7 +123,11 @@ function init(): void {
         if ($g.$caf) {
             $g.$caf = $g.$caf.bind($g.$env);
         }
+        $g.$assignLocation = window.location.assign;
+        $g.$openWindow = window.open;
     } else {
         $g.$raf = $g.$caf = null;
+        $g.$assignLocation = null;
+        $g.$openWindow = null;
     }
 }
