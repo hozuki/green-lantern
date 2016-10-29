@@ -25,3 +25,17 @@ $ git push origin modification_description
 ```
 
 6. Create a pull request from your account and describe the changes.
+
+## Naming Convention
+
+**For all classes**
+
+- Public function/property/field: `memberName`
+- Protected function: `_$functionName`
+- Private function: `__functionName`
+- Protected/private field: `_fieldName`
+
+**Special rule for Flash classes**
+
+If a public member does not exist in original class (please refer to ActionScript 3 API
+Reference), it should be named like `$memberName`.
