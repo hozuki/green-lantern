@@ -1,5 +1,7 @@
 # GLantern
 
+[![Travis](https://img.shields.io/travis/hozuki/GLantern.svg)](https://travis-ci.org/hozuki/GLantern)
+
 GLantern is a library intended for a Flash-HTML5 shim layer. Enjoy the live preview
 from <http://hozuki.github.io/GLantern>.
 
