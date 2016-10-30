@@ -136,7 +136,7 @@ export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
     copyFrom(sourceMatrix3D: Matrix3D): void {
         this.position = sourceMatrix3D.position !== null ? sourceMatrix3D.position.clone() : null;
-        this.rawData = sourceMatrix3D.rawData;
+        this.rawData = sourceMatrix3D.rawData.slice();
     }
 
     // AwayJS

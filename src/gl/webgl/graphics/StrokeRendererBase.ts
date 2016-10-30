@@ -15,13 +15,13 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
 
     moveTo(x: number, y: number): void {
         // This action seems weird...
-        if (this._graphics.isFilling) {
+        if (this.graphics.$isFilling) {
             this.closePath();
         }
-        this._currentX = x;
-        this._currentY = y;
-        this._lastPathStartX = x;
-        this._lastPathStartY = y;
+        this.currentX = x;
+        this.currentY = y;
+        this.lastPathStartX = x;
+        this.lastPathStartY = y;
     }
 
     protected _$getSimLineVertices(x1: number, y1: number, x2: number, y2: number, z: number, width: number): number[] {

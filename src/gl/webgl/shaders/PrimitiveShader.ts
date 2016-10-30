@@ -33,6 +33,10 @@ export class PrimitiveShader extends ShaderBase {
         this._uniforms.get("uAlpha").value = alpha;
     }
 
+    setHollow(hollow: boolean): void {
+        this._uniforms.get("uHollow").value = hollow;
+    }
+
     protected _$localInit(manager: ShaderManager, uniforms: Map<string,UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
@@ -61,6 +65,12 @@ export class PrimitiveShader extends ShaderBase {
         u.name = "uAlpha";
         u.type = WebGLDataType.U1F;
         u.value = 1;
+        uniforms.set(u.name, u);
+
+        u = new UniformCache();
+        u.name = "uHollow";
+        u.type = WebGLDataType.UBool;
+        u.value = true;
         uniforms.set(u.name, u);
     }
 

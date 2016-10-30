@@ -93,8 +93,9 @@ export class EngineBase extends EventDispatcher {
         }
         var stage = this.stage;
         stage.dispatchEvent(EventBase.create(FlashEvent.ENTER_FRAME));
-        stage.update(timeInfo);
-        stage.render(this.renderer);
+        stage.$update(timeInfo);
+        this.clear();
+        stage.$render(this.renderer);
     }
 
     get stage(): Stage {
@@ -159,7 +160,7 @@ export class EngineBase extends EventDispatcher {
     }
 
     /**
-     * The main render loop.
+     * The main $render loop.
      * @param time {Number} The time argument of {@link window#requestAnimationFrame} callback. However, some browsers
      * does not invoke with this argument.
      * @private

@@ -2,7 +2,6 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {RenderTarget2D} from "./RenderTarget2D";
 import {PackedArrayBuffer} from "./PackedArrayBuffer";
 import {WebGLRenderer} from "./WebGLRenderer";
 import {ReplicateShader} from "./shaders/ReplicateShader";
@@ -14,12 +13,14 @@ import {Primitive2Shader} from "./shaders/Primitive2Shader";
 import {PrimitiveShader} from "./shaders/PrimitiveShader";
 import {VirtualDom} from "../mic/VirtualDom";
 import {CommonUtil} from "../mic/CommonUtil";
+import {BitmapTargetBase} from "./BitmapTargetBase";
+import {BufferedBitmapTarget} from "./targets/BufferedBitmapTarget";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
 export abstract class RenderHelper {
 
-    static renderPrimitives(renderer: WebGLRenderer, renderTo: RenderTarget2D, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer, clearOutput: boolean): void {
+    static renderPrimitives(renderer: WebGLRenderer, renderTo: BitmapTargetBase, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
 
         var shader = <PrimitiveShader>renderer.shaderManager.currentShader;
@@ -48,7 +49,7 @@ export abstract class RenderHelper {
         glc.drawElements(gl.TRIANGLES, indices.elementCount, indices.elementGLType, 0);
     }
 
-    static renderPrimitives2(renderer: WebGLRenderer, renderTo: RenderTarget2D, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer,
+    static renderPrimitives2(renderer: WebGLRenderer, renderTo: BitmapTargetBase, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer,
                              flipX: boolean, flipY: boolean, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE2);
 
@@ -82,7 +83,7 @@ export abstract class RenderHelper {
     }
 
 
-    static copyTargetContent(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, flipX: boolean, flipY: boolean, clearOutput: boolean): void {
+    static copyTargetContent(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, flipX: boolean, flipY: boolean, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <ReplicateShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
@@ -94,7 +95,7 @@ export abstract class RenderHelper {
         });
     }
 
-    static copyImageContent(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, flipX: boolean, flipY: boolean, transform: Matrix3D, alpha: number, clearOutput: boolean): void {
+    static copyImageContent(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, flipX: boolean, flipY: boolean, transform: Matrix3D, alpha: number, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
@@ -108,7 +109,7 @@ export abstract class RenderHelper {
         });
     }
 
-    static renderImage(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, clearOutput: boolean): void {
+    static renderImage(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
             var shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(false);
@@ -116,7 +117,7 @@ export abstract class RenderHelper {
         });
     }
 
-    static renderBuffered(renderer: WebGLRenderer, source: RenderTarget2D, destination: RenderTarget2D, shaderID: number,
+    static renderBuffered(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, shaderID: number,
                           clearOutput: boolean, shaderInit: (r: WebGLRenderer) => void): void {
         if (!checkRenderTargets(source, destination)) {
             return;
@@ -153,13 +154,13 @@ export abstract class RenderHelper {
         // Some shaders, e.g. the blur-2 shader, have no texture coordinates.
         attributeLocation = shader.getAttributeLocation("aTextureCoord");
         if (attributeLocation >= 0) {
-            var textureCoords = RenderTarget2D.textureCoords;
+            var textureCoords = BufferedBitmapTarget.textureCoords;
             textureCoords.syncBufferData();
             glc.vertexAttribPointer(attributeLocation, 2, textureCoords.elementGLType, false, textureCoords.elementSize * 2, 0);
             glc.enableVertexAttribArray(attributeLocation);
         }
 
-        var textureIndices = RenderTarget2D.textureIndices;
+        var textureIndices = BufferedBitmapTarget.textureIndices;
         textureIndices.syncBufferData();
 
         destination.activate();
@@ -178,21 +179,21 @@ export abstract class RenderHelper {
 
 }
 
-function checkRenderTargets(source: RenderTarget2D, destination: RenderTarget2D): boolean {
+function checkRenderTargets(source: BufferedBitmapTarget, destination: BitmapTargetBase): boolean {
     if (!CommonUtil.ptr(source)) {
-        console.warn("Cannot render a null RenderTarget2D onto another RenderTarget2D.");
+        console.warn("Cannot render a null BitmapTargetBase onto another BitmapTargetBase.");
         return false;
     }
     if (source.texture === null) {
-        console.warn("Cannot use a RenderTarget2D without texture-based frame buffer to render onto another RenderTarget2D.");
+        console.warn("Cannot use a BitmapTargetBase without texture-based frame buffer to render onto another BitmapTargetBase.");
         return false;
     }
     if (source.isRoot) {
-        console.warn("Cannot use a root RenderTarget2D as source.");
+        console.warn("Cannot use a root BitmapTargetBase as source.");
         return false;
     }
     if (source === destination) {
-        console.warn("Source and destination must not be the same RenderTarget2D.");
+        console.warn("Source and destination must not be the same BitmapTargetBase.");
         return false;
     }
     return true;

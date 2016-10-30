@@ -17,7 +17,7 @@ import {TextFieldType} from "./TextFieldType";
 import {Rectangle} from "../geom/Rectangle";
 import {DisplayObject} from "../display/DisplayObject";
 import {TextLineMetrics} from "./TextLineMetrics";
-import {RenderTarget2D} from "../../webgl/RenderTarget2D";
+import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
 import {NotImplementedError} from "../errors/NotImplementedError";
@@ -33,7 +33,7 @@ export class TextField extends InteractiveObject {
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
         if (root !== null) {
-            this._canvasTarget = this._$createCanvasTarget(root.worldRenderer);
+            this._canvasTarget = this._$createCanvasTarget(root.$worldRenderer);
         }
         this._textFormatChangedHandler = this.__textFormatChanged.bind(this);
         this.defaultTextFormat = new TextFormat();
@@ -319,8 +319,7 @@ export class TextField extends InteractiveObject {
 
     dispose(): void {
         super.dispose();
-        // TODO: WARNING: HACK!
-        var renderer = (<Stage>this.root).worldRenderer;
+        var renderer = this.$rawRoot.$worldRenderer;
         renderer.releaseRenderTarget(this._canvasTarget);
         this._canvasTarget = null;
         this._canvas = null;
@@ -331,13 +330,6 @@ export class TextField extends InteractiveObject {
         if (!this._isContentChanged) {
             return;
         }
-        //var canvas = this._canvas;
-        //var context = this._context2D;
-        //context.font = this.__getStyleString();
-        //var metrics:TextMetrics = context.measureText(this.text);
-        //canvas.height = this.defaultTextFormat.size * 1.15;
-        //canvas.width = metrics.width;
-
         this._canvasTarget.updateImageSize();
         this._$updateCanvasTextStyle(this._context2D);
         this._$drawTextElements(this._context2D);
@@ -346,12 +338,16 @@ export class TextField extends InteractiveObject {
 
     protected _$render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
-            this._canvasTarget.updateImageContent();
+            var canvasTarget = this._canvasTarget;
+            canvasTarget.updateImageContent();
             var decomposed = this.transform.matrix3D.decompose();
             var matrix3D = new Matrix3D();
             // translation, rotation, skew, scale
             matrix3D.recompose([Vector3D.ORIGIN, decomposed[1], decomposed[2], decomposed[3]]);
-            RenderHelper.copyImageContent(renderer, this._canvasTarget, renderer.currentRenderTarget, false, true, matrix3D, this.alpha, false);
+            // Always invert Y axis, unless the target is a stencil.
+            var renderTarget = renderer.currentRenderTarget;
+            RenderHelper.copyImageContent(renderer, canvasTarget, renderTarget, false, !renderTarget.isStencil, matrix3D, this.alpha, false);
+            console.log("TextField: target is stencil: " + renderTarget.isStencil);
         }
     }
 

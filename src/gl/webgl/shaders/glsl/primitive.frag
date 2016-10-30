@@ -1,22 +1,16 @@
 
 precision mediump float;
 
-// When drawing in the original PrimitiveTarget, turn off the alpha to ensure
-// only the DisplayO
-//uniform bool uSolid;
 uniform float uAlpha;
+uniform bool uHollow;
 
 varying vec4 vVertexColor;
 
 void main() {
-    //gl_FragColor = vec4(vVertexColor.rgb, (uSolid ? 1.0 : uAlpha) * vVertexColor.a);
-    //gl_FragColor = vec4(vVertexColor.rgb, uAlpha * vVertexColor.a);
-    /*
-    if (vVertexColor.a == 0.0) {
-        gl_FragColor = vec4(vVertexColor.rgb, 0.0);
+    vec4 finalColor = vVertexColor * uAlpha;
+    if (uHollow && finalColor.a == 0.0) {
+        discard;
     } else {
-        gl_FragColor = vec4(vVertexColor.rgb / vVertexColor.a, uAlpha * vVertexColor.a);
+        gl_FragColor = finalColor;
     }
-    */
-    gl_FragColor = vVertexColor * uAlpha;
 }

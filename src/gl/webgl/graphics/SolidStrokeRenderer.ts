@@ -23,10 +23,9 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
 
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         if (this._w > 0) {
-            this._isDirty = true;
             var dt1: number, dt2: number, dt3: number;
             var t2: number, t3: number;
-            var fromX = this._currentX, fromY = this._currentY;
+            var fromX = this.currentX, fromY = this.currentY;
             var xa: number, ya: number;
             var j: number;
             for (var i = 1; i <= CURVE_ACCURACY; i++) {
@@ -40,16 +39,16 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                 ya = dt3 * fromY + 3 * dt2 * j * cy1 + 3 * dt1 * t2 * cy2 + t3 * y;
                 this.lineTo(xa, ya);
             }
+            this.becomeDirty();
         }
-        this._currentX = x;
-        this._currentY = y;
+        this.currentX = x;
+        this.currentY = y;
     }
 
     curveTo(cx: number, cy: number, x: number, y: number): void {
         if (this._w > 0) {
-            this._isDirty = true;
             var j: number;
-            var fromX = this._currentX, fromY = this._currentY;
+            var fromX = this.currentX, fromY = this.currentY;
             var xa: number, ya: number;
             for (var i = 1; i <= CURVE_ACCURACY; i++) {
                 j = i / CURVE_ACCURACY;
@@ -59,15 +58,15 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                 ya = ya + (cy + (y - cy) * j - ya) * j;
                 this.lineTo(xa, ya);
             }
+            this.becomeDirty();
         }
-        this._currentX = x;
-        this._currentY = y;
+        this.currentX = x;
+        this.currentY = y;
     }
 
     drawCircle(x: number, y: number, radius: number): void {
         this.moveTo(x - radius, y);
         if (this._w > 0) {
-            this._isDirty = true;
             var thetaNext: number;
             var thetaBegin: number;
             var x2: number, y2: number;
@@ -83,17 +82,17 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                 }
                 thetaBegin -= halfPi;
             }
+            this.becomeDirty();
         }
-        this._currentX = x + radius;
-        this._currentY = y;
-        this._lastPathStartX = x + radius;
-        this._lastPathStartY = y;
+        this.currentX = x + radius;
+        this.currentY = y;
+        this.lastPathStartX = x + radius;
+        this.lastPathStartY = y;
     }
 
     drawEllipse(x: number, y: number, width: number, height: number): void {
         this.moveTo(x, y + height / 2);
         if (this._w > 0) {
-            this._isDirty = true;
             var thetaNext: number;
             var thetaBegin: number;
             var centerX = x + width / 2, centerY = y + height / 2;
@@ -111,20 +110,21 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
                 }
                 thetaBegin -= halfPi;
             }
+            this.becomeDirty();
         }
-        this._currentX = x + width;
-        this._currentY = y + height / 2;
-        this._lastPathStartX = x + width;
-        this._lastPathStartY = y + height / 2;
+        this.currentX = x + width;
+        this.currentY = y + height / 2;
+        this.lastPathStartX = x + width;
+        this.lastPathStartY = y + height / 2;
     }
 
     drawRect(x: number, y: number, width: number, height: number): void {
-        this._isDirty = true;
         this.moveTo(x, y);
         this.lineTo(x, y + height);
         this.lineTo(x + width, y + height);
         this.lineTo(x + width, y);
         this.lineTo(x, y);
+        this.becomeDirty();
     }
 
     drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight: number = NaN): void {
@@ -133,29 +133,28 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
 
     lineTo(x: number, y: number): void {
         if (this._w > 0) {
-            this._isDirty = true;
-            var vertices = this._$getSimLineVertices(this._currentX, this._currentY, x, y, STD_Z, this._w);
+            var vertices = this._$getSimLineVertices(this.currentX, this.currentY, x, y, STD_Z, this._w);
             if (vertices.length > 0) {
                 // Generated 4 vertices, matching with 6 indices (2 triangles)
-                var cur = this._vertices.length / 3;
+                var cur = this.vertices.length / 3;
                 for (var i = 0; i < 12; i++) {
-                    this._vertices.push(vertices[i]);
+                    this.vertices.push(vertices[i]);
                 }
                 for (var i = 0; i < 4; i++) {
-                    this._colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
+                    this.colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
                 }
-                this._indices.push(cur, cur + 1, cur + 2, cur + 1, cur + 2, cur + 3);
-                this._hasDrawnAnything = true;
+                this.indices.push(cur, cur + 1, cur + 2, cur + 1, cur + 2, cur + 3);
+                this.becomeDirty();
             }
         }
-        this._currentX = x;
-        this._currentY = y;
+        this.currentX = x;
+        this.currentY = y;
     }
 
     render(renderer: WebGLRenderer): void {
-        if (this._vertices.length > 0) {
+        if (this.vertices.length > 0) {
             var target = renderer.currentRenderTarget;
-            RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
+            RenderHelper.renderPrimitives2(renderer, target, this.vertexBuffer, this.colorBuffer, this.indexBuffer, false, target.isRoot, false);
         }
     }
 

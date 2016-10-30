@@ -11,7 +11,7 @@ import {WebGLRenderer} from "../../webgl/WebGLRenderer";
 import {ShaderManager} from "../../webgl/ShaderManager";
 import {ShaderID} from "../../webgl/ShaderID";
 import {RenderHelper} from "../../webgl/RenderHelper";
-import {RenderTarget2D} from "../../webgl/RenderTarget2D";
+import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
 import {TimeInfo} from "../../mic/TimeInfo";
 
 export class Bitmap extends DisplayObject {
@@ -31,8 +31,8 @@ export class Bitmap extends DisplayObject {
     set bitmapData(v: BitmapData) {
         this.__disposeRenderTarget();
         this._bitmapData = v;
-        // HACK: not-assured cast.
-        this._renderTarget = (<Stage>this.root).worldRenderer.createRenderTarget(v.canvas);
+        this.__disposeRenderTarget();
+        this._renderTarget = this.$rawRoot.$worldRenderer.createRenderTarget(v.canvas);
     }
 
     get pixelSnapping(): string {

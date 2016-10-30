@@ -18,13 +18,13 @@
     var textField = Display.createText();
     textField.x = 350;
     textField.y = 60;
-    textField.text = "Elon Mask";
+    textField.text = "Elon 'Mask'";
     textField.defaultTextFormat.size = 30;
-    textField.textColor = 0xffffff;
+    textField.textColor = 0xff00ff;
     var boxShape2 = Display.createShape();
     var boxGraphics2 = boxShape2.graphics;
-    boxGraphics2.lineStyle(3, 0x00ff00);
-    boxGraphics2.beginFill(0x00ffff);
+    boxGraphics2.lineStyle(10, 0x00ff00);
+    boxGraphics2.beginFill(0xffffff);
     boxGraphics2.drawRect(250, 0, 200, 200);
     boxGraphics2.endFill();
     boxShape2.mask = textField;

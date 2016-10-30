@@ -34,8 +34,8 @@ var Display = Object.create({
     },
     "createBlurFilter": function (a, b) {
         return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
-        //var filter = new GLantern.webgl.filters.Blur2Filter(lantern.renderer.shaderManager);
-        //var filter = new GLantern.webgl.filters.BlurFilter(lantern.renderer.shaderManager);
+        //var filter = new GLantern.webgl.filters.Blur2Filter(lantern.$renderer.shaderManager);
+        //var filter = new GLantern.webgl.filters.BlurFilter(lantern.$renderer.shaderManager);
         //filter.strengthX = a;
         //filter.strengthY = b;
         //return filter;

@@ -6,18 +6,20 @@ import * as libtess from "libtess";
 import {RendererOptions} from "./RendererOptions";
 import {ShaderManager} from "./ShaderManager";
 import {FilterManager} from "./FilterManager";
-import {RenderTarget2D} from "./RenderTarget2D";
+import {RenderTarget2D} from "./targets/RenderTarget2D";
 import {WebGLUtils} from "./WebGLUtils";
 import {IDisposable} from "../mic/IDisposable";
 import {BlendMode} from "../flash/display/BlendMode";
 import {ArgumentError} from "../flash/errors/ArgumentError";
 import {VirtualDom} from "../mic/VirtualDom";
 import {CommonUtil} from "../mic/CommonUtil";
+import {StencilTarget2D} from "./targets/StencilTarget2D";
+import {FrameImage} from "./FrameImage";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
 /**
- * The WebGL renderer, main provider of the rendering services.
+ * The WebGL $renderer, main provider of the rendering services.
  * @implements {IDisposable}
  */
 export class WebGLRenderer implements IDisposable {
@@ -30,8 +32,8 @@ export class WebGLRenderer implements IDisposable {
     constructor(canvas: HTMLCanvasElement, options: RendererOptions);
     /**
      * Creates a new {@link WebGLRenderer}.
-     * @param width {Number} The width for presentation of the renderer.
-     * @param height {Number} The height for presentation of the renderer.
+     * @param width {Number} The width for presentation of the $renderer.
+     * @param height {Number} The height for presentation of the $renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
      */
     constructor(width: number, height: number, options: RendererOptions);
@@ -49,8 +51,8 @@ export class WebGLRenderer implements IDisposable {
      * Clear the screen.
      */
     clear(): void {
-        if (this._screenTarget !== null) {
-            this._screenTarget.clear();
+        if (this.screenRenderTarget !== null) {
+            this.screenRenderTarget.clear();
         }
     }
 
@@ -58,40 +60,98 @@ export class WebGLRenderer implements IDisposable {
      * Disposes the {@link WebGLRenderer} and related resources.
      */
     dispose(): void {
-        if (this._isInitialized) {
-            this._screenTarget.dispose();
-            this._filterManager.dispose();
-            this._shaderManager.dispose();
-            this._filterManager = null;
-            this._shaderManager = null;
-            this._screenTarget = null;
-            this._context = null;
-            if (this._view.parentNode !== null && this._view.parentNode !== undefined) {
-                this._view.parentNode.removeChild(this._view);
-            }
-            this._view = null;
+        if (!this._isInitialized) {
+            return;
         }
+        this.screenRenderTarget.dispose();
+        this.filterManager.dispose();
+        this.shaderManager.dispose();
+        this._filterManager = null;
+        this._shaderManager = null;
+        this._screenRenderTarget = null;
+        this._context = null;
+        if (!CommonUtil.isUndefinedOrNull(this.view)) {
+            this.view.parentNode.removeChild(this.view);
+        }
+        this._view = null;
+    }
+
+    beginDrawMaskObject(): void {
+        var context = this.context;
+        context.stencilFunc(gl.ALWAYS, 1, 0xff);
+        context.stencilMask(0xff);
+        context.enable(gl.STENCIL_TEST);
+        context.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        context.colorMask(false, false, false, false);
+        this._isStencilTestEnabled = true;
+    }
+
+    beginDrawMaskedObjects(): void {
+        var context = this.context;
+        context.stencilFunc(gl.EQUAL, 1, 0xff);
+        context.stencilMask(0);
+        context.enable(gl.STENCIL_TEST);
+        context.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        context.colorMask(true, true, true, true);
+        this._isStencilTestEnabled = true;
+    }
+
+    beginDrawNormalObjects(): void {
+        var context = this.context;
+        context.disable(gl.STENCIL_TEST);
+        context.stencilMask(0);
+        context.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        context.colorMask(true, true, true, true);
+        this._isStencilTestEnabled = false;
+    }
+
+    get isStencilTestEnabled(): boolean {
+        return this._isStencilTestEnabled;
+    }
+
+    // get currentTarget(): BufferedBitmapTarget {
+    //     return this._currentTarget;
+    // }
+    //
+    // set currentTarget(v: BufferedBitmapTarget) {
+    //     this._currentTarget = v;
+    // }
+
+    /**
+     * Returns current $render target of the {@link WebGLRenderer}.
+     * @returns {RenderTarget2D} Current $render target of the {@link WebGLRenderer}.
+     */
+    get currentRenderTarget(): RenderTarget2D {
+        return this._currentRenderTarget;
     }
 
     /**
-     * Switches current render target to a specified {@link RenderTarget2D}.
-     * @param [target] {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
-     * render target of the {@link WebGLRenderer}. The default value is null.
+     * Switches current $render target to a specified {@link RenderTarget2D}.
+     * @param [v] {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
+     * $render target of the {@link WebGLRenderer}. The default value is null.
      */
-    setRenderTarget(target: RenderTarget2D = null): void {
-        if (target === this._currentRenderTarget && CommonUtil.ptr(target)) {
+    set currentRenderTarget(v: RenderTarget2D) {
+        if (v === this._currentRenderTarget && CommonUtil.ptr(v)) {
             return;
         }
-        var t = this._currentRenderTarget = CommonUtil.ptr(target) ? target : this._screenTarget;
+        var t = this._currentRenderTarget = CommonUtil.ptr(v) ? v : this._screenRenderTarget;
         t.activate();
     }
 
     /**
-     * Returns current render target of the {@link WebGLRenderer}.
-     * @returns {RenderTarget2D} Current render target of the {@link WebGLRenderer}.
+     * Returns current stencil target of the {@link WebGLRenderer}.
+     * @returns {StencilTarget2D} Current stencil target of the {@link WebGLRenderer}.
      */
-    get currentRenderTarget(): RenderTarget2D {
-        return this._currentRenderTarget;
+    get currentStencilTarget(): StencilTarget2D {
+        return this._currentStencilTarget;
+    }
+
+    /**
+     * Sets current stencil target of the {@link WebGLRenderer}.
+     * @param v {StencilTarget2D} Expected stencil target.
+     */
+    set currentStencilTarget(v: StencilTarget2D) {
+        this._currentStencilTarget = v;
     }
 
     /**
@@ -135,34 +195,34 @@ export class WebGLRenderer implements IDisposable {
     }
 
     /**
-     * Returns the final output of the {@link WebGLRenderer}. This target is always a root render target, which directly
-     * renders to the attached &lt;canvas&gt;. If FXAA is enabled, the copying process from {@link WebGLRenderer.inputTarget}
+     * Returns the final output of the {@link WebGLRenderer}. This target is always a root $render target, which directly
+     * renders to the attached &lt;canvas&gt;. If FXAA is enabled, the copying process from {@link WebGLRenderer.currentRenderTarget}
      * to this target performs a FXAA filtering. If not, it is a simple replicating process.
      * @returns {RenderTarget2D} The output of the {@link WebGLRenderer}.
      */
-    get screenTarget(): RenderTarget2D {
-        return this._screenTarget;
+    get screenRenderTarget(): RenderTarget2D {
+        return this._screenRenderTarget;
     }
 
     /**
      * Creates a new {@link RenderTarget2D} as a buffer. {@link RenderTarget2D}s should be only instanted through this
      * factory method, and be released using {@link WebGLRenderer.releaseRenderTarget}.
-     * @param [image] {ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement} See {@link RenderTarget2D.image}
+     * @param [image] {FrameImage} See {@link RenderTarget2D.image}
      * for more information.
      * @returns {RenderTarget2D} The created {@link RenderTarget2D}.
      */
-    createRenderTarget(image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null): RenderTarget2D {
+    createRenderTarget(image: FrameImage = null): RenderTarget2D {
         return new RenderTarget2D(this, image, false);
     }
 
     /**
      * Creates a new {@link RenderTarget2D} as an output to the screen. {@link RenderTarget2D}s should be only instanted
      * through this factory method, and be released using {@link WebGLRenderer.releaseRenderTarget}.
-     * @param [image] {ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement} See {@link RenderTarget2D.image}
+     * @param [image] {FrameImage} See {@link RenderTarget2D.image}
      * for more information.
      * @returns {RenderTarget2D} The created {@link RenderTarget2D}.
      */
-    createRootRenderTarget(image: ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement = null): RenderTarget2D {
+    createRootRenderTarget(image: FrameImage = null): RenderTarget2D {
         return new RenderTarget2D(this, image, true);
     }
 
@@ -171,7 +231,21 @@ export class WebGLRenderer implements IDisposable {
      * @param target {RenderTarget2D} The {@link RenderTarget2D} to be released.
      */
     releaseRenderTarget(target: RenderTarget2D): void {
-        if (target !== null && target !== undefined) {
+        if (!CommonUtil.isUndefinedOrNull(target)) {
+            target.dispose();
+        }
+    }
+
+    createStencilTarget(): StencilTarget2D {
+        return new StencilTarget2D(this, false);
+    }
+
+    createRootStencilTarget(): StencilTarget2D {
+        return new StencilTarget2D(this, true);
+    }
+
+    releaseStencilTarget(target: StencilTarget2D): void {
+        if (!CommonUtil.isUndefinedOrNull(target)) {
             target.dispose();
         }
     }
@@ -181,11 +255,11 @@ export class WebGLRenderer implements IDisposable {
      * @param blendMode {String} See {@link BlendMode} for more information.
      * @see {@link BlendMode}
      */
-    setBlendMode(blendMode: string): void {
+    set blendMode(blendMode: string) {
         if (!this._isInitialized) {
             return;
         }
-        if (this._currentBlendMode === blendMode) {
+        if (this._blendMode === blendMode) {
             return;
         }
 
@@ -197,7 +271,11 @@ export class WebGLRenderer implements IDisposable {
             glc.blendEquation(gl.FUNC_SUBTRACT);
         }
         glc.blendFunc(config[1], config[2]);
-        this._currentBlendMode = blendMode;
+        this._blendMode = blendMode;
+    }
+
+    get blendMode(): string {
+        return this._blendMode;
     }
 
     /**
@@ -245,9 +323,9 @@ export class WebGLRenderer implements IDisposable {
         glc.disable(gl.DEPTH_TEST);
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
-        this.setBlendMode(BlendMode.NORMAL);
+        this.blendMode = BlendMode.NORMAL;
 
-        this._screenTarget = this.createRootRenderTarget();
+        this._screenRenderTarget = this.createRootRenderTarget();
 
         canvas.addEventListener("webglcontextlost", this.__onContextLost.bind(this));
         canvas.addEventListener("webglcontextrestored", this.__onContextRestored.bind(this));
@@ -256,7 +334,8 @@ export class WebGLRenderer implements IDisposable {
         this._shaderManager = new ShaderManager(this);
         this._filterManager = new FilterManager(this);
 
-        this.setRenderTarget(null);
+        this.currentRenderTarget = null;
+        // this.currentTarget = this.currentRenderTarget;
 
         this.__initializeTessellator();
     }
@@ -307,11 +386,13 @@ export class WebGLRenderer implements IDisposable {
     }
 
     private _currentRenderTarget: RenderTarget2D = null;
-    private _currentBlendMode: string = null;
-    private _screenTarget: RenderTarget2D = null;
+    private _currentStencilTarget: StencilTarget2D = null;
+    private _blendMode: string = null;
+    private _screenRenderTarget: RenderTarget2D = null;
     private _filterManager: FilterManager = null;
     private _shaderManager: ShaderManager = null;
     private _tessellator: libtess.GluTesselator = null;
+    private _isStencilTestEnabled: boolean = false;
     private _context: WebGLRenderingContext = null;
     private _view: HTMLCanvasElement;
     private _options: RendererOptions = null;

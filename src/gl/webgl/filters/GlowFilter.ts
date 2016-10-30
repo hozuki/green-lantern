@@ -4,7 +4,7 @@
 
 import {ColorTransformFilter} from "./ColorTransformFilter";
 import {BlurFilter} from "./BlurFilter";
-import {RenderTarget2D} from "../RenderTarget2D";
+import {RenderTarget2D} from "../targets/RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterBase} from "../FilterBase";
 import {FilterManager} from "../FilterManager";

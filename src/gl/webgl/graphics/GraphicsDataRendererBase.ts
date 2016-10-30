@@ -15,13 +15,13 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 
     constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         this._graphics = graphics;
-        this._glc = graphics.renderer.context;
+        this._context = graphics.$renderer.context;
         this.__initializeBuffers();
         this._hasDrawnAnything = false;
         this._lastPathStartX = lastPathStartX;
         this._lastPathStartY = lastPathStartY;
         this.moveTo(currentX, currentY);
-        this._isDirty = true;
+        this.becomeDirty();
     }
 
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
@@ -68,12 +68,12 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
     }
 
     update(): void {
-        // check whether to update the typed buffer
+        // check whether to $update the typed buffer
         this._$syncBuffers();
     }
 
     render(renderer: WebGLRenderer): void {
-        console.warn("Do not call GraphicsDataRendererBase.render().");
+        console.warn("Do not call GraphicsDataRendererBase.$render().");
     }
 
     dispose(): void {
@@ -82,15 +82,96 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._indexBuffer.dispose();
         this._vertexBuffer = this._colorBuffer = this._indexBuffer = null;
         this._vertices = this._colors = this._indices = null;
-        this._glc = null;
+        this._context = null;
     }
 
     becomeDirty(): void {
+        this._hasDrawnAnything = true;
         this._isDirty = true;
+    }
+
+    get isDirty(): boolean {
+        return this._isDirty;
+    }
+
+    get graphics(): Graphics {
+        return this._graphics;
+    }
+
+    get context(): WebGLRenderingContext {
+        return this._context;
+    }
+
+    get vertices(): number[] {
+        return this._vertices;
+    }
+
+    set vertices(v: number[]) {
+        this._vertices = v;
+    }
+
+    get colors(): number[] {
+        return this._colors;
+    }
+
+    set colors(v: number[]) {
+        this._colors = v;
+    }
+
+    get indices(): number[] {
+        return this._indices;
+    }
+
+    set indices(v: number[]) {
+        this._indices = v;
+    }
+
+    get vertexBuffer(): PackedArrayBuffer {
+        return this._vertexBuffer;
+    }
+
+    get colorBuffer(): PackedArrayBuffer {
+        return this._colorBuffer;
+    }
+
+    get indexBuffer(): PackedArrayBuffer {
+        return this._indexBuffer;
     }
 
     get hasDrawnAnything(): boolean {
         return this._hasDrawnAnything;
+    }
+
+    get currentX(): number {
+        return this._currentX;
+    }
+
+    set currentX(v: number) {
+        this._currentX = v;
+    }
+
+    get currentY(): number {
+        return this._currentY;
+    }
+
+    set currentY(v: number) {
+        this._currentY = v;
+    }
+
+    get lastPathStartX(): number {
+        return this._lastPathStartX;
+    }
+
+    set lastPathStartX(v: number) {
+        this._lastPathStartX = v;
+    }
+
+    get lastPathStartY(): number {
+        return this._lastPathStartY;
+    }
+
+    set lastPathStartY(v: number) {
+        this._lastPathStartY = v;
     }
 
     protected _$syncBuffers(): void {
@@ -111,27 +192,28 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._vertices = [];
         this._colors = [];
         this._indices = [];
-        this._vertexBuffer = PackedArrayBuffer.create(this._glc, this._vertices, gl.FLOAT, gl.ARRAY_BUFFER);
-        this._colorBuffer = PackedArrayBuffer.create(this._glc, this._colors, gl.FLOAT, gl.ARRAY_BUFFER);
-        this._indexBuffer = PackedArrayBuffer.create(this._glc, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
+        var context = this.context;
+        this._vertexBuffer = PackedArrayBuffer.create(context, this._vertices, gl.FLOAT, gl.ARRAY_BUFFER);
+        this._colorBuffer = PackedArrayBuffer.create(context, this._colors, gl.FLOAT, gl.ARRAY_BUFFER);
+        this._indexBuffer = PackedArrayBuffer.create(context, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
     }
 
-    protected _graphics: Graphics = null;
-    protected _glc: WebGLRenderingContext = null;
-    protected _isDirty: boolean = true;
+    private _graphics: Graphics = null;
+    private _context: WebGLRenderingContext = null;
+    private _isDirty: boolean = true;
     // Local points buffer, format: X, Y, Z(=STD_Z)
-    protected _vertices: number[] = null;
+    private _vertices: number[] = null;
     // Colors of points, format: R, G, B, A
-    protected _colors: number[] = null;
+    private _colors: number[] = null;
     // Local indices (for points) buffer
-    protected _indices: number[] = null;
-    protected _vertexBuffer: PackedArrayBuffer = null;
-    protected _colorBuffer: PackedArrayBuffer = null;
-    protected _indexBuffer: PackedArrayBuffer = null;
-    protected _currentX: number = 0;
-    protected _currentY: number = 0;
-    protected _hasDrawnAnything: boolean = false;
-    protected _lastPathStartX: number = 0;
-    protected _lastPathStartY: number = 0;
+    private _indices: number[] = null;
+    private _vertexBuffer: PackedArrayBuffer = null;
+    private _colorBuffer: PackedArrayBuffer = null;
+    private _indexBuffer: PackedArrayBuffer = null;
+    private _currentX: number = 0;
+    private _currentY: number = 0;
+    private _hasDrawnAnything: boolean = false;
+    private _lastPathStartX: number = 0;
+    private _lastPathStartY: number = 0;
 
 }
