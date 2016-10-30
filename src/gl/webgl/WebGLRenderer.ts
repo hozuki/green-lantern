@@ -13,7 +13,6 @@ import {BlendMode} from "../flash/display/BlendMode";
 import {ArgumentError} from "../flash/errors/ArgumentError";
 import {VirtualDom} from "../mic/VirtualDom";
 import {CommonUtil} from "../mic/CommonUtil";
-import {StencilTarget2D} from "./targets/StencilTarget2D";
 import {FrameImage} from "./FrameImage";
 
 const gl = VirtualDom.WebGLRenderingContext;
@@ -139,22 +138,6 @@ export class WebGLRenderer implements IDisposable {
     }
 
     /**
-     * Returns current stencil target of the {@link WebGLRenderer}.
-     * @returns {StencilTarget2D} Current stencil target of the {@link WebGLRenderer}.
-     */
-    get currentStencilTarget(): StencilTarget2D {
-        return this._currentStencilTarget;
-    }
-
-    /**
-     * Sets current stencil target of the {@link WebGLRenderer}.
-     * @param v {StencilTarget2D} Expected stencil target.
-     */
-    set currentStencilTarget(v: StencilTarget2D) {
-        this._currentStencilTarget = v;
-    }
-
-    /**
      * Returns the output &lt;canvas&gt; for displaying the contents rendered.
      * @returns {HTMLCanvasElement} The output &lt;canvas&gt;.
      */
@@ -231,20 +214,6 @@ export class WebGLRenderer implements IDisposable {
      * @param target {RenderTarget2D} The {@link RenderTarget2D} to be released.
      */
     releaseRenderTarget(target: RenderTarget2D): void {
-        if (!CommonUtil.isUndefinedOrNull(target)) {
-            target.dispose();
-        }
-    }
-
-    createStencilTarget(): StencilTarget2D {
-        return new StencilTarget2D(this, false);
-    }
-
-    createRootStencilTarget(): StencilTarget2D {
-        return new StencilTarget2D(this, true);
-    }
-
-    releaseStencilTarget(target: StencilTarget2D): void {
         if (!CommonUtil.isUndefinedOrNull(target)) {
             target.dispose();
         }
@@ -386,7 +355,6 @@ export class WebGLRenderer implements IDisposable {
     }
 
     private _currentRenderTarget: RenderTarget2D = null;
-    private _currentStencilTarget: StencilTarget2D = null;
     private _blendMode: string = null;
     private _screenRenderTarget: RenderTarget2D = null;
     private _filterManager: FilterManager = null;
