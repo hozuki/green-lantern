@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifndef FXAA_REDUCE_MIN
-    #define FXAA_REDUCE_MIN   (1.0/ 128.0)
+    #define FXAA_REDUCE_MIN   (1.0 / 128.0)
 #endif
 #ifndef FXAA_REDUCE_MUL
     #define FXAA_REDUCE_MUL   (1.0 / 8.0)
@@ -117,8 +117,13 @@ varying vec2 v_rgbSE;
 varying vec2 v_rgbM;
 
 uniform sampler2D uSampler;
+uniform bool uHollow;
 
 void main() {
-
-    gl_FragColor = fxaa(uSampler, vTextureCoord * vResolution, vResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+    vec4 finalColor = fxaa(uSampler, vTextureCoord * vResolution, vResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+    if (uHollow && finalColor.a == 0.0) {
+        discard;
+    } else {
+        gl_FragColor = finalColor;
+    }
 }

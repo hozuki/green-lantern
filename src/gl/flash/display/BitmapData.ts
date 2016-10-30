@@ -189,8 +189,8 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
             var displayObject = <DisplayObject>source;
             this.__buildRenderer();
             var renderer = this._cachedRenderer;
-            renderer.setBlendMode(blendMode || BlendMode.NORMAL);
-            displayObject.render(renderer);
+            renderer.blendMode = blendMode || BlendMode.NORMAL;
+            displayObject.$render(renderer);
         } else {
             throw new NotImplementedError();
         }

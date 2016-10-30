@@ -12,11 +12,17 @@ import {CommonUtil} from "./mic/CommonUtil";
 
 export {flash, webgl, fl, mx, mic, EngineBase};
 
+/**
+ * @param $this {*}
+ * @deprecated
+ */
 export function injectToGlobal($this: any): void {
-    $this["flash"] = flash;
-    $this["webgl"] = webgl;
-    $this["fl"] = fl;
-    $this["mx"] = mx;
+    if ($this) {
+        $this["flash"] = flash;
+        $this["webgl"] = webgl;
+        $this["fl"] = fl;
+        $this["mx"] = mx;
+    }
 }
 
 export function isSupported(): boolean {

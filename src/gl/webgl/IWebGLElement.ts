@@ -8,7 +8,7 @@ import {TimeInfo} from "../mic/TimeInfo";
 
 export interface IWebGLElement extends IDisposable {
 
-    update(timeInfo: TimeInfo): void;
-    render(renderer: WebGLRenderer): void;
+    $update(timeInfo: TimeInfo): void;
+    $render(renderer: WebGLRenderer): void;
 
 }

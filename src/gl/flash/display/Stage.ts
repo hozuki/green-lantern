@@ -20,7 +20,7 @@ export class Stage extends DisplayObjectContainer {
     constructor(renderer: WebGLRenderer) {
         super(null, null);
         this._root = this;
-        this._worldRenderer = renderer;
+        this._$worldRenderer = renderer;
         this.resize(renderer.view.width, renderer.view.height);
     }
 
@@ -65,7 +65,7 @@ export class Stage extends DisplayObjectContainer {
     }
 
     get stageHeight(): number {
-        return this.worldRenderer.view.height;
+        return this.$worldRenderer.view.height;
     }
 
     set stageHeight(v: number) {
@@ -73,7 +73,7 @@ export class Stage extends DisplayObjectContainer {
     }
 
     get stageWidth(): number {
-        return this.worldRenderer.view.width;
+        return this.$worldRenderer.view.width;
     }
 
     set stageWidth(v: number) {
@@ -91,11 +91,11 @@ export class Stage extends DisplayObjectContainer {
     }
 
     get width(): number {
-        return this.worldRenderer.view.width;
+        return this.$worldRenderer.view.width;
     }
 
     get height(): number {
-        return this.worldRenderer.view.height;
+        return this.$worldRenderer.view.height;
     }
 
     invalidate(): void {
@@ -106,8 +106,8 @@ export class Stage extends DisplayObjectContainer {
         throw new NotImplementedError();
     }
 
-    get worldRenderer(): WebGLRenderer {
-        return this._worldRenderer;
+    get $worldRenderer(): WebGLRenderer {
+        return this._$worldRenderer;
     }
 
     resize(width: number, height: number): void {
@@ -120,12 +120,11 @@ export class Stage extends DisplayObjectContainer {
     }
 
     protected _$render(renderer: WebGLRenderer): void {
-        renderer.currentRenderTarget.clear();
     }
 
     private _allowFullScreen: boolean = true;
     private _allowFullScreenInteractive: boolean = true;
     private _colorCorrectionSupport: string = ColorCorrectionSupport.DEFAULT_OFF;
-    private _worldRenderer: WebGLRenderer = null;
+    private _$worldRenderer: WebGLRenderer = null;
 
 }

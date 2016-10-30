@@ -1,8 +1,11 @@
 # IntelliJ project files
-.idea/
+/.idea/
 
 # Node.js modules
-node_modules/
+/node_modules/
 
 # Build result
-build/
+/build/
+
+/src/tests/visual/build/
+!/src/tests/visual/build/GLantern-browser.min.js

@@ -1,24 +1,3 @@
-
-var Display = Object.create({
-    "createShape": function (alpha) {
-        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
-        lantern.stage.addChild(s);
-        s.alpha = alpha;
-        return s;
-    },
-    "createGlowFilter": function (a, b, c, d, e, f, g) {
-        return new GLantern.flash.filters.GlowFilter(lantern.renderer.shaderManager, a, b, c, d, e, f, g);
-    },
-    "createBlurFilter": function (a, b) {
-        return new GLantern.flash.filters.BlurFilter(lantern.renderer.shaderManager, a, b);
-        //var filter = new GLantern.webgl.filters.Blur2Filter(lantern.renderer.shaderManager);
-        //var filter = new GLantern.webgl.filters.BlurFilter(lantern.renderer.shaderManager);
-        //filter.strengthX = a;
-        //filter.strengthY = b;
-        //return filter;
-    }
-});
-
 (function () {
     var s, g;
 

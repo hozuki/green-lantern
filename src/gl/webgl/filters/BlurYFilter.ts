@@ -3,7 +3,7 @@
  */
 
 import {BlurYShader} from "../shaders/BlurYShader";
-import {RenderTarget2D} from "../RenderTarget2D";
+import {RenderTarget2D} from "../targets/RenderTarget2D";
 import {WebGLRenderer} from "../WebGLRenderer";
 import {FilterManager} from "../FilterManager";
 import {FilterBase} from "../FilterBase";

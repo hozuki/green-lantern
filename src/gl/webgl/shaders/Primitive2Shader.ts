@@ -45,6 +45,10 @@ export class Primitive2Shader extends ShaderBase {
         this._uniforms.get("uOriginalSize").value = xy.slice();
     }
 
+    setHollow(hollow: boolean): void {
+        this._uniforms.get("uHollow").value = hollow;
+    }
+
     protected _$localInit(manager: ShaderManager, uniforms: Map<string,UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
@@ -91,6 +95,12 @@ export class Primitive2Shader extends ShaderBase {
         u.name = "uOriginalSize";
         u.type = WebGLDataType.U2F;
         u.value = [0, 0];
+        uniforms.set(u.name, u);
+
+        u = new UniformCache();
+        u.name = "uHollow";
+        u.type = WebGLDataType.UBool;
+        u.value = true;
         uniforms.set(u.name, u);
     }
 

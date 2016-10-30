@@ -95,8 +95,8 @@ function errorHandler(err) {
 
 function copyBuildResults() {
     return gulp
-        .src(["./build/GLantern-browser.min.js"])
-        .pipe(gulp.dest("src/tests/visual"));
+        .src(["./build/**/*"])
+        .pipe(gulp.dest("src/tests/visual/build"));
 }
 
 /**

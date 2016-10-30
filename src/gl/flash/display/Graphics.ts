@@ -21,10 +21,9 @@ import {IGraphicsData} from "./IGraphicsData";
 import {BitmapData} from "./BitmapData";
 import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
 import {Shader} from "./Shader";
-import {RenderTarget2D} from "../../webgl/RenderTarget2D";
+import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
 import {IDisposable} from "../../mic/IDisposable";
 import {NotImplementedError} from "../errors/NotImplementedError";
-import {TimeInfo} from "../../mic/TimeInfo";
 import {MathUtil} from "../../mic/MathUtil";
 import {CommonUtil} from "../../mic/CommonUtil";
 
@@ -34,6 +33,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._displayObject = attachTo;
         this._renderer = renderer;
         this._isDirty = true;
+        this._isFilling = false;
         this._strokeRenderers = [];
         this._fillRenderers = [];
         this._bufferTarget = renderer.createRenderTarget();
@@ -47,11 +47,11 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     beginFill(color: number, alpha: number = 1.0): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this.endFill();
         }
-        if (!this._isFilling) {
-            this._isFilling = true;
+        if (!this.$isFilling) {
+            this.$isFilling = true;
             this._currentStrokeRenderer = this.__createStrokeRendererWithCurrentSettings();
             this._strokeRenderers.push(this._currentStrokeRenderer);
             this._currentFillRenderer = new SolidFillRenderer(this, this._currentX, this._currentY, color, alpha);
@@ -71,15 +71,17 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
 
     clear(): void {
         var i: number;
-        if (this._strokeRenderers !== null) {
-            for (i = 0; i < this._strokeRenderers.length; ++i) {
-                this._strokeRenderers[i].dispose();
+        var strokeRenderers = this._strokeRenderers;
+        if (strokeRenderers !== null) {
+            for (i = 0; i < strokeRenderers.length; ++i) {
+                strokeRenderers[i].dispose();
                 this._isDirty = true;
             }
         }
-        if (this._fillRenderers !== null) {
-            for (i = 0; i < this._fillRenderers.length; ++i) {
-                this._fillRenderers[i].dispose();
+        var fillRenderers = this._fillRenderers;
+        if (fillRenderers !== null) {
+            for (i = 0; i < fillRenderers.length; ++i) {
+                fillRenderers[i].dispose();
                 this._isDirty = true;
             }
         }
@@ -87,20 +89,20 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
             this._currentFillRenderer.dispose();
             this._isDirty = true;
         }
-        while (this._strokeRenderers.length > 0) {
-            this._strokeRenderers.pop();
+        while (strokeRenderers.length > 0) {
+            strokeRenderers.pop();
             this._isDirty = true;
         }
-        while (this._fillRenderers.length > 0) {
-            this._fillRenderers.pop();
+        while (fillRenderers.length > 0) {
+            fillRenderers.pop();
             this._isDirty = true;
         }
         // create stroke and fill renderers according to current state
         // and push them into the stack
         this._currentFillRenderer = null;
         this._currentStrokeRenderer = this.__createStrokeRendererWithCurrentSettings();
-        this._strokeRenderers.push(this._currentStrokeRenderer);
-        this._isFilling = false;
+        strokeRenderers.push(this._currentStrokeRenderer);
+        this.$isFilling = false;
     }
 
     copyFrom(sourceGraphics: Graphics): void {
@@ -108,7 +110,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.curveTo(controlX, controlY, anchorX, anchorY);
         }
         this._currentStrokeRenderer.curveTo(controlX, controlY, anchorX, anchorY);
@@ -117,7 +119,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     drawCircle(x: number, y: number, radius: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.drawCircle(x, y, radius);
         }
         this._currentStrokeRenderer.drawCircle(x, y, radius);
@@ -127,7 +129,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     drawEllipse(x: number, y: number, width: number, height: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.drawEllipse(x, y, width, height);
         }
         this._currentStrokeRenderer.drawEllipse(x, y, width, height);
@@ -153,14 +155,14 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         }
         var commandLength = commands.length;
         var j = 0;
-        var isInFill = this._isFilling;
+        var isFilling = this.$isFilling;
         var sr = this._currentStrokeRenderer;
         var fr = this._currentFillRenderer;
         var newX: number, newY: number;
         for (var i = 0; i < commandLength; ++i) {
             switch (commands[i]) {
                 case GraphicsPathCommand.CUBIC_CURVE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.bezierCurveTo(data[j], data[j + 1], data[j + 2], data[j + 3], data[j + 4], data[j + 5]);
                     }
                     sr.bezierCurveTo(data[j], data[j + 1], data[j + 2], data[j + 3], data[j + 4], data[j + 5]);
@@ -169,7 +171,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                     j += 6;
                     break;
                 case GraphicsPathCommand.CURVE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.curveTo(data[j], data[j + 1], data[j + 2], data[j + 3]);
                     }
                     sr.curveTo(data[j], data[j + 1], data[j + 2], data[j + 3]);
@@ -178,7 +180,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                     j += 4;
                     break;
                 case GraphicsPathCommand.LINE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.lineTo(data[j], data[j + 1]);
                     }
                     sr.lineTo(data[j], data[j + 1]);
@@ -187,7 +189,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                     j += 2;
                     break;
                 case GraphicsPathCommand.MOVE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.moveTo(data[j], data[j + 1]);
                     }
                     sr.moveTo(data[j], data[j + 1]);
@@ -198,7 +200,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                 case GraphicsPathCommand.NO_OP:
                     break;
                 case GraphicsPathCommand.WIDE_LINE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.lineTo(data[j + 2], data[j + 3]);
                     }
                     sr.lineTo(data[j + 2], data[j + 3]);
@@ -207,7 +209,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                     j += 4;
                     break;
                 case GraphicsPathCommand.WIDE_MOVE_TO:
-                    if (isInFill) {
+                    if (isFilling) {
                         fr.moveTo(data[j + 2], data[j + 3]);
                     }
                     sr.moveTo(data[j + 2], data[j + 3]);
@@ -226,7 +228,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     drawRect(x: number, y: number, width: number, height: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.drawRect(x, y, width, height);
         }
         this._currentStrokeRenderer.drawRect(x, y, width, height);
@@ -250,7 +252,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
                 indices.push(i / 2);
             }
         } else {
-            indices = indices.slice(0);
+            indices = indices.slice();
         }
         if (indices.length % 3 !== 0) {
             CommonUtil.trace("Graphics.drawTriangles malformed indices count. Must be multiple of 3.", "err");
@@ -288,8 +290,8 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     endFill(): void {
-        if (this._isFilling) {
-            this._isFilling = false;
+        if (this.$isFilling) {
+            this.$isFilling = false;
             this._currentFillRenderer.endIndex = this._strokeRenderers.length - 1;
             this._currentFillRenderer.closePath();
             this._currentStrokeRenderer.closePath();
@@ -330,7 +332,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     lineTo(x: number, y: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.lineTo(x, y);
         }
         this._currentStrokeRenderer.lineTo(x, y);
@@ -339,7 +341,7 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     moveTo(x: number, y: number): void {
-        if (this._isFilling) {
+        if (this.$isFilling) {
             this._currentFillRenderer.moveTo(x, y);
         }
         this._currentStrokeRenderer.moveTo(x, y);
@@ -348,23 +350,27 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._isDirty = true;
     }
 
-    update(timeInfo: TimeInfo): void {
+    $update(): void {
         if (this._isDirty) {
-            var j = 0, fillLen = this._fillRenderers.length;
-            for (var i = 0; i < this._strokeRenderers.length; ++i) {
-                if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                    this._fillRenderers[j].update();
+            var fillRenderers = this._fillRenderers;
+            var strokeRenderers = this._strokeRenderers;
+            var j = 0, fillLen = fillRenderers.length;
+            for (var i = 0; i < strokeRenderers.length; ++i) {
+                if (j < fillLen && i === fillRenderers[j].beginIndex) {
+                    fillRenderers[j].update();
                     j++;
                 }
-                this._strokeRenderers[i].update();
+                strokeRenderers[i].update();
             }
             this._shouldUpdateRenderTarget = true;
+            this._isDirty = false;
         }
-        this._isDirty = false;
     }
 
-    render(renderer: WebGLRenderer, target: RenderTarget2D, clearOutput: boolean): void {
-        var j = 0, fillLen = this._fillRenderers.length;
+    $render(renderer: WebGLRenderer): void {
+        var fillRenderers = this._fillRenderers;
+        var strokeRenderers = this._strokeRenderers;
+        var j = 0;
         // TODO: Extend texture copy shader.
         // When _shouldUpdateRenderTarget and _bufferTarget are enabled, content of Graphics
         // is cached so that rendering performance is improved but transforms and alpha changes
@@ -372,12 +378,12 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         // support state changes.
         if (true || this._shouldUpdateRenderTarget) {
             this._bufferTarget.clear();
-            for (var i = 0; i < this._strokeRenderers.length; ++i) {
-                if (j < fillLen && i === this._fillRenderers[j].beginIndex) {
-                    this._fillRenderers[j].render(renderer);
+            for (var i = 0; i < strokeRenderers.length; ++i) {
+                if (j < fillRenderers.length && i === fillRenderers[j].beginIndex) {
+                    fillRenderers[j].render(renderer);
                     j++;
                 }
-                this._strokeRenderers[i].render(renderer);
+                strokeRenderers[i].render(renderer);
             }
             this._shouldUpdateRenderTarget = false;
         }
@@ -392,12 +398,16 @@ export class Graphics implements ICopyable<Graphics>, IDisposable {
         this._bufferTarget = null;
     }
 
-    get renderer(): WebGLRenderer {
+    get $renderer(): WebGLRenderer {
         return this._renderer;
     }
 
-    get isFilling(): boolean {
+    get $isFilling(): boolean {
         return this._isFilling;
+    }
+
+    set $isFilling(v: boolean) {
+        this._isFilling = v;
     }
 
     private __createStrokeRendererWithCurrentSettings(): StrokeRendererBase {

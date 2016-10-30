@@ -15,12 +15,12 @@ export class Shape extends DisplayObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
-        this._graphics = new Graphics(this, root.worldRenderer);
+        this._graphics = new Graphics(this, root.$worldRenderer);
     }
 
     dispose(): void {
         super.dispose();
-        this._graphics.dispose();
+        this.graphics.dispose();
         this._graphics = null;
     }
 
@@ -29,15 +29,15 @@ export class Shape extends DisplayObject {
     }
 
     protected _$update(timeInfo: TimeInfo): void {
-        this._graphics.update(timeInfo);
+        this.graphics.$update();
     }
 
     protected _$render(renderer: WebGLRenderer): void {
-        this.graphics.render(renderer, renderer.currentRenderTarget, false);
+        this.graphics.$render(renderer);
     }
 
     protected _$selectShader(shaderManager: ShaderManager): void {
-        // Switched to the new Primitive2Shader. Consider the obsolete of PrimitiveShader.
+        // Switched to the new Primitive2Shader. Consider PrimitiveShader as obsolete.
         shaderManager.selectShader(ShaderID.PRIMITIVE2);
     }
 

@@ -3,7 +3,7 @@
  */
 
 import {WebGLRenderer} from "./WebGLRenderer";
-import {RenderTarget2D} from "./RenderTarget2D";
+import {RenderTarget2D} from "./targets/RenderTarget2D";
 import {IDisposable} from "../mic/IDisposable";
 import {IBitmapFilter} from "./IBitmapFilter";
 import {RenderHelper} from "./RenderHelper";
@@ -25,11 +25,10 @@ export class FilterManager implements IDisposable {
     }
 
     clearFilterGroups(): void {
-        var filterGroup: IBitmapFilter[];
         var filterGroups = this._filterGroups;
         if (filterGroups.length > 0) {
             for (var i = 0; i < filterGroups.length; ++i) {
-                filterGroup = filterGroups[i];
+                var filterGroup = filterGroups[i];
                 while (filterGroup.length > 0) {
                     filterGroup.pop();
                 }
@@ -56,6 +55,12 @@ export class FilterManager implements IDisposable {
         return this._renderer;
     }
 
+    /**
+     * @param renderer
+     * @param input
+     * @param output {RenderTarget2D} Expected: screen ({@code renderer.screenRenderTarget}).
+     * @param clearOutput
+     */
     processFilters(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
         if (input === output) {
             console.warn("Filter alert: input and output are the same, processing aborted.");

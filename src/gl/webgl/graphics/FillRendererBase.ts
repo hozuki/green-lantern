@@ -13,7 +13,6 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
         this._contours = [[]];
         this.beginIndex = -1;
         this.endIndex = -1;
-        this._hasDrawnAnything = false;
         this._startingNewContour = true;
     }
 
@@ -25,17 +24,17 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
 
         // Flash closes the path before each moveTo() call
         this.closePath();
-        if (this._hasDrawnAnything) {
-            if (this._currentX !== x || this._currentY !== y) {
+        if (this.hasDrawnAnything) {
+            if (this.currentX !== x || this.currentY !== y) {
                 this._startingNewContour = true;
             }
         } else {
             this._startingNewContour = true;
         }
-        this._currentX = x;
-        this._currentY = y;
-        this._lastPathStartX = x;
-        this._lastPathStartY = y;
+        this.currentX = x;
+        this.currentY = y;
+        this.lastPathStartX = x;
+        this.lastPathStartY = y;
     }
 
     // Use to track the relative rendering order, based on stroke renderers' orders
@@ -44,7 +43,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
 
     protected _$getContourForClosedShapes(): number[] {
         var currentContour: number[];
-        if (this._hasDrawnAnything) {
+        if (this.hasDrawnAnything) {
             currentContour = [];
             this._contours.push(currentContour);
             this._startingNewContour = false;
@@ -56,7 +55,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
 
     protected _$getContourForLines(): number[] {
         var currentContour: number[];
-        if (this._hasDrawnAnything) {
+        if (this.hasDrawnAnything) {
             if (this._startingNewContour) {
                 currentContour = [];
                 this._contours.push(currentContour);

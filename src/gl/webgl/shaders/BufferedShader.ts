@@ -22,6 +22,10 @@ export class BufferedShader extends ShaderBase {
         this._uniforms.get("uSampler").texture = texture;
     }
 
+    setHollow(hollow: boolean): void {
+        this._uniforms.get("uHollow").value = hollow;
+    }
+
     static SHADER_CLASS_NAME: string = "BufferedShader";
     static FRAGMENT_SOURCE: string = FragmentShaders.buffered;
     static VERTEX_SOURCE: string = VertexShaders.buffered;
@@ -47,6 +51,12 @@ export class BufferedShader extends ShaderBase {
         u.type = WebGLDataType.UMat4;
         u.value = projectionMatrix.toArray();
         u.transpose = false;
+        uniforms.set(u.name, u);
+
+        u = new UniformCache();
+        u.name = "uHollow";
+        u.type = WebGLDataType.UBool;
+        u.value = true;
         uniforms.set(u.name, u);
     }
 

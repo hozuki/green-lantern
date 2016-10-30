@@ -27,21 +27,23 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     tabChildren: boolean = true;
 
     addChild(child: DisplayObject): DisplayObject {
-        if (this._children.indexOf(child) < 0) {
-            this._children.push(child);
+        var children = this._children;
+        if (children.indexOf(child) < 0) {
+            children.push(child);
         }
-        child.childIndex = this._children.length - 1;
+        child.childIndex = children.length - 1;
         return child;
     }
 
     addChildAt(child: DisplayObject, index: number): DisplayObject {
-        if (this._children.indexOf(child) < 0) {
+        var children = this._children;
+        if (children.indexOf(child) < 0) {
             if (index === 0) {
-                this._children.unshift(child);
-            } else if (index === this._children.length - 1) {
-                this._children.push(child);
+                children.unshift(child);
+            } else if (index === children.length - 1) {
+                children.push(child);
             } else {
-                this._children = this._children.slice(0, index - 1).concat(child).concat(this._children.slice(index, this._children.length - 1));
+                children = children.slice(0, index - 1).concat(child).concat(children.slice(index, children.length - 1));
             }
         }
         child.childIndex = index;
@@ -53,13 +55,14 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     contains(child: DisplayObject): boolean {
+        var children = this._children;
         var result = false;
-        for (var i = 0; i < this._children.length; ++i) {
-            if (this._children[i] === child) {
+        for (var i = 0; i < children.length; ++i) {
+            if (children[i] === child) {
                 return true;
             }
-            if (this._children[i] instanceof DisplayObjectContainer) {
-                result = (<DisplayObjectContainer>this._children[i]).contains(child);
+            if (children[i] instanceof DisplayObjectContainer) {
+                result = (<DisplayObjectContainer>children[i]).contains(child);
                 if (result) {
                     return true;
                 }
@@ -69,24 +72,26 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     getChildAt(index: number): DisplayObject {
-        if (index < 0 || index > this._children.length - 1) {
+        var children = this._children;
+        if (index < 0 || index > children.length - 1) {
             return null;
         } else {
-            return this._children[index];
+            return children[index];
         }
     }
 
     getChildByName(name: string): DisplayObject {
-        if (this._children.length === 0) {
+        var children = this._children;
+        if (children.length === 0) {
             return null;
         }
         var result: DisplayObject = null;
-        for (var i = 0; i < this._children.length; ++i) {
-            if (this._children[i].name === name) {
-                return this._children[i];
+        for (var i = 0; i < children.length; ++i) {
+            if (children[i].name === name) {
+                return children[i];
             }
-            if (this._children[i] instanceof DisplayObjectContainer) {
-                result = (<DisplayObjectContainer>this._children[i]).getChildByName(name);
+            if (children[i] instanceof DisplayObjectContainer) {
+                result = (<DisplayObjectContainer>children[i]).getChildByName(name);
                 if (result !== null) {
                     return result;
                 }
@@ -116,11 +121,12 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
         if (index < 0 || index >= this.numChildren) {
             return null;
         }
-        var child = this._children[index];
-        for (var i = index + 1; i < this._children.length; i++) {
-            this._children[i].childIndex++;
+        var children = this._children;
+        var child = children[index];
+        for (var i = index + 1; i < children.length; i++) {
+            children[i].childIndex++;
         }
-        this._children.splice(index, 1);
+        children.splice(index, 1);
         return child;
     }
 
@@ -154,40 +160,55 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
 
     dispatchEvent(event: Event, data?: any): boolean {
         var r = super.dispatchEvent(event, data);
-        for (var i = 0; i < this._children.length; i++) {
-            this._children[i].dispatchEvent(event, data);
+        var children = this._children;
+        for (var i = 0; i < children.length; i++) {
+            children[i].dispatchEvent(event, data);
         }
         return r;
     }
 
-    update(timeInfo: TimeInfo): void {
-        super.update(timeInfo);
+    $update(timeInfo: TimeInfo): void {
+        super.$update(timeInfo);
         if (this.enabled) {
             for (var i = 0; i < this._children.length; ++i) {
-                this._children[i].update(timeInfo);
+                this._children[i].$update(timeInfo);
             }
         }
     }
 
-    render(renderer: WebGLRenderer): void {
-        if (this.visible && this.alpha > 0) {
-            this._$preprocess(renderer);
-            this._$render(renderer);
-            for (var i = 0; i < this._children.length; ++i) {
-                var child = this._children[i];
-                child.render(renderer);
+    $render(renderer: WebGLRenderer): void {
+        if (!this.visible || this.alpha <= 0) {
+            return;
+        }
+        this._$beforeRender(renderer);
+        this._$render(renderer);
+        var children = this._children;
+        for (var i = 0; i < children.length; ++i) {
+            if (this._$shouldProcessMasking() && !renderer.isStencilTestEnabled) {
+                renderer.beginDrawMaskedObjects();
             }
-            this._$postprocess(renderer);
-        } else {
-            //this.outputRenderTarget.clear();
+            children[i].$render(renderer);
+        }
+        this._$afterRender(renderer);
+    }
+
+    $renderRaw(renderer: WebGLRenderer): void {
+        if (!this.visible || this.alpha <= 0) {
+            return;
+        }
+        this._$render(renderer);
+        var children = this._children;
+        for (var i = 0; i < children.length; ++i) {
+            children[i].$renderRaw(renderer);
         }
     }
 
-    requestUpdateTransform(): void {
+    $requestUpdateTransform(): void {
         this._isTransformDirty = true;
-        if (this._children !== null && this._children.length > 0) {
-            for (var i = 0; i < this._children.length; ++i) {
-                this._children[i].requestUpdateTransform();
+        var children = this._children;
+        if (children.length > 0) {
+            for (var i = 0; i < children.length; ++i) {
+                children[i].$requestUpdateTransform();
             }
         }
     }

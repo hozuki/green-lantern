@@ -302,7 +302,7 @@ function createShaderFromSource(glc: WebGLRenderingContext, source: string, type
     var isCompiled = glc.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!isCompiled) {
         var error = glc.getShaderInfoLog(shader);
-        console.warn("Failed to load shader: " + error);
+        console.warn("Failed to load shader: " + error, "Source:\n" + source);
         glc.deleteShader(shader);
         return null;
     }

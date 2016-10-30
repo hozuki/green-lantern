@@ -23,14 +23,13 @@ export class SolidFillRenderer extends FillRendererBase {
     }
 
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
-        this._isDirty = true;
         var currentContour = this._$getContourForLines();
-        if (!this._hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this._currentX, this._currentY, STD_Z);
+        if (!this.hasDrawnAnything || this._startingNewContour) {
+            currentContour.push(this.currentX, this.currentY, STD_Z);
         }
         var dt1: number, dt2: number, dt3: number;
         var t2: number, t3: number;
-        var fromX = this._currentX, fromY = this._currentY;
+        var fromX = this.currentX, fromY = this.currentY;
         var xa: number, ya: number;
         var j: number;
         for (var i = 1; i <= CURVE_ACCURACY; i++) {
@@ -44,20 +43,19 @@ export class SolidFillRenderer extends FillRendererBase {
             ya = dt3 * fromY + 3 * dt2 * j * cy1 + 3 * dt1 * t2 * cy2 + t3 * y;
             currentContour.push(xa, ya, STD_Z);
         }
-        this._currentX = x;
-        this._currentY = y;
-        this._hasDrawnAnything = true;
+        this.currentX = x;
+        this.currentY = y;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
     curveTo(cx: number, cy: number, x: number, y: number): void {
-        this._isDirty = true;
         var currentContour = this._$getContourForLines();
-        if (!this._hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this._currentX, this._currentY, STD_Z);
+        if (!this.hasDrawnAnything || this._startingNewContour) {
+            currentContour.push(this.currentX, this.currentY, STD_Z);
         }
         var j: number;
-        var fromX = this._currentX, fromY = this._currentY;
+        var fromX = this.currentX, fromY = this.currentY;
         var xa: number, ya: number;
         for (var i = 1; i <= CURVE_ACCURACY; i++) {
             j = i / CURVE_ACCURACY;
@@ -67,21 +65,20 @@ export class SolidFillRenderer extends FillRendererBase {
             ya = ya + (cy + (y - cy) * j - ya) * j;
             currentContour.push(xa, ya, STD_Z);
         }
-        this._currentX = x;
-        this._currentY = y;
-        this._hasDrawnAnything = true;
+        this.currentX = x;
+        this.currentY = y;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
     drawCircle(x: number, y: number, radius: number): void {
-        this._isDirty = true;
         this.moveTo(x, y);
         var currentContour = this._$getContourForClosedShapes();
         var thetaNext: number;
         var thetaBegin: number;
         var x2: number, y2: number;
         var halfPi = Math.PI / 2;
-        currentContour.push(this._currentX + radius, this._currentY, STD_Z);
+        currentContour.push(this.currentX + radius, this.currentY, STD_Z);
         thetaBegin = 0;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         for (var k = 0; k < 4; k++) {
@@ -93,16 +90,15 @@ export class SolidFillRenderer extends FillRendererBase {
             }
             thetaBegin -= halfPi;
         }
-        this._currentX = x + radius;
-        this._currentY = y;
-        this._lastPathStartX = x + radius;
-        this._lastPathStartY = y;
-        this._hasDrawnAnything = true;
+        this.currentX = x + radius;
+        this.currentY = y;
+        this.lastPathStartX = x + radius;
+        this.lastPathStartY = y;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
     drawEllipse(x: number, y: number, width: number, height: number): void {
-        this._isDirty = true;
         this.moveTo(x, y + height / 2);
         var currentContour = this._$getContourForClosedShapes();
         var thetaNext: number;
@@ -110,7 +106,7 @@ export class SolidFillRenderer extends FillRendererBase {
         var centerX = x + width / 2, centerY = y + height / 2;
         var x2: number, y2: number;
         var halfPi = Math.PI / 2;
-        currentContour.push(this._currentX, this._currentY, STD_Z);
+        currentContour.push(this.currentX, this.currentY, STD_Z);
         thetaBegin = Math.PI;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         // Brute, huh? Luckily there are 20 segments per PI/2...
@@ -123,16 +119,15 @@ export class SolidFillRenderer extends FillRendererBase {
             }
             thetaBegin -= halfPi;
         }
-        this._currentX = x + width;
-        this._currentY = y + height / 2;
-        this._lastPathStartX = x + width;
-        this._lastPathStartY = y + height / 2;
-        this._hasDrawnAnything = true;
+        this.currentX = x + width;
+        this.currentY = y + height / 2;
+        this.lastPathStartX = x + width;
+        this.lastPathStartY = y + height / 2;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
     drawRect(x: number, y: number, width: number, height: number): void {
-        this._isDirty = true;
         this.moveTo(x, y);
         // Create a new contour and draw a independent rectangle, should not use lineTo().
         var currentContour = this._$getContourForClosedShapes();
@@ -140,9 +135,9 @@ export class SolidFillRenderer extends FillRendererBase {
         currentContour.push(x + width, y, STD_Z);
         currentContour.push(x + width, y + height, STD_Z);
         currentContour.push(x, y + height, STD_Z);
-        this._currentX = x;
-        this._currentY = y;
-        this._hasDrawnAnything = true;
+        this.currentX = x;
+        this.currentY = y;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
@@ -151,70 +146,71 @@ export class SolidFillRenderer extends FillRendererBase {
     }
 
     lineTo(x: number, y: number): void {
-        this._isDirty = true;
         var currentContour = this._$getContourForLines();
-        if (!this._hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this._currentX, this._currentY, STD_Z);
+        if (!this.hasDrawnAnything || this._startingNewContour) {
+            currentContour.push(this.currentX, this.currentY, STD_Z);
         }
         currentContour.push(x, y, STD_Z);
-        this._currentX = x;
-        this._currentY = y;
-        this._hasDrawnAnything = true;
+        this.currentX = x;
+        this.currentY = y;
+        this.becomeDirty();
         this._startingNewContour = false;
     }
 
     update(): void {
-        if (this._isDirty) {
-            // Triangulate first
-            var tess = this._graphics.renderer.tessellator;
-            tess.gluTessProperty(libtess.gluEnum.GLU_TESS_WINDING_RULE, libtess.windingRule.GLU_TESS_WINDING_ODD);
-            tess.gluTessNormal(0, 0, 1);
-            var resultArray: number[][] = [];
-            tess.gluTessBeginPolygon(resultArray);
-            var contour: number[];
-            for (var i = 0; i < this._contours.length; i++) {
-                contour = this._contours[i];
-                if (contour.length > 0) {
-                    tess.gluTessBeginContour();
-                    for (var j = 0; j < contour.length; j += 3) {
-                        var coords = [contour[j], contour[j + 1], contour[j + 2]];
-                        tess.gluTessVertex(coords, coords);
-                    }
-                    tess.gluTessEndContour();
-                }
-            }
-            tess.gluTessEndPolygon();
-
-            this._vertices = [];
-            this._colors = [];
-            this._indices = [];
-            var colors = this._colors;
-            var indices = this._indices;
-            var vertices = this._vertices;
-            j = 0;
-            var tempArray: number[];
-            for (var i = 0; i < resultArray.length; i++) {
-                tempArray = resultArray[i];
-                for (var j = 0; j < tempArray.length; j++) {
-                    vertices.push(tempArray[j]);
-                }
-            }
-            j = 0;
-            for (var i = 0; i < vertices.length; i += 3) {
-                colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
-                indices.push(j);
-                j++;
-            }
+        if (!this.isDirty) {
+            return;
         }
 
-        // Then update buffers
+        // Triangulate first
+        var tess = this.graphics.$renderer.tessellator;
+        tess.gluTessProperty(libtess.gluEnum.GLU_TESS_WINDING_RULE, libtess.windingRule.GLU_TESS_WINDING_ODD);
+        tess.gluTessNormal(0, 0, 1);
+        var resultArray: number[][] = [];
+        tess.gluTessBeginPolygon(resultArray);
+        var contour: number[];
+        for (var i = 0; i < this._contours.length; i++) {
+            contour = this._contours[i];
+            if (contour.length > 0) {
+                tess.gluTessBeginContour();
+                for (var j = 0; j < contour.length; j += 3) {
+                    var coords = [contour[j], contour[j + 1], contour[j + 2]];
+                    tess.gluTessVertex(coords, coords);
+                }
+                tess.gluTessEndContour();
+            }
+        }
+        tess.gluTessEndPolygon();
+
+        this.vertices = [];
+        this.colors = [];
+        this.indices = [];
+        var colors = this.colors;
+        var indices = this.indices;
+        var vertices = this.vertices;
+        j = 0;
+        var tempArray: number[];
+        for (var i = 0; i < resultArray.length; i++) {
+            tempArray = resultArray[i];
+            for (var j = 0; j < tempArray.length; j++) {
+                vertices.push(tempArray[j]);
+            }
+        }
+        j = 0;
+        for (var i = 0; i < vertices.length; i += 3) {
+            colors.push(this._r * this._a, this._g * this._a, this._b * this._a, this._a);
+            indices.push(j);
+            j++;
+        }
+
+        // Then $update buffers
         super.update();
     }
 
     render(renderer: WebGLRenderer): void {
-        if (this._vertices.length > 0) {
+        if (this.vertices.length > 0) {
             var target = renderer.currentRenderTarget;
-            RenderHelper.renderPrimitives2(renderer, target, this._vertexBuffer, this._colorBuffer, this._indexBuffer, false, target.isRoot, false);
+            RenderHelper.renderPrimitives2(renderer, target, this.vertexBuffer, this.colorBuffer, this.indexBuffer, false, target.isRoot, false);
         }
     }
 
