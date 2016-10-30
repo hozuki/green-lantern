@@ -284,7 +284,6 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         }
         this._$beforeRender(renderer);
         this._$render(renderer);
-        console.log("Full render.");
         this._$afterRender(renderer);
     }
 
@@ -296,7 +295,6 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     $renderRaw(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0) {
             this._$render(renderer);
-            console.log("Raw render.");
         }
     }
 
