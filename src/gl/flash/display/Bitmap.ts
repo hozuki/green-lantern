@@ -2,19 +2,19 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {DisplayObject} from "./DisplayObject";
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {BitmapData} from "./BitmapData";
-import {PixelSnapping} from "./PixelSnapping";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {ShaderID} from "../../webgl/ShaderID";
-import {RenderHelper} from "../../webgl/RenderHelper";
-import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
-import {TimeInfo} from "../../mic/TimeInfo";
+import DisplayObject from "./DisplayObject";
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import BitmapData from "./BitmapData";
+import PixelSnapping from "./PixelSnapping";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ShaderManager from "../../webgl/ShaderManager";
+import ShaderID from "../../webgl/ShaderID";
+import RenderHelper from "../../webgl/RenderHelper";
+import RenderTarget2D from "../../webgl/targets/RenderTarget2D";
+import TimeInfo from "../../mic/TimeInfo";
 
-export class Bitmap extends DisplayObject {
+export default class Bitmap extends DisplayObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer, bitmapData: BitmapData = null,
                 pixelSnapping: string = PixelSnapping.AUTO, smoothing: boolean = false) {

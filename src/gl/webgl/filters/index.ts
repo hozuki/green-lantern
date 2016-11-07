@@ -2,9 +2,18 @@
  * Created by MIC on 2015/11/20.
  */
 
-export * from "./BlurFilter";
-export * from "./BlurXFilter";
-export * from "./BlurYFilter";
-export * from "./ColorTransformFilter";
-export * from "./GlowFilter";
-export * from "./Blur2Filter";
+import BlurFilter from "./BlurFilter";
+import BlurXFilter from "./BlurXFilter";
+import BlurYFilter from "./BlurYFilter";
+import ColorTransformFilter from "./ColorTransformFilter";
+import GlowFilter from "./GlowFilter";
+import Blur2Filter from "./Blur2Filter";
+
+export {
+    BlurFilter,
+    BlurXFilter,
+    BlurYFilter,
+    ColorTransformFilter,
+    GlowFilter,
+    Blur2Filter
+};

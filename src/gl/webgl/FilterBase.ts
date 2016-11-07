@@ -2,12 +2,12 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {FilterManager} from "./FilterManager";
-import {RenderTarget2D} from "./targets/RenderTarget2D";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {IBitmapFilter} from "./IBitmapFilter";
+import FilterManager from "./FilterManager";
+import RenderTarget2D from "./targets/RenderTarget2D";
+import WebGLRenderer from "./WebGLRenderer";
+import IBitmapFilter from "./IBitmapFilter";
 
-export abstract class FilterBase implements IBitmapFilter {
+abstract class FilterBase implements IBitmapFilter {
 
     constructor(manager: FilterManager) {
         this._filterManager = manager;
@@ -78,3 +78,5 @@ export abstract class FilterBase implements IBitmapFilter {
     private _referenceCount: number = 0;
 
 }
+
+export default FilterBase;

@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/30.
  */
 
-import {BitmapFilter} from "./BitmapFilter";
-import {GlowFilter as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
-import {FilterManager} from "../../webgl/FilterManager";
-import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {MathUtil} from "../../mic/MathUtil";
+import BitmapFilter from "./BitmapFilter";
+import {default as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
+import FilterManager from "../../webgl/FilterManager";
+import BitmapFilterQuality from "./BitmapFilterQuality";
+import MathUtil from "../../mic/MathUtil";
 
-export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
+export default class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 
     constructor(filterManager: FilterManager, color: number = 0xff0000, alpha: number = 1.0, blurX: number = 6.0, blurY: number = 6.0,
                 strength: number = 2, quality: number = BitmapFilterQuality.LOW, inner: boolean = false, knockout: boolean = false) {

@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/13.
  */
 
-export class EventBase implements Event {
+abstract class EventBase implements Event {
 
     bubbles: boolean = false;
     cancelBubble: boolean = false;
@@ -40,9 +40,14 @@ export class EventBase implements Event {
     }
 
     static create(type: string): EventBase {
-        var ev = new EventBase(type, false, false);
+        var ev = new PlainEvent(type, false, false);
         ev.timeStamp = Date.now();
         return ev;
     }
 
 }
+
+class PlainEvent extends EventBase {
+}
+
+export default EventBase;

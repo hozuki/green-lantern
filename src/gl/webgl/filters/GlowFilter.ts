@@ -2,17 +2,16 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ColorTransformFilter} from "./ColorTransformFilter";
-import {BlurFilter} from "./BlurFilter";
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterBase} from "../FilterBase";
-import {FilterManager} from "../FilterManager";
-import {Blur2Filter} from "./Blur2Filter";
-import {RenderHelper} from "../RenderHelper";
-import {MathUtil} from "../../mic/MathUtil";
+import ColorTransformFilter from "./ColorTransformFilter";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterBase from "../FilterBase";
+import FilterManager from "../FilterManager";
+import Blur2Filter from "./Blur2Filter";
+import RenderHelper from "../RenderHelper";
+import MathUtil from "../../mic/MathUtil";
 
-export class GlowFilter extends FilterBase {
+export default class GlowFilter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);

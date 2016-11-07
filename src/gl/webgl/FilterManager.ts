@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/17.
  */
 
-import {WebGLRenderer} from "./WebGLRenderer";
-import {RenderTarget2D} from "./targets/RenderTarget2D";
-import {IDisposable} from "../mic/IDisposable";
-import {IBitmapFilter} from "./IBitmapFilter";
-import {RenderHelper} from "./RenderHelper";
+import WebGLRenderer from "./WebGLRenderer";
+import RenderTarget2D from "./targets/RenderTarget2D";
+import IDisposable from "../mic/IDisposable";
+import IBitmapFilter from "./IBitmapFilter";
+import RenderHelper from "./RenderHelper";
 
-export class FilterManager implements IDisposable {
+export default class FilterManager implements IDisposable {
 
     constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;

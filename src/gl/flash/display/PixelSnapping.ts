@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/15.
  */
 
-export abstract class PixelSnapping {
+abstract class PixelSnapping {
 
     static get ALWAYS(): string {
         return "always";
@@ -17,3 +17,5 @@ export abstract class PixelSnapping {
     }
 
 }
+
+export default PixelSnapping;

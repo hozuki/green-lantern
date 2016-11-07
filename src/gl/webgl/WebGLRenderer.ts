@@ -3,17 +3,17 @@
  */
 
 import * as libtess from "libtess";
-import {RendererOptions} from "./RendererOptions";
-import {ShaderManager} from "./ShaderManager";
-import {FilterManager} from "./FilterManager";
-import {RenderTarget2D} from "./targets/RenderTarget2D";
-import {WebGLUtils} from "./WebGLUtils";
-import {IDisposable} from "../mic/IDisposable";
-import {BlendMode} from "../flash/display/BlendMode";
-import {ArgumentError} from "../flash/errors/ArgumentError";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
-import {FrameImage} from "./FrameImage";
+import RendererOptions from "./RendererOptions";
+import ShaderManager from "./ShaderManager";
+import FilterManager from "./FilterManager";
+import RenderTarget2D from "./targets/RenderTarget2D";
+import WebGLUtils from "./WebGLUtils";
+import IDisposable from "../mic/IDisposable";
+import BlendMode from "../flash/display/BlendMode";
+import ArgumentError from "../flash/errors/ArgumentError";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
+import FrameImage from "./FrameImage";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
@@ -21,7 +21,7 @@ const gl = VirtualDom.WebGLRenderingContext;
  * The WebGL $renderer, main provider of the rendering services.
  * @implements {IDisposable}
  */
-export class WebGLRenderer implements IDisposable {
+export default class WebGLRenderer implements IDisposable {
 
     /**
      * Creates a new {@link WebGLRenderer} based on specified {@link HTMLCanvasElement}.

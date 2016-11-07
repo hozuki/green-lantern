@@ -2,11 +2,11 @@
  * Created by MIC on 2015/12/26.
  */
 
-import {FlashEvent} from "../../flash/events/FlashEvent";
-import {ICloneable} from "../../mic/ICloneable";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import FlashEvent from "../../flash/events/FlashEvent";
+import ICloneable from "../../mic/ICloneable";
+import NotImplementedError from "../../flash/errors/NotImplementedError";
 
-export class TweenEvent extends FlashEvent implements ICloneable<TweenEvent> {
+export default class TweenEvent extends FlashEvent implements ICloneable<TweenEvent> {
 
     constructor(type: string, time: number, position: number, bubbles: boolean = false, cancelable: boolean = false) {
         super(type, bubbles, cancelable);

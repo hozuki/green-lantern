@@ -2,11 +2,11 @@
  * Created by MIC on 2016/1/7.
  */
 
-import {ICloneable} from "../../mic/ICloneable";
-import {FlashEvent} from "./FlashEvent";
-import {NotImplementedError} from "../errors/NotImplementedError";
+import ICloneable from "../../mic/ICloneable";
+import FlashEvent from "./FlashEvent";
+import NotImplementedError from "../errors/NotImplementedError";
 
-export class TimerEvent extends FlashEvent implements ICloneable<TimerEvent> {
+export default class TimerEvent extends FlashEvent implements ICloneable<TimerEvent> {
 
     constructor(type: string, bubbles: boolean = false, cancelable: boolean = false) {
         super(type, bubbles, cancelable);

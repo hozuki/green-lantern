@@ -2,10 +2,12 @@
  * Created by MIC on 2015/11/18.
  */
 
-export class AttributeCache {
+interface AttributeCache {
 
-    name: string = null;
-    value: any = undefined;
-    location: number = -1;
+    name: string;
+    value: any;
+    location: number;
 
 }
+
+export default AttributeCache;

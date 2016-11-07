@@ -2,23 +2,23 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {PackedArrayBuffer} from "./PackedArrayBuffer";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {ReplicateShader} from "./shaders/ReplicateShader";
-import {ShaderID} from "./ShaderID";
-import {BufferedShader} from "./shaders/BufferedShader";
-import {Matrix3D} from "../flash/geom/Matrix3D";
-import {CopyImageShader} from "./shaders/CopyImageShader";
-import {Primitive2Shader} from "./shaders/Primitive2Shader";
-import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
-import {BitmapTargetBase} from "./BitmapTargetBase";
-import {BufferedBitmapTarget} from "./targets/BufferedBitmapTarget";
+import PackedArrayBuffer from "./PackedArrayBuffer";
+import WebGLRenderer from "./WebGLRenderer";
+import ReplicateShader from "./shaders/ReplicateShader";
+import ShaderID from "./ShaderID";
+import BufferedShader from "./shaders/BufferedShader";
+import Matrix3D from "../flash/geom/Matrix3D";
+import CopyImageShader from "./shaders/CopyImageShader";
+import Primitive2Shader from "./shaders/Primitive2Shader";
+import PrimitiveShader from "./shaders/PrimitiveShader";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
+import BitmapTargetBase from "./BitmapTargetBase";
+import BufferedBitmapTarget from "./targets/BufferedBitmapTarget";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
-export abstract class RenderHelper {
+abstract class RenderHelper {
 
     static renderPrimitives(renderer: WebGLRenderer, renderTo: BitmapTargetBase, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
@@ -198,3 +198,5 @@ function checkRenderTargets(source: BufferedBitmapTarget, destination: BitmapTar
     }
     return true;
 }
+
+export default RenderHelper;

@@ -2,16 +2,16 @@
  * Created by MIC on 2015/12/22.
  */
 
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterManager} from "../FilterManager";
-import {FilterBase} from "../FilterBase";
-import {RenderHelper} from "../RenderHelper";
-import {ShaderID} from "../ShaderID";
-import {Blur2Shader} from "../shaders/Blur2Shader";
-import {MathUtil} from "../../mic/MathUtil";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterManager from "../FilterManager";
+import FilterBase from "../FilterBase";
+import RenderHelper from "../RenderHelper";
+import ShaderID from "../ShaderID";
+import Blur2Shader from "../shaders/Blur2Shader";
+import MathUtil from "../../mic/MathUtil";
 
-export class Blur2Filter extends FilterBase {
+export default class Blur2Filter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);

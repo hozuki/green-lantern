@@ -33,14 +33,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
+
 const gl = VirtualDom.WebGLRenderingContext;
 
 const GET_A_WEBGL_BROWSER: string = `This page requires a browser that supports WebGL.<br/><a href="http://get.webgl.org">Click here to upgrade your browser.</a>`;
 const OTHER_PROBLEM: string = `It appears your computer may not support WebGL.<br/><a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>`;
 
-export abstract class WebGLUtils {
+abstract class WebGLUtils {
 
     static setupWebGL(canvas: HTMLCanvasElement, optionalAttributes: any): WebGLRenderingContext {
         if (CommonUtil.isUndefined(gl)) {
@@ -88,3 +89,5 @@ function create3DContext(canvas: HTMLCanvasElement, optionalAttributes: any): We
     }
     return context;
 }
+
+export default WebGLUtils;

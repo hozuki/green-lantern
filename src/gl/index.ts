@@ -7,8 +7,8 @@ import * as webgl from "./webgl/index";
 import * as fl from "./fl/index";
 import * as mx from "./mx/index";
 import * as mic from "./mic/index";
-import {EngineBase} from "./mic/EngineBase";
-import {CommonUtil} from "./mic/CommonUtil";
+import EngineBase from "./mic/EngineBase";
+import CommonUtil from "./mic/CommonUtil";
 
 export {flash, webgl, fl, mx, mic, EngineBase};
 

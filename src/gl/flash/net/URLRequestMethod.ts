@@ -2,7 +2,7 @@
  * Created by MIC on 2016/9/13.
  */
 
-export abstract class URLRequestMethod {
+abstract class URLRequestMethod {
 
     static get GET(): string {
         return "GET";
@@ -13,3 +13,5 @@ export abstract class URLRequestMethod {
     }
 
 }
+
+export default URLRequestMethod;

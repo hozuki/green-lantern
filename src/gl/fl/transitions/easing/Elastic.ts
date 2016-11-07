@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Elastic {
+abstract class Elastic {
 
     static easeIn(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
         var s: number;
@@ -48,3 +48,5 @@ export abstract class Elastic {
     }
 
 }
+
+export default Elastic;

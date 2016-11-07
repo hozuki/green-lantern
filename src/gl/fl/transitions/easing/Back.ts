@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Back {
+abstract class Back {
 
     static easeIn(t: number, b: number, c: number, d: number, s: number = 0): number {
         //if (typeof s == "undefined") s = 1.70158;
@@ -24,3 +24,5 @@ export abstract class Back {
     }
 
 }
+
+export default Back;

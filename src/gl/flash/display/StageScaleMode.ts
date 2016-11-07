@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class StageScaleMode {
+abstract class StageScaleMode {
 
     static get EXACT_FIT(): string {
         return 'exactFit';
@@ -21,3 +21,5 @@ export abstract class StageScaleMode {
     }
 
 }
+
+export default StageScaleMode;

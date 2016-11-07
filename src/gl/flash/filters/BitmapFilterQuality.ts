@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/30.
  */
 
-export abstract class BitmapFilterQuality {
+abstract class BitmapFilterQuality {
 
     static get HIGH(): number {
         return 3;
@@ -17,3 +17,5 @@ export abstract class BitmapFilterQuality {
     }
 
 }
+
+export default BitmapFilterQuality;

@@ -2,15 +2,15 @@
  * Created by MIC on 2015/12/22.
  */
 
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {BufferedShader} from "./BufferedShader";
-import {WebGLDataType} from "../WebGLDataType";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import BufferedShader from "./BufferedShader";
+import WebGLDataType from "../WebGLDataType";
 
-export class Blur2Shader extends BufferedShader {
+export default class Blur2Shader extends BufferedShader {
 
     constructor(manager: ShaderManager) {
         super(manager, Blur2Shader.VERTEX_SOURCE, Blur2Shader.FRAGMENT_SOURCE);
@@ -47,19 +47,19 @@ export class Blur2Shader extends BufferedShader {
 
         var u: UniformCache;
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uStrength";
         u.type = WebGLDataType.U1F;
         u.value = 5;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uResolution";
         u.type = WebGLDataType.U1F;
         u.value = 1;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uBlurDirection";
         u.type = WebGLDataType.U2F;
         u.value = [1.0, 0.0];

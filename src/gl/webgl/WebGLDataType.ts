@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/17.
  */
 
-export enum WebGLDataType {
+enum WebGLDataType {
 
     UUnknown,
     UBool,
@@ -19,3 +19,5 @@ export enum WebGLDataType {
     USampler2D
 
 }
+
+export default WebGLDataType;

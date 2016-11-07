@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class GraphicsPathCommand {
+abstract class GraphicsPathCommand {
 
     public static get CUBIC_CURVE_TO(): number {
         return 6;
@@ -33,3 +33,5 @@ export abstract class GraphicsPathCommand {
     }
 
 }
+
+export default GraphicsPathCommand;

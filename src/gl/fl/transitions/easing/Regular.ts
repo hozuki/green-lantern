@@ -2,9 +2,9 @@
  * Created by MIC on 2015/12/26.
  */
 
-import {NotImplementedError} from "../../../flash/errors/NotImplementedError";
+import NotImplementedError from "../../../flash/errors/NotImplementedError";
 
-export abstract class Regular {
+abstract class Regular {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         throw new NotImplementedError();
@@ -19,3 +19,5 @@ export abstract class Regular {
     }
 
 }
+
+export default Regular;

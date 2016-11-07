@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ICopyable} from "../../mic/ICopyable";
-import {ICloneable} from "../../mic/ICloneable";
-import {MathUtil} from "../../mic/MathUtil";
+import ICopyable from "../../mic/ICopyable";
+import ICloneable from "../../mic/ICloneable";
+import MathUtil from "../../mic/MathUtil";
 
-export class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3D> {
+export default class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3D> {
 
     constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 0) {
         this.x = x;

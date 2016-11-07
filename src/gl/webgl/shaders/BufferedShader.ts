@@ -2,16 +2,16 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Matrix3D} from "../../flash/geom/Matrix3D";
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {ShaderBase} from "../ShaderBase";
-import {WebGLDataType} from "../WebGLDataType";
+import Matrix3D from "../../flash/geom/Matrix3D";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import ShaderBase from "../ShaderBase";
+import WebGLDataType from "../WebGLDataType";
 
-export class BufferedShader extends ShaderBase {
+abstract class BufferedShader extends ShaderBase {
 
     constructor(manager: ShaderManager, vertexSource: string, fragmentSource: string) {
         super(manager, vertexSource, fragmentSource, null, null);
@@ -39,21 +39,21 @@ export class BufferedShader extends ShaderBase {
         var h = manager.renderer.view.height;
         projectionMatrix.setOrthographicProjection(0, w, h, 0, -1000, 1000);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uSampler";
         u.type = WebGLDataType.USampler2D;
         u.value = 0;
         u.texture = null;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uProjectionMatrix";
         u.type = WebGLDataType.UMat4;
         u.value = projectionMatrix.toArray();
         u.transpose = false;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uHollow";
         u.type = WebGLDataType.UBool;
         u.value = true;
@@ -61,3 +61,5 @@ export class BufferedShader extends ShaderBase {
     }
 
 }
+
+export default BufferedShader;

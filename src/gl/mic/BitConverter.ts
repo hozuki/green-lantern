@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/11.
  */
 
-import {MathUtil} from "./MathUtil";
+import MathUtil from "./MathUtil";
 
 const arrayBuffer = new ArrayBuffer(8);
 const views = {
@@ -39,7 +39,7 @@ function setBufferArray(data: number[], dataStartIndex: number, length: number):
     }
 }
 
-export abstract class BitConverter {
+abstract class BitConverter {
 
     static get isLittleEndian(): boolean {
         return isSystemLittleEndian;
@@ -175,3 +175,5 @@ export abstract class BitConverter {
     }
 
 }
+
+export default BitConverter;

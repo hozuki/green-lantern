@@ -2,10 +2,10 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../../mic/IDisposable";
-import {CommonUtil} from "../../mic/CommonUtil";
+import IDisposable from "../../mic/IDisposable";
+import CommonUtil from "../../mic/CommonUtil";
 
-export abstract class EventDispatcher implements IDisposable {
+abstract class EventDispatcher implements IDisposable {
 
     constructor() {
         this._listeners = new Map<string, Function[]>();
@@ -71,3 +71,5 @@ export abstract class EventDispatcher implements IDisposable {
     private _listeners: Map<string, Function[]> = null;
 
 }
+
+export default EventDispatcher;

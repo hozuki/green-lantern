@@ -2,17 +2,17 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Vector3D} from "./Vector3D";
-import {Orientation3D} from "./Orientation3D";
-import {ICopyable} from "../../mic/ICopyable";
-import {ICloneable} from "../../mic/ICloneable";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {ArgumentError} from "../errors/ArgumentError";
-import {ApplicationError} from "../errors/ApplicationError";
-import {MathUtil} from "../../mic/MathUtil";
-import {CommonUtil} from "../../mic/CommonUtil";
+import Vector3D from "./Vector3D";
+import Orientation3D from "./Orientation3D";
+import ICopyable from "../../mic/ICopyable";
+import ICloneable from "../../mic/ICloneable";
+import NotImplementedError from "../errors/NotImplementedError";
+import ArgumentError from "../errors/ArgumentError";
+import ApplicationError from "../errors/ApplicationError";
+import MathUtil from "../../mic/MathUtil";
+import CommonUtil from "../../mic/CommonUtil";
 
-export class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
+export default class Matrix3D implements ICloneable<Matrix3D>, ICopyable<Matrix3D> {
 
     constructor(v: number[] | Float32Array = null) {
         if (CommonUtil.isNull(v) || v.length <= 0) {

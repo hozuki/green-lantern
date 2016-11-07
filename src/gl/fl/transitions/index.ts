@@ -3,8 +3,9 @@
  */
 
 import * as easing from "./easing/index";
+import Tween from "./Tween";
+import TweenEvent from "./TweenEvent";
 
-export * from "./Tween";
-export * from "./TweenEvent";
+export {Tween, TweenEvent};
 
 export {easing};

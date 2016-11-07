@@ -4,15 +4,15 @@
 
 import libtess = require("libtess");
 
-import {FillRendererBase} from "./FillRendererBase";
-import {Graphics} from "../../flash/display/Graphics";
-import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {RenderHelper} from "../RenderHelper";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
+import FillRendererBase from "./FillRendererBase";
+import Graphics from "../../flash/display/Graphics";
+import GraphicsConst from "./GraphicsConst";
+import WebGLRenderer from "../WebGLRenderer";
+import RenderHelper from "../RenderHelper";
+import NotImplementedError from "../../flash/errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
 
-export class SolidFillRenderer extends FillRendererBase {
+export default class SolidFillRenderer extends FillRendererBase {
 
     constructor(graphics: Graphics, startX: number, startY: number, color: number, alpha: number) {
         super(graphics, startX, startY);
@@ -25,15 +25,15 @@ export class SolidFillRenderer extends FillRendererBase {
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         var currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, STD_Z);
+            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
         }
         var dt1: number, dt2: number, dt3: number;
         var t2: number, t3: number;
         var fromX = this.currentX, fromY = this.currentY;
         var xa: number, ya: number;
         var j: number;
-        for (var i = 1; i <= CURVE_ACCURACY; i++) {
-            j = i / CURVE_ACCURACY;
+        for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+            j = i / GraphicsConst.CurveAccuracy;
             dt1 = 1 - j;
             dt2 = dt1 * dt1;
             dt3 = dt2 * dt1;
@@ -41,7 +41,7 @@ export class SolidFillRenderer extends FillRendererBase {
             t3 = t2 * j;
             xa = dt3 * fromX + 3 * dt2 * j * cx1 + 3 * dt1 * t2 * cx2 + t3 * x;
             ya = dt3 * fromY + 3 * dt2 * j * cy1 + 3 * dt1 * t2 * cy2 + t3 * y;
-            currentContour.push(xa, ya, STD_Z);
+            currentContour.push(xa, ya, GraphicsConst.Z0);
         }
         this.currentX = x;
         this.currentY = y;
@@ -52,18 +52,18 @@ export class SolidFillRenderer extends FillRendererBase {
     curveTo(cx: number, cy: number, x: number, y: number): void {
         var currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, STD_Z);
+            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
         }
         var j: number;
         var fromX = this.currentX, fromY = this.currentY;
         var xa: number, ya: number;
-        for (var i = 1; i <= CURVE_ACCURACY; i++) {
-            j = i / CURVE_ACCURACY;
+        for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+            j = i / GraphicsConst.CurveAccuracy;
             xa = fromX + (cx - fromX) * j;
             ya = fromY + (cy - fromY) * j;
             xa = xa + (cx + (x - cx) * j - xa) * j;
             ya = ya + (cy + (y - cy) * j - ya) * j;
-            currentContour.push(xa, ya, STD_Z);
+            currentContour.push(xa, ya, GraphicsConst.Z0);
         }
         this.currentX = x;
         this.currentY = y;
@@ -78,15 +78,15 @@ export class SolidFillRenderer extends FillRendererBase {
         var thetaBegin: number;
         var x2: number, y2: number;
         var halfPi = Math.PI / 2;
-        currentContour.push(this.currentX + radius, this.currentY, STD_Z);
+        currentContour.push(this.currentX + radius, this.currentY, GraphicsConst.Z0);
         thetaBegin = 0;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         for (var k = 0; k < 4; k++) {
-            for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                thetaNext = thetaBegin - i / CURVE_ACCURACY * halfPi;
+            for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                 x2 = x + radius * Math.cos(thetaNext);
                 y2 = y + radius * Math.sin(thetaNext);
-                currentContour.push(x2, y2, STD_Z);
+                currentContour.push(x2, y2, GraphicsConst.Z0);
             }
             thetaBegin -= halfPi;
         }
@@ -106,16 +106,16 @@ export class SolidFillRenderer extends FillRendererBase {
         var centerX = x + width / 2, centerY = y + height / 2;
         var x2: number, y2: number;
         var halfPi = Math.PI / 2;
-        currentContour.push(this.currentX, this.currentY, STD_Z);
+        currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
         thetaBegin = Math.PI;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         // Brute, huh? Luckily there are 20 segments per PI/2...
         for (var k = 0; k < 4; k++) {
-            for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                thetaNext = thetaBegin - i / CURVE_ACCURACY * halfPi;
+            for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                 x2 = centerX + width / 2 * Math.cos(thetaNext);
                 y2 = centerY + height / 2 * Math.sin(thetaNext);
-                currentContour.push(x2, y2, STD_Z);
+                currentContour.push(x2, y2, GraphicsConst.Z0);
             }
             thetaBegin -= halfPi;
         }
@@ -131,10 +131,10 @@ export class SolidFillRenderer extends FillRendererBase {
         this.moveTo(x, y);
         // Create a new contour and draw a independent rectangle, should not use lineTo().
         var currentContour = this._$getContourForClosedShapes();
-        currentContour.push(x, y, STD_Z);
-        currentContour.push(x + width, y, STD_Z);
-        currentContour.push(x + width, y + height, STD_Z);
-        currentContour.push(x, y + height, STD_Z);
+        currentContour.push(x, y, GraphicsConst.Z0);
+        currentContour.push(x + width, y, GraphicsConst.Z0);
+        currentContour.push(x + width, y + height, GraphicsConst.Z0);
+        currentContour.push(x, y + height, GraphicsConst.Z0);
         this.currentX = x;
         this.currentY = y;
         this.becomeDirty();
@@ -148,9 +148,9 @@ export class SolidFillRenderer extends FillRendererBase {
     lineTo(x: number, y: number): void {
         var currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, STD_Z);
+            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
         }
-        currentContour.push(x, y, STD_Z);
+        currentContour.push(x, y, GraphicsConst.Z0);
         this.currentX = x;
         this.currentY = y;
         this.becomeDirty();

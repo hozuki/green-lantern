@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class InterpolationMethod {
+abstract class InterpolationMethod {
 
     public static get LINEAR_RGB(): string {
         return 'linearRGB';
@@ -13,3 +13,5 @@ export abstract class InterpolationMethod {
     }
 
 }
+
+export default InterpolationMethod;

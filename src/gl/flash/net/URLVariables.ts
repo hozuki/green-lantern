@@ -2,9 +2,9 @@
  * Created by MIC on 2016/9/13.
  */
 
-import {Coerce} from "../../mic/Coerce";
+import Coerce from "../../mic/Coerce";
 
-export class URLVariables {
+export default class URLVariables {
 
     constructor(source: string = null) {
         this._dictionary = new Map<string, string>();

@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Circular {
+abstract class Circular {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
@@ -21,3 +21,5 @@ export abstract class Circular {
     }
 
 }
+
+export default Circular;

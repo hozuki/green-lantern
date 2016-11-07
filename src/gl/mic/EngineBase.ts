@@ -2,17 +2,17 @@
  * Created by MIC on 2015/11/25.
  */
 
-import {WebGLRenderer} from "../webgl/WebGLRenderer";
-import {Stage} from "../flash/display/Stage";
-import {RendererOptions} from "../webgl/RendererOptions";
-import {FlashEvent} from "../flash/events/FlashEvent";
-import {EventBase} from "./EventBase";
-import {TimeInfo} from "./TimeInfo";
-import {VirtualDom} from "./VirtualDom";
-import {EventDispatcher} from "../flash/events/EventDispatcher";
-import {CommonUtil} from "./CommonUtil";
+import WebGLRenderer from "../webgl/WebGLRenderer";
+import Stage from "../flash/display/Stage";
+import RendererOptions from "../webgl/RendererOptions";
+import FlashEvent from "../flash/events/FlashEvent";
+import EventBase from "./EventBase";
+import TimeInfo from "./TimeInfo";
+import VirtualDom from "./VirtualDom";
+import EventDispatcher from "../flash/events/EventDispatcher";
+import CommonUtil from "./CommonUtil";
 
-export class EngineBase extends EventDispatcher {
+export default class EngineBase extends EventDispatcher {
 
     constructor() {
         super();

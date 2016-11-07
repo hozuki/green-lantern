@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {GraphicsDataRendererBase} from "./GraphicsDataRendererBase";
-import {Graphics} from "../../flash/display/Graphics";
-import {IStrokeDataRenderer} from "./IStrokeDataRenderer";
+import GraphicsDataRendererBase from "./GraphicsDataRendererBase";
+import Graphics from "../../flash/display/Graphics";
+import IStrokeDataRenderer from "./IStrokeDataRenderer";
 
-export abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
+abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
 
     constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
@@ -93,3 +93,5 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
     private _lineVerticesStorage: number[][] = null;
 
 }
+
+export default StrokeRendererBase;

@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class TextFieldType {
+abstract class TextFieldType {
 
     static get DYNAMIC(): string {
         return "dynamic";
@@ -13,3 +13,5 @@ export abstract class TextFieldType {
     }
 
 }
+
+export default TextFieldType;

@@ -2,19 +2,19 @@
  * Created by MIC on 2015/11/17.
  */
 
-import {WebGLRenderer} from "../WebGLRenderer";
-import {IDisposable} from "../../mic/IDisposable";
-import {MathUtil} from "../../mic/MathUtil";
-import {VirtualDom} from "../../mic/VirtualDom";
-import {FrameImage} from "../FrameImage";
-import {BufferedBitmapTarget} from "./BufferedBitmapTarget";
+import WebGLRenderer from "../WebGLRenderer";
+import IDisposable from "../../mic/IDisposable";
+import MathUtil from "../../mic/MathUtil";
+import VirtualDom from "../../mic/VirtualDom";
+import FrameImage from "../FrameImage";
+import BufferedBitmapTarget from "./BufferedBitmapTarget";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
 /**
  * Represents a 2D $render target based on WebGL texture.
  */
-export class RenderTarget2D extends BufferedBitmapTarget {
+export default class RenderTarget2D extends BufferedBitmapTarget {
 
     /**
      * Instantiates a new {@link RenderTarget2D}.

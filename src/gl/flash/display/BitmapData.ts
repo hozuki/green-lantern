@@ -2,33 +2,33 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {IBitmapDrawable} from "./IBitmapDrawable";
-import {Rectangle} from "../geom/Rectangle";
-import {Point} from "../geom/Point";
-import {BitmapFilter} from "../filters/BitmapFilter";
-import {ICloneable} from "../../mic/ICloneable";
-import {ColorTransform} from "../geom/ColorTransform";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {ByteArray} from "../utils/ByteArray";
-import {IDisposable} from "../../mic/IDisposable";
-import {Matrix} from "../geom/Matrix";
-import {GLUtil} from "../../mic/glantern/GLUtil";
-import {MathUtil} from "../../mic/MathUtil";
-import {ArgumentError} from "../errors/ArgumentError";
-import {StageQuality} from "./StageQuality";
-import {DisplayObject} from "./DisplayObject";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {BlendMode} from "./BlendMode";
-import {RgbaColor} from "../../mic/RgbaColor";
-import {EOFError} from "../errors/EOFError";
-import {VirtualDom} from "../../mic/VirtualDom";
+import IBitmapDrawable from "./IBitmapDrawable";
+import Rectangle from "../geom/Rectangle";
+import Point from "../geom/Point";
+import BitmapFilter from "../filters/BitmapFilter";
+import ICloneable from "../../mic/ICloneable";
+import ColorTransform from "../geom/ColorTransform";
+import NotImplementedError from "../errors/NotImplementedError";
+import ByteArray from "../utils/ByteArray";
+import IDisposable from "../../mic/IDisposable";
+import Matrix from "../geom/Matrix";
+import GLUtil from "../../mic/glantern/GLUtil";
+import MathUtil from "../../mic/MathUtil";
+import ArgumentError from "../errors/ArgumentError";
+import StageQuality from "./StageQuality";
+import DisplayObject from "./DisplayObject";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import BlendMode from "./BlendMode";
+import RgbaColor from "../../mic/RgbaColor";
+import EOFError from "../errors/EOFError";
+import VirtualDom from "../../mic/VirtualDom";
 
 // TODO: Endian matters.
 // On Windows (x86/x86-64, little endian), the conversion of 32-bit RGBA to 8-bit bytes are correct. When retrieving
 // ImageData objects, the data is always in [RR,GG,BB,AA] order. Thus when constructing a Uint32Array from a Uint8ClampedArray,
 // reading from the Uint32Array automatically outputs 0xAABBGGRR. However, on big endian systems, it may outputs 0xRRGGBBAA.
 
-export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<BitmapData> {
+export default class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<BitmapData> {
 
     constructor(width: number, height: number, transparent: boolean = true, fillColor: number = 0xffffffff) {
         var canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");

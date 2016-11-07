@@ -2,16 +2,16 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {Graphics} from "../../flash/display/Graphics";
-import {IGraphicsDataRenderer} from "./IGraphicsDataRenderer";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {PackedArrayBuffer} from "../PackedArrayBuffer";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {VirtualDom} from "../../mic/VirtualDom";
+import Graphics from "../../flash/display/Graphics";
+import IGraphicsDataRenderer from "./IGraphicsDataRenderer";
+import WebGLRenderer from "../WebGLRenderer";
+import PackedArrayBuffer from "../PackedArrayBuffer";
+import NotImplementedError from "../../flash/errors/NotImplementedError";
+import VirtualDom from "../../mic/VirtualDom";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
-export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
+abstract class GraphicsDataRendererBase implements IGraphicsDataRenderer {
 
     constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         this._graphics = graphics;
@@ -217,3 +217,5 @@ export class GraphicsDataRendererBase implements IGraphicsDataRenderer {
     private _lastPathStartY: number = 0;
 
 }
+
+export default GraphicsDataRendererBase;

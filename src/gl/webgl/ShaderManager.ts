@@ -2,22 +2,22 @@
  * Created by MIC on 2015/11/17.
  */
 
-import {ShaderBase} from "./ShaderBase";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {BlurXShader} from "./shaders/BlurXShader";
-import {BlurYShader} from "./shaders/BlurYShader";
-import {ReplicateShader} from "./shaders/ReplicateShader";
-import {ColorTransformShader} from "./shaders/ColorTransformShader";
-import {FxaaShader} from "./shaders/FxaaShader";
-import {UniformCache} from "./UniformCache";
-import {AttributeCache} from "./AttributeCache";
-import {IDisposable} from "../mic/IDisposable";
-import {Blur2Shader} from "./shaders/Blur2Shader";
-import {CopyImageShader} from "./shaders/CopyImageShader";
-import {Primitive2Shader} from "./shaders/Primitive2Shader";
+import ShaderBase from "./ShaderBase";
+import WebGLRenderer from "./WebGLRenderer";
+import PrimitiveShader from "./shaders/PrimitiveShader";
+import BlurXShader from "./shaders/BlurXShader";
+import BlurYShader from "./shaders/BlurYShader";
+import ReplicateShader from "./shaders/ReplicateShader";
+import ColorTransformShader from "./shaders/ColorTransformShader";
+import FxaaShader from "./shaders/FxaaShader";
+import UniformCache from "./UniformCache";
+import AttributeCache from "./AttributeCache";
+import IDisposable from "../mic/IDisposable";
+import Blur2Shader from "./shaders/Blur2Shader";
+import CopyImageShader from "./shaders/CopyImageShader";
+import Primitive2Shader from "./shaders/Primitive2Shader";
 
-export class ShaderManager implements IDisposable {
+export default class ShaderManager implements IDisposable {
 
     constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;

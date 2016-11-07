@@ -2,16 +2,16 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {InteractiveObject} from "./InteractiveObject";
-import {Stage} from "./Stage";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {DisplayObject} from "./DisplayObject";
-import {Point} from "../geom/Point";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {TimeInfo} from "../../mic/TimeInfo";
+import InteractiveObject from "./InteractiveObject";
+import Stage from "./Stage";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import DisplayObject from "./DisplayObject";
+import Point from "../geom/Point";
+import ShaderManager from "../../webgl/ShaderManager";
+import NotImplementedError from "../errors/NotImplementedError";
+import TimeInfo from "../../mic/TimeInfo";
 
-export abstract class DisplayObjectContainer extends InteractiveObject {
+abstract class DisplayObjectContainer extends InteractiveObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
@@ -220,3 +220,5 @@ export abstract class DisplayObjectContainer extends InteractiveObject {
     protected _children: DisplayObject[] = null;
 
 }
+
+export default DisplayObjectContainer;

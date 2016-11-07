@@ -6,13 +6,13 @@
 // https://github.com/awayjs/core/blob/master/lib/geom/Vector3D.ts
 // License: Apache License 2.0 (see /docs/license/awayjs-core.txt)
 
-import {Vector3D} from "./Vector3D";
-import {Matrix3D} from "./Matrix3D";
-import {Orientation3D} from "./Orientation3D";
-import {ICloneable} from "../../mic/ICloneable";
-import {ICopyable} from "../../mic/ICopyable";
-import {CommonUtil} from "../../mic/CommonUtil";
-import {MathUtil} from "../../mic/MathUtil";
+import Vector3D from "./Vector3D";
+import Matrix3D from "./Matrix3D";
+import Orientation3D from "./Orientation3D";
+import ICloneable from "../../mic/ICloneable";
+import ICopyable from "../../mic/ICopyable";
+import CommonUtil from "../../mic/CommonUtil";
+import MathUtil from "../../mic/MathUtil";
 
 /**
  * A reference to a Vector to be used as a temporary raw data container, to prevent object creation.
@@ -23,7 +23,7 @@ const RAW_DATA_CONTAINER: Float32Array = new Float32Array(16);
 /**
  * A Quaternion object which can be used to represent rotations.
  */
-export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion> {
+export default class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion> {
 
     /**
      * Creates a new Quaternion object.

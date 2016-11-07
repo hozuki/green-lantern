@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Point} from "./Point";
-import {ICopyable} from "../../mic/ICopyable";
-import {ICloneable} from "../../mic/ICloneable";
+import Point from "./Point";
+import ICopyable from "../../mic/ICopyable";
+import ICloneable from "../../mic/ICloneable";
 
-export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
+export default class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this._x = x >= 0 ? x : 0;

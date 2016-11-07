@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../mic/IDisposable";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
+import IDisposable from "../mic/IDisposable";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
-export class PackedArrayBuffer implements IDisposable {
+export default class PackedArrayBuffer implements IDisposable {
 
     constructor() {
     }

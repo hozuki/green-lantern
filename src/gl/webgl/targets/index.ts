@@ -2,5 +2,7 @@
  * Created by MIC on 2016/10/29.
  */
 
-export * from "./BufferedBitmapTarget";
-export * from "./RenderTarget2D";
+import BufferedImageTarget from "./BufferedBitmapTarget";
+import RenderTarget2D from "./RenderTarget2D";
+
+export {BufferedImageTarget, RenderTarget2D};

@@ -2,16 +2,16 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {DisplayObject} from "./DisplayObject";
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {Graphics} from "./Graphics";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {ShaderID} from "../../webgl/ShaderID";
-import {TimeInfo} from "../../mic/TimeInfo";
+import DisplayObject from "./DisplayObject";
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import Graphics from "./Graphics";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ShaderManager from "../../webgl/ShaderManager";
+import ShaderID from "../../webgl/ShaderID";
+import TimeInfo from "../../mic/TimeInfo";
 
-export class Shape extends DisplayObject {
+export default class Shape extends DisplayObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);

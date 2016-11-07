@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/17.
  */
 
-import {RgbaColor} from "../RgbaColor";
-import {CommonUtil} from "../CommonUtil";
+import RgbaColor from "../RgbaColor";
+import CommonUtil from "../CommonUtil";
 
 /**
  * The class providing utility functions.
  */
-export abstract class GLUtil {
+abstract class GLUtil {
 
     static colorToCssSharp(color: number): string {
         color |= 0;
@@ -52,3 +52,5 @@ export abstract class GLUtil {
     }
 
 }
+
+export default GLUtil;

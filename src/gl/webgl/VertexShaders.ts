@@ -14,268 +14,221 @@ interface VertexShadersObject {
     primitive2?: string;
 }
 
-var Values: VertexShadersObject = Object.create(null);
+const VertexShaders: VertexShadersObject = Object.create(null);
 
-export abstract class VertexShaders {
+export default VertexShaders;
 
-    static get buffered(): string {
-        return Values.buffered;
-    }
+VertexShaders.buffered = `
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
 
-    static get blurX(): string {
-        return Values.blurX;
-    }
+uniform mat4 uProjectionMatrix;
 
-    static get blurY(): string {
-        return Values.blurY;
-    }
+varying vec2 vTextureCoord;
 
-    static get primitive(): string {
-        return Values.primitive;
-    }
+void main() {
+   gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
+   vTextureCoord = aTextureCoord;
+}`;
 
-    static get replicate(): string {
-        return Values.replicate;
-    }
+VertexShaders.blurX = `
+precision mediump float;
 
-    static get fxaa(): string {
-        return Values.fxaa;
-    }
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
 
-    static get blur2(): string {
-        return Values.blur2;
-    }
+uniform float uStrength;
+uniform mat4 uProjectionMatrix;
 
-    static get copyImage(): string {
-        return Values.copyImage;
-    }
+varying vec2 vTextureCoord;
+varying vec2 vBlurTexCoords[6];
 
-    static get primitive2(): string {
-        return Values.primitive2;
-    }
+void main()
+{
+    gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
+    vTextureCoord = aTextureCoord;
 
-}
+    vBlurTexCoords[0] = aTextureCoord + vec2(-0.012 * uStrength, 0.0);
+    vBlurTexCoords[1] = aTextureCoord + vec2(-0.008 * uStrength, 0.0);
+    vBlurTexCoords[2] = aTextureCoord + vec2(-0.004 * uStrength, 0.0);
+    vBlurTexCoords[3] = aTextureCoord + vec2( 0.004 * uStrength, 0.0);
+    vBlurTexCoords[4] = aTextureCoord + vec2( 0.008 * uStrength, 0.0);
+    vBlurTexCoords[5] = aTextureCoord + vec2( 0.012 * uStrength, 0.0);
+}`;
 
-Values.buffered = `
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+VertexShaders.blurY = `
+precision mediump float;
 
-    uniform mat4 uProjectionMatrix;
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
 
-    varying vec2 vTextureCoord;
+uniform float uStrength;
+uniform mat4 uProjectionMatrix;
 
-    void main() {
-       gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
-       vTextureCoord = aTextureCoord;
-    }
-`;
+varying vec2 vTextureCoord;
+varying vec2 vBlurTexCoords[6];
 
-Values.blurX = `
-    precision mediump float;
+void main()
+{
+    gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
+    vTextureCoord = aTextureCoord;
 
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+    vBlurTexCoords[0] = aTextureCoord + vec2(0.0, -0.012 * uStrength);
+    vBlurTexCoords[1] = aTextureCoord + vec2(0.0, -0.008 * uStrength);
+    vBlurTexCoords[2] = aTextureCoord + vec2(0.0, -0.004 * uStrength);
+    vBlurTexCoords[3] = aTextureCoord + vec2(0.0,  0.004 * uStrength);
+    vBlurTexCoords[4] = aTextureCoord + vec2(0.0,  0.008 * uStrength);
+    vBlurTexCoords[5] = aTextureCoord + vec2(0.0,  0.012 * uStrength);
+}`;
 
-    uniform float uStrength;
-    uniform mat4 uProjectionMatrix;
+VertexShaders.primitive = `
+precision mediump float;
 
-    varying vec2 vTextureCoord;
-    varying vec2 vBlurTexCoords[6];
+attribute vec3 aVertexPosition;
+attribute vec4 aVertexColor;
 
-    void main()
-    {
-        gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
-        vTextureCoord = aTextureCoord;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uTransformMatrix;
 
-        vBlurTexCoords[0] = aTextureCoord + vec2(-0.012 * uStrength, 0.0);
-        vBlurTexCoords[1] = aTextureCoord + vec2(-0.008 * uStrength, 0.0);
-        vBlurTexCoords[2] = aTextureCoord + vec2(-0.004 * uStrength, 0.0);
-        vBlurTexCoords[3] = aTextureCoord + vec2( 0.004 * uStrength, 0.0);
-        vBlurTexCoords[4] = aTextureCoord + vec2( 0.008 * uStrength, 0.0);
-        vBlurTexCoords[5] = aTextureCoord + vec2( 0.012 * uStrength, 0.0);
-    }
-`;
+varying vec4 vVertexColor;
 
-Values.blurY = `
-    precision mediump float;
+void main() {
+   gl_Position = uProjectionMatrix * uTransformMatrix * vec4(aVertexPosition.xyz, 1.0);
+   vVertexColor = aVertexColor;
+}`;
 
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+VertexShaders.replicate = `
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
 
-    uniform float uStrength;
-    uniform mat4 uProjectionMatrix;
+uniform mat4 uProjectionMatrix;
+uniform vec2 uOriginalSize;
+uniform vec2 uFitSize;
+uniform bool uFlipX;
+uniform bool uFlipY;
 
-    varying vec2 vTextureCoord;
-    varying vec2 vBlurTexCoords[6];
+varying vec2 vTextureCoord;
 
-    void main()
-    {
-        gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
-        vTextureCoord = aTextureCoord;
-
-        vBlurTexCoords[0] = aTextureCoord + vec2(0.0, -0.012 * uStrength);
-        vBlurTexCoords[1] = aTextureCoord + vec2(0.0, -0.008 * uStrength);
-        vBlurTexCoords[2] = aTextureCoord + vec2(0.0, -0.004 * uStrength);
-        vBlurTexCoords[3] = aTextureCoord + vec2(0.0,  0.004 * uStrength);
-        vBlurTexCoords[4] = aTextureCoord + vec2(0.0,  0.008 * uStrength);
-        vBlurTexCoords[5] = aTextureCoord + vec2(0.0,  0.012 * uStrength);
-    }
-`;
-
-Values.primitive = `
-    precision mediump float;
-
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uProjectionMatrix;
-    uniform mat4 uTransformMatrix;
-
-    varying vec4 vVertexColor;
-
-    void main() {
-       gl_Position = uProjectionMatrix * uTransformMatrix * vec4(aVertexPosition.xyz, 1.0);
-       vVertexColor = aVertexColor;
-    }
-`;
-
-Values.replicate = `
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
-
-    uniform mat4 uProjectionMatrix;
-    uniform vec2 uOriginalSize;
-    uniform vec2 uFitSize;
-    uniform bool uFlipX;
-    uniform bool uFlipY;
-
-    varying vec2 vTextureCoord;
-
-    void main() {
-        vec3 newVertexPostion = aVertexPosition;
-       vec2 newTextureCoord = aTextureCoord;
-       if (uFlipX) {
-           newTextureCoord.x = 1.0 - newTextureCoord.x;
-           newVertexPostion.x -= (uFitSize - uOriginalSize).x;
-       }
-       if (uFlipY) {
-           newTextureCoord.y = 1.0 - newTextureCoord.y;
-           newVertexPostion.y -= (uFitSize - uOriginalSize).y;
-       }
-       gl_Position = uProjectionMatrix * vec4(newVertexPostion.xyz, 1.0);
-       vTextureCoord = newTextureCoord;
-    }
-`;
+void main() {
+    vec3 newVertexPostion = aVertexPosition;
+   vec2 newTextureCoord = aTextureCoord;
+   if (uFlipX) {
+       newTextureCoord.x = 1.0 - newTextureCoord.x;
+       newVertexPostion.x -= (uFitSize - uOriginalSize).x;
+   }
+   if (uFlipY) {
+       newTextureCoord.y = 1.0 - newTextureCoord.y;
+       newVertexPostion.y -= (uFitSize - uOriginalSize).y;
+   }
+   gl_Position = uProjectionMatrix * vec4(newVertexPostion.xyz, 1.0);
+   vTextureCoord = newTextureCoord;
+}`;
 
 // For the full license, please refer to shaders/glsl/fxaa.vert
-Values.fxaa = `
-    precision mediump float;
+VertexShaders.fxaa = `
+precision mediump float;
 
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
 
-    uniform mat4 uProjectionMatrix;
-    uniform vec2 uResolution;
+uniform mat4 uProjectionMatrix;
+uniform vec2 uResolution;
 
-    varying vec2 vTextureCoord;
-    varying vec2 vResolution;
+varying vec2 vTextureCoord;
+varying vec2 vResolution;
 
-    varying vec2 v_rgbNW;
-    varying vec2 v_rgbNE;
-    varying vec2 v_rgbSW;
-    varying vec2 v_rgbSE;
-    varying vec2 v_rgbM;
+varying vec2 v_rgbNW;
+varying vec2 v_rgbNE;
+varying vec2 v_rgbSW;
+varying vec2 v_rgbSE;
+varying vec2 v_rgbM;
 
-    void texcoords(vec2 fragCoord, vec2 resolution,
-       out vec2 v_rgbNW, out vec2 v_rgbNE,
-       out vec2 v_rgbSW, out vec2 v_rgbSE,
-       out vec2 v_rgbM) {
-       vec2 inverseVP = 1.0 / resolution.xy;
-       v_rgbNW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;
-       v_rgbNE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;
-       v_rgbSW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;
-       v_rgbSE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;
-       v_rgbM = vec2(fragCoord * inverseVP);
+void texcoords(vec2 fragCoord, vec2 resolution,
+   out vec2 v_rgbNW, out vec2 v_rgbNE,
+   out vec2 v_rgbSW, out vec2 v_rgbSE,
+   out vec2 v_rgbM) {
+   vec2 inverseVP = 1.0 / resolution.xy;
+   v_rgbNW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;
+   v_rgbNE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;
+   v_rgbSW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;
+   v_rgbSE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;
+   v_rgbM = vec2(fragCoord * inverseVP);
+}
+
+void main() {
+   gl_Position = uProjectionMatrix * vec4(aVertexPosition, 1.0);
+   vTextureCoord = aTextureCoord;
+   vResolution = uResolution;
+
+   texcoords(aTextureCoord * uResolution, uResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+}`;
+
+VertexShaders.blur2 = `
+precision mediump float;
+
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
+
+uniform mat4 uProjectionMatrix;
+
+varying vec2 vTextureCoord;
+
+void main()
+{
+    gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
+    vTextureCoord = aTextureCoord;
+}`;
+
+VertexShaders.copyImage = `
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uTransformMatrix;
+uniform vec2 uOriginalSize;
+uniform vec2 uFitSize;
+uniform bool uFlipX;
+uniform bool uFlipY;
+
+varying vec2 vTextureCoord;
+
+void main() {
+    vec3 newVertexPostion = aVertexPosition;
+    vec2 newTextureCoord = aTextureCoord;
+    if (uFlipX) {
+        newTextureCoord.x = 1.0 - newTextureCoord.x;
+        newVertexPostion.x -= (uFitSize - uOriginalSize).x;
     }
-
-    void main() {
-       gl_Position = uProjectionMatrix * vec4(aVertexPosition, 1.0);
-       vTextureCoord = aTextureCoord;
-       vResolution = uResolution;
-
-       texcoords(aTextureCoord * uResolution, uResolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+    if (uFlipY) {
+        newTextureCoord.y = 1.0 - newTextureCoord.y;
+        newVertexPostion.y -= (uFitSize - uOriginalSize).y;
     }
-`;
+    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
+    vTextureCoord = newTextureCoord;
+}`;
 
-Values.blur2 = `
-    precision mediump float;
+VertexShaders.primitive2 = `
+precision mediump float;
 
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+attribute vec3 aVertexPosition;
+attribute vec4 aVertexColor;
 
-    uniform mat4 uProjectionMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uTransformMatrix;
+uniform vec2 uOriginalSize;
+uniform bool uFlipX;
+uniform bool uFlipY;
 
-    varying vec2 vTextureCoord;
+varying vec4 vVertexColor;
 
-    void main()
-    {
-        gl_Position = uProjectionMatrix * vec4(aVertexPosition.xyz, 1.0);
-        vTextureCoord = aTextureCoord;
+void main() {
+    vec3 newVertexPostion = aVertexPosition;
+    if (uFlipX) {
+        newVertexPostion.x = uOriginalSize.x - newVertexPostion.x;
     }
-`;
-
-Values.copyImage = `
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
-
-    uniform mat4 uProjectionMatrix;
-    uniform mat4 uTransformMatrix;
-    uniform vec2 uOriginalSize;
-    uniform vec2 uFitSize;
-    uniform bool uFlipX;
-    uniform bool uFlipY;
-
-    varying vec2 vTextureCoord;
-
-    void main() {
-        vec3 newVertexPostion = aVertexPosition;
-        vec2 newTextureCoord = aTextureCoord;
-        if (uFlipX) {
-            newTextureCoord.x = 1.0 - newTextureCoord.x;
-            newVertexPostion.x -= (uFitSize - uOriginalSize).x;
-        }
-        if (uFlipY) {
-            newTextureCoord.y = 1.0 - newTextureCoord.y;
-            newVertexPostion.y -= (uFitSize - uOriginalSize).y;
-        }
-        gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
-        vTextureCoord = newTextureCoord;
+    if (uFlipY) {
+        newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;
     }
-`;
-
-Values.primitive2 = `
-    precision mediump float;
-
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uProjectionMatrix;
-    uniform mat4 uTransformMatrix;
-    uniform vec2 uOriginalSize;
-    uniform bool uFlipX;
-    uniform bool uFlipY;
-
-    varying vec4 vVertexColor;
-
-    void main() {
-        vec3 newVertexPostion = aVertexPosition;
-        if (uFlipX) {
-            newVertexPostion.x = uOriginalSize.x - newVertexPostion.x;
-        }
-        if (uFlipY) {
-            newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;
-        }
-        gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
-        vVertexColor = aVertexColor;
-    }
-`;
+    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
+    vVertexColor = aVertexColor;
+}`;

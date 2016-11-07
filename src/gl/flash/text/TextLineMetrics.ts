@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export class TextLineMetrics {
+export default class TextLineMetrics {
 
     constructor(x: number, width: number, height: number, ascent: number, descent: number, leading: number) {
         this.x = x;

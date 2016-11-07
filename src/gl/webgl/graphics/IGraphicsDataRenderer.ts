@@ -2,10 +2,10 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {IDisposable} from "../../mic/IDisposable";
-import {WebGLRenderer} from "../WebGLRenderer";
+import IDisposable from "../../mic/IDisposable";
+import WebGLRenderer from "../WebGLRenderer";
 
-export interface IGraphicsDataRenderer extends IDisposable {
+interface IGraphicsDataRenderer extends IDisposable {
 
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void;
     closePath(): void;
@@ -22,3 +22,5 @@ export interface IGraphicsDataRenderer extends IDisposable {
     hasDrawnAnything: boolean;
 
 }
+
+export default IGraphicsDataRenderer;

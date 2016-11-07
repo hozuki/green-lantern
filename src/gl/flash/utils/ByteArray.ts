@@ -3,15 +3,15 @@
  */
 
 import * as pako from "pako";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {Endian} from "./Endian";
-import {ArgumentError} from "../errors/ArgumentError";
-import {EOFError} from "../errors/EOFError";
-import {CompressionAlgorithm} from "./CompressionAlgorithm";
-import {ApplicationError} from "../errors/ApplicationError";
-import {CommonUtil} from "../../mic/CommonUtil";
+import NotImplementedError from "../errors/NotImplementedError";
+import Endian from "./Endian";
+import ArgumentError from "../errors/ArgumentError";
+import EOFError from "../errors/EOFError";
+import CompressionAlgorithm from "./CompressionAlgorithm";
+import ApplicationError from "../errors/ApplicationError";
+import CommonUtil from "../../mic/CommonUtil";
 
-export class ByteArray {
+export default class ByteArray {
 
     constructor() {
     }

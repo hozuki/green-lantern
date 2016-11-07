@@ -3,7 +3,7 @@
  */
 
 import * as GLantern from "./index";
-import {VirtualDom} from "./mic/VirtualDom";
+import VirtualDom from "./mic/VirtualDom";
 
 /*
  Prepare to run in browsers.

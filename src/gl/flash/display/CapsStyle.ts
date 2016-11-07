@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class CapsStyle {
+abstract class CapsStyle {
 
     static get NONE(): string {
         return "none";
@@ -17,3 +17,5 @@ export abstract class CapsStyle {
     }
 
 }
+
+export default CapsStyle;

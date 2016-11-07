@@ -2,11 +2,11 @@
  * Created by MIC on 2016/1/7.
  */
 
-import {EventDispatcher} from "../events/EventDispatcher";
-import {TimerEvent} from "../events/TimerEvent";
-import {VirtualDom} from "../../mic/VirtualDom";
+import EventDispatcher from "../events/EventDispatcher";
+import TimerEvent from "../events/TimerEvent";
+import VirtualDom from "../../mic/VirtualDom";
 
-export class Timer extends EventDispatcher {
+export default class Timer extends EventDispatcher {
 
     constructor(delay: number, repeatCount: number = 0) {
         super();

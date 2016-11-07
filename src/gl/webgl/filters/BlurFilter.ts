@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {BlurYFilter} from "./BlurYFilter";
-import {BlurXFilter} from "./BlurXFilter";
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterManager} from "../FilterManager";
-import {FilterBase} from "../FilterBase";
-import {MathUtil} from "../../mic/MathUtil";
+import BlurYFilter from "./BlurYFilter";
+import BlurXFilter from "./BlurXFilter";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterManager from "../FilterManager";
+import FilterBase from "../FilterBase";
+import MathUtil from "../../mic/MathUtil";
 
-export class BlurFilter extends FilterBase {
+export default class BlurFilter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);

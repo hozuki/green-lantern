@@ -2,10 +2,10 @@
  * Created by MIC on 2016/8/22.
  */
 
-import {VirtualDom} from "./VirtualDom";
-import {SupportCheckResult} from "./SupportCheckResult";
+import VirtualDom from "./VirtualDom";
+import SupportCheckResult from "./SupportCheckResult";
 
-export abstract class CommonUtil {
+abstract class CommonUtil {
 
     static checkSupportStatus(): SupportCheckResult {
         var result: SupportCheckResult = {
@@ -349,3 +349,5 @@ export abstract class CommonUtil {
 function simpleEquals<T>(t1: T, t2: T): boolean {
     return t1 === t2;
 }
+
+export default CommonUtil;

@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
-import {GLUtil} from "../../mic/glantern/GLUtil";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
+import GLUtil from "../../mic/glantern/GLUtil";
 
-export class ColorTransform {
+export default class ColorTransform {
 
     constructor(redMultiplier: number = 1, greenMultiplier: number = 1, blueMultiplier: number = 1, alphaMultiplier: number = 1,
                 redOffset: number = 0, greenOffset: number = 0, blueOffset: number = 0, alphaOffset: number = 0) {

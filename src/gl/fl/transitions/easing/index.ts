@@ -2,16 +2,32 @@
  * Created by MIC on 2015/12/26.
  */
 
-export * from "./Back";
-export * from "./Bounce";
-export * from "./Circular";
-export * from "./Cubic";
-export * from "./Elastic";
-export * from "./Exponential";
-export * from "./None";
-export * from "./Quadratic";
-export * from "./Quartic";
-export * from "./Quintic";
-export * from "./Regular";
-export * from "./Sine";
-export * from "./Strong";
+import Back from "./Back";
+import Bounce from "./Bounce";
+import Circular from "./Circular";
+import Cubic from "./Cubic";
+import Elastic from "./Elastic";
+import Exponential from "./Exponential";
+import None from "./None";
+import Quadratic from "./Quadratic";
+import Quartic from "./Quartic";
+import Quintic from "./Quintic";
+import Regular from "./Regular";
+import Sine from "./Sine";
+import Strong from "./Strong";
+
+export {
+    Back,
+    Bounce,
+    Circular,
+    Cubic,
+    Elastic,
+    Exponential,
+    None,
+    Quadratic,
+    Quartic,
+    Quintic,
+    Regular,
+    Sine,
+    Strong
+};

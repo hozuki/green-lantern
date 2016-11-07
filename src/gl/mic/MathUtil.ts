@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/11.
  */
 
-export abstract class MathUtil {
+abstract class MathUtil {
 
     /**
      * Limit a number inside a range specified by min and max (both are reachable).
@@ -98,3 +98,5 @@ export abstract class MathUtil {
     }
 
 }
+
+export default MathUtil;

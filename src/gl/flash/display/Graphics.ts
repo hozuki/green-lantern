@@ -2,32 +2,32 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ICopyable} from "../../mic/ICopyable";
-import {DisplayObject} from "./DisplayObject";
-import {Matrix} from "../geom/Matrix";
-import {SpreadMethod} from "./SpreadMethod";
-import {InterpolationMethod} from "./InterpolationMethod";
-import {GraphicsPathWinding} from "./GraphicsPathWinding";
-import {GraphicsPathCommand} from "./GraphicsPathCommand";
-import {TriangleCulling} from "./TriangleCulling";
-import {LineScaleMode} from "./LineScaleMode";
-import {BrushType} from "../../webgl/graphics/BrushType";
-import {IFillDataRenderer} from "../../webgl/graphics/IFillDataRenderer";
-import {IStrokeDataRenderer} from "../../webgl/graphics/IStrokeDataRenderer";
-import {StrokeRendererBase} from "../../webgl/graphics/StrokeRendererBase";
-import {SolidStrokeRenderer} from "../../webgl/graphics/SolidStrokeRenderer";
-import {IGraphicsData} from "./IGraphicsData";
-import {BitmapData} from "./BitmapData";
-import {SolidFillRenderer} from "../../webgl/graphics/SolidFillRenderer";
-import {Shader} from "./Shader";
-import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
-import {IDisposable} from "../../mic/IDisposable";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
-import {CommonUtil} from "../../mic/CommonUtil";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ICopyable from "../../mic/ICopyable";
+import DisplayObject from "./DisplayObject";
+import Matrix from "../geom/Matrix";
+import SpreadMethod from "./SpreadMethod";
+import InterpolationMethod from "./InterpolationMethod";
+import GraphicsPathWinding from "./GraphicsPathWinding";
+import GraphicsPathCommand from "./GraphicsPathCommand";
+import TriangleCulling from "./TriangleCulling";
+import LineScaleMode from "./LineScaleMode";
+import BrushType from "../../webgl/graphics/BrushType";
+import IFillDataRenderer from "../../webgl/graphics/IFillDataRenderer";
+import IStrokeDataRenderer from "../../webgl/graphics/IStrokeDataRenderer";
+import StrokeRendererBase from "../../webgl/graphics/StrokeRendererBase";
+import SolidStrokeRenderer from "../../webgl/graphics/SolidStrokeRenderer";
+import IGraphicsData from "./IGraphicsData";
+import BitmapData from "./BitmapData";
+import SolidFillRenderer from "../../webgl/graphics/SolidFillRenderer";
+import Shader from "./Shader";
+import RenderTarget2D from "../../webgl/targets/RenderTarget2D";
+import IDisposable from "../../mic/IDisposable";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
+import CommonUtil from "../../mic/CommonUtil";
 
-export class Graphics implements ICopyable<Graphics>, IDisposable {
+class Graphics implements ICopyable<Graphics>, IDisposable {
 
     constructor(attachTo: DisplayObject, renderer: WebGLRenderer) {
         this._displayObject = attachTo;
@@ -511,3 +511,5 @@ function __checkPathCommands(commands: number[], data: number[]): boolean {
     }
     return true;
 }
+
+export default Graphics;

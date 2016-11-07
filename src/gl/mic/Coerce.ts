@@ -2,7 +2,7 @@
  * Created by MIC on 2016/9/13.
  */
 
-export abstract class Coerce {
+abstract class Coerce {
 
     static toString<T>(value: T): string {
         return "" + value;
@@ -13,3 +13,5 @@ export abstract class Coerce {
     }
 
 }
+
+export default Coerce;

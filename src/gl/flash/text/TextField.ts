@@ -2,33 +2,33 @@
  * Created by MIC on 2015/12/23.
  */
 
-import {InteractiveObject} from "../display/InteractiveObject";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {Stage} from "../display/Stage";
-import {DisplayObjectContainer} from "../display/DisplayObjectContainer";
-import {AntiAliasType} from "./AntiAliasType";
-import {TextFieldAutoSize} from "./TextFieldAutoSize";
-import {TextFormat} from "./TextFormat";
-import {GridFitType} from "./GridFitType";
-import {StyleSheet} from "./StyleSheet";
-import {TextInteractionMode} from "./TextInteractionMode";
-import {TextFieldType} from "./TextFieldType";
-import {Rectangle} from "../geom/Rectangle";
-import {DisplayObject} from "../display/DisplayObject";
-import {TextLineMetrics} from "./TextLineMetrics";
-import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
-import {ShaderID} from "../../webgl/ShaderID";
-import {RenderHelper} from "../../webgl/RenderHelper";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {GLUtil} from "../../mic/glantern/GLUtil";
-import {TimeInfo} from "../../mic/TimeInfo";
-import {VirtualDom} from "../../mic/VirtualDom";
-import {CommonUtil} from "../../mic/CommonUtil";
-import {Vector3D} from "../geom/Vector3D";
-import {Matrix3D} from "../geom/Matrix3D";
+import InteractiveObject from "../display/InteractiveObject";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ShaderManager from "../../webgl/ShaderManager";
+import Stage from "../display/Stage";
+import DisplayObjectContainer from "../display/DisplayObjectContainer";
+import AntiAliasType from "./AntiAliasType";
+import TextFieldAutoSize from "./TextFieldAutoSize";
+import TextFormat from "./TextFormat";
+import GridFitType from "./GridFitType";
+import StyleSheet from "./StyleSheet";
+import TextInteractionMode from "./TextInteractionMode";
+import TextFieldType from "./TextFieldType";
+import Rectangle from "../geom/Rectangle";
+import DisplayObject from "../display/DisplayObject";
+import TextLineMetrics from "./TextLineMetrics";
+import RenderTarget2D from "../../webgl/targets/RenderTarget2D";
+import ShaderID from "../../webgl/ShaderID";
+import RenderHelper from "../../webgl/RenderHelper";
+import NotImplementedError from "../errors/NotImplementedError";
+import GLUtil from "../../mic/glantern/GLUtil";
+import TimeInfo from "../../mic/TimeInfo";
+import VirtualDom from "../../mic/VirtualDom";
+import CommonUtil from "../../mic/CommonUtil";
+import Vector3D from "../geom/Vector3D";
+import Matrix3D from "../geom/Matrix3D";
 
-export class TextField extends InteractiveObject {
+export default class TextField extends InteractiveObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
@@ -347,7 +347,6 @@ export class TextField extends InteractiveObject {
             // Always invert Y axis, unless the target is a stencil.
             var renderTarget = renderer.currentRenderTarget;
             RenderHelper.copyImageContent(renderer, canvasTarget, renderTarget, false, !renderTarget.isStencil, matrix3D, this.alpha, false);
-            console.log("TextField: target is stencil: " + renderTarget.isStencil);
         }
     }
 

@@ -2,7 +2,7 @@
  * Created by MIC on 2016/8/22.
  */
 
-const $g: {
+interface GlobalObject {
     $env: Window | NodeJS.Global,
     $raf: (callback: FrameRequestCallback) => number,
     $caf: (handle: number) => void,
@@ -10,12 +10,14 @@ const $g: {
     $clearTimeout: (handle: NodeJS.Timer | number) => void,
     $openWindow: (url?: string, target?: string, features?: string, replace?: boolean) => Window,
     $assignLocation: (url: string) => void
-} = Object.create(null);
+}
+
+const $g: GlobalObject = Object.create(null);
 $g.$env = <any>(window || self || global || {});
 
 init();
 
-export abstract class VirtualDom {
+abstract class VirtualDom {
 
     static get env(): Window | NodeJS.Global {
         return $g.$env;
@@ -84,6 +86,10 @@ export abstract class VirtualDom {
         return windowExists() ? WebGLRenderingContext : null;
     }
 
+    static get isNodeJS(): boolean {
+        return globalExists();
+    }
+
 }
 
 function windowExists(): boolean {
@@ -134,3 +140,5 @@ function init(): void {
         $g.$openWindow = null;
     }
 }
+
+export default VirtualDom;

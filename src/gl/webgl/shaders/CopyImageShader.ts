@@ -2,16 +2,16 @@
  * Created by MIC on 2015/12/23.
  */
 
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {BufferedShader} from "./BufferedShader";
-import {WebGLDataType} from "../WebGLDataType";
-import {Matrix3D} from "../../flash/geom/Matrix3D";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import BufferedShader from "./BufferedShader";
+import WebGLDataType from "../WebGLDataType";
+import Matrix3D from "../../flash/geom/Matrix3D";
 
-export class CopyImageShader extends BufferedShader {
+export default class CopyImageShader extends BufferedShader {
 
     constructor(manager: ShaderManager) {
         super(manager, CopyImageShader.VERTEX_SOURCE, CopyImageShader.FRAGMENT_SOURCE);
@@ -52,38 +52,38 @@ export class CopyImageShader extends BufferedShader {
         var transformMatrix = new Matrix3D();
         transformMatrix.identity();
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uFlipX";
         u.type = WebGLDataType.UBool;
         u.value = false;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uFlipY";
         u.type = WebGLDataType.UBool;
         u.value = false;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uOriginalSize";
         u.type = WebGLDataType.U2F;
         u.value = [0, 0];
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uFitSize";
         u.type = WebGLDataType.U2F;
         u.value = [0, 0];
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uTransformMatrix";
         u.type = WebGLDataType.UMat4;
         u.value = transformMatrix.toArray();
         u.transpose = false;
         uniforms.set(u.name, u);
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uAlpha";
         u.type = WebGLDataType.U1F;
         u.value = 1;

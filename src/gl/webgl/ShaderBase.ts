@@ -2,19 +2,19 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {AttributeCache} from "./AttributeCache";
-import {UniformCache} from "./UniformCache";
-import {ShaderManager} from "./ShaderManager";
-import {VertexShaders} from "./VertexShaders";
-import {FragmentShaders} from "./FragmentShaders";
-import {IDisposable} from "../mic/IDisposable";
-import {WebGLDataType} from "./WebGLDataType";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
+import AttributeCache from "./AttributeCache";
+import UniformCache from "./UniformCache";
+import ShaderManager from "./ShaderManager";
+import VertexShaders from "./VertexShaders";
+import FragmentShaders from "./FragmentShaders";
+import IDisposable from "../mic/IDisposable";
+import WebGLDataType from "./WebGLDataType";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
 
 const gl = <any>VirtualDom.WebGLRenderingContext;
 
-export class ShaderBase implements IDisposable {
+abstract class ShaderBase implements IDisposable {
 
     constructor(manager: ShaderManager, vertexSource: string, fragmentSource: string,
                 uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>) {
@@ -308,3 +308,5 @@ function createShaderFromSource(glc: WebGLRenderingContext, source: string, type
     }
     return shader;
 }
+
+export default ShaderBase;

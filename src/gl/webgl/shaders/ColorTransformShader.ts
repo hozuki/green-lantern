@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {BufferedShader} from "./BufferedShader";
-import {WebGLDataType} from "../WebGLDataType";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import BufferedShader from "./BufferedShader";
+import WebGLDataType from "../WebGLDataType";
 
-export class ColorTransformShader extends BufferedShader {
+export default class ColorTransformShader extends BufferedShader {
 
     constructor(manager: ShaderManager) {
         super(manager, ColorTransformShader.VERTEX_SOURCE, ColorTransformShader.FRAGMENT_SOURCE);
@@ -39,7 +39,7 @@ export class ColorTransformShader extends BufferedShader {
             0, 0, 0, 1, 0
         ];
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uColorMatrix";
         u.type = WebGLDataType.U1FV;
         u.value = defaultColorMatrix;

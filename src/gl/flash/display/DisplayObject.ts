@@ -2,28 +2,28 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {Transform} from "../geom/Transform";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {Rectangle} from "../geom/Rectangle";
-import {IWebGLElement} from "../../webgl/IWebGLElement";
-import {IBitmapDrawable} from "./IBitmapDrawable";
-import {EventDispatcher} from "../events/EventDispatcher";
-import {BlendMode} from "./BlendMode";
-import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {UniformCache} from "../../webgl/UniformCache";
-import {BitmapFilter} from "../filters/BitmapFilter";
-import {Matrix3D} from "../geom/Matrix3D";
-import {Vector3D} from "../geom/Vector3D";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
-import {TimeInfo} from "../../mic/TimeInfo";
-import {CommonUtil} from "../../mic/CommonUtil";
-import {RenderHelper} from "../../webgl/RenderHelper";
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import Transform from "../geom/Transform";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import Rectangle from "../geom/Rectangle";
+import IWebGLElement from "../../webgl/IWebGLElement";
+import IBitmapDrawable from "./IBitmapDrawable";
+import EventDispatcher from "../events/EventDispatcher";
+import BlendMode from "./BlendMode";
+import RenderTarget2D from "../../webgl/targets/RenderTarget2D";
+import ShaderManager from "../../webgl/ShaderManager";
+import UniformCache from "../../webgl/UniformCache";
+import BitmapFilter from "../filters/BitmapFilter";
+import Matrix3D from "../geom/Matrix3D";
+import Vector3D from "../geom/Vector3D";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
+import TimeInfo from "../../mic/TimeInfo";
+import CommonUtil from "../../mic/CommonUtil";
+import RenderHelper from "../../webgl/RenderHelper";
 
-export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
+abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super();
@@ -466,3 +466,5 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     private _mask: DisplayObject = null;
 
 }
+
+export default DisplayObject;

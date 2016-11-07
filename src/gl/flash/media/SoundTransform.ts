@@ -2,9 +2,9 @@
  * Created by MIC on 2016/9/13.
  */
 
-import {NotImplementedError} from "../errors/NotImplementedError";
+import NotImplementedError from "../errors/NotImplementedError";
 
-export class SoundTransform {
+export default class SoundTransform {
 
     constructor(vol: number = 1, panning: number = 0) {
         this._volume = vol;

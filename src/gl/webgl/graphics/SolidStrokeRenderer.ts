@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {WebGLRenderer} from "../WebGLRenderer";
-import {Graphics} from "../../flash/display/Graphics";
-import {StrokeRendererBase} from "./StrokeRendererBase";
-import {CURVE_ACCURACY, STD_Z} from "./GRAPHICS_CONST";
-import {RenderHelper} from "../RenderHelper";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
+import WebGLRenderer from "../WebGLRenderer";
+import Graphics from "../../flash/display/Graphics";
+import StrokeRendererBase from "./StrokeRendererBase";
+import GraphicsConst from "./GraphicsConst";
+import RenderHelper from "../RenderHelper";
+import NotImplementedError from "../../flash/errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
 
-export class SolidStrokeRenderer extends StrokeRendererBase {
+export default class SolidStrokeRenderer extends StrokeRendererBase {
 
     constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number, lineWidth: number, color: number, alpha: number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
@@ -28,8 +28,8 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
             var fromX = this.currentX, fromY = this.currentY;
             var xa: number, ya: number;
             var j: number;
-            for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                j = i / CURVE_ACCURACY;
+            for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                j = i / GraphicsConst.CurveAccuracy;
                 dt1 = 1 - j;
                 dt2 = dt1 * dt1;
                 dt3 = dt2 * dt1;
@@ -50,8 +50,8 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
             var j: number;
             var fromX = this.currentX, fromY = this.currentY;
             var xa: number, ya: number;
-            for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                j = i / CURVE_ACCURACY;
+            for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                j = i / GraphicsConst.CurveAccuracy;
                 xa = fromX + (cx - fromX) * j;
                 ya = fromY + (cy - fromY) * j;
                 xa = xa + (cx + (x - cx) * j - xa) * j;
@@ -74,8 +74,8 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
             thetaBegin = Math.PI;
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
             for (var k = 0; k < 4; k++) {
-                for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                    thetaNext = thetaBegin - i / CURVE_ACCURACY * halfPi;
+                for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                    thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                     x2 = x + radius * Math.cos(thetaNext);
                     y2 = y + radius * Math.sin(thetaNext);
                     this.lineTo(x2, y2);
@@ -102,8 +102,8 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
             // Brute, huh? Luckily there are 20 segments per PI/2...
             for (var k = 0; k < 4; k++) {
-                for (var i = 1; i <= CURVE_ACCURACY; i++) {
-                    thetaNext = thetaBegin - i / CURVE_ACCURACY * halfPi;
+                for (var i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
+                    thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                     x2 = centerX + width / 2 * Math.cos(thetaNext);
                     y2 = centerY + height / 2 * Math.sin(thetaNext);
                     this.lineTo(x2, y2);
@@ -133,7 +133,7 @@ export class SolidStrokeRenderer extends StrokeRendererBase {
 
     lineTo(x: number, y: number): void {
         if (this._w > 0) {
-            var vertices = this._$getSimLineVertices(this.currentX, this.currentY, x, y, STD_Z, this._w);
+            var vertices = this._$getSimLineVertices(this.currentX, this.currentY, x, y, GraphicsConst.Z0, this._w);
             if (vertices.length > 0) {
                 // Generated 4 vertices, matching with 6 indices (2 triangles)
                 var cur = this.vertices.length / 3;

@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {BufferedShader} from "./BufferedShader";
-import {WebGLDataType} from "../WebGLDataType";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import BufferedShader from "./BufferedShader";
+import WebGLDataType from "../WebGLDataType";
 
-export class BlurXShader extends BufferedShader {
+export default class BlurXShader extends BufferedShader {
 
     constructor(manager: ShaderManager) {
         super(manager, BlurXShader.VERTEX_SOURCE, BlurXShader.FRAGMENT_SOURCE);
@@ -36,7 +36,7 @@ export class BlurXShader extends BufferedShader {
 
         var u: UniformCache;
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uStrength";
         u.type = WebGLDataType.U1F;
         u.value = 5;

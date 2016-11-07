@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Bounce {
+abstract class Bounce {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         return c - Bounce.easeOut(d - t, 0, c, d) + b;
@@ -29,3 +29,5 @@ export abstract class Bounce {
     }
 
 }
+
+export default Bounce;

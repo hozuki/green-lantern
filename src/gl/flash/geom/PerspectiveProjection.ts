@@ -2,12 +2,12 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Matrix3D} from "./Matrix3D";
-import {Point} from "./Point";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
+import Matrix3D from "./Matrix3D";
+import Point from "./Point";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
 
-export class PerspectiveProjection {
+export default class PerspectiveProjection {
 
     constructor() {
         this.projectionCenter = new Point();

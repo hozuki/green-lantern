@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Point} from "./Point";
-import {Vector3D} from "./Vector3D";
-import {ICloneable} from "../../mic/ICloneable";
-import {ICopyable} from "../../mic/ICopyable";
-import {NotImplementedError} from "../errors/NotImplementedError";
+import Point from "./Point";
+import Vector3D from "./Vector3D";
+import ICloneable from "../../mic/ICloneable";
+import ICopyable from "../../mic/ICopyable";
+import NotImplementedError from "../errors/NotImplementedError";
 
-export class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
+export default class Matrix implements ICloneable<Matrix>, ICopyable<Matrix> {
 
     constructor(a: number = 1, b: number = 0, c: number = 1, d: number = 1, tx: number = 0, ty: number = 0) {
         this._data = [a, c, tx, b, d, ty, 0, 0, 1];

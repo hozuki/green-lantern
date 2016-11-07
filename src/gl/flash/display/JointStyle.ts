@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class JointStyle {
+abstract class JointStyle {
 
     static get BEVEL(): string {
         return "bevel";
@@ -17,3 +17,5 @@ export abstract class JointStyle {
     }
 
 }
+
+export default JointStyle;
