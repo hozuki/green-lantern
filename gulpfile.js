@@ -8,7 +8,6 @@ const gulp = require("gulp");
 const ts = require("gulp-typescript");
 const sourcemaps = require("gulp-sourcemaps");
 const uglify = require("gulp-uglify");
-const concat = require("gulp-concat");
 const rename = require("gulp-rename");
 const gutil = require("gulp-util");
 const browserify = require("browserify");

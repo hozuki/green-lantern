@@ -2,8 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-import libtess = require("libtess");
-
+import * as libtess from "libtess";
 import FillRendererBase from "./FillRendererBase";
 import Graphics from "../../flash/display/Graphics";
 import GraphicsConst from "./GraphicsConst";

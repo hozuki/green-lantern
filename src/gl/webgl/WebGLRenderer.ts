@@ -126,7 +126,7 @@ export default class WebGLRenderer implements IDisposable {
 
     /**
      * Switches current $render target to a specified {@link RenderTarget2D}.
-     * @param [v] {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
+     * @param v {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
      * $render target of the {@link WebGLRenderer}. The default value is null.
      */
     set currentRenderTarget(v: RenderTarget2D) {
@@ -243,6 +243,9 @@ export default class WebGLRenderer implements IDisposable {
         this._blendMode = blendMode;
     }
 
+    /**
+     * @returns {String}
+     */
     get blendMode(): string {
         return this._blendMode;
     }

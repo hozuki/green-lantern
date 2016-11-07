@@ -22,6 +22,7 @@ import BlendMode from "./BlendMode";
 import RgbaColor from "../../mic/RgbaColor";
 import EOFError from "../errors/EOFError";
 import VirtualDom from "../../mic/VirtualDom";
+import CommonUtil from "../../mic/CommonUtil";
 
 // TODO: Endian matters.
 // On Windows (x86/x86-64, little endian), the conversion of 32-bit RGBA to 8-bit bytes are correct. When retrieving
@@ -129,7 +130,7 @@ export default class BitmapData implements IBitmapDrawable, IDisposable, IClonea
         realRect.height = MathUtil.clampUpper(realRect.height, sourceBitmapData.height - realRect.y);
         realRect.width = MathUtil.clampUpper(realRect.width, this.width - destPoint.x);
         realRect.height = MathUtil.clampUpper(realRect.height, this.height - destPoint.y);
-        if (alphaBitmapData) {
+        if (CommonUtil.ptr(alphaBitmapData)) {
             if (!alphaPoint) {
                 alphaPoint = new Point();
             }
@@ -139,8 +140,8 @@ export default class BitmapData implements IBitmapDrawable, IDisposable, IClonea
         var thisData = new ImageData(realRect.width, realRect.height);
         var thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
         var thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
-        var alphaData: ImageData = null, alphaArray: Uint8ClampedArray = null;
-        if (alphaBitmapData) {
+        var alphaData: ImageData = null, alphaArray: Uint32Array = null;
+        if (CommonUtil.ptr(alphaBitmapData)) {
             alphaData = alphaBitmapData.__getArea(alphaPoint.x, alphaPoint.y, realRect.width, realRect.height);
             alphaArray = new Uint32Array(alphaData.data.buffer);
         }

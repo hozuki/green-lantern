@@ -21,14 +21,14 @@
   "author": "George Wu <uiharu@buaa.edu.cn>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Hozuki/GLantern/issues"
+    "url": "https://github.com/hozuki/GLantern/issues"
   },
-  "homepage": "https://github.com/Hozuki/GLantern#readme",
-  "dependencies": {
+  "homepage": "https://github.com/hozuki/GLantern#readme",
+  "dependencies": {},
+  "devDependencies": {
     "browserify": "^12.0.1",
     "chalk": "^1.1.3",
     "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.9.2",

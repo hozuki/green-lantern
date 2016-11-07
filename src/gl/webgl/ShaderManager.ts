@@ -38,19 +38,6 @@ export default class ShaderManager implements IDisposable {
         return this._shaders.length;
     }
 
-    loadShader(shaderName: string, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): number {
-        var returnID = -1;
-        try {
-            var SHADER_CLASS: any = require("./shaders/" + shaderName + "Shader");
-            var shaderClassName: string = SHADER_CLASS.SHADER_CLASS_NAME;
-            var shader = new SHADER_CLASS(this, SHADER_CLASS.VERTEX_SOURCE, SHADER_CLASS.FRAGMENT_SOURCE, uniforms, attributes);
-            this._shaders.push(shader);
-            returnID = shader.id;
-        } catch (e) {
-        }
-        return returnID;
-    }
-
     selectShader(id: number): void {
         var shader = this.__getShader(id);
         if (shader !== null) {

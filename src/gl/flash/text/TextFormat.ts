@@ -8,21 +8,13 @@ import EventBase from "../../mic/EventBase";
 import CommonUtil from "../../mic/CommonUtil";
 import VirtualDom from "../../mic/VirtualDom";
 
-let defaultFontName: string;
-if (VirtualDom.isNodeJS) {
-    let os = require("os");
-    defaultFontName = os.type().toLowerCase().indexOf("osx") >= 0 ? "Times" : "Times New Roman";
-} else {
-    defaultFontName = "Times New Roman";
-}
-
 export default class TextFormat extends EventDispatcher {
 
     constructor(font: string = null, size: number = 12, color: number = 0x000000, bold: boolean = false, italic: boolean = false,
                 underline: boolean = false, url: string = null, target: string = null, align: string = TextFormatAlign.LEFT,
                 leftMargin: number = 0, rightMargin: number = 0, indent: number = 0, leading: number = 0) {
         super();
-        this.font = font !== null ? font : defaultFontName;
+        this.font = font !== null ? font : "Times New Roman";
         this.size = size;
         this.color = color;
         this.bold = bold;
