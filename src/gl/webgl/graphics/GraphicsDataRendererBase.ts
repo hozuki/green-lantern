@@ -77,9 +77,15 @@ abstract class GraphicsDataRendererBase implements IGraphicsDataRenderer {
     }
 
     dispose(): void {
-        this._vertexBuffer.dispose();
-        this._colorBuffer.dispose();
-        this._indexBuffer.dispose();
+        if (this.vertexBuffer) {
+            this.vertexBuffer.dispose();
+        }
+        if (this.colorBuffer) {
+            this.colorBuffer.dispose();
+        }
+        if (this.indexBuffer) {
+            this.indexBuffer.dispose();
+        }
         this._vertexBuffer = this._colorBuffer = this._indexBuffer = null;
         this._vertices = this._colors = this._indices = null;
         this._context = null;
