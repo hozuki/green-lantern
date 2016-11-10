@@ -165,7 +165,8 @@ export default class TextField extends InteractiveObject {
     }
 
     getTextFormat(beginIndex: number = -1, endIndex: number = -1): TextFormat {
-        throw new NotImplementedError();
+        // TODO: Fully implement this
+        return this.defaultTextFormat;
     }
 
     isFontCompatible(fontName: string, fontStyle: number): boolean {
@@ -185,7 +186,8 @@ export default class TextField extends InteractiveObject {
     }
 
     setTextFormat(format: TextFormat, beginIndex: number = -1, endIndex: number = -1): void {
-        throw new NotImplementedError();
+        // TODO: Fully implement this
+        this.defaultTextFormat = format;
     }
 
     gridFitType: string = GridFitType.PIXEL;
