@@ -282,7 +282,11 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
             // are vertically mirrored, and they will be transformed in one at last.
             //context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
             if (texture !== null) {
-                context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.isInitialized ? <ImageData>image : null);
+                if (this.isInitialized) {
+                    context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
+                } else {
+                    context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, newWidth, newHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                }
             }
         } else {
             context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
