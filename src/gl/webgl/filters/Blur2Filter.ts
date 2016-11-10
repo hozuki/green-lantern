@@ -15,7 +15,6 @@ export default class Blur2Filter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);
-        this._tempTarget = manager.renderer.createRenderTarget();
     }
 
     get strengthX(): number {
@@ -54,7 +53,8 @@ export default class Blur2Filter extends FilterBase {
         var passCoeff = 3;
 
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
-        var t1 = input, t2 = this._tempTarget;
+        var tempTarget = this.filterManager.requestTempTarget();
+        var t1 = input, t2 = tempTarget;
         t2.clear();
         var t: RenderTarget2D;
         for (var i = 0; i < this.pass * passCoeff; ++i) {
@@ -80,18 +80,15 @@ export default class Blur2Filter extends FilterBase {
             t2 = t;
         }
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
+        this.filterManager.returnTempTarget(tempTarget);
     }
 
     protected _$initialize(): void {
-        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
-        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
-        this._tempTarget = null;
     }
 
-    private _tempTarget: RenderTarget2D = null;
     private _strengthX: number = 5;
     private _strengthY: number = 5;
     private _pass: number = 1;

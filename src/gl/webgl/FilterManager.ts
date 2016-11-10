@@ -7,19 +7,28 @@ import RenderTarget2D from "./targets/RenderTarget2D";
 import IDisposable from "../mic/IDisposable";
 import IBitmapFilter from "./IBitmapFilter";
 import RenderHelper from "./RenderHelper";
+import CommonUtil from "../mic/CommonUtil";
+
+type RenderTargetUsage = {target: RenderTarget2D, isUsing: boolean};
 
 export default class FilterManager implements IDisposable {
 
     constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;
         this._filterGroups = [];
-        this._tempTarget = renderer.createRenderTarget();
+        this._internalTempTarget = renderer.createRenderTarget();
+        this._tempTargetPool = [];
     }
 
     dispose(): void {
-        this._renderer.releaseRenderTarget(this._tempTarget);
+        var pool = this._tempTargetPool;
+        for (var i = 0; i < pool.length; ++i) {
+            this.renderer.releaseRenderTarget(pool[i].target);
+        }
+        this.renderer.releaseRenderTarget(this._internalTempTarget);
         this.clearFilterGroups();
-        this._tempTarget = null;
+        this._tempTargetPool = null;
+        this._internalTempTarget = null;
         this._filterGroups = null;
         this._renderer = null;
     }
@@ -55,6 +64,40 @@ export default class FilterManager implements IDisposable {
         return this._renderer;
     }
 
+    requestTempTarget(): RenderTarget2D {
+        var pool = this._tempTargetPool;
+        for (var i = 0; i < pool.length; ++i) {
+            if (!pool[i].isUsing) {
+                pool[i].isUsing = true;
+                return pool[i].target;
+            }
+        }
+        var target = this.renderer.createRenderTarget();
+        this._tempTargetPool.push({target: target, isUsing: true});
+        return target;
+    }
+
+    returnTempTarget(target: RenderTarget2D): void {
+        var pool = this._tempTargetPool;
+        for (var i = 0; i < pool.length; ++i) {
+            if (pool[i].target === target) {
+                pool[i].isUsing = false;
+                break;
+            }
+        }
+    }
+
+    compactPool(): void {
+        var pool = this._tempTargetPool;
+        for (var i = 0; i < pool.length; ++i) {
+            if (!pool[i].isUsing) {
+                this.renderer.releaseRenderTarget(pool[i].target);
+                CommonUtil.removeAt(pool, i);
+                --i;
+            }
+        }
+    }
+
     /**
      * @param renderer
      * @param input
@@ -70,7 +113,7 @@ export default class FilterManager implements IDisposable {
         if (this.hasFilterGroups) {
             var filterGroup: IBitmapFilter[] = this._filterGroups[this._filterGroups.length - 1];
             var filter: IBitmapFilter;
-            var t1 = input, t2 = this._tempTarget;
+            var t1 = input, t2 = this._internalTempTarget;
             t2.clear();
             var t: RenderTarget2D;
             for (var i = 0; i < filterGroup.length; i++) {
@@ -88,7 +131,8 @@ export default class FilterManager implements IDisposable {
         }
     }
 
-    private _tempTarget: RenderTarget2D = null;
+    private _tempTargetPool: RenderTargetUsage[] = null;
+    private _internalTempTarget: RenderTarget2D = null;
     private _renderer: WebGLRenderer = null;
     private _filterGroups: IBitmapFilter[][] = null;
 

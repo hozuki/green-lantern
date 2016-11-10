@@ -65,10 +65,14 @@ export default class GlowFilter extends FilterBase {
     }
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
-        RenderHelper.copyTargetContent(renderer, input, this._tempOriginalTarget, false, false, true);
-        this._colorTransformFilter.process(renderer, input, this._tempColorTransformedTarget, true);
-        this._blurFilter.process(renderer, this._tempColorTransformedTarget, output, false);
-        RenderHelper.copyTargetContent(renderer, this._tempOriginalTarget, output, this.flipX, this.flipY, false);
+        var tempOriginalTarget = this.filterManager.requestTempTarget();
+        var tempColorTransformedTarget = this.filterManager.requestTempTarget();
+        RenderHelper.copyTargetContent(renderer, input, tempOriginalTarget, false, false, true);
+        this._colorTransformFilter.process(renderer, input, tempColorTransformedTarget, true);
+        this._blurFilter.process(renderer, tempColorTransformedTarget, output, false);
+        RenderHelper.copyTargetContent(renderer, tempOriginalTarget, output, this.flipX, this.flipY, false);
+        this.filterManager.returnTempTarget(tempOriginalTarget);
+        this.filterManager.returnTempTarget(tempColorTransformedTarget);
     }
 
     protected _$initialize(): void {
@@ -80,17 +84,12 @@ export default class GlowFilter extends FilterBase {
         this._blurFilter.strengthY = this.strengthY;
         this._blurFilter.pass = this.pass;
         this._colorTransformFilter.setColorMatrix(this._colorMatrix);
-        this._tempOriginalTarget = this.filterManager.renderer.createRenderTarget();
-        this._tempColorTransformedTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
         this._blurFilter.dispose();
         this._colorTransformFilter.dispose();
         this._blurFilter = this._colorTransformFilter = null;
-        this.filterManager.renderer.releaseRenderTarget(this._tempOriginalTarget);
-        this.filterManager.renderer.releaseRenderTarget(this._tempColorTransformedTarget);
-        this._tempOriginalTarget = this._tempColorTransformedTarget = null;
     }
 
     private _strengthX: number = 5;
@@ -109,7 +108,5 @@ export default class GlowFilter extends FilterBase {
      */
     private _blurFilter: Blur2Filter = null;
     private _colorTransformFilter: ColorTransformFilter = null;
-    private _tempOriginalTarget: RenderTarget2D = null;
-    private _tempColorTransformedTarget: RenderTarget2D = null;
 
 }

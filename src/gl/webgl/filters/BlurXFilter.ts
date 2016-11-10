@@ -40,7 +40,8 @@ export default class BlurXFilter extends FilterBase {
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
         // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
         var passCoeff = 3;
-        var t1 = input, t2 = this._tempTarget;
+        var tempTarget = this.filterManager.requestTempTarget();
+        var t1 = input, t2 = tempTarget;
         t2.clear();
         var t: RenderTarget2D;
         for (var i = 0; i < passCoeff * this.pass; ++i) {
@@ -54,19 +55,16 @@ export default class BlurXFilter extends FilterBase {
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
+        this.filterManager.returnTempTarget(tempTarget);
     }
 
     protected _$initialize(): void {
-        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
-        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
-        this._tempTarget = null;
     }
 
     private _strength: number = 5;
     private _pass: number = 1;
-    private _tempTarget: RenderTarget2D = null;
 
 }
