@@ -462,7 +462,7 @@ export default class BitmapData implements IBitmapDrawable, IDisposable, IClonea
         if (this._cachedRenderer !== null) {
             return;
         }
-        this._cachedRenderer = new WebGLRenderer(this._canvas, WebGLRenderer.DEFAULT_OPTIONS);
+        this._cachedRenderer = new WebGLRenderer(WebGLRenderer.DEFAULT_OPTIONS, this._canvas);
     }
 
     private _canvas: HTMLCanvasElement = null;

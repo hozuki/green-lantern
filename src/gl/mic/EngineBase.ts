@@ -19,11 +19,11 @@ export default class EngineBase extends EventDispatcher {
         this._attachedUpdateFunctions = [];
     }
 
-    initialize(width: number, height: number, options: RendererOptions = WebGLRenderer.DEFAULT_OPTIONS): void {
+    initialize(canvas: HTMLCanvasElement = null, width?: number, height?: number, options: RendererOptions = WebGLRenderer.DEFAULT_OPTIONS): void {
         if (this.isInitialized) {
             return;
         }
-        this._renderer = new WebGLRenderer(width, height, options);
+        this._renderer = new WebGLRenderer(options, canvas, width, height);
         this._stage = new Stage(this._renderer);
         this._loopFunction = this.__mainLoop.bind(this);
         this._isInitialized = true;

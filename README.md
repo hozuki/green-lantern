@@ -72,7 +72,8 @@ to inject the "packages" to the global scope.
 // Check if GLantern is supported
 if (GLantern.isSupported()) {
     var lantern = new GLantern.EngineBase();
-    lantern.initialize(682, 438);
+    var canvas = document.createElement("canvas");
+    lantern.initialize(canvas, 682, 438);
     document.body.appendChild(lantern.view);
     window.addEventListener("unload", function () {
         lantern.dispose();

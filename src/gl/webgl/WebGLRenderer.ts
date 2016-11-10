@@ -10,7 +10,6 @@ import RenderTarget2D from "./targets/RenderTarget2D";
 import WebGLUtils from "./WebGLUtils";
 import IDisposable from "../mic/IDisposable";
 import BlendMode from "../flash/display/BlendMode";
-import ArgumentError from "../flash/errors/ArgumentError";
 import VirtualDom from "../mic/VirtualDom";
 import CommonUtil from "../mic/CommonUtil";
 import FrameImage from "./FrameImage";
@@ -24,26 +23,14 @@ const gl = VirtualDom.WebGLRenderingContext;
 export default class WebGLRenderer implements IDisposable {
 
     /**
-     * Creates a new {@link WebGLRenderer} based on specified {@link HTMLCanvasElement}.
-     * @param canvas {HTMLCanvasElement}
-     * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
-     */
-    constructor(canvas: HTMLCanvasElement, options: RendererOptions);
-    /**
      * Creates a new {@link WebGLRenderer}.
+     * @param canvas {HTMLCanvasElement} If canvas is not null, the new {@link WebGLRenderer} will use it as target.
      * @param width {Number} The width for presentation of the $renderer.
      * @param height {Number} The height for presentation of the $renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
      */
-    constructor(width: number, height: number, options: RendererOptions);
-    constructor(p1: any, p2: any, p3?: any) {
-        if (typeof p1 === "number") {
-            this.__initialize(p3, null, p1, p2);
-        } else if (p1 instanceof HTMLCanvasElement) {
-            this.__initialize(p2, p1);
-        } else {
-            throw new ArgumentError("Invalid constructor parameters.");
-        }
+    constructor(options: RendererOptions, canvas: HTMLCanvasElement = null, width?: number, height?: number) {
+        this.__initialize(options, canvas, width, height);
     }
 
     /**
@@ -269,7 +256,7 @@ export default class WebGLRenderer implements IDisposable {
      * @param [height] {Number} The height, in pixels.
      * @private
      */
-    private __initialize(options: RendererOptions, canvas: HTMLCanvasElement = null, width: number = 400, height: number = 300) {
+    private __initialize(options: RendererOptions, canvas: HTMLCanvasElement = null, width?: number, height?: number) {
         if (this._isInitialized) {
             return;
         }
@@ -279,7 +266,11 @@ export default class WebGLRenderer implements IDisposable {
         if (!canvas) {
             canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
             canvas.className = "glantern-view";
+        }
+        if (!CommonUtil.isUndefined(width)) {
             canvas.width = width;
+        }
+        if (!CommonUtil.isUndefined(height)) {
             canvas.height = height;
         }
 
@@ -307,7 +298,6 @@ export default class WebGLRenderer implements IDisposable {
         this._filterManager = new FilterManager(this);
 
         this.currentRenderTarget = null;
-        // this.currentTarget = this.currentRenderTarget;
 
         this.__initializeTessellator();
     }

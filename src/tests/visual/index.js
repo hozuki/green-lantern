@@ -9,7 +9,9 @@ var lantern = null;
 (function initGLantern() {
     if (GLantern.isSupported()) {
         lantern = new GLantern.EngineBase();
-        lantern.initialize(682, 438);
+        var canvas = document.createElement("canvas");
+        canvas.className = "glantern-view";
+        lantern.initialize(canvas, 682, 438);
         (function (selector) {
             var elem = document.querySelector(selector);
             elem.appendChild(lantern.view);
