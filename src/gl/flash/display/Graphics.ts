@@ -390,8 +390,25 @@ class Graphics implements ICopyable<Graphics>, IDisposable {
     }
 
     dispose(): void {
-        this.clear();
-        this._strokeRenderers.pop();
+        var i: number;
+        var strokeRenderers = this._strokeRenderers;
+        if (strokeRenderers !== null) {
+            for (i = 0; i < strokeRenderers.length; ++i) {
+                strokeRenderers[i].dispose();
+            }
+        }
+        var fillRenderers = this._fillRenderers;
+        if (fillRenderers !== null) {
+            for (i = 0; i < fillRenderers.length; ++i) {
+                fillRenderers[i].dispose();
+            }
+        }
+        while (strokeRenderers.length > 0) {
+            strokeRenderers.pop();
+        }
+        while (fillRenderers.length > 0) {
+            fillRenderers.pop();
+        }
         this._currentStrokeRenderer.dispose();
         this._currentStrokeRenderer = null;
         this._bufferTarget.dispose();

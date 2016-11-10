@@ -119,6 +119,10 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
         this._isStencil = v;
     }
 
+    get isInitialized(): boolean {
+        return this._isInitialized;
+    }
+
     /**
      * Activates the {@link RenderTarget2D}, and all the rendering after the activation will be done on this target.
      */
@@ -231,6 +235,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
         context.bindRenderbuffer(gl.RENDERBUFFER, null);
         context.bindTexture(gl.TEXTURE_2D, null);
         context.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this._isInitialized = true;
     }
 
     /**
@@ -276,12 +281,12 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
             // So there is no need to flip the images here - all the contents in child RenderTarget2Ds
             // are vertically mirrored, and they will be transformed in one at last.
             //context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-            if (texture !== null) {
+            if (texture !== null && this.isInitialized) {
                 context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
             }
         } else {
             context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
-            if (texture !== null) {
+            if (texture !== null && this.isInitialized) {
                 context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, newWidth, newHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             }
         }
@@ -302,6 +307,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
     private _fitHeight: number = 0;
     private _image: FrameImage = null;
     private _isStencil: boolean = false;
+    private _isInitialized: boolean = false;
 
 }
 

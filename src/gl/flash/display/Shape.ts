@@ -19,9 +19,9 @@ export default class Shape extends DisplayObject {
     }
 
     dispose(): void {
-        super.dispose();
         this.graphics.dispose();
         this._graphics = null;
+        super.dispose();
     }
 
     get graphics(): Graphics {
