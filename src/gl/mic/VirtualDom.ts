@@ -108,8 +108,8 @@ function init(): void {
         return;
     }
     // We have a preference for the more accurate Node.js timers.
-    $g.$setTimeout = ge ? global.setTimeout : (we ? window.setTimeout : null);
-    $g.$clearTimeout = ge ? global.clearTimeout : (we ? window.clearTimeout : null);
+    $g.$setTimeout = ge ? global.setTimeout.bind(global) : (we ? window.setTimeout.bind(window) : null);
+    $g.$clearTimeout = ge ? global.clearTimeout.bind(global) : (we ? window.clearTimeout.bind(window) : null);
     if (we) {
         const raf = "RequestAnimationFrame",
             caf = "CancelAnimationFrame",
@@ -132,8 +132,8 @@ function init(): void {
         if ($g.$caf) {
             $g.$caf = $g.$caf.bind($g.$env);
         }
-        $g.$assignLocation = window.location.assign;
-        $g.$openWindow = window.open;
+        $g.$assignLocation = window.location.assign.bind(window.location);
+        $g.$openWindow = window.open.bind(window);
     } else {
         $g.$raf = $g.$caf = null;
         $g.$assignLocation = null;
