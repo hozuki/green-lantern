@@ -2,7 +2,7 @@
  * Created by MIC on 2016/7/16.
  */
 
-import {Rectangle} from "../../../../gl/flash/geom/Rectangle";
+import Rectangle from "../../../../gl/flash/geom/Rectangle";
 import Assert from "../../Assert";
 import GLTestHelper from "../../GLTestHelper";
 

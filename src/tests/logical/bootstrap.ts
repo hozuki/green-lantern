@@ -2,11 +2,11 @@
  * Created by MIC on 2016/7/16.
  */
 
+import * as chalk from "chalk";
 import * as tests from "./index";
 import GLTestHelper from "./GLTestHelper";
-import {TestEntry} from "./TestEntry";
+import TestEntry from "./TestEntry";
 import TestRunner from "./TestRunner";
-import * as chalk from "chalk";
 
 runTests(tests);
 
