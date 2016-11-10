@@ -3,7 +3,6 @@
  */
 
 import IDisposable from "../../mic/IDisposable";
-import CommonUtil from "../../mic/CommonUtil";
 
 abstract class EventDispatcher implements IDisposable {
 
@@ -26,11 +25,7 @@ abstract class EventDispatcher implements IDisposable {
         if (listeners.has(event.type) && listeners.get(event.type) !== null) {
             var arr = listeners.get(event.type);
             for (var i = 0; i < arr.length; ++i) {
-                try {
-                    arr[i](data);
-                } catch (ex) {
-                    CommonUtil.trace(ex.toString(), "dispatchEvent: error");
-                }
+                arr[i](data);
             }
             return true;
         } else {
