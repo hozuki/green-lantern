@@ -289,6 +289,7 @@ abstract class CommonUtil {
         } else {
             console.info(message, extra);
         }
+        console.trace();
     }
 
     static padLeft(str: string, targetLength: number, padWith: string): string {
