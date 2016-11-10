@@ -178,6 +178,7 @@ abstract class CommonUtil {
      * @param sourceObject {*} The object to be cloned.
      * @returns {*} The copy of original object.
      */
+    static deepClone<T>(sourceObject: T): T;
     static deepClone(sourceObject: boolean): boolean;
     static deepClone(sourceObject: string): string;
     static deepClone(sourceObject: number): number;
