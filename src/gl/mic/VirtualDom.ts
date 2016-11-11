@@ -90,6 +90,18 @@ abstract class VirtualDom {
         return globalExists();
     }
 
+    static appendChildToBody(element: HTMLElement): void {
+        if ($g.$env === window) {
+            window.document.body.appendChild(element);
+        }
+    }
+
+    static removeChildFromBody(element: HTMLElement): void {
+        if ($g.$env === window) {
+            window.document.body.removeChild(element);
+        }
+    }
+
 }
 
 function windowExists(): boolean {
