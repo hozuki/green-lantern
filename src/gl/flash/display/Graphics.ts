@@ -25,6 +25,7 @@ import IDisposable from "../../mic/IDisposable";
 import NotImplementedError from "../errors/NotImplementedError";
 import MathUtil from "../../mic/MathUtil";
 import CommonUtil from "../../mic/CommonUtil";
+import RenderHelper from "../../webgl/RenderHelper";
 
 class Graphics implements ICopyable<Graphics>, IDisposable {
 
@@ -368,17 +369,25 @@ class Graphics implements ICopyable<Graphics>, IDisposable {
         // is cached so that rendering performance is improved but transforms and alpha changes
         // are not reflected. To fix this behavior, consider extending the replicate shader to
         // support state changes.
-        if (true || this._shouldUpdateRenderTarget) {
-            this._bufferTarget.clear();
-            for (let i = 0; i < strokeRenderers.length; ++i) {
-                if (j < fillRenderers.length && i === fillRenderers[j].beginIndex) {
-                    fillRenderers[j].render(renderer);
-                    j++;
-                }
-                strokeRenderers[i].render(renderer);
+        // Also, since current WebGL version (1.0) doesn't support antialiasing of Framebuffer, to achieve antialiased
+        // render results we must directly draw the content to the screen.
+
+        // const bufferTarget = this._bufferTarget, originalTarget = renderer.currentRenderTarget;
+        // if (false && !this._shouldUpdateRenderTarget) {
+        //     RenderHelper.copyTargetContent(renderer, bufferTarget, originalTarget, false, !originalTarget.isStencil, false);
+        //     return;
+        // }
+        //renderer.currentRenderTarget = bufferTarget;
+        for (let i = 0; i < strokeRenderers.length; ++i) {
+            if (j < fillRenderers.length && i === fillRenderers[j].beginIndex) {
+                fillRenderers[j].render(renderer);
+                j++;
             }
-            this._shouldUpdateRenderTarget = false;
+            strokeRenderers[i].render(renderer);
         }
+        // RenderHelper.copyTargetContent(renderer, bufferTarget, originalTarget, false, !originalTarget.isStencil, false);
+        // renderer.currentRenderTarget = originalTarget;
+        this._shouldUpdateRenderTarget = false;
     }
 
     dispose(): void {
@@ -414,6 +423,10 @@ class Graphics implements ICopyable<Graphics>, IDisposable {
 
     set $isFilling(v: boolean) {
         this._isFilling = v;
+    }
+
+    $requestRedraw(): void {
+        this._isDirty = true;
     }
 
     private __newStroke(): StrokeRendererBase {

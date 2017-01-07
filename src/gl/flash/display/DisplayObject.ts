@@ -38,7 +38,12 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set alpha(v: number) {
-        this._alpha = MathUtil.clamp(v, 0, 1);
+        const alpha = MathUtil.clamp(v, 0, 1);
+        const b = alpha !== this._alpha;
+        this._alpha = alpha;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get blendMode(): string {
@@ -46,7 +51,11 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set blendMode(v: string) {
+        const b = v !== this._blendMode;
         this._blendMode = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get cacheAsBitmap(): boolean {
@@ -76,7 +85,11 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set enabled(v: boolean) {
+        const b = v !== this.enabled;
         this._enabled = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get filters(): BitmapFilter[] {
@@ -153,7 +166,11 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         while (v > 180) {
             v -= 360;
         }
+        const b = v !== this._rotation;
         this._rotation = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationX(): number {
@@ -167,7 +184,11 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         while (v > 180) {
             v -= 360;
         }
+        const b = v != this._rotationX;
         this._rotationX = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationY(): number {
@@ -181,7 +202,11 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         while (v > 180) {
             v -= 360;
         }
+        const b = v !== this._rotationY;
         this._rotationY = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationZ(): number {
@@ -195,13 +220,19 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         while (v > 180) {
             v -= 360;
         }
+        const b = v != this._rotationZ;
         this._rotationZ = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get stage(): Stage {
         return this._stage;
     }
 
+    // In current version there is still no way to inform a Transform object change. So setting values in 'transform'
+    // property does not suggest to redraw.
     get transform(): Transform {
         return this._transform;
     }
@@ -324,6 +355,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         matrix3D.prependRotation(this.rotationZ, Vector3D.Z_AXIS);
         this.transform.matrix3D.copyFrom(matrix3D);
         this._transformArray = matrix3D.toArray();
+        this._isRedrawSuggested = true;
     }
 
     protected abstract _$update(timeInfo: TimeInfo): void;
@@ -380,6 +412,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         } else if (hasMask) {
             RenderHelper.copyTargetContent(renderer, this.$bufferTarget, renderer.screenRenderTarget, false, true, false);
         }
+        this._isRedrawSuggested = false;
     }
 
     protected _$shouldProcessMasking(): boolean {
@@ -431,6 +464,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         } else {
             this.__releaseBufferTarget();
         }
+        this._isRedrawSuggested = true;
     }
 
     protected _parent: DisplayObjectContainer = null;
@@ -439,6 +473,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     protected _width: number = 0;
     protected _childIndex: number = -1;
     protected _isTransformDirty: boolean = true;
+    protected _isRedrawSuggested = true;
     private _isRoot: boolean = false;
     private _alpha: number = 1;
     private _filters: BitmapFilter[] = null;

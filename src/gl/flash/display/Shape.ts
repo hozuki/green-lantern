@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/20.
  */
-
 import DisplayObject from "./DisplayObject";
 import Stage from "./Stage";
 import DisplayObjectContainer from "./DisplayObjectContainer";
@@ -29,6 +28,9 @@ export default class Shape extends DisplayObject {
     }
 
     protected _$update(timeInfo: TimeInfo): void {
+        if (this._isRedrawSuggested) {
+            this.graphics.$requestRedraw();
+        }
         this.graphics.$update();
     }
 
