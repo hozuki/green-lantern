@@ -198,7 +198,7 @@ abstract class GraphicsDataRendererBase implements IGraphicsDataRenderer {
         this._vertices = [];
         this._colors = [];
         this._indices = [];
-        var context = this.context;
+        const context = this.context;
         this._vertexBuffer = PackedArrayBuffer.create(context, this._vertices, gl.FLOAT, gl.ARRAY_BUFFER);
         this._colorBuffer = PackedArrayBuffer.create(context, this._colors, gl.FLOAT, gl.ARRAY_BUFFER);
         this._indexBuffer = PackedArrayBuffer.create(context, this._indices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);

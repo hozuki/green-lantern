@@ -48,7 +48,7 @@ abstract class MathUtil {
      * @returns {Boolean} True if the number is a power of 2, and false otherwise.
      */
     static isPowerOfTwo(positiveNumber: number): boolean {
-        var num = positiveNumber | 0;
+        const num = positiveNumber | 0;
         if (num != positiveNumber || MathUtil.isNaN(num) || !isFinite(num)) {
             return false;
         } else {

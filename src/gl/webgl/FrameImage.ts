@@ -2,6 +2,6 @@
  * Created by MIC on 2016/10/29.
  */
 
-type FrameImage = ImageData|HTMLCanvasElement|HTMLImageElement|HTMLVideoElement;
+type FrameImage = HTMLCanvasElement|HTMLImageElement|HTMLVideoElement|ImageData;
 
 export default FrameImage;

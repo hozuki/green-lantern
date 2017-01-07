@@ -60,7 +60,7 @@ export default class BlurFilter extends FilterBase {
     }
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
-        var tempTarget = this.filterManager.requestTempTarget();
+        const tempTarget = this.filterManager.requestTempTarget();
         this._blurXFilter.process(renderer, input, tempTarget, true);
         this._blurYFilter.process(renderer, tempTarget, output, clearOutput);
         this.filterManager.returnTempTarget(tempTarget);

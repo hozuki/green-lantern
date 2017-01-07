@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
 import UniformCache from "../UniformCache";
 import AttributeCache from "../AttributeCache";
 import ShaderManager from "../ShaderManager";
@@ -31,8 +30,8 @@ export default class ColorTransformShader extends BufferedShader {
     protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u: UniformCache;
-        var defaultColorMatrix = [
+        let u: UniformCache;
+        const defaultColorMatrix: number[] = [
             1, 0, 0, 0, 0,
             0, 1, 0, 0, 0,
             0, 0, 1, 0, 0,

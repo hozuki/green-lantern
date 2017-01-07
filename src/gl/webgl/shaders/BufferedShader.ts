@@ -33,10 +33,10 @@ abstract class BufferedShader extends ShaderBase {
     protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u: UniformCache;
-        var projectionMatrix = new Matrix3D();
-        var w = manager.renderer.view.width;
-        var h = manager.renderer.view.height;
+        let u: UniformCache;
+        const projectionMatrix = new Matrix3D();
+        const w = manager.renderer.view.width;
+        const h = manager.renderer.view.height;
         projectionMatrix.setOrthographicProjection(0, w, h, 0, -1000, 1000);
 
         u = Object.create(null);

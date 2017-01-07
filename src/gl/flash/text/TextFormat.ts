@@ -1,12 +1,9 @@
 /**
  * Created by MIC on 2015/12/23.
  */
-
 import TextFormatAlign from "./TextFormatAlign";
 import EventDispatcher from "../events/EventDispatcher";
 import EventBase from "../../mic/EventBase";
-import CommonUtil from "../../mic/CommonUtil";
-import VirtualDom from "../../mic/VirtualDom";
 
 export default class TextFormat extends EventDispatcher {
 
@@ -38,7 +35,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set align(v: string) {
-        var b = this._align !== v;
+        const b = this._align !== v;
         if (b) {
             this._align = v;
             this.__raiseChange();
@@ -50,7 +47,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set blockIndent(v: number) {
-        var b = this._blockIndent !== v;
+        const b = this._blockIndent !== v;
         if (b) {
             this._blockIndent = v;
             this.__raiseChange();
@@ -62,7 +59,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set bold(v: boolean) {
-        var b = this._bold !== v;
+        const b = this._bold !== v;
         if (b) {
             this._bold = v;
             this.__raiseChange();
@@ -74,7 +71,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set bullet(v: boolean) {
-        var b = this._bullet !== v;
+        const b = this._bullet !== v;
         if (b) {
             this._bullet = v;
             this.__raiseChange();
@@ -86,7 +83,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set color(v: number) {
-        var b = this._color !== v;
+        const b = this._color !== v;
         if (b) {
             this._color = v;
             this.__raiseChange();
@@ -98,7 +95,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set font(v: string) {
-        var b = this._font !== v;
+        const b = this._font !== v;
         if (b) {
             this._font = v;
             this.__raiseChange();
@@ -110,7 +107,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set indent(v: number) {
-        var b = this._indent !== v;
+        const b = this._indent !== v;
         if (b) {
             this._indent = v;
             this.__raiseChange();
@@ -122,7 +119,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set italic(v: boolean) {
-        var b = this._italic !== v;
+        const b = this._italic !== v;
         if (b) {
             this._italic = v;
             this.__raiseChange();
@@ -134,7 +131,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set kerning(v: boolean) {
-        var b = this._kerning !== v;
+        const b = this._kerning !== v;
         if (b) {
             this._kerning = v;
             this.__raiseChange();
@@ -146,7 +143,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set leading(v: number) {
-        var b = this._leading !== v;
+        const b = this._leading !== v;
         if (b) {
             this._leading = v;
             this.__raiseChange();
@@ -158,7 +155,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set leftMargin(v: number) {
-        var b = this._leftMargin !== v;
+        const b = this._leftMargin !== v;
         if (b) {
             this._leftMargin = v;
             this.__raiseChange();
@@ -170,7 +167,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set letterSpacing(v: number) {
-        var b = this._letterSpacing !== v;
+        const b = this._letterSpacing !== v;
         if (b) {
             this._letterSpacing = v;
             this.__raiseChange();
@@ -182,7 +179,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set rightMargin(v: number) {
-        var b = this._rightMargin !== v;
+        const b = this._rightMargin !== v;
         if (b) {
             this._rightMargin = v;
             this.__raiseChange();
@@ -194,7 +191,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set size(v: number) {
-        var b = this._size !== v;
+        const b = this._size !== v;
         if (b) {
             this._size = v;
             this.__raiseChange();
@@ -206,15 +203,15 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set tabStops(v: number[]) {
-        if (!CommonUtil.ptr(v)) {
+        if (!v) {
             v = [];
         }
-        var b = false;
+        let b = false;
         if (!b) {
             b = this._tabStops.length !== v.length;
         }
         if (!b) {
-            for (var i = 0; i < v.length; ++i) {
+            for (let i = 0; i < v.length; ++i) {
                 if (this._tabStops[i] !== v[i]) {
                     b = true;
                     break;
@@ -232,7 +229,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set target(v: string) {
-        var b = this._target !== v;
+        const b = this._target !== v;
         if (b) {
             this._target = v;
             this.__raiseChange();
@@ -244,7 +241,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set underline(v: boolean) {
-        var b = this._underline !== v;
+        const b = this._underline !== v;
         if (b) {
             this._underline = v;
             this.__raiseChange();
@@ -256,7 +253,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     set url(v: string) {
-        var b = this._url !== v;
+        const b = this._url !== v;
         if (b) {
             this._url = v;
             this.__raiseChange();
@@ -264,7 +261,7 @@ export default class TextFormat extends EventDispatcher {
     }
 
     private __raiseChange(): void {
-        var ev = EventBase.create(TextFormat.TEXT_FORMAT_CHANGE);
+        const ev = EventBase.create(TextFormat.TEXT_FORMAT_CHANGE);
         this.dispatchEvent(ev);
     }
 

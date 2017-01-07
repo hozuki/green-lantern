@@ -21,9 +21,9 @@ export default class ColorTransformFilter extends FilterBase {
     }
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
-        var tempTarget = this.filterManager.requestTempTarget();
+        const tempTarget = this.filterManager.requestTempTarget();
         RenderHelper.renderBuffered(renderer, input, tempTarget, ShaderID.COLOR_TRANSFORM, true, (renderer: WebGLRenderer): void => {
-            var shader = <ColorTransformShader>renderer.shaderManager.currentShader;
+            const shader = <ColorTransformShader>renderer.shaderManager.currentShader;
             shader.setColorMatrix(this._colorMatrix);
         });
         RenderHelper.copyTargetContent(renderer, tempTarget, output, this.flipX, this.flipY, clearOutput);

@@ -49,9 +49,9 @@ export default class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3
     }
 
     static angleBetween(a: Vector3D, b: Vector3D): number {
-        var mulNom = a.x * b.x + a.y * b.y + a.z * b.z;
-        var den = a.length * b.length;
-        var val = Math.sqrt(mulNom * mulNom / den);
+        const mulNom = a.x * b.x + a.y * b.y + a.z * b.z;
+        const den = a.length * b.length;
+        const val = Math.sqrt(mulNom * mulNom / den);
         return Math.acos(val);
     }
 
@@ -67,9 +67,9 @@ export default class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3
     }
 
     crossProduct(a: Vector3D): Vector3D {
-        var i = this.y * a.z - this.z * a.y;
-        var j = this.z * a.x - this.x * a.z;
-        var k = this.x * a.y - this.y * a.x;
+        const i = this.y * a.z - this.z * a.y;
+        const j = this.z * a.x - this.x * a.z;
+        const k = this.x * a.y - this.y * a.x;
         return new Vector3D(i, j, k, this.w);
     }
 
@@ -112,7 +112,7 @@ export default class Vector3D implements ICloneable<Vector3D>, ICopyable<Vector3
     }
 
     normalize(): number {
-        var len = this.length;
+        const len = this.length;
         if (len > 0) {
             this.x /= len;
             this.y /= len;

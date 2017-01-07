@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
 import AttributeCache from "./AttributeCache";
 import UniformCache from "./UniformCache";
 import ShaderManager from "./ShaderManager";
@@ -10,7 +9,6 @@ import FragmentShaders from "./FragmentShaders";
 import IDisposable from "../mic/IDisposable";
 import WebGLDataType from "./WebGLDataType";
 import VirtualDom from "../mic/VirtualDom";
-import CommonUtil from "../mic/CommonUtil";
 
 const gl = <any>VirtualDom.WebGLRenderingContext;
 
@@ -24,7 +22,7 @@ abstract class ShaderBase implements IDisposable {
         this._id = manager.getNextAvailableID();
         this.__initialize(manager.context, vertexSource, fragmentSource);
         this.select();
-        if (CommonUtil.ptr(uniforms) && CommonUtil.ptr(attributes)) {
+        if (uniforms && attributes) {
             this._uniforms = uniforms;
             this._attributes = attributes;
         } else {
@@ -42,7 +40,7 @@ abstract class ShaderBase implements IDisposable {
     }
 
     dispose(): void {
-        var glc = this._glc;
+        const glc = this._glc;
         glc.deleteProgram(this._program);
         glc.deleteShader(this._vertexShader);
         glc.deleteShader(this._fragmentShader);
@@ -63,7 +61,7 @@ abstract class ShaderBase implements IDisposable {
     }
 
     changeValue(name: string, callback: (uniform: UniformCache) => void): void {
-        var uniform = this._uniforms.get(name);
+        const uniform = this._uniforms.get(name);
         if (uniform !== (void 0) && uniform !== null) {
             callback(uniform);
         }
@@ -132,25 +130,17 @@ abstract class ShaderBase implements IDisposable {
         glc.attachShader(this._program, this._vertexShader);
         glc.attachShader(this._program, this._fragmentShader);
         glc.linkProgram(this._program);
-        var isLinked = glc.getProgramParameter(this._program, gl.LINK_STATUS);
+        const isLinked = glc.getProgramParameter(this._program, gl.LINK_STATUS);
         if (!isLinked) {
-            var errorLog = glc.getProgramInfoLog(this._program);
+            const errorLog = glc.getProgramInfoLog(this._program);
             return error("Failed to link program: ", errorLog);
         }
     }
 
     private __syncUniform(uniform: UniformCache): void {
-        var location = uniform.location;
-        var value = uniform.value;
-        var glc = this._glc;
-        /**
-         * @type {Number}
-         */
-        var i = 0;
-        /**
-         * @type {Number}
-         */
-        var il = 0;
+        const location = uniform.location;
+        const value = uniform.value;
+        const glc = this._glc;
         switch (uniform.type) {
             case WebGLDataType.UBool:
                 glc.uniform1i(location, value ? 1 : 0);
@@ -222,7 +212,7 @@ abstract class ShaderBase implements IDisposable {
                 if (!uniform.array) {
                     uniform.array = new Float32Array(2 * value.length);
                 }
-                for (i = 0, il = value.length; i < il; i++) {
+                for (let i = 0, il = value.length; i < il; i++) {
                     uniform.array[i * 2] = value[i].x;
                     uniform.array[i * 2 + 1] = value[i].y;
                 }
@@ -232,7 +222,7 @@ abstract class ShaderBase implements IDisposable {
                 if (!uniform.array) {
                     uniform.array = new Float32Array(3 * value.length);
                 }
-                for (i = 0, il = value.length; i < il; i++) {
+                for (let i = 0, il = value.length; i < il; i++) {
                     uniform.array[i * 3] = value[i].x;
                     uniform.array[i * 3 + 1] = value[i].y;
                     uniform.array[i * 3 + 2] = value[i].z;
@@ -243,7 +233,7 @@ abstract class ShaderBase implements IDisposable {
                 if (!uniform.array) {
                     uniform.array = new Float32Array(4 * value.length);
                 }
-                for (i = 0, il = value.length; i < il; i++) {
+                for (let i = 0, il = value.length; i < il; i++) {
                     uniform.array[i * 4] = value[i].x;
                     uniform.array[i * 4 + 1] = value[i].y;
                     uniform.array[i * 4 + 2] = value[i].z;
@@ -263,16 +253,16 @@ abstract class ShaderBase implements IDisposable {
     }
 
     private __cacheUniformLocations(): void {
-        var glc = this._glc;
-        var program = this._program;
+        const glc = this._glc;
+        const program = this._program;
         this._uniforms.forEach((v, k): void => {
             v.location = glc.getUniformLocation(program, k);
         });
     }
 
     private __cacheAttributeLocations(): void {
-        var glc = this._glc;
-        var program = this._program;
+        const glc = this._glc;
+        const program = this._program;
         this._attributes.forEach((v, k): void => {
             v.location = glc.getAttribLocation(program, k);
         });
@@ -292,16 +282,16 @@ abstract class ShaderBase implements IDisposable {
 }
 
 function createShaderFromSource(glc: WebGLRenderingContext, source: string, type: number): WebGLShader {
-    var shader = glc.createShader(type);
+    const shader = glc.createShader(type);
     if (shader === null) {
         console.warn("Cannot create shader.");
         return null;
     }
     glc.shaderSource(shader, source);
     glc.compileShader(shader);
-    var isCompiled = glc.getShaderParameter(shader, gl.COMPILE_STATUS);
+    const isCompiled = glc.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!isCompiled) {
-        var error = glc.getShaderInfoLog(shader);
+        const error = glc.getShaderInfoLog(shader);
         console.warn("Failed to load shader: " + error, "Source:\n" + source);
         glc.deleteShader(shader);
         return null;

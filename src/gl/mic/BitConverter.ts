@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2016/6/11.
  */
-
 import MathUtil from "./MathUtil";
 
 const arrayBuffer = new ArrayBuffer(8);
@@ -16,25 +15,25 @@ const views = {
     float64View: new Float64Array(arrayBuffer)
 };
 
-var isSystemLittleEndian: boolean;
-(function (): void {
-    var buffer = new ArrayBuffer(2);
-    var dataView = new DataView(buffer);
+let isSystemLittleEndian: boolean;
+((): void => {
+    const buffer = new ArrayBuffer(2);
+    const dataView = new DataView(buffer);
     dataView.setInt16(0, 256, true);
-    var newBuffer = new Int16Array(buffer);
+    const newBuffer = new Int16Array(buffer);
     isSystemLittleEndian = newBuffer[0] === 256;
 })();
 
 function getBufferArray(length: number): number[] {
-    var array = new Array<number>(length);
-    for (var i = 0; i < length; ++i) {
+    const array = new Array<number>(length);
+    for (let i = 0; i < length; ++i) {
         array[i] = views.uint8View[i];
     }
     return array;
 }
 
 function setBufferArray(data: number[], dataStartIndex: number, length: number): void {
-    for (var i = dataStartIndex; i < dataStartIndex + length; ++i) {
+    for (let i = dataStartIndex; i < dataStartIndex + length; ++i) {
         views.uint8View[i - dataStartIndex] = data[i];
     }
 }
@@ -86,9 +85,9 @@ abstract class BitConverter {
     }
 
     static int64ToBytes(value: number): number[] {
-        var byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
-        for (var index = byteArray.length - 1; index >= 0; index--) {
-            var byte = value & 0xff;
+        const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
+        for (let index = byteArray.length - 1; index >= 0; index--) {
+            const byte = value & 0xff;
             byteArray [index] = byte;
             value = (value - byte) / 256;
         }
@@ -100,8 +99,8 @@ abstract class BitConverter {
     }
 
     static bytesToInt64(bytes: number[], startIndex: number = 0): number {
-        var value = BitConverter.bytesToUint64(bytes, startIndex);
-        var isNegative = BitConverter.__isComplement(bytes, startIndex, 8);
+        let value = BitConverter.bytesToUint64(bytes, startIndex);
+        const isNegative = BitConverter.__isComplement(bytes, startIndex, 8);
         if (isNegative) {
             value = MathUtil.complementToNegative(value);
         }
@@ -109,8 +108,8 @@ abstract class BitConverter {
     }
 
     static bytesToUint64(bytes: number[], startIndex: number = 0): number {
-        var value = 0;
-        for (var i = startIndex; i < startIndex + 8; i++) {
+        let value = 0;
+        for (let i = startIndex; i < startIndex + 8; i++) {
             value = (value << 8) + bytes[i];
         }
         return value;
@@ -137,10 +136,10 @@ abstract class BitConverter {
     }
 
     static swapEndian(bytes: ArrayLike<number>, startIndex: number = 0, length: number = bytes.length): number[] {
-        var result = new Array<number>(length);
-        var endIndex = startIndex + length - 1;
-        var halfIndex = startIndex + (((length + 1) / 2) | 0);
-        for (var i = startIndex; i < halfIndex; i++) {
+        const result = new Array<number>(length);
+        const endIndex = startIndex + length - 1;
+        const halfIndex = startIndex + (((length + 1) / 2) | 0);
+        for (let i = startIndex; i < halfIndex; i++) {
             result[i - startIndex] = bytes[endIndex - i];
         }
         return result;
@@ -149,13 +148,13 @@ abstract class BitConverter {
     static float64ToInt64Bits(value: number): number {
         // Be careful! Only 6-7 digits are significant!
         views.float64View[0] = value;
-        var bytes = getBufferArray(8);
+        const bytes = getBufferArray(8);
         return BitConverter.bytesToInt64(bytes);
     }
 
     static int64ToFloat64Bits(value: number): number {
         // Be careful! Only 6-7 digits are significant!
-        var bytes = BitConverter.int64ToBytes(value);
+        const bytes = BitConverter.int64ToBytes(value);
         setBufferArray(bytes, 0, bytes.length);
         return views.float64View[0];
     }

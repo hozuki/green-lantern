@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/17.
  */
-
 import WebGLRenderer from "../WebGLRenderer";
 import IDisposable from "../../mic/IDisposable";
 import MathUtil from "../../mic/MathUtil";
@@ -34,7 +33,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
      * Disposes the {@link RenderTarget2D} and related resources.
      */
     dispose(): void {
-        var glc = this.context;
+        const glc = this.context;
         glc.deleteTexture(this.texture);
         glc.deleteFramebuffer(this.frameBuffer);
         glc.deleteRenderbuffer(this.depthStencilBuffer);
@@ -135,7 +134,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
      */
     clear(): void {
         this.activate();
-        var context = this.context;
+        const context = this.context;
         context.viewport(0, 0, this.fitWidth, this.fitHeight);
         context.clearColor(0, 0, 0, 0);
         context.clearDepth(0);
@@ -163,7 +162,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
         if (this.texture === null || this.image === null) {
             return;
         }
-        var context = this.context;
+        const context = this.context;
         context.bindTexture(gl.TEXTURE_2D, this.texture);
         context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>this.image);
         context.bindTexture(gl.TEXTURE_2D, null);
@@ -173,7 +172,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
      * Update image size to fit the whole scene.
      */
     updateImageSize(): void {
-        var image = this.image;
+        const image = this.image;
         if (this.texture === null || image === null) {
             return;
         }
@@ -181,8 +180,9 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
         // Find a way to optimize, for example, freeze the size when created, or implement a draw call
         // flexible enough to handle all sort of sizes.
         try {
-            image.width = MathUtil.power2Roundup(image.width);
-            image.height = MathUtil.power2Roundup(image.height);
+            // Flee from the ImageData's readonly check.
+            (<any>image).width = MathUtil.power2Roundup(image.width);
+            (<any>image).height = MathUtil.power2Roundup(image.height);
         } catch (ex) {
         }
         this._originalWidth = this._fitWidth = image.width;
@@ -198,7 +198,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
      */
     private __initialize(width: number, height: number, image: FrameImage): void {
         this._image = image;
-        var context = this.context;
+        const context = this.context;
 
         const error = (message: string): void => {
             context.deleteFramebuffer(this.frameBuffer);
@@ -208,15 +208,15 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
         };
 
         if (!this.isRoot) {
-            var frameBuffer = this._frameBuffer = context.createFramebuffer();
+            const frameBuffer = this._frameBuffer = context.createFramebuffer();
             if (frameBuffer === null) {
                 return error("Failed to create the frame buffer.");
             }
-            var depthBuffer = this._depthStencilBuffer = context.createRenderbuffer();
+            const depthBuffer = this._depthStencilBuffer = context.createRenderbuffer();
             if (depthBuffer === null) {
                 return error("Failed to create the depth/stencil buffer.");
             }
-            var texture = this._texture = context.createTexture();
+            const texture = this._texture = context.createTexture();
             if (texture === null) {
                 return error("Failed to create the underlying texture.");
             }
@@ -227,7 +227,7 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
             context.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
             context.bindRenderbuffer(gl.RENDERBUFFER, this.depthStencilBuffer);
             context.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.depthStencilBuffer);
-            var status = context.checkFramebufferStatus(gl.FRAMEBUFFER);
+            const status = context.checkFramebufferStatus(gl.FRAMEBUFFER);
             if (status !== gl.FRAMEBUFFER_COMPLETE) {
                 return error("Frame buffer is not complete: code 0x" + status.toString(16));
             }
@@ -245,10 +245,10 @@ export default class RenderTarget2D extends BufferedBitmapTarget {
      * @private
      */
     private __resize(newWidth: number, newHeight: number): void {
-        var context = this.context;
-        var image = this.image;
-        var isRoot = this.isRoot;
-        var texture = this.texture;
+        const context = this.context;
+        const image = this.image;
+        const isRoot = this.isRoot;
+        const texture = this.texture;
 
         if (image === null) {
             newWidth |= 0;

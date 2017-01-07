@@ -42,7 +42,7 @@ abstract class FillRendererBase extends GraphicsDataRendererBase implements IFil
     endIndex: number = -1;
 
     protected _$getContourForClosedShapes(): number[] {
-        var currentContour: number[];
+        let currentContour: number[];
         if (this.hasDrawnAnything) {
             currentContour = [];
             this._contours.push(currentContour);
@@ -54,7 +54,7 @@ abstract class FillRendererBase extends GraphicsDataRendererBase implements IFil
     }
 
     protected _$getContourForLines(): number[] {
-        var currentContour: number[];
+        let currentContour: number[];
         if (this.hasDrawnAnything) {
             if (this._startingNewContour) {
                 currentContour = [];

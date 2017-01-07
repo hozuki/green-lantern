@@ -65,8 +65,8 @@ export default class GlowFilter extends FilterBase {
     }
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
-        var tempOriginalTarget = this.filterManager.requestTempTarget();
-        var tempColorTransformedTarget = this.filterManager.requestTempTarget();
+        const tempOriginalTarget = this.filterManager.requestTempTarget();
+        const tempColorTransformedTarget = this.filterManager.requestTempTarget();
         RenderHelper.copyTargetContent(renderer, input, tempOriginalTarget, false, false, true);
         this._colorTransformFilter.process(renderer, input, tempColorTransformedTarget, true);
         this._blurFilter.process(renderer, tempColorTransformedTarget, output, false);

@@ -45,7 +45,7 @@ export default class Blur2Shader extends BufferedShader {
     protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u: UniformCache;
+        let u: UniformCache;
 
         u = Object.create(null);
         u.name = "uStrength";

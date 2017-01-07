@@ -92,7 +92,7 @@ export default class ColorTransform {
 
     // MIC
     transform(color: number): number {
-        var rgba = GLUtil.decomposeRgba(color);
+        const rgba = GLUtil.decomposeRgba(color);
         rgba.r = MathUtil.clamp(rgba.r * this.redMultiplier + this.redOffset, 0, 0xff);
         rgba.g = MathUtil.clamp(rgba.g * this.greenMultiplier + this.greenOffset, 0, 0xff);
         rgba.b = MathUtil.clamp(rgba.b * this.blueMultiplier + this.blueOffset, 0, 0xff);

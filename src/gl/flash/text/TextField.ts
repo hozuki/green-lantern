@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/12/23.
  */
-
 import InteractiveObject from "../display/InteractiveObject";
 import WebGLRenderer from "../../webgl/WebGLRenderer";
 import ShaderManager from "../../webgl/ShaderManager";
@@ -24,7 +23,6 @@ import NotImplementedError from "../errors/NotImplementedError";
 import GLUtil from "../../mic/glantern/GLUtil";
 import TimeInfo from "../../mic/TimeInfo";
 import VirtualDom from "../../mic/VirtualDom";
-import CommonUtil from "../../mic/CommonUtil";
 import Vector3D from "../geom/Vector3D";
 import Matrix3D from "../geom/Matrix3D";
 
@@ -52,7 +50,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set background(v: boolean) {
-        var b = v !== this._background;
+        const b = v !== this._background;
         if (b) {
             this._background = v;
             this._isContentChanged = true;
@@ -64,7 +62,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set backgroundColor(v: number) {
-        var b = v !== this._backgroundColor;
+        const b = v !== this._backgroundColor;
         if (b) {
             this._backgroundColor = v;
             this._isContentChanged = true;
@@ -76,7 +74,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set border(v: boolean) {
-        var b = v !== this._border;
+        const b = v !== this._border;
         if (b) {
             this._border = v;
             this._isContentChanged = true;
@@ -88,7 +86,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set borderColor(v: number) {
-        var b = v !== this._borderColor;
+        const b = v !== this._borderColor;
         if (b) {
             this._borderColor = v;
             this._isContentChanged = true;
@@ -113,7 +111,7 @@ export default class TextField extends InteractiveObject {
         if (this._defaultTextFormat !== null) {
             this._defaultTextFormat.removeEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
         }
-        this._defaultTextFormat = CommonUtil.ptr(v) ? v : new TextFormat();
+        this._defaultTextFormat = v ? v : new TextFormat();
         this._defaultTextFormat.addEventListener(TextFormat.TEXT_FORMAT_CHANGE, this._textFormatChangedHandler);
     }
 
@@ -194,7 +192,7 @@ export default class TextField extends InteractiveObject {
     htmlText: string = null;
 
     get length(): number {
-        return CommonUtil.ptr(this.text) ? this.text.length : 0;
+        return this.text ? this.text.length : 0;
     }
 
     maxChars: number = 0;
@@ -235,7 +233,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set text(v: string) {
-        var b = this._text !== v;
+        const b = this._text !== v;
         if (b) {
             this._text = v;
             this._isContentChanged = true;
@@ -247,7 +245,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set textColor(v: number) {
-        var b = this.defaultTextFormat.color !== v;
+        const b = this.defaultTextFormat.color !== v;
         this.defaultTextFormat.color = v;
         if (b && !this.customOutlineEnabled) {
             this.textOutlineColor = v;
@@ -267,7 +265,7 @@ export default class TextField extends InteractiveObject {
      * @param v {Number}
      */
     set textOutlineColor(v: number) {
-        var b = this._textOutlineColor !== v;
+        const b = this._textOutlineColor !== v;
         if (b) {
             this._textOutlineColor = v;
             this._isContentChanged = true;
@@ -284,7 +282,7 @@ export default class TextField extends InteractiveObject {
 
     get textHeight(): number {
         // TODO: This only works under single line circumstances.
-        var height = this.defaultTextFormat.size * 1.5;
+        let height = this.defaultTextFormat.size * 1.5;
         if (this.thickness > 0) {
             height += this.thickness * 2;
         }
@@ -295,8 +293,8 @@ export default class TextField extends InteractiveObject {
 
     get textWidth(): number {
         // TODO: This only works under single line circumstances.
-        var metrics: TextMetrics = this._context2D.measureText(this.text);
-        var width = metrics.width;
+        const metrics: TextMetrics = this._context2D.measureText(this.text);
+        let width = metrics.width;
         if (this.thickness > 0) {
             width += this.thickness * 2;
         }
@@ -308,7 +306,7 @@ export default class TextField extends InteractiveObject {
     }
 
     set thickness(v: number) {
-        var b = this._thickness !== v;
+        const b = this._thickness !== v;
         if (b) {
             this._thickness = v;
             this._isContentChanged = true;
@@ -321,7 +319,7 @@ export default class TextField extends InteractiveObject {
 
     dispose(): void {
         super.dispose();
-        var renderer = this.$rawRoot.$worldRenderer;
+        const renderer = this.$rawRoot.$worldRenderer;
         renderer.releaseRenderTarget(this._canvasTarget);
         this._canvasTarget = null;
         this._canvas = null;
@@ -340,14 +338,14 @@ export default class TextField extends InteractiveObject {
 
     protected _$render(renderer: WebGLRenderer): void {
         if (this.visible && this.alpha > 0 && this.text !== null && this.text.length > 0) {
-            var canvasTarget = this._canvasTarget;
+            const canvasTarget = this._canvasTarget;
             canvasTarget.updateImageContent();
-            var decomposed = this.transform.matrix3D.decompose();
-            var matrix3D = new Matrix3D();
+            const decomposed = this.transform.matrix3D.decompose();
+            const matrix3D = new Matrix3D();
             // translation, rotation, skew, scale
             matrix3D.recompose([Vector3D.ORIGIN, decomposed[1], decomposed[2], decomposed[3]]);
             // Always invert Y axis, unless the target is a stencil.
-            var renderTarget = renderer.currentRenderTarget;
+            const renderTarget = renderer.currentRenderTarget;
             RenderHelper.copyImageContent(renderer, canvasTarget, renderTarget, false, !renderTarget.isStencil, matrix3D, this.alpha, false);
         }
     }
@@ -358,7 +356,7 @@ export default class TextField extends InteractiveObject {
 
     protected _$createCanvasTarget(renderer: WebGLRenderer): RenderTarget2D {
         if (this._canvas === null) {
-            var canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
+            const canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
             canvas.width = renderer.view.width;
             canvas.height = renderer.view.height;
             this._canvas = canvas;
@@ -368,7 +366,7 @@ export default class TextField extends InteractiveObject {
     }
 
     protected _$updateCanvasTextStyle(context2D: CanvasRenderingContext2D): void {
-        var fontStyles: string[] = [];
+        const fontStyles: string[] = [];
         if (this.defaultTextFormat.bold) {
             fontStyles.push("bold");
         }
@@ -384,13 +382,13 @@ export default class TextField extends InteractiveObject {
         // TextField is a special class that do not actually draw vertices, so we have to calculate the transform
         // ourselves.
         // TODO: What about clipping bounds?
-        var matrix3D = this.transform.matrix3D;
-        var positionVector3 = new Vector3D(this.x, this.y, this.z);
+        const matrix3D = this.transform.matrix3D;
+        let positionVector3 = new Vector3D(this.x, this.y, this.z);
         positionVector3 = matrix3D.transformVector(positionVector3);
-        var x = positionVector3.x, y = positionVector3.y;
-        var baseX = this.thickness;
-        var baseY = this.thickness;
-        var borderThickness = 1;
+        const x = positionVector3.x, y = positionVector3.y;
+        const baseX = this.thickness;
+        const baseY = this.thickness;
+        const borderThickness = 1;
         context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
         if (this.background) {
             context2D.fillStyle = GLUtil.colorToCssSharp(this.backgroundColor);
@@ -404,7 +402,7 @@ export default class TextField extends InteractiveObject {
             context2D.strokeText(this.text, x + baseX + borderThickness, y + this.textHeight * 0.75 + borderThickness);
         }
         if (this.border) {
-            context2D.lineWidth = 1;
+            context2D.lineWidth = borderThickness;
             context2D.strokeStyle = GLUtil.colorToCssSharp(this.borderColor);
             context2D.strokeRect(x + borderThickness, y + borderThickness, this.textWidth + borderThickness * 2, this.textHeight + borderThickness * 2);
         }

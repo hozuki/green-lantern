@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2016/1/7.
  */
-
 import EventDispatcher from "../events/EventDispatcher";
 import TimerEvent from "../events/TimerEvent";
 import VirtualDom from "../../mic/VirtualDom";
@@ -44,12 +43,13 @@ export default class Timer extends EventDispatcher {
     }
 
     reset(): void {
-        if (this.running) {
-            VirtualDom.clearInterval(this._handle);
-            this._handle = 0;
-            this._running = false;
-            this._currentCount = 0;
+        if (!this.running) {
+            return;
         }
+        VirtualDom.clearInterval(this._handle);
+        this._handle = 0;
+        this._running = false;
+        this._currentCount = 0;
     }
 
     start(): void {
@@ -60,11 +60,12 @@ export default class Timer extends EventDispatcher {
     }
 
     stop(): void {
-        if (this.running) {
-            VirtualDom.clearInterval(this._handle);
-            this._handle = 0;
-            this._running = false;
+        if (!this.running) {
+            return;
         }
+        VirtualDom.clearInterval(this._handle);
+        this._handle = 0;
+        this._running = false;
     }
 
     dispose(): void {
@@ -73,25 +74,26 @@ export default class Timer extends EventDispatcher {
     }
 
     protected _$timerCallback(): void {
-        if (this.enabled) {
-            this._currentCount++;
-            if (this.repeatCount > 0 && this.currentCount > this.repeatCount) {
-                this.stop();
-                this._$raiseTimerCompleteEvent();
-            } else {
-                this._$raiseTimerEvent();
-            }
+        if (!this.enabled) {
+            return;
+        }
+        this._currentCount++;
+        if (this.repeatCount > 0 && this.currentCount > this.repeatCount) {
+            this.stop();
+            this._$raiseTimerCompleteEvent();
+        } else {
+            this._$raiseTimerEvent();
         }
     }
 
     protected _$raiseTimerEvent(): void {
-        var ev = new TimerEvent(TimerEvent.TIMER);
+        const ev = new TimerEvent(TimerEvent.TIMER);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);
     }
 
     protected _$raiseTimerCompleteEvent(): void {
-        var ev = new TimerEvent(TimerEvent.TIMER_COMPLETE);
+        const ev = new TimerEvent(TimerEvent.TIMER_COMPLETE);
         ev.timeStamp = Date.now();
         this.dispatchEvent(ev);
     }

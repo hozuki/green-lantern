@@ -32,7 +32,7 @@ abstract class VirtualDom {
     }
 
     static setInterval(fn: Function, millis: number, ...params: any[]): number {
-        return $g.$env.setInterval.apply($g.$env, arguments);
+        return (<Function>$g.$env.setInterval).apply($g.$env, arguments);
     }
 
     static clearInterval(handle: number): void {
@@ -113,8 +113,8 @@ function globalExists(): boolean {
 }
 
 function init(): void {
-    var we = windowExists();
-    var ge = globalExists();
+    const we = windowExists();
+    const ge = globalExists();
     if (!we) {
         console.warn("Some critical functions need a window to execute.");
         return;

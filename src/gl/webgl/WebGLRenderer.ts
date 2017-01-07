@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/17.
  */
-
 import * as libtess from "libtess";
 import RendererOptions from "./RendererOptions";
 import ShaderManager from "./ShaderManager";
@@ -63,7 +62,7 @@ export default class WebGLRenderer implements IDisposable {
     }
 
     beginDrawMaskObject(): void {
-        var context = this.context;
+        const context = this.context;
         context.stencilFunc(gl.ALWAYS, 1, 0xff);
         context.stencilMask(0xff);
         context.enable(gl.STENCIL_TEST);
@@ -73,7 +72,7 @@ export default class WebGLRenderer implements IDisposable {
     }
 
     beginDrawMaskedObjects(): void {
-        var context = this.context;
+        const context = this.context;
         context.stencilFunc(gl.EQUAL, 1, 0xff);
         context.stencilMask(0);
         context.enable(gl.STENCIL_TEST);
@@ -83,7 +82,7 @@ export default class WebGLRenderer implements IDisposable {
     }
 
     beginDrawNormalObjects(): void {
-        var context = this.context;
+        const context = this.context;
         context.disable(gl.STENCIL_TEST);
         context.stencilMask(0);
         context.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
@@ -117,10 +116,10 @@ export default class WebGLRenderer implements IDisposable {
      * $render target of the {@link WebGLRenderer}. The default value is null.
      */
     set currentRenderTarget(v: RenderTarget2D) {
-        if (v === this._currentRenderTarget && CommonUtil.ptr(v)) {
+        if (v === this._currentRenderTarget && v) {
             return;
         }
-        var t = this._currentRenderTarget = CommonUtil.ptr(v) ? v : this._screenRenderTarget;
+        const t = this._currentRenderTarget = v ? v : this._screenRenderTarget;
         t.activate();
     }
 
@@ -219,8 +218,8 @@ export default class WebGLRenderer implements IDisposable {
             return;
         }
 
-        var config: number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
-        var glc = this._context;
+        const config: number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
+        const glc = this._context;
         if (config[0] >= 0) {
             glc.blendEquation(gl.FUNC_ADD);
         } else {
@@ -274,7 +273,7 @@ export default class WebGLRenderer implements IDisposable {
             canvas.height = height;
         }
 
-        var attributes: WebGLContextAttributes = Object.create(null);
+        const attributes: WebGLContextAttributes = Object.create(null);
         attributes.alpha = options.transparent;
         attributes.antialias = options.antialias;
         attributes.premultipliedAlpha = true;
@@ -282,7 +281,7 @@ export default class WebGLRenderer implements IDisposable {
         this._context = WebGLUtils.setupWebGL(canvas, attributes);
         this._view = canvas;
 
-        var glc = this._context;
+        const glc = this._context;
         glc.disable(gl.DEPTH_TEST);
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
@@ -307,7 +306,7 @@ export default class WebGLRenderer implements IDisposable {
      * @private
      */
     private __initializeTessellator(): void {
-        var tess = this._tessellator;
+        const tess = this._tessellator;
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_VERTEX_DATA,
             (data: number[], polyVertArray: number[][]): void => {
                 polyVertArray[polyVertArray.length - 1].push(data[0], data[1], data[2]);
@@ -361,7 +360,7 @@ export default class WebGLRenderer implements IDisposable {
 
 }
 
-var BMS: {[k: string]: number[]} = Object.create(null);
+const BMS: {[k: string]: number[]} = Object.create(null);
 BMS[BlendMode.ADD] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.ALPHA] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.DARKEN] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];

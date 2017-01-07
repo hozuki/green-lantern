@@ -28,7 +28,7 @@ export default class GlowFilter extends WebGLGlowFilter implements BitmapFilter 
     }
 
     set alpha(v: number) {
-        var b = v !== this.alpha;
+        const b = v !== this.alpha;
         this._alpha = v;
         if (b) {
             this.__updateColorMatrix();
@@ -57,7 +57,7 @@ export default class GlowFilter extends WebGLGlowFilter implements BitmapFilter 
 
     set color(v: number) {
         v |= 0;
-        var b = v !== this._color;
+        const b = v !== this._color;
         this._color = v;
         if (b) {
             this.__updateColorMatrix();
@@ -83,11 +83,11 @@ export default class GlowFilter extends WebGLGlowFilter implements BitmapFilter 
     }
 
     private __updateColorMatrix(): void {
-        var r = ((this._color >>> 16) & 0xff) / 0xff;
-        var g = ((this._color >>> 8) & 0xff) / 0xff;
-        var b = (this._color & 0xff) / 0xff;
-        var a = this._alpha;
-        var cm = [
+        const r = ((this._color >>> 16) & 0xff) / 0xff;
+        const g = ((this._color >>> 8) & 0xff) / 0xff;
+        const b = (this._color & 0xff) / 0xff;
+        const a = this._alpha;
+        const cm = [
             0, 0, 0, r, 0,
             0, 0, 0, g, 0,
             0, 0, 0, b, 0,

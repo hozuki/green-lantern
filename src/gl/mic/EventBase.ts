@@ -8,10 +8,12 @@ abstract class EventBase implements Event {
     cancelBubble: boolean = false;
     cancelable: boolean = false;
     currentTarget: EventTarget = null;
+    deepPath: () => EventTarget[] = null;
     defaultPrevented: boolean = false;
     eventPhase: number = -1;
     isTrusted: boolean = true;
     returnValue: boolean = false;
+    scoped: boolean = true;
     srcElement: Element = null;
     target: EventTarget = null;
     timeStamp: number = 0;
@@ -40,7 +42,7 @@ abstract class EventBase implements Event {
     }
 
     static create(type: string): EventBase {
-        var ev = new PlainEvent(type, false, false);
+        const ev = new PlainEvent(type, false, false);
         ev.timeStamp = Date.now();
         return ev;
     }

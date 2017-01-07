@@ -48,8 +48,8 @@ export default class CopyImageShader extends BufferedShader {
     protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u: UniformCache;
-        var transformMatrix = new Matrix3D();
+        let u: UniformCache;
+        const transformMatrix = new Matrix3D();
         transformMatrix.identity();
 
         u = Object.create(null);

@@ -44,17 +44,17 @@ gulp.task("default", ["build"]);
 
 gulp.task("build", ["build-compile", "build-browserify"], copyBuildResults);
 
-gulp.task("build-compile", function () {
+gulp.task("build-compile", () => {
     return gulp
         .src(["src/gl/**/*.ts"].concat(incDirs.build))
         .pipe(sourcemaps.init())
         .pipe(ts(tsConfigs.build))
         .js
         .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest("build/node/gl"))
+        .pipe(gulp.dest("build/node/gl"));
 });
 
-gulp.task("build-browserify", ["build-compile"], function () {
+gulp.task("build-browserify", ["build-compile"], () => {
     return browserify({
         entries: "build/node/gl/browser-bootstrap.js",
         debug: true
@@ -73,7 +73,7 @@ gulp.task("build-browserify", ["build-compile"], function () {
 
 gulp.task("copy", copyBuildResults);
 
-gulp.task("transform-tests", ["build-compile"], function () {
+gulp.task("transform-tests", ["build-compile"], () => {
     return gulp
         .src(["src/tests/logical/**/*.ts"].concat(incDirs.tests))
         .pipe(sourcemaps.init())
@@ -85,7 +85,7 @@ gulp.task("transform-tests", ["build-compile"], function () {
 
 // Consider using stream-combiner2. (http://www.cnblogs.com/giggle/p/5562459.html)
 function errorHandler(err) {
-    var colors = gutil.colors;
+    const colors = gutil.colors;
     gutil.log(os.EOL);
     gutil.log(colors.red("Error:") + " " + colors.magenta(err.fileName));
     gutil.log("    on line " + colors.cyan(err.loc.line) + ": " + colors.red(err.message));
@@ -103,7 +103,7 @@ function copyBuildResults() {
  * @param arr {String[]}
  */
 function incDirToRel(arr) {
-    for (var i = 0; i < arr.length; ++i) {
+    for (let i = 0; i < arr.length; ++i) {
         arr[i] = "inc/" + arr[i] + "/**/*.ts";
     }
 }

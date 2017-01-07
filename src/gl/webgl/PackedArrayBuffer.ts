@@ -1,10 +1,8 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
 import IDisposable from "../mic/IDisposable";
 import VirtualDom from "../mic/VirtualDom";
-import CommonUtil from "../mic/CommonUtil";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
@@ -14,25 +12,25 @@ export default class PackedArrayBuffer implements IDisposable {
     }
 
     static create(context: WebGLRenderingContext, data: number[], elementGLType: number, bufferType: number): PackedArrayBuffer {
-        var T: any = PackedArrayBuffer.getTypedArrayType(elementGLType);
+        const T: any = PackedArrayBuffer.getTypedArrayType(elementGLType);
         if (T === null) {
             console.warn("Failed to create typed array whose elements are of WebGL type 0x" + elementGLType.toString(16));
             return null;
         }
-        var wab = new PackedArrayBuffer();
-        wab._glc = context;
-        wab._elementGLType = elementGLType;
-        wab._webglBuffer = context.createBuffer();
-        if (wab._webglBuffer == null) {
+        const newPAB = new PackedArrayBuffer();
+        newPAB._glc = context;
+        newPAB._elementGLType = elementGLType;
+        newPAB._webglBuffer = context.createBuffer();
+        if (newPAB._webglBuffer == null) {
             console.warn("Failed to create WebGL buffer.");
             return null;
         }
-        wab._arrayType = T;
-        wab._bufferType = bufferType;
-        wab.setNewData(data);
-        wab.becomeDirty();
-        wab.syncBufferData();
-        return wab;
+        newPAB._arrayType = T;
+        newPAB._bufferType = bufferType;
+        newPAB.setNewData(data);
+        newPAB.becomeDirty();
+        newPAB.syncBufferData();
+        return newPAB;
     }
 
     get webglBuffer(): WebGLBuffer {
@@ -52,7 +50,7 @@ export default class PackedArrayBuffer implements IDisposable {
     }
 
     setNewData(data: number[]): void {
-        this._array = CommonUtil.ptr(data) ? data.slice() : [];
+        this._array = data ? data.slice() : [];
     }
 
     becomeDirty(): void {
@@ -61,14 +59,15 @@ export default class PackedArrayBuffer implements IDisposable {
 
     syncBufferData(): void {
         if (this._isDirty) {
-            var T: any = this._arrayType;
+            const T: any = this._arrayType;
             this._typedArray = new T(this._array);
             this._isDirty = false;
         }
-        this._glc.bindBuffer(this._bufferType, this._webglBuffer);
+        const glc = this._glc;
+        glc.bindBuffer(this._bufferType, this._webglBuffer);
         // DANGER! In complex scenes, bufferData() transfers large amount of data.
         // Improper optimization does harm on performance.
-        this._glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
+        glc.bufferData(this._bufferType, this._typedArray, gl.DYNAMIC_DRAW);
     }
 
     dispose(): void {

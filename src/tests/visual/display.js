@@ -2,7 +2,7 @@
  * Created by MIC on 2016/9/14.
  */
 
-var Display = Object.create({
+const Display = Object.create({
     /**
      * @param [alpha] {Number}
      * @returns {TextField}
@@ -11,7 +11,7 @@ var Display = Object.create({
         if (alpha === void(0)) {
             alpha = 1;
         }
-        var s = new GLantern.flash.text.TextField(lantern.stage, lantern.stage);
+        const s = new GLantern.flash.text.TextField(lantern.stage, lantern.stage);
         lantern.stage.addChild(s);
         s.alpha = alpha;
         return s;
@@ -24,7 +24,7 @@ var Display = Object.create({
         if (alpha === void(0)) {
             alpha = 1;
         }
-        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
+        const s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
         lantern.stage.addChild(s);
         s.alpha = alpha;
         return s;

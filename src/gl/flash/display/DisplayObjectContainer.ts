@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
 import InteractiveObject from "./InteractiveObject";
 import Stage from "./Stage";
 import WebGLRenderer from "../../webgl/WebGLRenderer";
@@ -10,6 +9,7 @@ import Point from "../geom/Point";
 import ShaderManager from "../../webgl/ShaderManager";
 import NotImplementedError from "../errors/NotImplementedError";
 import TimeInfo from "../../mic/TimeInfo";
+import MathUtil from "../../mic/MathUtil";
 
 abstract class DisplayObjectContainer extends InteractiveObject {
 
@@ -27,7 +27,7 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     tabChildren: boolean = true;
 
     addChild(child: DisplayObject): DisplayObject {
-        var children = this._children;
+        const children = this._children;
         if (children.indexOf(child) < 0) {
             children.push(child);
         }
@@ -36,17 +36,18 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     addChildAt(child: DisplayObject, index: number): DisplayObject {
-        var children = this._children;
+        const children = this._children;
         if (children.indexOf(child) < 0) {
             if (index === 0) {
                 children.unshift(child);
             } else if (index === children.length - 1) {
                 children.push(child);
             } else {
-                children = children.slice(0, index - 1).concat(child).concat(children.slice(index, children.length - 1));
+                index = MathUtil.clamp(index, 0, children.length);
+                children.splice(index, 0, child);
             }
+            child.childIndex = index;
         }
-        child.childIndex = index;
         return child;
     }
 
@@ -55,9 +56,12 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     contains(child: DisplayObject): boolean {
-        var children = this._children;
-        var result = false;
-        for (var i = 0; i < children.length; ++i) {
+        const children = this._children;
+        if (children.length === 0) {
+            return false;
+        }
+        let result = false;
+        for (let i = 0; i < children.length; ++i) {
             if (children[i] === child) {
                 return true;
             }
@@ -72,7 +76,7 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     getChildAt(index: number): DisplayObject {
-        var children = this._children;
+        const children = this._children;
         if (index < 0 || index > children.length - 1) {
             return null;
         } else {
@@ -81,18 +85,18 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     getChildByName(name: string): DisplayObject {
-        var children = this._children;
+        const children = this._children;
         if (children.length === 0) {
             return null;
         }
-        var result: DisplayObject = null;
-        for (var i = 0; i < children.length; ++i) {
+        let result: DisplayObject = null;
+        for (let i = 0; i < children.length; ++i) {
             if (children[i].name === name) {
                 return children[i];
             }
             if (children[i] instanceof DisplayObjectContainer) {
                 result = (<DisplayObjectContainer>children[i]).getChildByName(name);
-                if (result !== null) {
+                if (result) {
                     return result;
                 }
             }
@@ -109,7 +113,7 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     removeChild(child: DisplayObject): DisplayObject {
-        var childIndex = this._children.indexOf(child);
+        const childIndex = this._children.indexOf(child);
         if (childIndex >= 0) {
             return this.removeChildAt(childIndex);
         } else {
@@ -118,12 +122,12 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     removeChildAt(index: number): DisplayObject {
-        if (index < 0 || index >= this.numChildren) {
+        const children = this._children;
+        if (index < 0 || index >= children.length) {
             return null;
         }
-        var children = this._children;
-        var child = children[index];
-        for (var i = index + 1; i < children.length; i++) {
+        const child = children[index];
+        for (let i = index + 1; i < children.length; i++) {
             children[i].childIndex++;
         }
         children.splice(index, 1);
@@ -159,19 +163,24 @@ abstract class DisplayObjectContainer extends InteractiveObject {
     }
 
     dispatchEvent(event: Event, data?: any): boolean {
-        var r = super.dispatchEvent(event, data);
-        var children = this._children;
-        for (var i = 0; i < children.length; i++) {
-            children[i].dispatchEvent(event, data);
+        const r = super.dispatchEvent(event, data);
+        const children = this._children;
+        if (children.length > 0) {
+            for (let i = 0; i < children.length; i++) {
+                children[i].dispatchEvent(event, data);
+            }
         }
         return r;
     }
 
     $update(timeInfo: TimeInfo): void {
         super.$update(timeInfo);
+        const children = this._children;
         if (this.enabled) {
-            for (var i = 0; i < this._children.length; ++i) {
-                this._children[i].$update(timeInfo);
+            if (children.length > 0) {
+                for (let i = 0; i < children.length; ++i) {
+                    children[i].$update(timeInfo);
+                }
             }
         }
     }
@@ -182,12 +191,14 @@ abstract class DisplayObjectContainer extends InteractiveObject {
         }
         this._$beforeRender(renderer);
         this._$render(renderer);
-        var children = this._children;
-        for (var i = 0; i < children.length; ++i) {
-            if (this._$shouldProcessMasking() && !renderer.isStencilTestEnabled) {
-                renderer.beginDrawMaskedObjects();
+        const children = this._children;
+        if (children.length > 0) {
+            for (let i = 0; i < children.length; ++i) {
+                if (this._$shouldProcessMasking() && !renderer.isStencilTestEnabled) {
+                    renderer.beginDrawMaskedObjects();
+                }
+                children[i].$render(renderer);
             }
-            children[i].$render(renderer);
         }
         this._$afterRender(renderer);
     }
@@ -197,17 +208,19 @@ abstract class DisplayObjectContainer extends InteractiveObject {
             return;
         }
         this._$render(renderer);
-        var children = this._children;
-        for (var i = 0; i < children.length; ++i) {
-            children[i].$renderRaw(renderer);
+        const children = this._children;
+        if (children.length > 0) {
+            for (let i = 0; i < children.length; ++i) {
+                children[i].$renderRaw(renderer);
+            }
         }
     }
 
     $requestUpdateTransform(): void {
         this._isTransformDirty = true;
-        var children = this._children;
+        const children = this._children;
         if (children.length > 0) {
-            for (var i = 0; i < children.length; ++i) {
+            for (let i = 0; i < children.length; ++i) {
                 children[i].$requestUpdateTransform();
             }
         }

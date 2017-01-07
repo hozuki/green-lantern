@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
 import Stage from "./Stage";
 import DisplayObjectContainer from "./DisplayObjectContainer";
 import Transform from "../geom/Transform";
@@ -20,7 +19,6 @@ import Vector3D from "../geom/Vector3D";
 import NotImplementedError from "../errors/NotImplementedError";
 import MathUtil from "../../mic/MathUtil";
 import TimeInfo from "../../mic/TimeInfo";
-import CommonUtil from "../../mic/CommonUtil";
 import RenderHelper from "../../webgl/RenderHelper";
 
 abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
@@ -86,18 +84,17 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set filters(v: BitmapFilter[]) {
-        var i: number;
-        var hasFiltersBefore = this.__shouldProcessFilters();
-        var filters = this._filters;
+        let hasFiltersBefore = this.__shouldProcessFilters();
+        let filters = this._filters;
         if (hasFiltersBefore) {
-            for (i = 0; i < filters.length; ++i) {
+            for (let i = 0; i < filters.length; ++i) {
                 filters[i].notifyRemoved();
             }
         }
         filters = this._filters = v || [];
-        var hasFiltersNow = this.__shouldProcessFilters();
+        let hasFiltersNow = this.__shouldProcessFilters();
         if (hasFiltersNow) {
-            for (i = 0; i < filters.length; ++i) {
+            for (let i = 0; i < filters.length; ++i) {
                 filters[i].notifyAdded();
             }
         }
@@ -230,7 +227,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set x(v: number) {
-        var b = this._x !== v;
+        let b = this._x !== v;
         this._x = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -242,7 +239,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set y(v: number) {
-        var b = this._y !== v;
+        let b = this._y !== v;
         this._y = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -254,7 +251,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     set z(v: number) {
-        var b = this._z !== v;
+        let b = this._z !== v;
         this._z = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -315,7 +312,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     protected _$updateTransform(): void {
-        var matrix3D: Matrix3D;
+        let matrix3D: Matrix3D;
         if (this.$isRoot) {
             matrix3D = new Matrix3D();
         } else {
@@ -345,7 +342,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
 
     protected _$beforeRender(renderer: WebGLRenderer): void {
         if (this.__shouldHaveBufferTarget()) {
-            var bufferTarget = this.$bufferTarget;
+            const bufferTarget = this.$bufferTarget;
             renderer.currentRenderTarget = bufferTarget;
             bufferTarget.clear();
             if (this._$shouldProcessMasking()) {
@@ -356,10 +353,10 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         } else {
             renderer.currentRenderTarget = null;
         }
-        var shaderManager = renderer.shaderManager;
+        const shaderManager = renderer.shaderManager;
         this._$selectShader(shaderManager);
-        var shader = shaderManager.currentShader;
-        if (CommonUtil.ptr(shader)) {
+        const shader = shaderManager.currentShader;
+        if (shader) {
             shader.changeValue("uTransformMatrix", (u: UniformCache): void => {
                 u.value = this._transformArray;
             });
@@ -371,12 +368,12 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     protected _$afterRender(renderer: WebGLRenderer): void {
-        var hasMask = this._$shouldProcessMasking();
+        const hasMask = this._$shouldProcessMasking();
         if (hasMask) {
             renderer.beginDrawNormalObjects();
         }
         if (this.__shouldProcessFilters()) {
-            var filterManager = renderer.filterManager;
+            let filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
             filterManager.processFilters(renderer, this.$bufferTarget, renderer.screenRenderTarget, false);
             filterManager.popFilterGroup();
@@ -393,8 +390,8 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
         if (!this.__shouldHaveBufferTarget()) {
             return;
         }
-        var t = this.$bufferTarget;
-        if (CommonUtil.ptr(t)) {
+        const t = this.$bufferTarget;
+        if (t) {
             t.dispose();
         }
         return this._bufferTarget = this.$rawRoot.$worldRenderer.createRenderTarget();
@@ -410,7 +407,7 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
 
     private __shouldProcessFilters(): boolean {
         // Don't use `filter` property, it clones an array and lowers performance.
-        var filters = this._filters;
+        const filters = this._filters;
         return filters !== null && filters.length > 0;
     }
 
@@ -419,9 +416,9 @@ abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable,
     }
 
     private __updateBufferTargetStatus(): void {
-        var expected = this.__shouldHaveBufferTarget();
-        var actual = this.$bufferTarget !== null;
-        var hasMask = this._$shouldProcessMasking();
+        const expected = this.__shouldHaveBufferTarget();
+        const actual = this.$bufferTarget !== null;
+        const hasMask = this._$shouldProcessMasking();
         if (actual) {
             this.$bufferTarget.isStencil = hasMask;
         }

@@ -44,7 +44,7 @@ export default class Point implements ICloneable<Point>, ICopyable<Point> {
     }
 
     normalize(thickness: number): void {
-        var len = this.length;
+        const len = this.length;
         if (len > 0) {
             this.x *= thickness / len;
             this.y *= thickness / len;
