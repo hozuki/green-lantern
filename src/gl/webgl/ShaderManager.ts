@@ -1,23 +1,20 @@
 /**
  * Created by MIC on 2015/11/17.
  */
+import ShaderBase from "./ShaderBase";
+import WebGLRenderer from "./WebGLRenderer";
+import PrimitiveShader from "./shaders/PrimitiveShader";
+import BlurXShader from "./shaders/BlurXShader";
+import BlurYShader from "./shaders/BlurYShader";
+import ReplicateShader from "./shaders/ReplicateShader";
+import ColorTransformShader from "./shaders/ColorTransformShader";
+import FxaaShader from "./shaders/FxaaShader";
+import IDisposable from "../mic/IDisposable";
+import Blur2Shader from "./shaders/Blur2Shader";
+import CopyImageShader from "./shaders/CopyImageShader";
+import Primitive2Shader from "./shaders/Primitive2Shader";
 
-import {ShaderBase} from "./ShaderBase";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {BlurXShader} from "./shaders/BlurXShader";
-import {BlurYShader} from "./shaders/BlurYShader";
-import {ReplicateShader} from "./shaders/ReplicateShader";
-import {ColorTransformShader} from "./shaders/ColorTransformShader";
-import {FxaaShader} from "./shaders/FxaaShader";
-import {UniformCache} from "./UniformCache";
-import {AttributeCache} from "./AttributeCache";
-import {IDisposable} from "../mic/IDisposable";
-import {Blur2Shader} from "./shaders/Blur2Shader";
-import {CopyImageShader} from "./shaders/CopyImageShader";
-import {Primitive2Shader} from "./shaders/Primitive2Shader";
-
-export class ShaderManager implements IDisposable {
+export default class ShaderManager implements IDisposable {
 
     constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;
@@ -26,8 +23,9 @@ export class ShaderManager implements IDisposable {
     }
 
     dispose(): void {
-        for (var i = 0; i < this._shaders.length; ++i) {
-            this._shaders[i].dispose();
+        const shaders = this._shaders;
+        for (let i = 0; i < shaders.length; ++i) {
+            shaders[i].dispose();
         }
         this._currentShader = null;
         this._renderer = null;
@@ -38,21 +36,8 @@ export class ShaderManager implements IDisposable {
         return this._shaders.length;
     }
 
-    loadShader(shaderName: string, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): number {
-        var returnID = -1;
-        try {
-            var SHADER_CLASS: any = require("./shaders/" + shaderName + "Shader");
-            var shaderClassName: string = SHADER_CLASS.SHADER_CLASS_NAME;
-            var shader = new SHADER_CLASS(this, SHADER_CLASS.VERTEX_SOURCE, SHADER_CLASS.FRAGMENT_SOURCE, uniforms, attributes);
-            this._shaders.push(shader);
-            returnID = shader.id;
-        } catch (e) {
-        }
-        return returnID;
-    }
-
     selectShader(id: number): void {
-        var shader = this.__getShader(id);
+        const shader = this.__getShader(id);
         if (shader !== null) {
             shader.select();
             this._currentShader = shader;
@@ -72,7 +57,7 @@ export class ShaderManager implements IDisposable {
     }
 
     private __getShader(id: number): ShaderBase {
-        var shader: ShaderBase = null;
+        let shader: ShaderBase = null;
         try {
             shader = this._shaders[id];
         } catch (e) {
@@ -81,7 +66,7 @@ export class ShaderManager implements IDisposable {
     }
 
     private __insertShaders(): void {
-        var shaderList = this._shaders;
+        const shaderList = this._shaders;
         shaderList.push(new PrimitiveShader(this));
         shaderList.push(new BlurXShader(this));
         shaderList.push(new BlurYShader(this));

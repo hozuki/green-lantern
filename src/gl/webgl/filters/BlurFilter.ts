@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {BlurYFilter} from "./BlurYFilter";
-import {BlurXFilter} from "./BlurXFilter";
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterManager} from "../FilterManager";
-import {FilterBase} from "../FilterBase";
-import {MathUtil} from "../../mic/MathUtil";
+import BlurYFilter from "./BlurYFilter";
+import BlurXFilter from "./BlurXFilter";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterManager from "../FilterManager";
+import FilterBase from "../FilterBase";
+import MathUtil from "../../mic/MathUtil";
 
-export class BlurFilter extends FilterBase {
+export default class BlurFilter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);
@@ -60,8 +60,10 @@ export class BlurFilter extends FilterBase {
     }
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
-        this._blurXFilter.process(renderer, input, this._tempTarget, true);
-        this._blurYFilter.process(renderer, this._tempTarget, output, clearOutput);
+        const tempTarget = this.filterManager.requestTempTarget();
+        this._blurXFilter.process(renderer, input, tempTarget, true);
+        this._blurYFilter.process(renderer, tempTarget, output, clearOutput);
+        this.filterManager.returnTempTarget(tempTarget);
     }
 
     protected _$initialize(): void {
@@ -74,18 +76,14 @@ export class BlurFilter extends FilterBase {
         this._blurXFilter.pass = this.pass;
         this._blurYFilter.pass = this.pass;
         this._blurXFilter.flipY = false;
-        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
-        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
-        this._tempTarget = null;
         this._blurXFilter.dispose();
         this._blurYFilter.dispose();
         this._blurXFilter = this._blurYFilter = null;
     }
 
-    private _tempTarget: RenderTarget2D = null;
     private _strengthX: number = 5;
     private _strengthY: number = 5;
     private _pass: number = 1;

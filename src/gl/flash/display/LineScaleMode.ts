@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class LineScaleMode {
+abstract class LineScaleMode {
 
     static get HORIZONTAL(): string {
         return "horizontal";
@@ -21,3 +21,5 @@ export abstract class LineScaleMode {
     }
 
 }
+
+export default LineScaleMode;

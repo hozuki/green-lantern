@@ -1,17 +1,16 @@
 /**
  * Created by MIC on 2015/11/20.
  */
+import DisplayObject from "./DisplayObject";
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import Graphics from "./Graphics";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ShaderManager from "../../webgl/ShaderManager";
+import ShaderID from "../../webgl/ShaderID";
+import TimeInfo from "../../mic/TimeInfo";
 
-import {DisplayObject} from "./DisplayObject";
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {Graphics} from "./Graphics";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {ShaderID} from "../../webgl/ShaderID";
-import {TimeInfo} from "../../mic/TimeInfo";
-
-export class Shape extends DisplayObject {
+export default class Shape extends DisplayObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
@@ -19,9 +18,9 @@ export class Shape extends DisplayObject {
     }
 
     dispose(): void {
-        super.dispose();
         this.graphics.dispose();
         this._graphics = null;
+        super.dispose();
     }
 
     get graphics(): Graphics {
@@ -29,6 +28,9 @@ export class Shape extends DisplayObject {
     }
 
     protected _$update(timeInfo: TimeInfo): void {
+        if (this._isRedrawSuggested) {
+            this.graphics.$requestRedraw();
+        }
         this.graphics.$update();
     }
 

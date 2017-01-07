@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class AntiAliasType {
+abstract class AntiAliasType {
 
     static get ADVANCED(): string {
         return "advanced";
@@ -13,3 +13,5 @@ export abstract class AntiAliasType {
     }
 
 }
+
+export default AntiAliasType;

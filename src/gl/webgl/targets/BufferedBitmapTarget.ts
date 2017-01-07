@@ -1,17 +1,16 @@
 /**
  * Created by MIC on 2016/10/29.
  */
-
-import {BitmapTargetBase} from "../BitmapTargetBase";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {PackedArrayBuffer} from "../PackedArrayBuffer";
-import {VirtualDom} from "../../mic/VirtualDom";
+import BitmapTargetBase from "../BitmapTargetBase";
+import WebGLRenderer from "../WebGLRenderer";
+import PackedArrayBuffer from "../PackedArrayBuffer";
+import VirtualDom from "../../mic/VirtualDom";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
-var isInitializedStatically: boolean = false;
+let isInitializedStatically: boolean = false;
 
-export abstract class BufferedBitmapTarget extends BitmapTargetBase {
+abstract class BufferedBitmapTarget extends BitmapTargetBase {
 
     constructor(renderer: WebGLRenderer, isRoot: boolean) {
         super(renderer);
@@ -54,13 +53,13 @@ function initStaticFields(glc: WebGLRenderingContext) {
     if (isInitializedStatically) {
         return;
     }
-    var textureCoords = [
+    const textureCoords: number[] = [
         0, 1,
         1, 1,
         0, 0,
         1, 0
     ];
-    var textureIndices = [
+    const textureIndices: number[] = [
         0, 1, 2,
         1, 2, 3
     ];
@@ -68,3 +67,5 @@ function initStaticFields(glc: WebGLRenderingContext) {
     BufferedBitmapTarget.textureIndices = PackedArrayBuffer.create(glc, textureIndices, gl.UNSIGNED_SHORT, gl.ELEMENT_ARRAY_BUFFER);
     isInitializedStatically = true;
 }
+
+export default BufferedBitmapTarget;

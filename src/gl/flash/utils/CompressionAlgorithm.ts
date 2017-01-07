@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/11.
  */
 
-export abstract class CompressionAlgorithm {
+abstract class CompressionAlgorithm {
 
     static get DEFLATE(): string {
         return "deflate";
@@ -17,3 +17,5 @@ export abstract class CompressionAlgorithm {
     }
 
 }
+
+export default CompressionAlgorithm;

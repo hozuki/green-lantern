@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/30.
  */
 
-import {BitmapFilter} from "./BitmapFilter";
-import {GlowFilter as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
-import {FilterManager} from "../../webgl/FilterManager";
-import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {MathUtil} from "../../mic/MathUtil";
+import BitmapFilter from "./BitmapFilter";
+import {default as WebGLGlowFilter} from "../../webgl/filters/GlowFilter";
+import FilterManager from "../../webgl/FilterManager";
+import BitmapFilterQuality from "./BitmapFilterQuality";
+import MathUtil from "../../mic/MathUtil";
 
-export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
+export default class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 
     constructor(filterManager: FilterManager, color: number = 0xff0000, alpha: number = 1.0, blurX: number = 6.0, blurY: number = 6.0,
                 strength: number = 2, quality: number = BitmapFilterQuality.LOW, inner: boolean = false, knockout: boolean = false) {
@@ -28,7 +28,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
     }
 
     set alpha(v: number) {
-        var b = v !== this.alpha;
+        const b = v !== this.alpha;
         this._alpha = v;
         if (b) {
             this.__updateColorMatrix();
@@ -57,7 +57,7 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
 
     set color(v: number) {
         v |= 0;
-        var b = v !== this._color;
+        const b = v !== this._color;
         this._color = v;
         if (b) {
             this.__updateColorMatrix();
@@ -83,11 +83,11 @@ export class GlowFilter extends WebGLGlowFilter implements BitmapFilter {
     }
 
     private __updateColorMatrix(): void {
-        var r = ((this._color >>> 16) & 0xff) / 0xff;
-        var g = ((this._color >>> 8) & 0xff) / 0xff;
-        var b = (this._color & 0xff) / 0xff;
-        var a = this._alpha;
-        var cm = [
+        const r = ((this._color >>> 16) & 0xff) / 0xff;
+        const g = ((this._color >>> 8) & 0xff) / 0xff;
+        const b = (this._color & 0xff) / 0xff;
+        const a = this._alpha;
+        const cm = [
             0, 0, 0, r, 0,
             0, 0, 0, g, 0,
             0, 0, 0, b, 0,

@@ -1,40 +1,39 @@
 /**
  * Created by MIC on 2015/11/20.
  */
-
-import {IBitmapDrawable} from "./IBitmapDrawable";
-import {Rectangle} from "../geom/Rectangle";
-import {Point} from "../geom/Point";
-import {BitmapFilter} from "../filters/BitmapFilter";
-import {ICloneable} from "../../mic/ICloneable";
-import {ColorTransform} from "../geom/ColorTransform";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {ByteArray} from "../utils/ByteArray";
-import {IDisposable} from "../../mic/IDisposable";
-import {Matrix} from "../geom/Matrix";
-import {GLUtil} from "../../mic/glantern/GLUtil";
-import {MathUtil} from "../../mic/MathUtil";
-import {ArgumentError} from "../errors/ArgumentError";
-import {StageQuality} from "./StageQuality";
-import {DisplayObject} from "./DisplayObject";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {BlendMode} from "./BlendMode";
-import {RgbaColor} from "../../mic/RgbaColor";
-import {EOFError} from "../errors/EOFError";
-import {VirtualDom} from "../../mic/VirtualDom";
+import IBitmapDrawable from "./IBitmapDrawable";
+import Rectangle from "../geom/Rectangle";
+import Point from "../geom/Point";
+import BitmapFilter from "../filters/BitmapFilter";
+import ICloneable from "../../mic/ICloneable";
+import ColorTransform from "../geom/ColorTransform";
+import NotImplementedError from "../errors/NotImplementedError";
+import ByteArray from "../utils/ByteArray";
+import IDisposable from "../../mic/IDisposable";
+import Matrix from "../geom/Matrix";
+import GLUtil from "../../mic/glantern/GLUtil";
+import MathUtil from "../../mic/MathUtil";
+import ArgumentError from "../errors/ArgumentError";
+import StageQuality from "./StageQuality";
+import DisplayObject from "./DisplayObject";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import BlendMode from "./BlendMode";
+import RgbaColor from "../../mic/RgbaColor";
+import EOFError from "../errors/EOFError";
+import VirtualDom from "../../mic/VirtualDom";
 
 // TODO: Endian matters.
 // On Windows (x86/x86-64, little endian), the conversion of 32-bit RGBA to 8-bit bytes are correct. When retrieving
 // ImageData objects, the data is always in [RR,GG,BB,AA] order. Thus when constructing a Uint32Array from a Uint8ClampedArray,
 // reading from the Uint32Array automatically outputs 0xAABBGGRR. However, on big endian systems, it may outputs 0xRRGGBBAA.
 
-export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<BitmapData> {
+export default class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<BitmapData> {
 
     constructor(width: number, height: number, transparent: boolean = true, fillColor: number = 0xffffffff) {
-        var canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
+        const canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
         canvas.width = width;
         canvas.height = height;
-        var context = canvas.getContext("2d");
+        const context = canvas.getContext("2d");
         context.fillStyle = GLUtil.colorToCssSharp(fillColor);
         context.fillRect(0, 0, width, height);
         this._canvas = canvas;
@@ -47,18 +46,18 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     }
 
     clone(): BitmapData {
-        var bitmapData = new BitmapData(this.width, this.height, this._supportsTransparent);
+        const bitmapData = new BitmapData(this.width, this.height, this._supportsTransparent);
         bitmapData._context.putImageData(this.__getArea(0, 0, this.width, this.height), 0, 0);
         return bitmapData;
     }
 
     colorTransform(rect: Rectangle, colorTransform: ColorTransform): void {
-        var realRect = rect.clone();
+        const realRect = rect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, this.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, this.height - realRect.y);
-        var imageData = this.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
-        var imageArray = new Uint32Array(imageData.data.buffer);
-        for (var i = 0; i < imageArray.length; ++i) {
+        const imageData = this.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
+        const imageArray = new Uint32Array(imageData.data.buffer);
+        for (let i = 0; i < imageArray.length; ++i) {
             imageArray[i] = colorTransform.transform(imageArray[i]);
         }
         this.__setArea(imageData, realRect.x, realRect.y);
@@ -66,57 +65,55 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
     compare(otherBitmapData: BitmapData): BitmapData;
     compare(otherBitmapData: BitmapData): number;
-    compare(otherBitmapData: BitmapData): BitmapData|number {
+    compare(otherBitmapData: BitmapData): BitmapData | number {
         if (this.width !== otherBitmapData.width) {
             return -3;
         }
         if (this.height !== otherBitmapData.height) {
             return -4;
         }
-        var thisData = this.__getArea(0, 0, this.width, this.height);
-        var thatData = otherBitmapData.__getArea(0, 0, otherBitmapData.width, otherBitmapData.height);
-        var thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
-        var imageData: ImageData = null;
-        var imageArray: Uint32Array = null;
-        for (var i = 0; i < thisArray.length; ++i) {
-            var thisColor = GLUtil.decomposeRgba(thisArray[i]), thatColor = GLUtil.decomposeRgba(thatArray[i]);
-            var colorDiff: RgbaColor = {
+        const thisData = this.__getArea(0, 0, this.width, this.height);
+        const thatData = otherBitmapData.__getArea(0, 0, otherBitmapData.width, otherBitmapData.height);
+        const thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
+        let imageData: ImageData = null;
+        let imageArray: Uint32Array = null;
+        for (let i = 0; i < thisArray.length; ++i) {
+            let thisColor = GLUtil.decomposeRgba(thisArray[i]), thatColor = GLUtil.decomposeRgba(thatArray[i]);
+            let colorDiff: RgbaColor = {
                 r: Math.abs(thisColor.r - thatColor.r),
                 g: Math.abs(thisColor.g - thatColor.g),
                 b: Math.abs(thisColor.b - thatColor.b),
                 a: Math.abs(thisColor.a - thatColor.a)
             };
             if (colorDiff.r || colorDiff.g || colorDiff.b) {
-                initImageData();
+                if (!imageData) {
+                    imageData = new ImageData(this.width, this.height);
+                    imageArray = new Uint32Array(imageData.data);
+                }
                 imageArray[i] = GLUtil.rgb(colorDiff.r, colorDiff.g, colorDiff.b);
             } else if (colorDiff.a) {
-                initImageData();
+                if (!imageData) {
+                    imageData = new ImageData(this.width, this.height);
+                    imageArray = new Uint32Array(imageData.data);
+                }
                 imageArray[i] = (colorDiff.a << 24) | 0x00ffffff;
             }
         }
-        return imageData !== null ? BitmapData.fromImageData(imageData) : 0;
-
-        function initImageData(): void {
-            if (imageData) {
-                return;
-            }
-            imageData = new ImageData(this.width, this.height);
-            imageArray = new Uint32Array(imageData.data);
-        }
+        return imageData ? BitmapData.fromImageData(imageData) : 0;
     }
 
     copyChannel(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, sourceChannel: number, destChannel: number): void {
-        var realRect = sourceRect.clone();
+        const realRect = sourceRect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, sourceBitmapData.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, sourceBitmapData.height - realRect.y);
         realRect.width = MathUtil.clampUpper(realRect.width, this.width - destPoint.x);
         realRect.height = MathUtil.clampUpper(realRect.height, this.height - destPoint.y);
-        var thisData = this.__getArea(destPoint.x, destPoint.y, realRect.width, realRect.height);
-        var thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
-        var thisArray = thisData.data, thatArray = thatData.data;
-        var srcIndex = Math.round(Math.LOG2E * Math.log(sourceChannel));
-        var destIndex = Math.round(Math.LOG2E * Math.log(destChannel));
-        for (var i = 0; i < thisArray.length; i += 4) {
+        const thisData = this.__getArea(destPoint.x, destPoint.y, realRect.width, realRect.height);
+        const thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
+        const thisArray = thisData.data, thatArray = thatData.data;
+        const srcIndex = Math.round(Math.LOG2E * Math.log(sourceChannel));
+        const destIndex = Math.round(Math.LOG2E * Math.log(destChannel));
+        for (let i = 0; i < thisArray.length; i += 4) {
             thisArray[i + destIndex] = thatArray[i + srcIndex];
         }
         this.__setArea(thisData, destPoint.x, destPoint.y);
@@ -124,7 +121,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
     copyPixels(sourceBitmapData: BitmapData, sourceRect: Rectangle, destPoint: Point, alphaBitmapData: BitmapData = null,
                alphaPoint: Point = null, mergeAlpha: boolean = false): void {
-        var realRect = sourceRect.clone();
+        const realRect = sourceRect.clone();
         realRect.width = MathUtil.clampUpper(realRect.width, sourceBitmapData.width - realRect.x);
         realRect.height = MathUtil.clampUpper(realRect.height, sourceBitmapData.height - realRect.y);
         realRect.width = MathUtil.clampUpper(realRect.width, this.width - destPoint.x);
@@ -136,19 +133,19 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
             realRect.width = MathUtil.clampUpper(realRect.width, alphaBitmapData.width - alphaPoint.x);
             realRect.height = MathUtil.clampUpper(realRect.height, alphaBitmapData.height - alphaPoint.y);
         }
-        var thisData = new ImageData(realRect.width, realRect.height);
-        var thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
-        var thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
-        var alphaData: ImageData = null, alphaArray: Uint8ClampedArray = null;
+        const thisData = new ImageData(realRect.width, realRect.height);
+        const thatData = sourceBitmapData.__getArea(realRect.x, realRect.y, realRect.width, realRect.height);
+        const thisArray = new Uint32Array(thisData.data.buffer), thatArray = new Uint32Array(thatData.data.buffer);
+        let alphaData: ImageData = null, alphaArray: Uint32Array = null;
         if (alphaBitmapData) {
             alphaData = alphaBitmapData.__getArea(alphaPoint.x, alphaPoint.y, realRect.width, realRect.height);
             alphaArray = new Uint32Array(alphaData.data.buffer);
         }
-        for (var i = 0; i < thisArray.length; ++i) {
-            var value = thatArray[i];
+        for (let i = 0; i < thisArray.length; ++i) {
+            let value = thatArray[i];
             if (alphaBitmapData && mergeAlpha) {
-                var alphaAlpha = alphaArray[i] >>> 24;
-                var sourceAlpha = (value & 0xff000000) >>> 24;
+                let alphaAlpha = alphaArray[i] >>> 24;
+                let sourceAlpha = (value & 0xff000000) >>> 24;
                 sourceAlpha *= (alphaAlpha / 0xff) | 0;
                 value = (value & 0x00ffffff) | (sourceAlpha << 24);
             }
@@ -158,13 +155,13 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     }
 
     copyPixelsToByteArray(rect: Rectangle, data: ByteArray): void {
-        var expectedLength = rect.width * rect.height * 4;
+        const expectedLength = rect.width * rect.height * 4;
         if (data.bytesAvailable < expectedLength) {
             data.length = data.position + expectedLength;
         }
-        var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
-        var dataArray = new Uint32Array(imageData.data.buffer);
-        for (var i = 0; i < dataArray.length; ++i) {
+        const imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
+        const dataArray = new Uint32Array(imageData.data.buffer);
+        for (let i = 0; i < dataArray.length; ++i) {
             data.writeUnsignedInt(dataArray[i]);
         }
     }
@@ -186,9 +183,9 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     drawWithQuality(source: IBitmapDrawable, matrix: Matrix = null, colorTransform: ColorTransform = null, blendMode: string = null,
                     clipRect: Rectangle = null, smoothing: boolean = false, quality: string = null): void {
         if (source instanceof DisplayObject) {
-            var displayObject = <DisplayObject>source;
+            const displayObject = <DisplayObject>source;
             this.__buildRenderer();
-            var renderer = this._cachedRenderer;
+            const renderer = this._cachedRenderer;
             renderer.blendMode = blendMode || BlendMode.NORMAL;
             displayObject.$render(renderer);
         } else {
@@ -201,7 +198,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     }
 
     fillRect(rect: Rectangle, color: number): void {
-        var context = this._context;
+        const context = this._context;
         context.fillStyle = GLUtil.colorToCssSharp(color);
         context.fillRect(rect.x, rect.y, rect.width, rect.height);
     }
@@ -222,33 +219,33 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     }
 
     getPixel(x: number, y: number): number {
-        var imageData = this.__getArea(x, y, 1, 1);
-        var dataBuffer = imageData.data;
+        const imageData = this.__getArea(x, y, 1, 1);
+        const dataBuffer = imageData.data;
         // ImageData order: r,g,b,a
         return GLUtil.rgb(dataBuffer[0], dataBuffer[1], dataBuffer[2]);
     }
 
     getPixel32(x: number, y: number): number {
-        var imageData = this.__getArea(x, y, 1, 1);
-        var dataBuffer = imageData.data;
+        const imageData = this.__getArea(x, y, 1, 1);
+        const dataBuffer = imageData.data;
         return GLUtil.rgba(dataBuffer[0], dataBuffer[1], dataBuffer[2], dataBuffer[3]);
     }
 
     getPixels(rect: Rectangle): ByteArray {
-        var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
-        var dataBuffer = imageData.data;
+        const imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
+        const dataBuffer = imageData.data;
         return ByteArray.from(dataBuffer.buffer);
     }
 
     getVector(rect: Rectangle): number[] {
-        var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
-        var dataBuffer = imageData.data;
-        var uint32Array = new Uint32Array(dataBuffer.buffer);
-        var result: number[] = new Array<number>(uint32Array.length);
-        for (var i = 0; i < result.length; ++i) {
-            result[i] = uint32Array[i];
+        const imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
+        const dataBuffer = imageData.data;
+        const uint32Array = new Uint32Array(dataBuffer.buffer);
+        const ret: number[] = new Array<number>(uint32Array.length);
+        for (let i = 0; i < uint32Array.length; ++i) {
+            ret[i] = uint32Array[i];
         }
-        return result;
+        return ret;
     }
 
     get height(): number {
@@ -307,9 +304,9 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
     setPixel32(x: number, y: number, color: number): void {
         color &= 0xffffffff;
-        var imageData = new ImageData(1, 1);
-        var rgba = GLUtil.decomposeRgba(color);
-        var dataBuffer = imageData.data;
+        const imageData = new ImageData(1, 1);
+        const rgba = GLUtil.decomposeRgba(color);
+        const dataBuffer = imageData.data;
         dataBuffer[0] = rgba.r;
         dataBuffer[1] = rgba.g;
         dataBuffer[2] = rgba.b;
@@ -323,15 +320,15 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
      * @param inputByteArray {ByteArray}
      */
     setPixels(rect: Rectangle, inputByteArray: ByteArray): void {
-        var r = rect.clone();
+        const r = rect.clone();
         r.width = MathUtil.clampUpper(r.width, this.width - r.x);
         r.height = MathUtil.clampUpper(r.height, this.height - r.y);
-        var originalPosition = inputByteArray.position;
-        var expectedLength = rect.width * rect.height * 4;
-        var pixelsToRead = (inputByteArray.bytesAvailable / 4) | 0;
-        var imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
-        var dataBuffer = new Uint32Array(imageData.data.buffer);
-        for (var i = 0; i < expectedLength; ++i) {
+        const originalPosition = inputByteArray.position;
+        const expectedLength = rect.width * rect.height * 4;
+        const pixelsToRead = (inputByteArray.bytesAvailable / 4) | 0;
+        const imageData = this.__getArea(rect.x, rect.y, rect.width, rect.height);
+        const dataBuffer = new Uint32Array(imageData.data.buffer);
+        for (let i = 0; i < expectedLength; ++i) {
             if (i >= pixelsToRead) {
                 this._context.putImageData(imageData, rect.x, rect.y);
                 throw new EOFError("The input ByteArray is not large enough.");
@@ -343,17 +340,17 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
     }
 
     setVector(rect: Rectangle, inputVector: number[]): void {
-        var r = rect.clone();
+        const r = rect.clone();
         r.width = MathUtil.clampUpper(r.width, this.width - r.x);
         r.height = MathUtil.clampUpper(r.height, this.height - r.y);
-        var expectedLength = rect.width * rect.height;
+        const expectedLength = rect.width * rect.height;
         if (inputVector.length !== expectedLength) {
             throw new ArgumentError("Invalid vector is used when trying to set pixels.");
         }
-        var imageData = new ImageData(r.width, r.height);
-        var dataBuffer = imageData.data;
-        var uint32Array = new Uint32Array(dataBuffer.buffer);
-        for (var i = 0; i < dataBuffer.length; ++i) {
+        const imageData = new ImageData(r.width, r.height);
+        const dataBuffer = imageData.data;
+        const uint32Array = new Uint32Array(dataBuffer.buffer);
+        for (let i = 0; i < dataBuffer.length; ++i) {
             uint32Array[i] = inputVector[i] | 0;
         }
         this.__setArea(imageData, rect.x, rect.y);
@@ -393,30 +390,30 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
     // Bulletproof
     static fromImageData(imageData: ImageData): BitmapData {
-        var bitmapData = new BitmapData(imageData.width, imageData.height, true, 0x00000000);
+        const bitmapData = new BitmapData(imageData.width, imageData.height, true, 0x00000000);
         bitmapData._context.putImageData(imageData, 0, 0);
         return bitmapData;
     }
 
     private __getArea(x: number, y: number, width: number, height: number): ImageData {
         if (this.isLocked) {
-            var imageData = this._cachedImageData;
-            var imageArray = new Uint32Array(imageData.data.buffer);
-            var resultData = new ImageData(width, height);
-            var resultArray = new Uint32Array(resultData.data.buffer);
+            const imageData = this._cachedImageData;
+            const imageArray = new Uint32Array(imageData.data.buffer);
+            const resultData = new ImageData(width, height);
+            const resultArray = new Uint32Array(resultData.data.buffer);
             if (x === 0 && y === 0 && width === this.width && height === this.height) {
                 // Fast copy
-                for (var i = 0; i < imageArray.length; ++i) {
+                for (let i = 0; i < imageArray.length; ++i) {
                     resultArray[i] = imageArray[i];
                 }
             } else {
                 width = MathUtil.clampUpper(width, this.width - x);
                 height = MathUtil.clampUpper(height, this.height - y);
-                var lineWidth = this.width;
-                var k = 0;
-                for (var i = 0; i < imageArray.length; ++i) {
-                    var row = (i / lineWidth) | 0;
-                    var col = i - row * lineWidth;
+                let lineWidth = this.width;
+                let k = 0;
+                for (let i = 0; i < imageArray.length; ++i) {
+                    let row = (i / lineWidth) | 0;
+                    let col = i - row * lineWidth;
                     if (x <= col && col <= x + width && y <= row && row <= y + height) {
                         resultArray[k++] = imageArray[i];
                     }
@@ -430,22 +427,22 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
     private __setArea(imageData: ImageData, x: number, y: number): void {
         if (this.isLocked) {
-            var cachedData = this._cachedImageData;
-            var cachedArray = new Uint32Array(cachedData.data.buffer);
-            var imageArray = new Uint32Array(imageData.data.buffer);
+            const cachedData = this._cachedImageData;
+            const cachedArray = new Uint32Array(cachedData.data.buffer);
+            const imageArray = new Uint32Array(imageData.data.buffer);
             if (x === 0 && y === 0 && imageData.width === this.width && imageData.height === this.height) {
                 // Fast copy
-                for (var i = 0; i < cachedArray.length; ++i) {
+                for (let i = 0; i < cachedArray.length; ++i) {
                     cachedArray[i] = imageArray[i];
                 }
             } else {
-                var width = MathUtil.clampUpper(imageData.width, this.width - x);
-                var height = MathUtil.clampUpper(imageData.height, this.height - y);
-                var lineWidth = this.width;
-                var k = 0;
-                for (var i = 0; i < cachedArray.length; ++i) {
-                    var row = (i / lineWidth) | 0;
-                    var col = i - row * lineWidth;
+                const width = MathUtil.clampUpper(imageData.width, this.width - x);
+                const height = MathUtil.clampUpper(imageData.height, this.height - y);
+                const lineWidth = this.width;
+                let k = 0;
+                for (let i = 0; i < cachedArray.length; ++i) {
+                    let row = (i / lineWidth) | 0;
+                    let col = i - row * lineWidth;
                     if (x <= col && col <= x + width && y <= row && row <= y + height) {
                         cachedArray[i] = imageArray[k++];
                     }
@@ -461,7 +458,7 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
         if (this._cachedRenderer !== null) {
             return;
         }
-        this._cachedRenderer = new WebGLRenderer(this._canvas, WebGLRenderer.DEFAULT_OPTIONS);
+        this._cachedRenderer = new WebGLRenderer(WebGLRenderer.DEFAULT_OPTIONS, this._canvas);
     }
 
     private _canvas: HTMLCanvasElement = null;
@@ -476,10 +473,10 @@ export class BitmapData implements IBitmapDrawable, IDisposable, ICloneable<Bitm
 
 function floodFill(bitmapData: BitmapData, getCall: (x: number, y: number, w: number, h: number) => ImageData, setCall: (data: ImageData, x: number, y: number) => void,
                    x: number, y: number, color: number): void {
-    var imageData = getCall(0, 0, bitmapData.width, bitmapData.height);
-    var dataBuffer = imageData.data.buffer;
-    var u32 = new Uint32Array(dataBuffer);
-    var lineWidth = bitmapData.width;
+    const imageData = getCall(0, 0, bitmapData.width, bitmapData.height);
+    const dataBuffer = imageData.data.buffer;
+    const u32 = new Uint32Array(dataBuffer);
+    const lineWidth = bitmapData.width;
 
     function point2Index(x: number, y: number): number {
         return x + y * lineWidth;
@@ -495,14 +492,14 @@ function floodFill(bitmapData: BitmapData, getCall: (x: number, y: number, w: nu
 
     // The core flood-fill algorithm, based on a queue.
     type Coordinate = {x: number, y: number};
-    var queue: Coordinate[] = [{x: x, y: y}];
-    var visited: boolean[] = new Array<boolean>(u32.length);
-    var refColor = getColor(x, y);
+    const queue: Coordinate[] = [{x: x, y: y}];
+    const visited: boolean[] = new Array<boolean>(u32.length);
+    const refColor = getColor(x, y);
     visited[point2Index(x, y)] = true;
     while (queue.length > 0) {
-        var coord = queue.shift();
+        const coord = queue.shift();
         setColor(coord.x, coord.y, color);
-        var index: number;
+        let index: number;
         // Top
         if (coord.y > 0) {
             index = point2Index(coord.x, coord.y - 1);

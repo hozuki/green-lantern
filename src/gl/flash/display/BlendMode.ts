@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class BlendMode {
+abstract class BlendMode {
 
     static get ADD(): string {
         return "add";
@@ -65,3 +65,5 @@ export abstract class BlendMode {
     }
 
 }
+
+export default BlendMode;

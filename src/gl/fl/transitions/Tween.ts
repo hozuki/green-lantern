@@ -2,10 +2,10 @@
  * Created by MIC on 2015/12/26.
  */
 
-import {EventDispatcher} from "../../flash/events/EventDispatcher";
-import {NotImplementedError} from "../../flash/errors/NotImplementedError";
+import EventDispatcher from "../../flash/events/EventDispatcher";
+import NotImplementedError from "../../flash/errors/NotImplementedError";
 
-export class Tween extends EventDispatcher {
+export default class Tween extends EventDispatcher {
 
     constructor(obj: Object, prop: string, func: Function, begin: number, finish: number, duration: number, useSeconds: boolean = false) {
         super();

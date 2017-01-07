@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class GridFitType {
+abstract class GridFitType {
 
     static get NONE(): string {
         return "none";
@@ -17,3 +17,5 @@ export abstract class GridFitType {
     }
 
 }
+
+export default GridFitType;

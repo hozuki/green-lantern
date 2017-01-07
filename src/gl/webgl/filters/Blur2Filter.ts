@@ -2,20 +2,19 @@
  * Created by MIC on 2015/12/22.
  */
 
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterManager} from "../FilterManager";
-import {FilterBase} from "../FilterBase";
-import {RenderHelper} from "../RenderHelper";
-import {ShaderID} from "../ShaderID";
-import {Blur2Shader} from "../shaders/Blur2Shader";
-import {MathUtil} from "../../mic/MathUtil";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterManager from "../FilterManager";
+import FilterBase from "../FilterBase";
+import RenderHelper from "../RenderHelper";
+import ShaderID from "../ShaderID";
+import Blur2Shader from "../shaders/Blur2Shader";
+import MathUtil from "../../mic/MathUtil";
 
-export class Blur2Filter extends FilterBase {
+export default class Blur2Filter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);
-        this._tempTarget = manager.renderer.createRenderTarget();
     }
 
     get strengthX(): number {
@@ -51,15 +50,16 @@ export class Blur2Filter extends FilterBase {
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
         // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
-        var passCoeff = 3;
+        const passCoeff = 3;
 
         // See http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
-        var t1 = input, t2 = this._tempTarget;
+        const tempTarget = this.filterManager.requestTempTarget();
+        let t1 = input, t2 = tempTarget;
         t2.clear();
-        var t: RenderTarget2D;
-        for (var i = 0; i < this.pass * passCoeff; ++i) {
+        let t: RenderTarget2D;
+        for (let i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR2, true, (renderer: WebGLRenderer): void => {
-                var shader = <Blur2Shader>renderer.shaderManager.currentShader;
+                const shader = <Blur2Shader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strengthX / 4 / this.pass / (t1.fitWidth / t1.originalWidth));
                 shader.setResolution(input.fitWidth);
                 shader.setBlurDirection([1.0, 0.0]);
@@ -68,9 +68,9 @@ export class Blur2Filter extends FilterBase {
             t1 = t2;
             t2 = t;
         }
-        for (var i = 0; i < this.pass * passCoeff; ++i) {
+        for (let i = 0; i < this.pass * passCoeff; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR2, true, (renderer: WebGLRenderer): void => {
-                var shader = <Blur2Shader>renderer.shaderManager.currentShader;
+                const shader = <Blur2Shader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strengthY / 4 / this.pass / (t1.fitWidth / t1.originalWidth));
                 shader.setResolution(input.fitHeight);
                 shader.setBlurDirection([0.0, 1.0]);
@@ -80,18 +80,15 @@ export class Blur2Filter extends FilterBase {
             t2 = t;
         }
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
+        this.filterManager.returnTempTarget(tempTarget);
     }
 
     protected _$initialize(): void {
-        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
-        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
-        this._tempTarget = null;
     }
 
-    private _tempTarget: RenderTarget2D = null;
     private _strengthX: number = 5;
     private _strengthY: number = 5;
     private _pass: number = 1;

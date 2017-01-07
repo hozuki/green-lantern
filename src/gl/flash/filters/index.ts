@@ -2,6 +2,8 @@
  * Created by MIC on 2015/11/30.
  */
 
-export * from "./BitmapFilterQuality";
-export * from "./BlurFilter";
-export * from "./GlowFilter";
+import BitmapFilterQuality from "./BitmapFilterQuality";
+import BlurFilter from "./BlurFilter";
+import GlowFilter from "./GlowFilter";
+
+export {BitmapFilterQuality, BlurFilter, GlowFilter};

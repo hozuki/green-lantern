@@ -5,13 +5,15 @@
 /**
  * @type {EngineBase}
  */
-var lantern = null;
+let lantern = null;
 (function initGLantern() {
     if (GLantern.isSupported()) {
         lantern = new GLantern.EngineBase();
-        lantern.initialize(682, 438);
-        (function (selector) {
-            var elem = document.querySelector(selector);
+        const canvas = document.createElement("canvas");
+        canvas.className = "glantern-view";
+        lantern.initialize(canvas, 682, 438);
+        ((selector) => {
+            const elem = document.querySelector(selector);
             elem.appendChild(lantern.view);
         })("#glantern-container");
 
@@ -22,16 +24,16 @@ var lantern = null;
 })();
 
 (function initList() {
-    var testCases = {
+    const testCases = {
         "Madoka": "raw-madoka-group.js",
         "Shapes and Interaction": "shapes-and-interaction.js",
         "TT Test Case #2": "tt-test-case-2.js",
-        "Simple Text": "draw-text.js",
+        "Simple Text": "simple-text.js",
         "Object Masking": "object-masking.js"
     };
 
-    var caseListElem = document.querySelector("#test-case-selector");
-    var checkResult = GLantern.checkSupportStatus();
+    const caseListElem = document.querySelector("#test-case-selector");
+    const checkResult = GLantern.checkSupportStatus();
     if (checkResult.ok) {
         initNormal();
     } else {
@@ -42,8 +44,8 @@ var lantern = null;
         /**
          * @type {HTMLAnchorElement}
          */
-        var aElem = this;
-        var e;
+        const aElem = this;
+        let e;
         e = document.querySelector("#test-case-selector-container");
         e.style.display = "none";
         e = document.querySelector("#test-case-desc");
@@ -61,23 +63,23 @@ var lantern = null;
         /**
          * @type {HTMLScriptElement}
          */
-        var script = document.createElement("script");
+        const script = document.createElement("script");
         script.src = fileName;
         script.defer = true;
         document.body.appendChild(script);
     }
 
     function initNormal() {
-        for (var caseName in testCases) {
+        for (const caseName in testCases) {
             if (testCases.hasOwnProperty(caseName)) {
                 /**
                  * @type {HTMLLIElement}
                  */
-                var liElem = document.createElement("li");
+                const liElem = document.createElement("li");
                 /**
                  * @type {HTMLAnchorElement}
                  */
-                var aElem = document.createElement("a");
+                const aElem = document.createElement("a");
                 aElem.textContent = caseName;
                 aElem.href = "javascript:;";
                 aElem.name = "test-scripts/" + testCases[caseName];
@@ -96,28 +98,28 @@ var lantern = null;
         /**
          * @type {HTMLLIElement}
          */
-        var liElem = document.createElement("li");
+        const liElem = document.createElement("li");
         /**
          * @type {HTMLParagraphElement}
          */
-        var mainPara = document.createElement("p");
+        const mainPara = document.createElement("p");
         mainPara.textContent = "Oops, it seems that GLantern is not support by your browser.";
         /**
          * @type {HTMLUListElement}
          */
-        var reasonList = document.createElement("ul");
+        const reasonList = document.createElement("ul");
         /**
          * @type {HTMLParagraphElement}
          */
-        var reasonPara = document.createElement("p");
+        const reasonPara = document.createElement("p");
         reasonPara.textContent = "Reason:";
 
         liElem.appendChild(mainPara);
         liElem.appendChild(reasonPara);
         liElem.appendChild(reasonList);
 
-        for (var i = 0; i < reasons.length; ++i) {
-            var li = document.createElement("li");
+        for (let i = 0; i < reasons.length; ++i) {
+            const li = document.createElement("li");
             li.textContent = reasons[i];
             reasonList.appendChild(li);
         }

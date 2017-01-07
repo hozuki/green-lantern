@@ -2,11 +2,11 @@
  * Created by MIC on 2016/10/30.
  */
 
-import {TimeInfo} from "./TimeInfo";
+import TimeInfo from "./TimeInfo";
 
-export interface IUpdateable {
-
+interface IUpdateable {
     enabled: boolean;
     update(timeInfo: TimeInfo): void;
-
 }
+
+export default IUpdateable;

@@ -2,13 +2,13 @@
  * Created by MIC on 2015/11/17.
  */
 
-import {RgbaColor} from "../RgbaColor";
-import {CommonUtil} from "../CommonUtil";
+import RgbaColor from "../RgbaColor";
+import CommonUtil from "../CommonUtil";
 
 /**
  * The class providing utility functions.
  */
-export abstract class GLUtil {
+abstract class GLUtil {
 
     static colorToCssSharp(color: number): string {
         color |= 0;
@@ -17,10 +17,10 @@ export abstract class GLUtil {
 
     static colorToCssRgba(color: number): string {
         color |= 0;
-        var a = (color >> 24) & 0xff;
-        var r = (color >> 16) & 0xff;
-        var g = (color >> 8) & 0xff;
-        var b = color & 0xff;
+        const a = (color >> 24) & 0xff;
+        const r = (color >> 16) & 0xff;
+        const g = (color >> 8) & 0xff;
+        const b = color & 0xff;
         return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
 
@@ -33,22 +33,24 @@ export abstract class GLUtil {
     }
 
     static decomposeRgb(color: number): RgbaColor {
-        var r = (color >> 16) & 0xff;
-        var g = (color >> 8) & 0xff;
-        var b = color & 0xff;
+        const r = (color >> 16) & 0xff;
+        const g = (color >> 8) & 0xff;
+        const b = color & 0xff;
         return {
             r: r, g: g, b: b, a: 0xff
         };
     }
 
     static decomposeRgba(color: number): RgbaColor {
-        var a = (color >> 24) & 0xff;
-        var r = (color >> 16) & 0xff;
-        var g = (color >> 8) & 0xff;
-        var b = color & 0xff;
+        const a = (color >> 24) & 0xff;
+        const r = (color >> 16) & 0xff;
+        const g = (color >> 8) & 0xff;
+        const b = color & 0xff;
         return {
             r: r, g: g, b: b, a: a
         };
     }
 
 }
+
+export default GLUtil;

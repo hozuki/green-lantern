@@ -1,19 +1,17 @@
 /**
  * Created by MIC on 2015/11/17.
  */
-
 import * as libtess from "libtess";
-import {RendererOptions} from "./RendererOptions";
-import {ShaderManager} from "./ShaderManager";
-import {FilterManager} from "./FilterManager";
-import {RenderTarget2D} from "./targets/RenderTarget2D";
-import {WebGLUtils} from "./WebGLUtils";
-import {IDisposable} from "../mic/IDisposable";
-import {BlendMode} from "../flash/display/BlendMode";
-import {ArgumentError} from "../flash/errors/ArgumentError";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
-import {FrameImage} from "./FrameImage";
+import RendererOptions from "./RendererOptions";
+import ShaderManager from "./ShaderManager";
+import FilterManager from "./FilterManager";
+import RenderTarget2D from "./targets/RenderTarget2D";
+import WebGLUtils from "./WebGLUtils";
+import IDisposable from "../mic/IDisposable";
+import BlendMode from "../flash/display/BlendMode";
+import VirtualDom from "../mic/VirtualDom";
+import CommonUtil from "../mic/CommonUtil";
+import FrameImage from "./FrameImage";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
@@ -21,29 +19,17 @@ const gl = VirtualDom.WebGLRenderingContext;
  * The WebGL $renderer, main provider of the rendering services.
  * @implements {IDisposable}
  */
-export class WebGLRenderer implements IDisposable {
+export default class WebGLRenderer implements IDisposable {
 
     /**
-     * Creates a new {@link WebGLRenderer} based on specified {@link HTMLCanvasElement}.
-     * @param canvas {HTMLCanvasElement}
-     * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
-     */
-    constructor(canvas: HTMLCanvasElement, options: RendererOptions);
-    /**
      * Creates a new {@link WebGLRenderer}.
+     * @param canvas {HTMLCanvasElement} If canvas is not null, the new {@link WebGLRenderer} will use it as target.
      * @param width {Number} The width for presentation of the $renderer.
      * @param height {Number} The height for presentation of the $renderer.
      * @param options {RendererOptions} Options for initializing the newly created {@link WebGLRenderer}.
      */
-    constructor(width: number, height: number, options: RendererOptions);
-    constructor(p1: any, p2: any, p3?: any) {
-        if (typeof p1 === "number") {
-            this.__initialize(p3, null, p1, p2);
-        } else if (p1 instanceof HTMLCanvasElement) {
-            this.__initialize(p2, p1);
-        } else {
-            throw new ArgumentError("Invalid constructor parameters.");
-        }
+    constructor(options: RendererOptions, canvas: HTMLCanvasElement = null, width?: number, height?: number) {
+        this.__initialize(options, canvas, width, height);
     }
 
     /**
@@ -76,7 +62,7 @@ export class WebGLRenderer implements IDisposable {
     }
 
     beginDrawMaskObject(): void {
-        var context = this.context;
+        const context = this.context;
         context.stencilFunc(gl.ALWAYS, 1, 0xff);
         context.stencilMask(0xff);
         context.enable(gl.STENCIL_TEST);
@@ -86,7 +72,7 @@ export class WebGLRenderer implements IDisposable {
     }
 
     beginDrawMaskedObjects(): void {
-        var context = this.context;
+        const context = this.context;
         context.stencilFunc(gl.EQUAL, 1, 0xff);
         context.stencilMask(0);
         context.enable(gl.STENCIL_TEST);
@@ -96,7 +82,7 @@ export class WebGLRenderer implements IDisposable {
     }
 
     beginDrawNormalObjects(): void {
-        var context = this.context;
+        const context = this.context;
         context.disable(gl.STENCIL_TEST);
         context.stencilMask(0);
         context.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
@@ -126,14 +112,14 @@ export class WebGLRenderer implements IDisposable {
 
     /**
      * Switches current $render target to a specified {@link RenderTarget2D}.
-     * @param [v] {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
+     * @param v {RenderTarget2D} The {@link RenderTarget2D} that will be used. Null means using the default first-time
      * $render target of the {@link WebGLRenderer}. The default value is null.
      */
     set currentRenderTarget(v: RenderTarget2D) {
-        if (v === this._currentRenderTarget && CommonUtil.ptr(v)) {
+        if (v === this._currentRenderTarget && v) {
             return;
         }
-        var t = this._currentRenderTarget = CommonUtil.ptr(v) ? v : this._screenRenderTarget;
+        const t = this._currentRenderTarget = v ? v : this._screenRenderTarget;
         t.activate();
     }
 
@@ -232,8 +218,8 @@ export class WebGLRenderer implements IDisposable {
             return;
         }
 
-        var config: number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
-        var glc = this._context;
+        const config: number[] = BMS[blendMode] || BMS[BlendMode.NORMAL];
+        const glc = this._context;
         if (config[0] >= 0) {
             glc.blendEquation(gl.FUNC_ADD);
         } else {
@@ -243,6 +229,9 @@ export class WebGLRenderer implements IDisposable {
         this._blendMode = blendMode;
     }
 
+    /**
+     * @returns {String}
+     */
     get blendMode(): string {
         return this._blendMode;
     }
@@ -266,7 +255,7 @@ export class WebGLRenderer implements IDisposable {
      * @param [height] {Number} The height, in pixels.
      * @private
      */
-    private __initialize(options: RendererOptions, canvas: HTMLCanvasElement = null, width: number = 400, height: number = 300) {
+    private __initialize(options: RendererOptions, canvas: HTMLCanvasElement = null, width?: number, height?: number) {
         if (this._isInitialized) {
             return;
         }
@@ -276,11 +265,15 @@ export class WebGLRenderer implements IDisposable {
         if (!canvas) {
             canvas = VirtualDom.createElement<HTMLCanvasElement>("canvas");
             canvas.className = "glantern-view";
+        }
+        if (!CommonUtil.isUndefined(width)) {
             canvas.width = width;
+        }
+        if (!CommonUtil.isUndefined(height)) {
             canvas.height = height;
         }
 
-        var attributes: WebGLContextAttributes = Object.create(null);
+        const attributes: WebGLContextAttributes = Object.create(null);
         attributes.alpha = options.transparent;
         attributes.antialias = options.antialias;
         attributes.premultipliedAlpha = true;
@@ -288,7 +281,7 @@ export class WebGLRenderer implements IDisposable {
         this._context = WebGLUtils.setupWebGL(canvas, attributes);
         this._view = canvas;
 
-        var glc = this._context;
+        const glc = this._context;
         glc.disable(gl.DEPTH_TEST);
         glc.disable(gl.CULL_FACE);
         glc.enable(gl.BLEND);
@@ -304,7 +297,6 @@ export class WebGLRenderer implements IDisposable {
         this._filterManager = new FilterManager(this);
 
         this.currentRenderTarget = null;
-        // this.currentTarget = this.currentRenderTarget;
 
         this.__initializeTessellator();
     }
@@ -314,7 +306,7 @@ export class WebGLRenderer implements IDisposable {
      * @private
      */
     private __initializeTessellator(): void {
-        var tess = this._tessellator;
+        const tess = this._tessellator;
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_VERTEX_DATA,
             (data: number[], polyVertArray: number[][]): void => {
                 polyVertArray[polyVertArray.length - 1].push(data[0], data[1], data[2]);
@@ -368,7 +360,7 @@ export class WebGLRenderer implements IDisposable {
 
 }
 
-var BMS: {[k: string]: number[]} = Object.create(null);
+const BMS: {[k: string]: number[]} = Object.create(null);
 BMS[BlendMode.ADD] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.ALPHA] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
 BMS[BlendMode.DARKEN] = [1, gl.ONE, gl.ONE_MINUS_SRC_ALPHA];

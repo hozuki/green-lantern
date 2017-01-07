@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/30.
  */
 
-import {BitmapFilter} from "./BitmapFilter";
-import {Blur2Filter as WebGLBlur2Filter} from "../../webgl/filters/Blur2Filter";
-import {BitmapFilterQuality} from "./BitmapFilterQuality";
-import {FilterManager} from "../../webgl/FilterManager";
+import BitmapFilter from "./BitmapFilter";
+import Blur2Filter from "../../webgl/filters/Blur2Filter";
+import BitmapFilterQuality from "./BitmapFilterQuality";
+import FilterManager from "../../webgl/FilterManager";
 
 /**
  * Derive from {@link BlurFilter} for better performance, or {@link Blur2Filter} for better quality.
  */
-export class BlurFilter extends WebGLBlur2Filter implements BitmapFilter {
+export default class BlurFilter extends Blur2Filter implements BitmapFilter {
 
     constructor(filterManager: FilterManager, blurX: number = 4.0, blurY: number = 4.0, quality: number = BitmapFilterQuality.LOW) {
         super(filterManager);

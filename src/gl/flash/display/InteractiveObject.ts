@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {DisplayObject} from "./DisplayObject";
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
+import DisplayObject from "./DisplayObject";
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
 
-export abstract class InteractiveObject extends DisplayObject {
+abstract class InteractiveObject extends DisplayObject {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super(root, parent);
@@ -20,3 +20,5 @@ export abstract class InteractiveObject extends DisplayObject {
     tabIndex: number = -1;
 
 }
+
+export default InteractiveObject;

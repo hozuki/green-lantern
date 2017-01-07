@@ -2,16 +2,18 @@
  * Created by MIC on 2016/6/13.
  */
 
-export class EventBase implements Event {
+abstract class EventBase implements Event {
 
     bubbles: boolean = false;
     cancelBubble: boolean = false;
     cancelable: boolean = false;
     currentTarget: EventTarget = null;
+    deepPath: () => EventTarget[] = null;
     defaultPrevented: boolean = false;
     eventPhase: number = -1;
     isTrusted: boolean = true;
     returnValue: boolean = false;
+    scoped: boolean = true;
     srcElement: Element = null;
     target: EventTarget = null;
     timeStamp: number = 0;
@@ -40,9 +42,14 @@ export class EventBase implements Event {
     }
 
     static create(type: string): EventBase {
-        var ev = new EventBase(type, false, false);
+        const ev = new PlainEvent(type, false, false);
         ev.timeStamp = Date.now();
         return ev;
     }
 
 }
+
+class PlainEvent extends EventBase {
+}
+
+export default EventBase;

@@ -2,4 +2,6 @@
  * Created by MIC on 2016/6/11.
  */
 
-export * from "./GLUtil";
+import GLUtil from "./GLUtil";
+
+export {GLUtil};

@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ICopyable} from "../../mic/ICopyable";
-import {ICloneable} from "../../mic/ICloneable";
-import {MathUtil} from "../../mic/MathUtil";
+import ICopyable from "../../mic/ICopyable";
+import ICloneable from "../../mic/ICloneable";
+import MathUtil from "../../mic/MathUtil";
 
-export class Point implements ICloneable<Point>, ICopyable<Point> {
+export default class Point implements ICloneable<Point>, ICopyable<Point> {
 
     constructor(x: number = 0, y: number = 0) {
         this.x = x;
@@ -44,7 +44,7 @@ export class Point implements ICloneable<Point>, ICopyable<Point> {
     }
 
     normalize(thickness: number): void {
-        var len = this.length;
+        const len = this.length;
         if (len > 0) {
             this.x *= thickness / len;
             this.y *= thickness / len;

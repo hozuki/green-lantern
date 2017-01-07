@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class TextFormatAlign {
+abstract class TextFormatAlign {
 
     static get CENTER(): string {
         return "center";
@@ -29,3 +29,5 @@ export abstract class TextFormatAlign {
     }
 
 }
+
+export default TextFormatAlign;

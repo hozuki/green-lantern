@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class StageQuality {
+abstract class StageQuality {
 
     static get BEST(): string {
         return 'best';
@@ -21,3 +21,5 @@ export abstract class StageQuality {
     }
 
 }
+
+export default StageQuality;

@@ -2,10 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {IDisposable} from "../../mic/IDisposable";
-import {CommonUtil} from "../../mic/CommonUtil";
+import IDisposable from "../../mic/IDisposable";
 
-export abstract class EventDispatcher implements IDisposable {
+abstract class EventDispatcher implements IDisposable {
 
     constructor() {
         this._listeners = new Map<string, Function[]>();
@@ -13,7 +12,7 @@ export abstract class EventDispatcher implements IDisposable {
 
     addEventListener(type: string, listener: Function, useCapture: boolean = false): void {
         // jabbany
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         if (!listeners.has(type)) {
             listeners.set(type, []);
         }
@@ -22,15 +21,11 @@ export abstract class EventDispatcher implements IDisposable {
 
     dispatchEvent(event: Event, data?: any): boolean {
         // jabbany
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         if (listeners.has(event.type) && listeners.get(event.type) !== null) {
-            var arr = listeners.get(event.type);
-            for (var i = 0; i < arr.length; ++i) {
-                try {
-                    arr[i](data);
-                } catch (ex) {
-                    CommonUtil.trace(ex.toString(), "dispatchEvent: error");
-                }
+            const arr = listeners.get(event.type);
+            for (let i = 0; i < arr.length; ++i) {
+                arr[i](data);
             }
             return true;
         } else {
@@ -40,11 +35,11 @@ export abstract class EventDispatcher implements IDisposable {
 
     removeEventListener(type: string, listener: Function, useCapture: boolean = false): void {
         // jabbany
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         if (!listeners.has(type) || listeners.get(type).length === 0) {
             return;
         }
-        var index = listeners.get(type).indexOf(listener);
+        const index = listeners.get(type).indexOf(listener);
         if (index >= 0) {
             listeners.get(type).splice(index, 1);
         }
@@ -59,7 +54,7 @@ export abstract class EventDispatcher implements IDisposable {
     }
 
     dispose(): void {
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         listeners.forEach((categorizedListeners: Function[]): void => {
             while (categorizedListeners.length > 0) {
                 categorizedListeners.pop();
@@ -71,3 +66,5 @@ export abstract class EventDispatcher implements IDisposable {
     private _listeners: Map<string, Function[]> = null;
 
 }
+
+export default EventDispatcher;

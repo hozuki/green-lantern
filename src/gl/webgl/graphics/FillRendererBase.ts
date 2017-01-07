@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {GraphicsDataRendererBase} from "./GraphicsDataRendererBase";
-import {IFillDataRenderer} from "./IFillDataRenderer";
-import {Graphics} from "../../flash/display/Graphics";
+import GraphicsDataRendererBase from "./GraphicsDataRendererBase";
+import IFillDataRenderer from "./IFillDataRenderer";
+import Graphics from "../../flash/display/Graphics";
 
-export abstract class FillRendererBase extends GraphicsDataRendererBase implements IFillDataRenderer {
+abstract class FillRendererBase extends GraphicsDataRendererBase implements IFillDataRenderer {
 
     constructor(graphics: Graphics, currentX: number, currentY: number) {
         super(graphics, currentX, currentY, currentX, currentY);
@@ -42,7 +42,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     endIndex: number = -1;
 
     protected _$getContourForClosedShapes(): number[] {
-        var currentContour: number[];
+        let currentContour: number[];
         if (this.hasDrawnAnything) {
             currentContour = [];
             this._contours.push(currentContour);
@@ -54,7 +54,7 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     }
 
     protected _$getContourForLines(): number[] {
-        var currentContour: number[];
+        let currentContour: number[];
         if (this.hasDrawnAnything) {
             if (this._startingNewContour) {
                 currentContour = [];
@@ -74,3 +74,5 @@ export abstract class FillRendererBase extends GraphicsDataRendererBase implemen
     protected _startingNewContour: boolean = true;
 
 }
+
+export default FillRendererBase;

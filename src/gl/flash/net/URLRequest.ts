@@ -2,13 +2,13 @@
  * Created by MIC on 2016/9/13.
  */
 
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {ByteArray} from "../utils/ByteArray";
-import {URLVariables} from "./URLVariables";
-import {URLRequestMethod} from "./URLRequestMethod";
-import {URLRequestHeader} from "./URLRequestHeader";
+import NotImplementedError from "../errors/NotImplementedError";
+import ByteArray from "../utils/ByteArray";
+import URLVariables from "./URLVariables";
+import URLRequestMethod from "./URLRequestMethod";
+import URLRequestHeader from "./URLRequestHeader";
 
-export class URLRequest {
+export default class URLRequest {
 
     constructor(url: string = null) {
         this._url = url;

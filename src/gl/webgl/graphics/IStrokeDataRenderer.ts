@@ -2,8 +2,9 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {IGraphicsDataRenderer} from "./IGraphicsDataRenderer";
+import IGraphicsDataRenderer from "./IGraphicsDataRenderer";
 
-export interface IStrokeDataRenderer extends IGraphicsDataRenderer {
-
+interface IStrokeDataRenderer extends IGraphicsDataRenderer {
 }
+
+export default IStrokeDataRenderer;

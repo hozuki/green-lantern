@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/11.
  */
 
-export abstract class MathUtil {
+abstract class MathUtil {
 
     /**
      * Limit a number inside a range specified by min and max (both are reachable).
@@ -48,7 +48,7 @@ export abstract class MathUtil {
      * @returns {Boolean} True if the number is a power of 2, and false otherwise.
      */
     static isPowerOfTwo(positiveNumber: number): boolean {
-        var num = positiveNumber | 0;
+        const num = positiveNumber | 0;
         if (num != positiveNumber || MathUtil.isNaN(num) || !isFinite(num)) {
             return false;
         } else {
@@ -98,3 +98,5 @@ export abstract class MathUtil {
     }
 
 }
+
+export default MathUtil;

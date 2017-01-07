@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export class ErrorBase implements Error {
+abstract class ErrorBase implements Error {
 
     constructor(message: string = "") {
         this._message = message;
@@ -19,3 +19,5 @@ export class ErrorBase implements Error {
     private _message: string = null;
 
 }
+
+export default ErrorBase;

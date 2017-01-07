@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class TextFieldAutoSize {
+abstract class TextFieldAutoSize {
 
     static get CENTER(): string {
         return "center";
@@ -21,3 +21,5 @@ export abstract class TextFieldAutoSize {
     }
 
 }
+
+export default TextFieldAutoSize;

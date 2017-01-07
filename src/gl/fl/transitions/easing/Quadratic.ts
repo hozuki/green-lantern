@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Quadratic {
+abstract class Quadratic {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         return c * (t /= d) * t + b;
@@ -21,3 +21,5 @@ export abstract class Quadratic {
     }
 
 }
+
+export default Quadratic;

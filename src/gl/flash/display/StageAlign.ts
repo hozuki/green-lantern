@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class StageAlign {
+abstract class StageAlign {
 
     static get BOTTOM(): string {
         return 'B';
@@ -37,3 +37,5 @@ export abstract class StageAlign {
     }
 
 }
+
+export default StageAlign;

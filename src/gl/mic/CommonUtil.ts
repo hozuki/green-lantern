@@ -1,23 +1,22 @@
 /**
  * Created by MIC on 2016/8/22.
  */
+import VirtualDom from "./VirtualDom";
+import SupportCheckResult from "./SupportCheckResult";
 
-import {VirtualDom} from "./VirtualDom";
-import {SupportCheckResult} from "./SupportCheckResult";
-
-export abstract class CommonUtil {
+abstract class CommonUtil {
 
     static checkSupportStatus(): SupportCheckResult {
-        var result: SupportCheckResult = {
+        const result: SupportCheckResult = {
             ok: true,
             reasons: []
         };
-        var env = <any>VirtualDom.env;
+        const env = <any>VirtualDom.env;
         if (!env) {
             result.ok = false;
             result.reasons.push("'window' object is not found in global scope.");
         }
-        var notSupportedPrompt = " is not supported by this browser";
+        const notSupportedPrompt = " is not supported by this browser";
         // GLantern is based on <canvas>, so it should exist.
         if (!CommonUtil.isClassDefinition(env["HTMLCanvasElement"])) {
             result.ok = false;
@@ -34,8 +33,8 @@ export abstract class CommonUtil {
             result.reasons.push("WebGL" + notSupportedPrompt);
         }
         // Classes related to array buffer.
-        var arrayBufferClasses: string[] = ["ArrayBuffer", "DataView", "Uint8Array", "Int8Array", "Uint16Array", "Int16Array", "Uint32Array", "Int32Array", "Float32Array", "Float64Array"];
-        for (var i = 0; i < arrayBufferClasses.length; ++i) {
+        const arrayBufferClasses: string[] = ["ArrayBuffer", "DataView", "Uint8Array", "Int8Array", "Uint16Array", "Int16Array", "Uint32Array", "Int32Array", "Float32Array", "Float64Array"];
+        for (let i = 0; i < arrayBufferClasses.length; ++i) {
             if (!CommonUtil.isClassDefinition(env[arrayBufferClasses[i]])) {
                 result.ok = false;
                 result.reasons.push(`'${arrayBufferClasses[i]}' class${notSupportedPrompt}`);
@@ -53,8 +52,8 @@ export abstract class CommonUtil {
         }
         // No plans for support of Chrome whose version is under 40, due to a WebGL memory leak problem.
         if (typeof env["chrome"] === "object") {
-            var chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
-            var chromeVersionInfo = chromeVersionRegExp.exec(VirtualDom.appVersion);
+            const chromeVersionRegExp = /Chrome\/(\d+)(?:\.\d+)*/;
+            const chromeVersionInfo = chromeVersionRegExp.exec(VirtualDom.appVersion);
             if (chromeVersionInfo.length < 2 || parseInt(chromeVersionInfo[1]) < 40) {
                 result.ok = false;
                 result.reasons.push("Chrome under version 40 is not supported due to performance faults.");
@@ -112,15 +111,6 @@ export abstract class CommonUtil {
     }
 
     /**
-     * Check whether a value is logically true.
-     * @param value {*} The value to check.
-     * @returns {Boolean}
-     */
-    static ptr<T>(value: T): boolean {
-        return !!value;
-    }
-
-    /**
      * Check whether a value is a class prototype.
      * @param value {*} The value to check.
      * @returns {Boolean} True if the value is a class definition, and false otherwise.
@@ -128,14 +118,15 @@ export abstract class CommonUtil {
      *          and tested features (e.g. WebGLRenderingContext) as objects.
      */
     static isClassDefinition(value: any): boolean {
-        var typeCheck: boolean;
+        let typeCheck: boolean;
         if (typeof value === "function") {
             typeCheck = true;
         } else {
-            var isIE11 = VirtualDom.appVersion.indexOf("Trident/7.0") >= 0 && VirtualDom.appVersion.indexOf("rv:11.0") >= 0;
+            const appVersion = VirtualDom.appVersion;
+            const isIE11 = appVersion.indexOf("Trident/7.0") >= 0 && appVersion.indexOf("rv:11.0") >= 0;
             typeCheck = isIE11 && typeof value === "object";
         }
-        var constructorCheck = (value && value.prototype ? value.prototype.constructor === value : false);
+        const constructorCheck = (value && value.prototype ? value.prototype.constructor === value : false);
         return typeCheck && constructorCheck;
     }
 
@@ -150,12 +141,12 @@ export abstract class CommonUtil {
      * @returns {String} The generated string, with valid placeholders replaced by values matched.
      */
     static formatString(format: string, ...replaceWithArray: any[]): string {
-        var replaceWithArrayIsNull = !CommonUtil.ptr(replaceWithArray);
-        var replaceWithArrayLength = replaceWithArrayIsNull ? -1 : replaceWithArray.length;
+        const replaceWithArrayIsNull = !replaceWithArray;
+        const replaceWithArrayLength = replaceWithArrayIsNull ? -1 : replaceWithArray.length;
 
         function __stringFormatter(matched: string): string {
-            var indexString = matched.substring(1, matched.length - 1);
-            var indexValue = parseInt(indexString);
+            const indexString = matched.substring(1, matched.length - 1);
+            const indexValue = parseInt(indexString);
             if (!replaceWithArrayIsNull && (0 <= indexValue && indexValue < replaceWithArrayLength)) {
                 if (typeof replaceWithArray[indexValue] === "undefined") {
                     return "undefined";
@@ -169,7 +160,7 @@ export abstract class CommonUtil {
             }
         }
 
-        var regex = /{[\d]+}/g;
+        const regex = /{[\d]+}/g;
         return format.replace(regex, __stringFormatter);
     }
 
@@ -178,6 +169,7 @@ export abstract class CommonUtil {
      * @param sourceObject {*} The object to be cloned.
      * @returns {*} The copy of original object.
      */
+    static deepClone<T>(sourceObject: T): T;
     static deepClone(sourceObject: boolean): boolean;
     static deepClone(sourceObject: string): string;
     static deepClone(sourceObject: number): number;
@@ -195,23 +187,23 @@ export abstract class CommonUtil {
         }
         /* Arrays */
         if (CommonUtil.isArray(sourceObject)) {
-            var tmpArray: any[] = [];
-            for (var i = 0; i < sourceObject.length; ++i) {
+            const tmpArray: any[] = [];
+            for (let i = 0; i < sourceObject.length; ++i) {
                 tmpArray.push(CommonUtil.deepClone(sourceObject[i]));
             }
             return tmpArray;
         }
-        var $global = <any>VirtualDom.env;
+        const $global = <any>VirtualDom.env;
         /* ES6 classes. Chrome has implemented a part of them so they must be considered. */
         if (typeof $global.Map !== "undefined" && sourceObject instanceof Map) {
-            var newMap = new Map<any, any>();
+            const newMap = new Map<any, any>();
             sourceObject.forEach((v: any, k: any) => {
                 newMap.set(CommonUtil.deepClone(k), CommonUtil.deepClone(v));
             });
             return newMap;
         }
         if (typeof $global.Set !== "undefined" && sourceObject instanceof Set) {
-            var newSet = new Set<any>();
+            const newSet = new Set<any>();
             sourceObject.forEach((v: any) => {
                 newSet.add(CommonUtil.deepClone(v));
             });
@@ -219,14 +211,15 @@ export abstract class CommonUtil {
         }
         /* Classic ES5 functions. */
         if (CommonUtil.isFunction(sourceObject)) {
-            var sourceFunctionObject = <Function>sourceObject;
-            var fn = (function (): Function {
-                return function () {
+            const sourceFunctionObject = <Function>sourceObject;
+            const fn = ((): Function => {
+                // This anonymous function is for "arguments" variable.
+                return function (): any {
                     return sourceFunctionObject.apply(this, arguments);
                 }
             })();
             fn.prototype = sourceFunctionObject.prototype;
-            for (var key in sourceFunctionObject) {
+            for (const key in sourceFunctionObject) {
                 if (sourceFunctionObject.hasOwnProperty(key)) {
                     (<any>fn)[key] = (<any>sourceFunctionObject)[key];
                 }
@@ -235,15 +228,15 @@ export abstract class CommonUtil {
         }
         /* Classic ES5 objects. */
         if (CommonUtil.isObject(sourceObject)) {
-            var newObject = Object.create(null);
+            const newObject = Object.create(null);
             if (typeof sourceObject.hasOwnProperty === "function") {
-                for (var key in sourceObject) {
+                for (const key in sourceObject) {
                     if (sourceObject.hasOwnProperty(key)) {
                         newObject[key] = CommonUtil.deepClone(sourceObject[key]);
                     }
                 }
             } else {
-                for (var key in sourceObject) {
+                for (const key in sourceObject) {
                     newObject[key] = CommonUtil.deepClone(sourceObject[key]);
                 }
             }
@@ -263,9 +256,9 @@ export abstract class CommonUtil {
             return new Array(source);
         }
         if (CommonUtil.isObject(source)) {
-            var obj = Object.create(null);
-            var keys = Object.keys(source);
-            for (var i = 0; i < keys.length; ++i) {
+            const obj = Object.create(null);
+            const keys = Object.keys(source);
+            for (let i = 0; i < keys.length; ++i) {
                 obj[keys[i]] = source[keys[i]];
             }
             return obj;
@@ -288,6 +281,7 @@ export abstract class CommonUtil {
         } else {
             console.info(message, extra);
         }
+        console.trace();
     }
 
     static padLeft(str: string, targetLength: number, padWith: string): string {
@@ -302,7 +296,7 @@ export abstract class CommonUtil {
 
     static remove<T>(array: T[], value: T, equalFunc: (t1: T, t2: T) => boolean = null): boolean {
         if (typeof equalFunc !== "function") {
-            var searchIndex = array.indexOf(value);
+            const searchIndex = array.indexOf(value);
             if (searchIndex >= 0) {
                 array.splice(searchIndex, 1);
                 return true;
@@ -310,7 +304,7 @@ export abstract class CommonUtil {
                 return false;
             }
         }
-        for (var i = 0; i < array.length; ++i) {
+        for (let i = 0; i < array.length; ++i) {
             if (equalFunc(value, array[i])) {
                 array.splice(i, 1);
                 return true;
@@ -320,10 +314,10 @@ export abstract class CommonUtil {
     }
 
     static removeAll<T>(array: T[], value: T, equalFunc: (t1: T, t2: T) => boolean = null): number {
-        var func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
-        var counter = 0;
-        var arrayLength = array.length;
-        for (var i = 0; i < arrayLength; ++i) {
+        const func = typeof equalFunc === "function" ? equalFunc : simpleEquals;
+        let counter = 0;
+        let arrayLength = array.length;
+        for (let i = 0; i < arrayLength; ++i) {
             if (func(value, array[i])) {
                 array.splice(i, 1);
                 --i;
@@ -349,3 +343,5 @@ export abstract class CommonUtil {
 function simpleEquals<T>(t1: T, t2: T): boolean {
     return t1 === t2;
 }
+
+export default CommonUtil;

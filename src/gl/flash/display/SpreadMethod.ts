@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class SpreadMethod {
+abstract class SpreadMethod {
 
     static get PAD(): string {
         return "pad";
@@ -17,3 +17,5 @@ export abstract class SpreadMethod {
     }
 
 }
+
+export default SpreadMethod;

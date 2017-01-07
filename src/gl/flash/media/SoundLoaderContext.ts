@@ -2,7 +2,7 @@
  * Created by MIC on 2016/9/13.
  */
 
-export class SoundLoaderContext {
+export default class SoundLoaderContext {
 
     constructor(bufferTime: number = 1000, checkPolicyFile: boolean = false) {
         this._bufferTime = bufferTime;

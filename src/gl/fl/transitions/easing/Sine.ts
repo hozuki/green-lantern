@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Sine {
+abstract class Sine {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
@@ -17,3 +17,5 @@ export abstract class Sine {
     }
 
 }
+
+export default Sine;

@@ -2,15 +2,15 @@
  * Created by MIC on 2016/1/7.
  */
 
-import {EventDispatcher} from "../events/EventDispatcher";
-import {URLRequest} from "../net/URLRequest";
-import {SoundLoaderContext} from "./SoundLoaderContext";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {ByteArray} from "../utils/ByteArray";
-import {SoundTransform} from "./SoundTransform";
-import {SoundChannel} from "./SoundChannel";
+import EventDispatcher from "../events/EventDispatcher";
+import URLRequest from "../net/URLRequest";
+import SoundLoaderContext from "./SoundLoaderContext";
+import NotImplementedError from "../errors/NotImplementedError";
+import ByteArray from "../utils/ByteArray";
+import SoundTransform from "./SoundTransform";
+import SoundChannel from "./SoundChannel";
 
-export class Sound extends EventDispatcher {
+export default class Sound extends EventDispatcher {
 
     constructor(stream: URLRequest = null, context: SoundLoaderContext = null) {
         super();

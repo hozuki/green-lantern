@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/20.
  */
 
-import {GraphicsDataRendererBase} from "./GraphicsDataRendererBase";
-import {Graphics} from "../../flash/display/Graphics";
-import {IStrokeDataRenderer} from "./IStrokeDataRenderer";
+import GraphicsDataRendererBase from "./GraphicsDataRendererBase";
+import Graphics from "../../flash/display/Graphics";
+import IStrokeDataRenderer from "./IStrokeDataRenderer";
 
-export abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
+abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IStrokeDataRenderer {
 
     constructor(graphics: Graphics, lastPathStartX: number, lastPathStartY: number, currentX: number, currentY: number) {
         super(graphics, lastPathStartX, lastPathStartY, currentX, currentY);
@@ -28,11 +28,12 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
         if (width < 0) {
             return [];
         }
-        var halfWidth = width / 2;
-        var vert1 = this._lineVerticesStorage[0],
-            vert2 = this._lineVerticesStorage[1],
-            vert3 = this._lineVerticesStorage[2],
-            vert4 = this._lineVerticesStorage[3];
+        const halfWidth = width / 2;
+        const lineVerticesStorage = this._lineVerticesStorage;
+        const vert1 = lineVerticesStorage[0],
+            vert2 = lineVerticesStorage[1],
+            vert3 = lineVerticesStorage[2],
+            vert4 = lineVerticesStorage[3];
         if (x1 === x2) {
             vert1[0] = x1 - halfWidth;
             vert1[1] = y1 > y2 ? y1 + halfWidth : y1 - halfWidth;
@@ -43,15 +44,15 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
             vert4[0] = x2 + halfWidth;
             vert4[1] = y1 > y2 ? y2 - halfWidth : y2 + halfWidth;
         } else {
-            var slope = (y2 - y1) / (x2 - x1);
-            var ct = 1 / Math.sqrt(1 + slope * slope);
-            var st = Math.sqrt(1 - ct * ct);
+            const slope = (y2 - y1) / (x2 - x1);
+            const ct = 1 / Math.sqrt(1 + slope * slope);
+            const st = Math.sqrt(1 - ct * ct);
             // dx/dy: additional length considering the line width perpendicular to the line itself
-            var dx = halfWidth * st;
-            var dy = halfWidth * ct;
+            const dx = halfWidth * st;
+            const dy = halfWidth * ct;
             // dtx/dty: additional length considering the line width at end points
-            var dtx = dy;
-            var dty = dx;
+            const dtx = dy;
+            const dty = dx;
             // move the line to their new end points
             if (x1 > x2) {
                 x1 += dtx;
@@ -93,3 +94,5 @@ export abstract class StrokeRendererBase extends GraphicsDataRendererBase implem
     private _lineVerticesStorage: number[][] = null;
 
 }
+
+export default StrokeRendererBase;

@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class StageDisplayState {
+abstract class StageDisplayState {
 
     static get FULL_SCREEN(): string {
         return 'fullScreen';
@@ -17,3 +17,5 @@ export abstract class StageDisplayState {
     }
 
 }
+
+export default StageDisplayState;

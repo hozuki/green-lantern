@@ -2,42 +2,18 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class ShaderID {
+enum ShaderID {
 
-    static get PRIMITIVE(): number {
-        return 0;
-    }
-
-    static get BLUR_X(): number {
-        return 1;
-    }
-
-    static get BLUR_Y(): number {
-        return 2;
-    }
-
-    static get REPLICATE(): number {
-        return 3;
-    }
-
-    static get COLOR_TRANSFORM(): number {
-        return 4;
-    }
-
-    static get FXAA(): number {
-        return 5;
-    }
-
-    static get BLUR2(): number {
-        return 6;
-    }
-
-    static get COPY_IMAGE(): number {
-        return 7;
-    }
-
-    static get PRIMITIVE2(): number {
-        return 8;
-    }
+    PRIMITIVE = 0,
+    BLUR_X = 1,
+    BLUR_Y = 2,
+    REPLICATE = 3,
+    COLOR_TRANSFORM = 4,
+    FXAA = 5,
+    BLUR2 = 6,
+    COPY_IMAGE = 7,
+    PRIMITIVE2 = 8
 
 }
+
+export default ShaderID;

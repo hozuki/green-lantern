@@ -2,11 +2,11 @@
  * Created by MIC on 2015/12/23.
  */
 
-import {EventDispatcher} from "../events/EventDispatcher";
-import {TextFormat} from "./TextFormat";
-import {NotImplementedError} from "../errors/NotImplementedError";
+import EventDispatcher from "../events/EventDispatcher";
+import TextFormat from "./TextFormat";
+import NotImplementedError from "../errors/NotImplementedError";
 
-export class StyleSheet extends EventDispatcher {
+export default class StyleSheet extends EventDispatcher {
 
     constructor() {
         super();

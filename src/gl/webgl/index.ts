@@ -2,25 +2,38 @@
  * Created by MIC on 2015/11/20.
  */
 
-export * from "./AttributeCache";
-export * from "./BitmapTargetBase";
-export * from "./FilterBase";
-export * from "./FilterManager";
-export * from "./FragmentShaders";
-export * from "./PackedArrayBuffer";
-export * from "./RenderHelper";
-export * from "./ShaderBase";
-export * from "./ShaderID";
-export * from "./ShaderManager";
-export * from "./UniformCache";
-export * from "./VertexShaders";
-export * from "./WebGLDataType";
-export * from "./WebGLRenderer";
-export * from "./WebGLUtils";
-
+import BitmapTargetBase from "./BitmapTargetBase";
+import FilterBase from "./FilterBase";
+import FilterManager from "./FilterManager";
+import FragmentShaders from "./FragmentShaders";
+import PackedArrayBuffer from "./PackedArrayBuffer";
+import RenderHelper from "./RenderHelper";
+import ShaderBase from "./ShaderBase";
+import ShaderID from "./ShaderID";
+import ShaderManager from "./ShaderManager";
+import VertexShaders from "./VertexShaders";
+import WebGLDataType from "./WebGLDataType";
+import WebGLRenderer from "./WebGLRenderer";
+import WebGLUtils from "./WebGLUtils";
 import * as filters from "./filters/index";
 import * as shaders from "./shaders/index";
 import * as graphics from "./graphics/index";
 import * as targets from "./targets/index";
+
+export {
+    BitmapTargetBase,
+    FilterBase,
+    FilterManager,
+    FragmentShaders,
+    PackedArrayBuffer,
+    RenderHelper,
+    ShaderBase,
+    ShaderID,
+    ShaderManager,
+    VertexShaders,
+    WebGLDataType,
+    WebGLRenderer,
+    WebGLUtils
+};
 
 export {filters, shaders, graphics, targets};

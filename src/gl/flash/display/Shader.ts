@@ -2,6 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class Shader {
-
+abstract class Shader {
 }
+
+export default Shader;

@@ -2,9 +2,9 @@
  * Created by MIC on 2016/6/11.
  */
 
-import {ErrorBase} from "../../mic/ErrorBase";
+import ErrorBase from "../../mic/ErrorBase";
 
-export class IOError extends ErrorBase {
+export default class IOError extends ErrorBase {
 
     constructor(message: string = "") {
         super(message);

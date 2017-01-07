@@ -1,29 +1,27 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+import Stage from "./Stage";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import Transform from "../geom/Transform";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import Rectangle from "../geom/Rectangle";
+import IWebGLElement from "../../webgl/IWebGLElement";
+import IBitmapDrawable from "./IBitmapDrawable";
+import EventDispatcher from "../events/EventDispatcher";
+import BlendMode from "./BlendMode";
+import RenderTarget2D from "../../webgl/targets/RenderTarget2D";
+import ShaderManager from "../../webgl/ShaderManager";
+import UniformCache from "../../webgl/UniformCache";
+import BitmapFilter from "../filters/BitmapFilter";
+import Matrix3D from "../geom/Matrix3D";
+import Vector3D from "../geom/Vector3D";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
+import TimeInfo from "../../mic/TimeInfo";
+import RenderHelper from "../../webgl/RenderHelper";
 
-import {Stage} from "./Stage";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {Transform} from "../geom/Transform";
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {Rectangle} from "../geom/Rectangle";
-import {IWebGLElement} from "../../webgl/IWebGLElement";
-import {IBitmapDrawable} from "./IBitmapDrawable";
-import {EventDispatcher} from "../events/EventDispatcher";
-import {BlendMode} from "./BlendMode";
-import {RenderTarget2D} from "../../webgl/targets/RenderTarget2D";
-import {ShaderManager} from "../../webgl/ShaderManager";
-import {UniformCache} from "../../webgl/UniformCache";
-import {BitmapFilter} from "../filters/BitmapFilter";
-import {Matrix3D} from "../geom/Matrix3D";
-import {Vector3D} from "../geom/Vector3D";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
-import {TimeInfo} from "../../mic/TimeInfo";
-import {CommonUtil} from "../../mic/CommonUtil";
-import {RenderHelper} from "../../webgl/RenderHelper";
-
-export abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
+abstract class DisplayObject extends EventDispatcher implements IBitmapDrawable, IWebGLElement {
 
     constructor(root: Stage, parent: DisplayObjectContainer) {
         super();
@@ -40,7 +38,12 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set alpha(v: number) {
-        this._alpha = MathUtil.clamp(v, 0, 1);
+        const alpha = MathUtil.clamp(v, 0, 1);
+        const b = alpha !== this._alpha;
+        this._alpha = alpha;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get blendMode(): string {
@@ -48,7 +51,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set blendMode(v: string) {
+        const b = v !== this._blendMode;
         this._blendMode = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get cacheAsBitmap(): boolean {
@@ -78,7 +85,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set enabled(v: boolean) {
+        const b = v !== this.enabled;
         this._enabled = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get filters(): BitmapFilter[] {
@@ -86,18 +97,17 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set filters(v: BitmapFilter[]) {
-        var i: number;
-        var hasFiltersBefore = this.__shouldProcessFilters();
-        var filters = this._filters;
+        let hasFiltersBefore = this.__shouldProcessFilters();
+        let filters = this._filters;
         if (hasFiltersBefore) {
-            for (i = 0; i < filters.length; ++i) {
+            for (let i = 0; i < filters.length; ++i) {
                 filters[i].notifyRemoved();
             }
         }
         filters = this._filters = v || [];
-        var hasFiltersNow = this.__shouldProcessFilters();
+        let hasFiltersNow = this.__shouldProcessFilters();
         if (hasFiltersNow) {
-            for (i = 0; i < filters.length; ++i) {
+            for (let i = 0; i < filters.length; ++i) {
                 filters[i].notifyAdded();
             }
         }
@@ -156,7 +166,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         while (v > 180) {
             v -= 360;
         }
+        const b = v !== this._rotation;
         this._rotation = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationX(): number {
@@ -170,7 +184,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         while (v > 180) {
             v -= 360;
         }
+        const b = v != this._rotationX;
         this._rotationX = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationY(): number {
@@ -184,7 +202,11 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         while (v > 180) {
             v -= 360;
         }
+        const b = v !== this._rotationY;
         this._rotationY = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get rotationZ(): number {
@@ -198,13 +220,19 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         while (v > 180) {
             v -= 360;
         }
+        const b = v != this._rotationZ;
         this._rotationZ = v;
+        if (b) {
+            this._isRedrawSuggested = true;
+        }
     }
 
     get stage(): Stage {
         return this._stage;
     }
 
+    // In current version there is still no way to inform a Transform object change. So setting values in 'transform'
+    // property does not suggest to redraw.
     get transform(): Transform {
         return this._transform;
     }
@@ -230,7 +258,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set x(v: number) {
-        var b = this._x !== v;
+        let b = this._x !== v;
         this._x = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -242,7 +270,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set y(v: number) {
-        var b = this._y !== v;
+        let b = this._y !== v;
         this._y = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -254,7 +282,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     set z(v: number) {
-        var b = this._z !== v;
+        let b = this._z !== v;
         this._z = v;
         if (b) {
             this.$requestUpdateTransform();
@@ -315,7 +343,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     protected _$updateTransform(): void {
-        var matrix3D: Matrix3D;
+        let matrix3D: Matrix3D;
         if (this.$isRoot) {
             matrix3D = new Matrix3D();
         } else {
@@ -327,6 +355,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         matrix3D.prependRotation(this.rotationZ, Vector3D.Z_AXIS);
         this.transform.matrix3D.copyFrom(matrix3D);
         this._transformArray = matrix3D.toArray();
+        this._isRedrawSuggested = true;
     }
 
     protected abstract _$update(timeInfo: TimeInfo): void;
@@ -345,7 +374,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
 
     protected _$beforeRender(renderer: WebGLRenderer): void {
         if (this.__shouldHaveBufferTarget()) {
-            var bufferTarget = this.$bufferTarget;
+            const bufferTarget = this.$bufferTarget;
             renderer.currentRenderTarget = bufferTarget;
             bufferTarget.clear();
             if (this._$shouldProcessMasking()) {
@@ -356,10 +385,10 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         } else {
             renderer.currentRenderTarget = null;
         }
-        var shaderManager = renderer.shaderManager;
+        const shaderManager = renderer.shaderManager;
         this._$selectShader(shaderManager);
-        var shader = shaderManager.currentShader;
-        if (CommonUtil.ptr(shader)) {
+        const shader = shaderManager.currentShader;
+        if (shader) {
             shader.changeValue("uTransformMatrix", (u: UniformCache): void => {
                 u.value = this._transformArray;
             });
@@ -371,18 +400,19 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     protected _$afterRender(renderer: WebGLRenderer): void {
-        var hasMask = this._$shouldProcessMasking();
+        const hasMask = this._$shouldProcessMasking();
         if (hasMask) {
             renderer.beginDrawNormalObjects();
         }
         if (this.__shouldProcessFilters()) {
-            var filterManager = renderer.filterManager;
+            let filterManager = renderer.filterManager;
             filterManager.pushFilterGroup(this.filters);
             filterManager.processFilters(renderer, this.$bufferTarget, renderer.screenRenderTarget, false);
             filterManager.popFilterGroup();
         } else if (hasMask) {
             RenderHelper.copyTargetContent(renderer, this.$bufferTarget, renderer.screenRenderTarget, false, true, false);
         }
+        this._isRedrawSuggested = false;
     }
 
     protected _$shouldProcessMasking(): boolean {
@@ -393,8 +423,8 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         if (!this.__shouldHaveBufferTarget()) {
             return;
         }
-        var t = this.$bufferTarget;
-        if (CommonUtil.ptr(t)) {
+        const t = this.$bufferTarget;
+        if (t) {
             t.dispose();
         }
         return this._bufferTarget = this.$rawRoot.$worldRenderer.createRenderTarget();
@@ -410,7 +440,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
 
     private __shouldProcessFilters(): boolean {
         // Don't use `filter` property, it clones an array and lowers performance.
-        var filters = this._filters;
+        const filters = this._filters;
         return filters !== null && filters.length > 0;
     }
 
@@ -419,9 +449,9 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     }
 
     private __updateBufferTargetStatus(): void {
-        var expected = this.__shouldHaveBufferTarget();
-        var actual = this.$bufferTarget !== null;
-        var hasMask = this._$shouldProcessMasking();
+        const expected = this.__shouldHaveBufferTarget();
+        const actual = this.$bufferTarget !== null;
+        const hasMask = this._$shouldProcessMasking();
         if (actual) {
             this.$bufferTarget.isStencil = hasMask;
         }
@@ -434,6 +464,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
         } else {
             this.__releaseBufferTarget();
         }
+        this._isRedrawSuggested = true;
     }
 
     protected _parent: DisplayObjectContainer = null;
@@ -442,6 +473,7 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     protected _width: number = 0;
     protected _childIndex: number = -1;
     protected _isTransformDirty: boolean = true;
+    protected _isRedrawSuggested = true;
     private _isRoot: boolean = false;
     private _alpha: number = 1;
     private _filters: BitmapFilter[] = null;
@@ -466,3 +498,5 @@ export abstract class DisplayObject extends EventDispatcher implements IBitmapDr
     private _mask: DisplayObject = null;
 
 }
+
+export default DisplayObject;

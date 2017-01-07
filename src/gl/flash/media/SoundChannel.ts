@@ -2,11 +2,11 @@
  * Created by MIC on 2016/9/13.
  */
 
-import {EventDispatcher} from "../events/EventDispatcher";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {SoundTransform} from "./SoundTransform";
+import EventDispatcher from "../events/EventDispatcher";
+import NotImplementedError from "../errors/NotImplementedError";
+import SoundTransform from "./SoundTransform";
 
-export class SoundChannel extends EventDispatcher {
+export default class SoundChannel extends EventDispatcher {
 
     constructor() {
         super();

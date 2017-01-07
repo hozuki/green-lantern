@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {UniformCache} from "../UniformCache";
-import {AttributeCache} from "../AttributeCache";
-import {ShaderManager} from "../ShaderManager";
-import {VertexShaders} from "../VertexShaders";
-import {FragmentShaders} from "../FragmentShaders";
-import {BufferedShader} from "./BufferedShader";
-import {WebGLDataType} from "../WebGLDataType";
+import UniformCache from "../UniformCache";
+import AttributeCache from "../AttributeCache";
+import ShaderManager from "../ShaderManager";
+import VertexShaders from "../VertexShaders";
+import FragmentShaders from "../FragmentShaders";
+import BufferedShader from "./BufferedShader";
+import WebGLDataType from "../WebGLDataType";
 
-export class FxaaShader extends BufferedShader {
+export default class FxaaShader extends BufferedShader {
 
     constructor(manager: ShaderManager) {
         super(manager, FxaaShader.VERTEX_SOURCE, FxaaShader.FRAGMENT_SOURCE);
@@ -27,9 +27,9 @@ export class FxaaShader extends BufferedShader {
     protected _$localInit(manager: ShaderManager, uniforms: Map<string, UniformCache>, attributes: Map<string, AttributeCache>): void {
         super._$localInit(manager, uniforms, attributes);
 
-        var u: UniformCache;
+        let u: UniformCache;
 
-        u = new UniformCache();
+        u = Object.create(null);
         u.name = "uResolution";
         u.type = WebGLDataType.U2F;
         u.value = [1, 1];

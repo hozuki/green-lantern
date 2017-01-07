@@ -1,20 +1,19 @@
 /**
  * Created by MIC on 2015/11/17.
  */
-
-import {WebGLRenderer} from "../WebGLRenderer";
-import {IDisposable} from "../../mic/IDisposable";
-import {MathUtil} from "../../mic/MathUtil";
-import {VirtualDom} from "../../mic/VirtualDom";
-import {FrameImage} from "../FrameImage";
-import {BufferedBitmapTarget} from "./BufferedBitmapTarget";
+import WebGLRenderer from "../WebGLRenderer";
+import IDisposable from "../../mic/IDisposable";
+import MathUtil from "../../mic/MathUtil";
+import VirtualDom from "../../mic/VirtualDom";
+import FrameImage from "../FrameImage";
+import BufferedBitmapTarget from "./BufferedBitmapTarget";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
 /**
  * Represents a 2D $render target based on WebGL texture.
  */
-export class RenderTarget2D extends BufferedBitmapTarget {
+export default class RenderTarget2D extends BufferedBitmapTarget {
 
     /**
      * Instantiates a new {@link RenderTarget2D}.
@@ -34,7 +33,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
      * Disposes the {@link RenderTarget2D} and related resources.
      */
     dispose(): void {
-        var glc = this.context;
+        const glc = this.context;
         glc.deleteTexture(this.texture);
         glc.deleteFramebuffer(this.frameBuffer);
         glc.deleteRenderbuffer(this.depthStencilBuffer);
@@ -119,6 +118,10 @@ export class RenderTarget2D extends BufferedBitmapTarget {
         this._isStencil = v;
     }
 
+    get isInitialized(): boolean {
+        return this._isInitialized;
+    }
+
     /**
      * Activates the {@link RenderTarget2D}, and all the rendering after the activation will be done on this target.
      */
@@ -131,7 +134,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
      */
     clear(): void {
         this.activate();
-        var context = this.context;
+        const context = this.context;
         context.viewport(0, 0, this.fitWidth, this.fitHeight);
         context.clearColor(0, 0, 0, 0);
         context.clearDepth(0);
@@ -159,7 +162,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
         if (this.texture === null || this.image === null) {
             return;
         }
-        var context = this.context;
+        const context = this.context;
         context.bindTexture(gl.TEXTURE_2D, this.texture);
         context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>this.image);
         context.bindTexture(gl.TEXTURE_2D, null);
@@ -169,7 +172,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
      * Update image size to fit the whole scene.
      */
     updateImageSize(): void {
-        var image = this.image;
+        const image = this.image;
         if (this.texture === null || image === null) {
             return;
         }
@@ -177,8 +180,9 @@ export class RenderTarget2D extends BufferedBitmapTarget {
         // Find a way to optimize, for example, freeze the size when created, or implement a draw call
         // flexible enough to handle all sort of sizes.
         try {
-            image.width = MathUtil.power2Roundup(image.width);
-            image.height = MathUtil.power2Roundup(image.height);
+            // Flee from the ImageData's readonly check.
+            (<any>image).width = MathUtil.power2Roundup(image.width);
+            (<any>image).height = MathUtil.power2Roundup(image.height);
         } catch (ex) {
         }
         this._originalWidth = this._fitWidth = image.width;
@@ -194,7 +198,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
      */
     private __initialize(width: number, height: number, image: FrameImage): void {
         this._image = image;
-        var context = this.context;
+        const context = this.context;
 
         const error = (message: string): void => {
             context.deleteFramebuffer(this.frameBuffer);
@@ -204,15 +208,15 @@ export class RenderTarget2D extends BufferedBitmapTarget {
         };
 
         if (!this.isRoot) {
-            var frameBuffer = this._frameBuffer = context.createFramebuffer();
+            const frameBuffer = this._frameBuffer = context.createFramebuffer();
             if (frameBuffer === null) {
                 return error("Failed to create the frame buffer.");
             }
-            var depthBuffer = this._depthStencilBuffer = context.createRenderbuffer();
+            const depthBuffer = this._depthStencilBuffer = context.createRenderbuffer();
             if (depthBuffer === null) {
                 return error("Failed to create the depth/stencil buffer.");
             }
-            var texture = this._texture = context.createTexture();
+            const texture = this._texture = context.createTexture();
             if (texture === null) {
                 return error("Failed to create the underlying texture.");
             }
@@ -223,7 +227,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
             context.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
             context.bindRenderbuffer(gl.RENDERBUFFER, this.depthStencilBuffer);
             context.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.depthStencilBuffer);
-            var status = context.checkFramebufferStatus(gl.FRAMEBUFFER);
+            const status = context.checkFramebufferStatus(gl.FRAMEBUFFER);
             if (status !== gl.FRAMEBUFFER_COMPLETE) {
                 return error("Frame buffer is not complete: code 0x" + status.toString(16));
             }
@@ -231,6 +235,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
         context.bindRenderbuffer(gl.RENDERBUFFER, null);
         context.bindTexture(gl.TEXTURE_2D, null);
         context.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this._isInitialized = true;
     }
 
     /**
@@ -240,10 +245,10 @@ export class RenderTarget2D extends BufferedBitmapTarget {
      * @private
      */
     private __resize(newWidth: number, newHeight: number): void {
-        var context = this.context;
-        var image = this.image;
-        var isRoot = this.isRoot;
-        var texture = this.texture;
+        const context = this.context;
+        const image = this.image;
+        const isRoot = this.isRoot;
+        const texture = this.texture;
 
         if (image === null) {
             newWidth |= 0;
@@ -277,7 +282,11 @@ export class RenderTarget2D extends BufferedBitmapTarget {
             // are vertically mirrored, and they will be transformed in one at last.
             //context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
             if (texture !== null) {
-                context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
+                if (this.isInitialized) {
+                    context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, <ImageData>image);
+                } else {
+                    context.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, newWidth, newHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                }
             }
         } else {
             context.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
@@ -302,6 +311,7 @@ export class RenderTarget2D extends BufferedBitmapTarget {
     private _fitHeight: number = 0;
     private _image: FrameImage = null;
     private _isStencil: boolean = false;
+    private _isInitialized: boolean = false;
 
 }
 

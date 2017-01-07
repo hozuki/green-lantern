@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/18.
  */
 
-export abstract class ColorCorrectionSupport {
+abstract class ColorCorrectionSupport {
 
     static get DEFAULT_OFF(): string {
         return 'defaultOff';
@@ -17,3 +17,5 @@ export abstract class ColorCorrectionSupport {
     }
 
 }
+
+export default ColorCorrectionSupport;

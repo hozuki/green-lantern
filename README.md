@@ -13,13 +13,13 @@ Screenshots of test cases can be found [here](res/images).
 Native `git` is highly recommended against other clients:
 
 ```bash
-$ git clone https://github.com/Hozuki/GLantern.git /preferred/cloning/destination
+git clone https://github.com/hozuki/GLantern.git
 ```
 
-Or, as a [NPM package](//npmjs.com/package/glantern), you can install it via `npm`:
+Or, as an [NPM package](//npmjs.com/package/glantern), you can install it via `npm`:
 
 ```bash
-$ npm install glantern --save
+npm install glantern --save
 ```
 
 ## Building from the Source
@@ -27,9 +27,9 @@ $ npm install glantern --save
 Make sure you have Node.js and NPM installed. The rest is quite simple:
 
 ```bash
-$ cd /path/to/GLantern/
-$ npm install
-$ gulp build
+cd GLantern
+npm install
+gulp build
 ```
 
 After building, you will find:
@@ -56,10 +56,8 @@ The first one is importing by `<script>` tag. Use its `src` attribute and point 
 
 In environments that support Node.js, like NW.js or Electron, you can also use the `require` syntax:
 
-```html
-<script type="text/javascript">
-    var GLantern = require("glantern");
-</script>
+```javascript
+var GLantern = require("glantern");
 ```
 
 After importing with either the former or the latter style, the `GLantern` object is globally available.
@@ -74,7 +72,8 @@ to inject the "packages" to the global scope.
 // Check if GLantern is supported
 if (GLantern.isSupported()) {
     var lantern = new GLantern.EngineBase();
-    lantern.initialize(682, 438);
+    var canvas = document.createElement("canvas");
+    lantern.initialize(canvas, 682, 438);
     document.body.appendChild(lantern.view);
     window.addEventListener("unload", function () {
         lantern.dispose();
@@ -91,20 +90,14 @@ if (GLantern.isSupported()) {
 * @param asGlobal {Boolean} Whether to inject Flash packages to global scope or not.
 * @param g {*} The global object, usually {@link window}.
 */
-function draw(asGLobal, g) {
-    if (asGLobal) {
-        GLantern.injectToGlobal(g);
+function draw() {
+    function createShape(alpha) {
+        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
+        lantern.stage.addChild(s);
+        s.alpha = alpha;
+        return s;
     }
-    var flash = g.flash ? g.flash : GLantern.flash;
-    var Display = Object.create({
-        "createShape": function (alpha) {
-            var s = new flash.display.Shape(lantern.stage, lantern.stage);
-            lantern.stage.addChild(s);
-            s.alpha = alpha;
-            return s;
-        }
-    });
-    var shape1 = Display.createShape(1);
+    var shape1 = createShape(1);
     shape1.graphics.beginFill(0xffffff);
     shape1.graphics.drawRect(0, 0, 540, 383);
     shape1.graphics.endFill();

@@ -2,7 +2,7 @@
  * Created by MIC on 2016/9/13.
  */
 
-export class URLRequestHeader {
+export default class URLRequestHeader {
 
     constructor(name: string = "", value: string = "") {
         this._name = name;

@@ -6,13 +6,13 @@
 // https://github.com/awayjs/core/blob/master/lib/geom/Vector3D.ts
 // License: Apache License 2.0 (see /docs/license/awayjs-core.txt)
 
-import {Vector3D} from "./Vector3D";
-import {Matrix3D} from "./Matrix3D";
-import {Orientation3D} from "./Orientation3D";
-import {ICloneable} from "../../mic/ICloneable";
-import {ICopyable} from "../../mic/ICopyable";
-import {CommonUtil} from "../../mic/CommonUtil";
-import {MathUtil} from "../../mic/MathUtil";
+import Vector3D from "./Vector3D";
+import Matrix3D from "./Matrix3D";
+import Orientation3D from "./Orientation3D";
+import ICloneable from "../../mic/ICloneable";
+import ICopyable from "../../mic/ICopyable";
+import CommonUtil from "../../mic/CommonUtil";
+import MathUtil from "../../mic/MathUtil";
 
 /**
  * A reference to a Vector to be used as a temporary raw data container, to prevent object creation.
@@ -23,7 +23,7 @@ const RAW_DATA_CONTAINER: Float32Array = new Float32Array(16);
 /**
  * A Quaternion object which can be used to represent rotations.
  */
-export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion> {
+export default class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion> {
 
     /**
      * Creates a new Quaternion object.
@@ -78,8 +78,8 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param qb {Quaternion} The second quaternion in the multiplication.
      */
     multiply(qa: Quaternion, qb: Quaternion): void {
-        var w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
-        var w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
+        const w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
+        const w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
 
         this.w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2;
         this.x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2;
@@ -97,9 +97,9 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
             target = new Quaternion();
         }
 
-        var x2 = vector.x;
-        var y2 = vector.y;
-        var z2 = vector.z;
+        const x2 = vector.x;
+        const y2 = vector.y;
+        const z2 = vector.z;
 
         target.w = -this.x * x2 - this.y * y2 - this.z * z2;
         target.x = this.w * x2 + this.y * z2 - this.z * y2;
@@ -115,8 +115,8 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param angle {Number} The angle in radians of the rotation.
      */
     fromAxisAngle(axis: Vector3D, angle: number): void {
-        var sin_a = Math.sin(angle / 2);
-        var cos_a = Math.cos(angle / 2);
+        const sin_a = Math.sin(angle / 2);
+        const cos_a = Math.cos(angle / 2);
 
         this.x = axis.x * sin_a;
         this.y = axis.y * sin_a;
@@ -133,9 +133,9 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param t {Number} The interpolation weight, a value between 0 and 1.
      */
     slerp(qa: Quaternion, qb: Quaternion, t: number): void {
-        var w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
-        var w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
-        var dot = w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2;
+        let w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
+        let w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
+        let dot = w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2;
 
         // shortest direction
         if (dot < 0) {
@@ -148,10 +148,10 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
 
         if (dot < 0.95) {
             // interpolate angle linearly
-            var angle = Math.acos(dot);
-            var s = 1 / Math.sin(angle);
-            var s1 = Math.sin(angle * (1 - t)) * s;
-            var s2 = Math.sin(angle * t) * s;
+            const angle = Math.acos(dot);
+            const s = 1 / Math.sin(angle);
+            const s1 = Math.sin(angle * (1 - t)) * s;
+            const s2 = Math.sin(angle * t) * s;
             this.w = w1 * s1 + w2 * s2;
             this.x = x1 * s1 + x2 * s2;
             this.y = y1 * s1 + y2 * s2;
@@ -162,7 +162,7 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
             this.x = x1 + t * (x2 - x1);
             this.y = y1 + t * (y2 - y1);
             this.z = z1 + t * (z2 - z1);
-            var len = 1 / Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
+            const len = 1 / Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
             this.w *= len;
             this.x *= len;
             this.y *= len;
@@ -178,8 +178,8 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      */
     lerp(qa: Quaternion, qb: Quaternion, t: number): void {
         t = MathUtil.clamp(t, 0, 1);
-        var w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
-        var w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
+        let w1 = qa.w, x1 = qa.x, y1 = qa.y, z1 = qa.z;
+        let w2 = qb.w, x2 = qb.x, y2 = qb.y, z2 = qb.z;
 
         // shortest direction
         if (w1 * w2 + x1 * x2 + y1 * y2 + z1 * z2 < 0) {
@@ -194,7 +194,7 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
         this.y = y1 + t * (y2 - y1);
         this.z = z1 + t * (z2 - z1);
 
-        var len = 1 / Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
+        const len = 1 / Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
         this.w *= len;
         this.x *= len;
         this.y *= len;
@@ -208,10 +208,10 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param az {Number} The angle in radians of the rotation around the az axis.
      */
     fromEulerAngles(ax: number, ay: number, az: number): void {
-        var halfX = ax / 2, halfY = ay / 2, halfZ = az / 2;
-        var cosX = Math.cos(halfX), sinX = Math.sin(halfX);
-        var cosY = Math.cos(halfY), sinY = Math.sin(halfY);
-        var cosZ = Math.cos(halfZ), sinZ = Math.sin(halfZ);
+        const halfX = ax / 2, halfY = ay / 2, halfZ = az / 2;
+        const cosX = Math.cos(halfX), sinX = Math.sin(halfX);
+        const cosY = Math.cos(halfY), sinY = Math.sin(halfY);
+        const cosZ = Math.cos(halfZ), sinZ = Math.sin(halfZ);
 
         this.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
         this.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
@@ -239,7 +239,7 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param value {Number} Normalized length.
      */
     normalize(value: number = 1): void {
-        var magnitude = value / Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+        const magnitude = value / Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
         this.x *= magnitude;
         this.y *= magnitude;
         this.z *= magnitude;
@@ -260,10 +260,10 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @returns {Matrix3D} A Matrix3D object representing an equivalent rotation.
      */
     toMatrix3D(target: Matrix3D = null): Matrix3D {
-        var rawData: Float32Array = RAW_DATA_CONTAINER;
-        var xy2 = 2 * this.x * this.y, xz2 = 2 * this.x * this.z, xw2 = 2 * this.x * this.w;
-        var yz2 = 2 * this.y * this.z, yw2 = 2 * this.y * this.w, zw2 = 2 * this.z * this.w;
-        var xx = this.x * this.x, yy = this.y * this.y, zz = this.z * this.z, ww = this.w * this.w;
+        const rawData: Float32Array = RAW_DATA_CONTAINER;
+        const xy2 = 2 * this.x * this.y, xz2 = 2 * this.x * this.z, xw2 = 2 * this.x * this.w;
+        const yz2 = 2 * this.y * this.z, yw2 = 2 * this.y * this.w, zw2 = 2 * this.z * this.w;
+        const xx = this.x * this.x, yy = this.y * this.y, zz = this.z * this.z, ww = this.w * this.w;
 
         rawData[0] = xx - yy - zz + ww;
         rawData[4] = xy2 - zw2;
@@ -296,7 +296,7 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param matrix {Matrix3D} The Matrix3D out of which the rotation will be extracted.
      */
     fromMatrix(matrix: Matrix3D): void {
-        var v = matrix.decompose(Orientation3D.QUATERNION)[1];
+        const v = matrix.decompose(Orientation3D.QUATERNION)[1];
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
@@ -309,9 +309,9 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
      * @param [exclude4thRow] {Boolean} If true, the last row will be omitted, and a 4x3 matrix will be generated instead of a 4x4.
      */
     toRawData(target: number[], exclude4thRow: boolean = false): void {
-        var xy2 = 2 * this.x * this.y, xz2 = 2 * this.x * this.z, xw2 = 2 * this.x * this.w;
-        var yz2 = 2 * this.y * this.z, yw2 = 2 * this.y * this.w, zw2 = 2 * this.z * this.w;
-        var xx = this.x * this.x, yy = this.y * this.y, zz = this.z * this.z, ww = this.w * this.w;
+        const xy2 = 2 * this.x * this.y, xz2 = 2 * this.x * this.z, xw2 = 2 * this.x * this.w;
+        const yz2 = 2 * this.y * this.z, yw2 = 2 * this.y * this.w, zw2 = 2 * this.z * this.w;
+        const xx = this.x * this.x, yy = this.y * this.y, zz = this.z * this.z, ww = this.w * this.w;
 
         target[0] = xx - yy - zz + ww;
         target[1] = xy2 - zw2;
@@ -349,13 +349,13 @@ export class Quaternion implements ICloneable<Quaternion>, ICopyable<Quaternion>
             target = new Vector3D();
         }
 
-        var x2 = vector.x, y2 = vector.y, z2 = vector.z;
+        const x2 = vector.x, y2 = vector.y, z2 = vector.z;
 
         // p*q'
-        var w1 = -this.x * x2 - this.y * y2 - this.z * z2;
-        var x1 = this.w * x2 + this.y * z2 - this.z * y2;
-        var y1 = this.w * y2 - this.x * z2 + this.z * x2;
-        var z1 = this.w * z2 + this.x * y2 - this.y * x2;
+        const w1 = -this.x * x2 - this.y * y2 - this.z * z2;
+        const x1 = this.w * x2 + this.y * z2 - this.z * y2;
+        const y1 = this.w * y2 - this.x * z2 + this.z * x2;
+        const z1 = this.w * z2 + this.x * y2 - this.y * x2;
 
         target.x = -w1 * this.x + x1 * this.w - y1 * this.z + z1 * this.y;
         target.y = -w1 * this.y + x1 * this.z + y1 * this.w - z1 * this.x;

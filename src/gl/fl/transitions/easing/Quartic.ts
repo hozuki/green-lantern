@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/26.
  */
 
-export abstract class Quartic {
+abstract class Quartic {
 
     static easeIn(t: number, b: number, c: number, d: number): number {
         return c * (t /= d) * t * t * t + b;
@@ -21,3 +21,5 @@ export abstract class Quartic {
     }
 
 }
+
+export default Quartic;

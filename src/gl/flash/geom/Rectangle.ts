@@ -1,12 +1,11 @@
 /**
  * Created by MIC on 2015/11/18.
  */
+import Point from "./Point";
+import ICopyable from "../../mic/ICopyable";
+import ICloneable from "../../mic/ICloneable";
 
-import {Point} from "./Point";
-import {ICopyable} from "../../mic/ICopyable";
-import {ICloneable} from "../../mic/ICloneable";
-
-export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
+export default class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this._x = x >= 0 ? x : 0;
@@ -83,10 +82,10 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
     }
 
     intersection(toIntersect: Rectangle): Rectangle {
-        var areIntersect = this.intersects(toIntersect);
+        const areIntersect = this.intersects(toIntersect);
         if (areIntersect) {
-            var r1 = this, r2 = toIntersect;
-            var x0 = Math.max(r1.x, r2.x),
+            const r1 = this, r2 = toIntersect;
+            const x0 = Math.max(r1.x, r2.x),
                 y1 = Math.max(r1.bottom, r2.bottom),
                 x1 = Math.min(r1.right, r2.right),
                 y0 = Math.min(r1.y, r2.y);
@@ -178,10 +177,10 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
     }
 
     union(toUnion: Rectangle): Rectangle {
-        var x = Math.min(this.x, toUnion.x);
-        var y = Math.min(this.y, toUnion.y);
-        var r = Math.max(this.right, toUnion.right);
-        var b = Math.max(this.bottom, toUnion.bottom);
+        const x = Math.min(this.x, toUnion.x);
+        const y = Math.min(this.y, toUnion.y);
+        const r = Math.max(this.right, toUnion.right);
+        const b = Math.max(this.bottom, toUnion.bottom);
         return new Rectangle(x, y, r - x, b - y);
     }
 
@@ -223,7 +222,7 @@ export class Rectangle implements ICloneable<Rectangle>, ICopyable<Rectangle> {
      * @returns {Boolean}
      */
     static testIntersection(rect1: Rectangle, rect2: Rectangle, strict: boolean = true): boolean {
-        var areSeparate: boolean;
+        let areSeparate: boolean;
         if (strict) {
             areSeparate = rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom;
         } else {

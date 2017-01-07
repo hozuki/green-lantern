@@ -2,13 +2,26 @@
  * Created by MIC on 2015/12/23.
  */
 
-export * from "./AntiAliasType";
-export * from "./GridFitType";
-export * from "./StyleSheet";
-export * from "./TextField";
-export * from "./TextFieldAutoSize";
-export * from "./TextFieldType";
-export * from "./TextFormat";
-export * from "./TextFormatAlign";
-export * from "./TextInteractionMode";
-export * from "./TextLineMetrics";
+import AntiAliasType from "./AntiAliasType";
+import GridFitType from "./GridFitType";
+import StyleSheet from "./StyleSheet";
+import TextField from "./TextField";
+import TextFieldAutoSize from "./TextFieldAutoSize";
+import TextFieldType from "./TextFieldType";
+import TextFormat from "./TextFormat";
+import TextFormatAlign from "./TextFormatAlign";
+import TextInteractionMode from "./TextInteractionMode";
+import TextLineMetrics from "./TextLineMetrics";
+
+export {
+    AntiAliasType,
+    GridFitType,
+    StyleSheet,
+    TextField,
+    TextFieldAutoSize,
+    TextFieldType,
+    TextFormat,
+    TextFormatAlign,
+    TextInteractionMode,
+    TextLineMetrics
+};

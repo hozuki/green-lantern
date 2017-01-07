@@ -2,7 +2,7 @@
  * Created by MIC on 2015/12/23.
  */
 
-export abstract class TextInteractionMode {
+abstract class TextInteractionMode {
 
     static get NORMAL(): string {
         return "normal";
@@ -13,3 +13,5 @@ export abstract class TextInteractionMode {
     }
 
 }
+
+export default TextInteractionMode;

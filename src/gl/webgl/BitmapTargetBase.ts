@@ -2,12 +2,12 @@
  * Created by MIC on 2016/10/29.
  */
 
-import {IDisposable} from "../mic/IDisposable";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {NotImplementedError} from "../flash/errors/NotImplementedError";
-import {PackedArrayBuffer} from "./PackedArrayBuffer";
+import IDisposable from "../mic/IDisposable";
+import WebGLRenderer from "./WebGLRenderer";
+import NotImplementedError from "../flash/errors/NotImplementedError";
+import PackedArrayBuffer from "./PackedArrayBuffer";
 
-export abstract class BitmapTargetBase implements IDisposable {
+abstract class BitmapTargetBase implements IDisposable {
 
     constructor(renderer: WebGLRenderer) {
         this._renderer = renderer;
@@ -56,3 +56,5 @@ export abstract class BitmapTargetBase implements IDisposable {
     static textureIndices: PackedArrayBuffer = null;
 
 }
+
+export default BitmapTargetBase;

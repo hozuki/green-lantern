@@ -2,15 +2,15 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {Matrix3D} from "./Matrix3D";
-import {ColorTransform} from "./ColorTransform";
-import {Matrix} from "./Matrix";
-import {PerspectiveProjection} from "./PerspectiveProjection";
-import {Rectangle} from "./Rectangle";
-import {DisplayObject} from "../display/DisplayObject";
-import {NotImplementedError} from "../errors/NotImplementedError";
+import Matrix3D from "./Matrix3D";
+import ColorTransform from "./ColorTransform";
+import Matrix from "./Matrix";
+import PerspectiveProjection from "./PerspectiveProjection";
+import Rectangle from "./Rectangle";
+import DisplayObject from "../display/DisplayObject";
+import NotImplementedError from "../errors/NotImplementedError";
 
-export class Transform {
+export default class Transform {
 
     constructor() {
         this.matrix = new Matrix();

@@ -2,11 +2,11 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {MathUtil} from "../../mic/MathUtil";
-import {GLUtil} from "../../mic/glantern/GLUtil";
+import NotImplementedError from "../errors/NotImplementedError";
+import MathUtil from "../../mic/MathUtil";
+import GLUtil from "../../mic/glantern/GLUtil";
 
-export class ColorTransform {
+export default class ColorTransform {
 
     constructor(redMultiplier: number = 1, greenMultiplier: number = 1, blueMultiplier: number = 1, alphaMultiplier: number = 1,
                 redOffset: number = 0, greenOffset: number = 0, blueOffset: number = 0, alphaOffset: number = 0) {
@@ -92,7 +92,7 @@ export class ColorTransform {
 
     // MIC
     transform(color: number): number {
-        var rgba = GLUtil.decomposeRgba(color);
+        const rgba = GLUtil.decomposeRgba(color);
         rgba.r = MathUtil.clamp(rgba.r * this.redMultiplier + this.redOffset, 0, 0xff);
         rgba.g = MathUtil.clamp(rgba.g * this.greenMultiplier + this.greenOffset, 0, 0xff);
         rgba.b = MathUtil.clamp(rgba.b * this.blueMultiplier + this.blueOffset, 0, 0xff);

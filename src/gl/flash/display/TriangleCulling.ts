@@ -2,7 +2,7 @@
  * Created by MIC on 2015/11/20.
  */
 
-export abstract class TriangleCulling {
+abstract class TriangleCulling {
 
     static get NEGATIVE(): string {
         return "negative";
@@ -17,3 +17,5 @@ export abstract class TriangleCulling {
     }
 
 }
+
+export default TriangleCulling;

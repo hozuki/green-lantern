@@ -2,7 +2,7 @@
  * Created by MIC on 2016/6/12.
  */
 
-export abstract class BitmapDataChannel {
+abstract class BitmapDataChannel {
 
     static get ALPHA(): number {
         return 8;
@@ -21,3 +21,5 @@ export abstract class BitmapDataChannel {
     }
 
 }
+
+export default BitmapDataChannel;

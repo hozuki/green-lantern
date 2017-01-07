@@ -2,9 +2,9 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {ErrorBase} from "../../mic/ErrorBase";
+import ErrorBase from "../../mic/ErrorBase";
 
-export class NotImplementedError extends ErrorBase {
+export default class NotImplementedError extends ErrorBase {
 
     constructor(message: string = "") {
         super(message);

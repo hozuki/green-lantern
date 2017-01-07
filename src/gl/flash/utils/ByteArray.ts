@@ -1,23 +1,21 @@
 /**
  * Created by MIC on 2016/5/18.
  */
-
 import * as pako from "pako";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {Endian} from "./Endian";
-import {ArgumentError} from "../errors/ArgumentError";
-import {EOFError} from "../errors/EOFError";
-import {CompressionAlgorithm} from "./CompressionAlgorithm";
-import {ApplicationError} from "../errors/ApplicationError";
-import {CommonUtil} from "../../mic/CommonUtil";
+import NotImplementedError from "../errors/NotImplementedError";
+import Endian from "./Endian";
+import ArgumentError from "../errors/ArgumentError";
+import EOFError from "../errors/EOFError";
+import CompressionAlgorithm from "./CompressionAlgorithm";
+import ApplicationError from "../errors/ApplicationError";
 
-export class ByteArray {
+export default class ByteArray {
 
     constructor() {
     }
 
     get bytesAvailable(): number {
-        var available = this.length - this.position - 1;
+        const available = this.length - this.position - 1;
         return available < 0 ? 0 : available;
     }
 
@@ -68,8 +66,8 @@ export class ByteArray {
 
     compress(algorithm: string = CompressionAlgorithm.ZLIB): void {
         this.__ensureBufferExists();
-        var oldDataView = new Uint8Array(this._buffer);
-        var newData: Uint8Array;
+        const oldDataView = new Uint8Array(this._buffer);
+        let newData: Uint8Array;
         switch (algorithm) {
             case CompressionAlgorithm.DEFLATE:
                 // Definition hack.
@@ -104,7 +102,7 @@ export class ByteArray {
 
     readByte(): number {
         this.__checkPosition(1);
-        var value = this._dataView.getInt8(this.position);
+        const value = this._dataView.getInt8(this.position);
         this.position += 1;
         return value;
     }
@@ -114,8 +112,8 @@ export class ByteArray {
         bytes.__checkPosition(length);
         if (length > 0) {
             bytes.position = offset;
-            var position = this.position;
-            for (var i = 0; i < length; ++i) {
+            const position = this.position;
+            for (let i = 0; i < length; ++i) {
                 bytes._dataView.setUint8(offset, this._dataView.getUint8(position + i));
             }
             this.position += length;
@@ -125,57 +123,57 @@ export class ByteArray {
 
     readDouble(): number {
         this.__checkPosition(8);
-        var value = this._dataView.getFloat64(this.position, this.__isLittleEndian());
+        const value = this._dataView.getFloat64(this.position, this.__isLittleEndian());
         this.position += 8;
         return value;
     }
 
     readFloat(): number {
         this.__checkPosition(4);
-        var value = this._dataView.getFloat32(this.position, this.__isLittleEndian());
+        const value = this._dataView.getFloat32(this.position, this.__isLittleEndian());
         this.position += 4;
         return value;
     }
 
     readInt(): number {
         this.__checkPosition(4);
-        var value = this._dataView.getInt32(this.position, this.__isLittleEndian());
+        const value = this._dataView.getInt32(this.position, this.__isLittleEndian());
         this.position += 4;
         return value;
     }
 
     readShort(): number {
         this.__checkPosition(2);
-        var value = this._dataView.getInt16(this.position, this.__isLittleEndian());
+        const value = this._dataView.getInt16(this.position, this.__isLittleEndian());
         this.position += 2;
         return value;
     }
 
     readUnsignedByte(): number {
         this.__checkPosition(1);
-        var value = this._dataView.getUint8(this.position);
+        const value = this._dataView.getUint8(this.position);
         this.position += 1;
         return value;
     }
 
     readUnsignedInt(): number {
         this.__checkPosition(4);
-        var value = this._dataView.getUint32(this.position, this.__isLittleEndian());
+        const value = this._dataView.getUint32(this.position, this.__isLittleEndian());
         this.position += 4;
         return value;
     }
 
     readUnsignedShort(): number {
         this.__checkPosition(2);
-        var value = this._dataView.getUint16(this.position, this.__isLittleEndian());
+        const value = this._dataView.getUint16(this.position, this.__isLittleEndian());
         this.position += 2;
         return value;
     }
 
     uncompress(algorithm: string = CompressionAlgorithm.ZLIB): void {
         this.__ensureBufferExists();
-        var oldDataView = new Uint8Array(this._buffer);
-        var newData: Uint8Array;
+        const oldDataView = new Uint8Array(this._buffer);
+        let newData: Uint8Array;
         switch (algorithm) {
             case CompressionAlgorithm.DEFLATE:
                 newData = pako.inflateRaw(oldDataView);
@@ -252,7 +250,7 @@ export class ByteArray {
 
     // MIC
     static from(buffer: ArrayBuffer): ByteArray {
-        var arrayBuffer = new ByteArray();
+        const arrayBuffer = new ByteArray();
         arrayBuffer._buffer = buffer;
         arrayBuffer._dataView = new DataView(buffer);
         arrayBuffer._length = buffer.byteLength;
@@ -263,8 +261,8 @@ export class ByteArray {
     // MIC
     flatten(): number[] {
         this.__ensureBufferExists();
-        var array: number[] = new Array<number>(this.length);
-        for (var i = 0; i < array.length; ++i) {
+        const array: number[] = new Array<number>(this.length);
+        for (let i = 0; i < array.length; ++i) {
             array[i] = this._dataView.getUint8(i);
         }
         return array;
@@ -275,20 +273,20 @@ export class ByteArray {
     }
 
     private __adjustLength(targetLength: number): void {
-        var oldBuffer = this._buffer;
-        var oldDataView = this._dataView;
-        var newBuffer = new ArrayBuffer(targetLength);
-        var newDataView = new DataView(newBuffer);
-        if (CommonUtil.ptr(oldBuffer)) {
-            var copyLength = targetLength > this.length ? oldBuffer.byteLength : newBuffer.byteLength;
-            for (var i = 0; i < copyLength; ++i) {
+        const oldBuffer = this._buffer;
+        const oldDataView = this._dataView;
+        const newBuffer = new ArrayBuffer(targetLength);
+        const newDataView = new DataView(newBuffer);
+        if (oldBuffer) {
+            const copyLength = targetLength > this.length ? oldBuffer.byteLength : newBuffer.byteLength;
+            for (let i = 0; i < copyLength; ++i) {
                 newDataView.setUint8(i, oldDataView.getUint8(i));
             }
-            for (var i = copyLength; i < newBuffer.byteLength; ++i) {
+            for (let i = copyLength; i < newBuffer.byteLength; ++i) {
                 newDataView.setUint8(i, 0);
             }
         } else {
-            for (var i = 0; i < newBuffer.byteLength; ++i) {
+            for (let i = 0; i < newBuffer.byteLength; ++i) {
                 newDataView.setUint8(i, 0);
             }
         }

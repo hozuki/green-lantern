@@ -1,14 +1,21 @@
 /**
  * Created by MIC on 2015/12/26.
  */
+import CommonUtil from "../../../mic/CommonUtil";
 
-export abstract class Elastic {
+abstract class Elastic {
 
     static easeIn(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
-        var s: number;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        //if (typeof p == "undefined") p = d * .3;
+        if (t === 0) {
+            return b;
+        }
+        if ((t /= d) === 1) {
+            return b + c;
+        }
+        if (CommonUtil.isUndefined(p)) {
+            p = d * .3;
+        }
+        let s: number;
         if (!a || a < Math.abs(c)) {
             s = p / 4;
             a = c;
@@ -19,10 +26,16 @@ export abstract class Elastic {
     }
 
     static easeInOut(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
-        var s: number;
-        if (t == 0) return b;
-        if ((t /= d / 2) == 2) return b + c;
-        //if (typeof p == "undefined") p = d * (.3 * 1.5);
+        if (t === 0) {
+            return b;
+        }
+        if ((t /= d / 2) === 2) {
+            return b + c;
+        }
+        if (CommonUtil.isUndefined(p)) {
+            p = d * (.3 * 1.5);
+        }
+        let s: number;
         if (!a || a < Math.abs(c)) {
             a = c;
             s = p / 4;
@@ -34,10 +47,16 @@ export abstract class Elastic {
     }
 
     static easeOut(t: number, b: number, c: number, d: number, a: number = 0, p: number = 0): number {
-        var s: number;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        //if (typeof p == "undefined") p = d * .3;
+        if (t === 0) {
+            return b;
+        }
+        if ((t /= d) === 1) {
+            return b + c;
+        }
+        if (CommonUtil.isUndefined(p)) {
+            p = d * .3;
+        }
+        let s: number;
         if (!a || a < Math.abs(c)) {
             a = c;
             s = p / 4;
@@ -48,3 +67,5 @@ export abstract class Elastic {
     }
 
 }
+
+export default Elastic;

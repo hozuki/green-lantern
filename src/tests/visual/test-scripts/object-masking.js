@@ -1,28 +1,28 @@
 "use strict";
 
-(function () {
-    var circleShape = Display.createShape();
-    var circleGraphics = circleShape.graphics;
+(() => {
+    const circleShape = Display.createShape();
+    const circleGraphics = circleShape.graphics;
     // The color doesn't matter.
     circleGraphics.beginFill(0x0000ff);
     circleGraphics.drawCircle(200, 160, 180);
     circleGraphics.endFill();
-    var boxShape1 = Display.createShape();
-    var boxGraphics1 = boxShape1.graphics;
+    const boxShape1 = Display.createShape();
+    const boxGraphics1 = boxShape1.graphics;
     boxGraphics1.lineStyle(3, 0xff0000);
     boxGraphics1.beginFill(0xffff00);
     boxGraphics1.drawRect(0, 0, 200, 200);
     boxGraphics1.endFill();
     boxShape1.mask = circleShape;
 
-    var textField = Display.createText();
+    const textField = Display.createText();
     textField.x = 350;
     textField.y = 60;
     textField.text = "Elon 'Mask'";
     textField.defaultTextFormat.size = 30;
     textField.textColor = 0xff00ff;
-    var boxShape2 = Display.createShape();
-    var boxGraphics2 = boxShape2.graphics;
+    const boxShape2 = Display.createShape();
+    const boxGraphics2 = boxShape2.graphics;
     boxGraphics2.lineStyle(10, 0x00ff00);
     boxGraphics2.beginFill(0xffffff);
     boxGraphics2.drawRect(250, 0, 200, 200);
@@ -31,9 +31,9 @@
 
     lantern.runOneFrame();
 
-    var alpha = 1;
-    var direction = -1;
-    var handle = window.setInterval(function () {
+    let alpha = 1;
+    let direction = -1;
+    const handle = window.setInterval(() => {
         alpha += 0.05 * direction;
         if (alpha >= 1) {
             direction = -1;
@@ -43,7 +43,7 @@
         boxShape1.alpha = boxShape2.alpha = alpha;
         lantern.runOneFrame();
     }, 40);
-    window.addEventListener("beforeunload", function () {
+    window.addEventListener("beforeunload", () => {
         window.clearInterval(handle);
     });
 })();

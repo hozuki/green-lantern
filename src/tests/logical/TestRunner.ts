@@ -3,8 +3,8 @@
  */
 
 import * as os from "os";
-import {TestEntry} from "./TestEntry";
 import * as chalk from "chalk";
+import TestEntry from "./TestEntry";
 
 export default class TestRunner {
 

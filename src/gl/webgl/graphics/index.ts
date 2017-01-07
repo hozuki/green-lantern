@@ -2,10 +2,20 @@
  * Created by MIC on 2015/12/26.
  */
 
-export * from "./BrushType";
-export * from "./FillRendererBase";
-export * from "./GRAPHICS_CONST";
-export * from "./GraphicsDataRendererBase";
-export * from "./SolidFillRenderer";
-export * from "./SolidStrokeRenderer";
-export * from "./StrokeRendererBase";
+import BrushType from "./BrushType";
+import FillRendererBase from "./FillRendererBase";
+import GraphicsConst from "./GraphicsConst";
+import GraphicsDataRendererBase from "./GraphicsDataRendererBase";
+import SolidFillRenderer from "./SolidFillRenderer";
+import SolidStrokeRenderer from "./SolidStrokeRenderer";
+import StrokeRendererBase from "./StrokeRendererBase";
+
+export {
+    BrushType,
+    FillRendererBase,
+    GraphicsConst,
+    GraphicsDataRendererBase,
+    SolidFillRenderer,
+    SolidStrokeRenderer,
+    StrokeRendererBase
+};

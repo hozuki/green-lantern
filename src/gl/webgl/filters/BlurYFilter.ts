@@ -2,16 +2,16 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {BlurYShader} from "../shaders/BlurYShader";
-import {RenderTarget2D} from "../targets/RenderTarget2D";
-import {WebGLRenderer} from "../WebGLRenderer";
-import {FilterManager} from "../FilterManager";
-import {FilterBase} from "../FilterBase";
-import {ShaderID} from "../ShaderID";
-import {RenderHelper} from "../RenderHelper";
-import {MathUtil} from "../../mic/MathUtil";
+import BlurYShader from "../shaders/BlurYShader";
+import RenderTarget2D from "../targets/RenderTarget2D";
+import WebGLRenderer from "../WebGLRenderer";
+import FilterManager from "../FilterManager";
+import FilterBase from "../FilterBase";
+import ShaderID from "../ShaderID";
+import RenderHelper from "../RenderHelper";
+import MathUtil from "../../mic/MathUtil";
 
-export class BlurYFilter extends FilterBase {
+export default class BlurYFilter extends FilterBase {
 
     constructor(manager: FilterManager) {
         super(manager);
@@ -39,13 +39,14 @@ export class BlurYFilter extends FilterBase {
 
     process(renderer: WebGLRenderer, input: RenderTarget2D, output: RenderTarget2D, clearOutput: boolean): void {
         // Larger value makes image smoother, darker (or less contrastive), but greatly improves efficiency.
-        var passCoeff = 3;
-        var t1 = input, t2 = this._tempTarget;
+        const passCoeff = 3;
+        const tempTarget = this.filterManager.requestTempTarget();
+        let t1 = input, t2 = tempTarget;
         t2.clear();
-        var t: RenderTarget2D;
-        for (var i = 0; i < passCoeff * this.pass; ++i) {
+        let t: RenderTarget2D;
+        for (let i = 0; i < passCoeff * this.pass; ++i) {
             RenderHelper.renderBuffered(renderer, t1, t2, ShaderID.BLUR_Y, true, (renderer: WebGLRenderer): void => {
-                var shader = <BlurYShader>renderer.shaderManager.currentShader;
+                const shader = <BlurYShader>renderer.shaderManager.currentShader;
                 shader.setStrength(this.strength / 4 / this.pass / (t1.fitWidth / t1.originalWidth));
             });
             t = t1;
@@ -54,19 +55,16 @@ export class BlurYFilter extends FilterBase {
         }
         //renderer.copyRenderTargetContent(t1, output, clearOutput);
         RenderHelper.copyTargetContent(renderer, t1, output, this.flipX, this.flipY, clearOutput);
+        this.filterManager.returnTempTarget(tempTarget);
     }
 
     protected _$initialize(): void {
-        this._tempTarget = this.filterManager.renderer.createRenderTarget();
     }
 
     protected _$dispose(): void {
-        this.filterManager.renderer.releaseRenderTarget(this._tempTarget);
-        this._tempTarget = null;
     }
 
     private _strength: number = 5;
     private _pass: number = 1;
-    private _tempTarget: RenderTarget2D = null;
 
 }

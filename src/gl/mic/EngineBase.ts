@@ -1,29 +1,28 @@
 /**
  * Created by MIC on 2015/11/25.
  */
+import WebGLRenderer from "../webgl/WebGLRenderer";
+import Stage from "../flash/display/Stage";
+import RendererOptions from "../webgl/RendererOptions";
+import FlashEvent from "../flash/events/FlashEvent";
+import EventBase from "./EventBase";
+import TimeInfo from "./TimeInfo";
+import VirtualDom from "./VirtualDom";
+import EventDispatcher from "../flash/events/EventDispatcher";
+import CommonUtil from "./CommonUtil";
 
-import {WebGLRenderer} from "../webgl/WebGLRenderer";
-import {Stage} from "../flash/display/Stage";
-import {RendererOptions} from "../webgl/RendererOptions";
-import {FlashEvent} from "../flash/events/FlashEvent";
-import {EventBase} from "./EventBase";
-import {TimeInfo} from "./TimeInfo";
-import {VirtualDom} from "./VirtualDom";
-import {EventDispatcher} from "../flash/events/EventDispatcher";
-import {CommonUtil} from "./CommonUtil";
-
-export class EngineBase extends EventDispatcher {
+export default class EngineBase extends EventDispatcher {
 
     constructor() {
         super();
         this._attachedUpdateFunctions = [];
     }
 
-    initialize(width: number, height: number, options: RendererOptions = WebGLRenderer.DEFAULT_OPTIONS): void {
+    initialize(canvas: HTMLCanvasElement = null, width?: number, height?: number, options: RendererOptions = WebGLRenderer.DEFAULT_OPTIONS): void {
         if (this.isInitialized) {
             return;
         }
-        this._renderer = new WebGLRenderer(width, height, options);
+        this._renderer = new WebGLRenderer(options, canvas, width, height);
         this._stage = new Stage(this._renderer);
         this._loopFunction = this.__mainLoop.bind(this);
         this._isInitialized = true;
@@ -37,7 +36,7 @@ export class EngineBase extends EventDispatcher {
         this.renderer.dispose();
         this._stage = null;
         this._renderer = null;
-        var attachedFunctions = this._attachedUpdateFunctions;
+        const attachedFunctions = this._attachedUpdateFunctions;
         while (attachedFunctions.length > 0) {
             attachedFunctions.pop();
         }
@@ -82,16 +81,16 @@ export class EngineBase extends EventDispatcher {
         if (!this._isInitialized) {
             return;
         }
-        var attachedFunctions = this._attachedUpdateFunctions;
+        const attachedFunctions = this._attachedUpdateFunctions;
         if (attachedFunctions.length > 0) {
-            for (var i = 0; i < attachedFunctions.length; ++i) {
-                var func = attachedFunctions[i];
+            for (let i = 0; i < attachedFunctions.length; ++i) {
+                const func = attachedFunctions[i];
                 if (CommonUtil.isFunction(func)) {
                     func(timeInfo);
                 }
             }
         }
-        var stage = this.stage;
+        const stage = this.stage;
         stage.dispatchEvent(EventBase.create(FlashEvent.ENTER_FRAME));
         stage.$update(timeInfo);
         this.clear();
@@ -123,7 +122,7 @@ export class EngineBase extends EventDispatcher {
     }
 
     attachUpdateFunction(func: (timeInfo: TimeInfo) => void): void {
-        var attachedFunctions = this._attachedUpdateFunctions;
+        const attachedFunctions = this._attachedUpdateFunctions;
         if (CommonUtil.isFunction(func) && attachedFunctions.indexOf(func) < 0) {
             attachedFunctions.push(func);
         }
@@ -147,7 +146,7 @@ export class EngineBase extends EventDispatcher {
 
     private __updateTimeCounters(): void {
         if (this._lastTimeUpdated > 0) {
-            var now = Date.now();
+            const now = Date.now();
             this._elapsedMillis += now - this._lastTimeUpdated;
             this._lastTimeUpdated = now;
         }
@@ -161,16 +160,16 @@ export class EngineBase extends EventDispatcher {
 
     /**
      * The main $render loop.
-     * @param time {Number} The time argument of {@link window#requestAnimationFrame} callback. However, some browsers
+     * @param [time] {Number} The time argument of {@link window#requestAnimationFrame} callback. However, some browsers
      * does not invoke with this argument.
      * @private
      */
-    private __mainLoop(time: number): void {
+    private __mainLoop(time?: number): void {
         if (!this.isAnimationRunning) {
             return;
         }
         this.__updateTimeCounters();
-        var timeInfo: TimeInfo = {millisFromStartup: this.elapsedMillis};
+        const timeInfo: TimeInfo = {millisFromStartup: this.elapsedMillis};
         this.runOneFrame(timeInfo);
         VirtualDom.requestAnimationFrame(this._loopFunction);
     }

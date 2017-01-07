@@ -2,20 +2,20 @@
  * Created by MIC on 2015/11/18.
  */
 
-import {WebGLRenderer} from "../../webgl/WebGLRenderer";
-import {ColorCorrectionSupport} from "./ColorCorrectionSupport";
-import {Rectangle} from "../geom/Rectangle";
-import {StageScaleMode} from "./StageScaleMode";
-import {StageQuality} from "./StageQuality";
-import {InteractiveObject} from "./InteractiveObject";
-import {StageDisplayState} from "./StageDisplayState";
-import {ColorCorrection} from "./ColorCorrection";
-import {StageAlign} from "./StageAlign";
-import {DisplayObjectContainer} from "./DisplayObjectContainer";
-import {NotImplementedError} from "../errors/NotImplementedError";
-import {TimeInfo} from "../../mic/TimeInfo";
+import WebGLRenderer from "../../webgl/WebGLRenderer";
+import ColorCorrectionSupport from "./ColorCorrectionSupport";
+import Rectangle from "../geom/Rectangle";
+import StageScaleMode from "./StageScaleMode";
+import StageQuality from "./StageQuality";
+import InteractiveObject from "./InteractiveObject";
+import StageDisplayState from "./StageDisplayState";
+import ColorCorrection from "./ColorCorrection";
+import StageAlign from "./StageAlign";
+import DisplayObjectContainer from "./DisplayObjectContainer";
+import NotImplementedError from "../errors/NotImplementedError";
+import TimeInfo from "../../mic/TimeInfo";
 
-export class Stage extends DisplayObjectContainer {
+export default class Stage extends DisplayObjectContainer {
 
     constructor(renderer: WebGLRenderer) {
         super(null, null);

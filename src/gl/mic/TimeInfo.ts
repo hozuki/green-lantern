@@ -2,8 +2,8 @@
  * Created by MIC on 2016/6/17.
  */
 
-export interface TimeInfo {
-
+interface TimeInfo {
     millisFromStartup?: number;
-
 }
+
+export default TimeInfo;

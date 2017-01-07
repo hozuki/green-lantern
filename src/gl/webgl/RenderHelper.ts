@@ -1,31 +1,29 @@
 /**
  * Created by MIC on 2015/11/18.
  */
-
-import {PackedArrayBuffer} from "./PackedArrayBuffer";
-import {WebGLRenderer} from "./WebGLRenderer";
-import {ReplicateShader} from "./shaders/ReplicateShader";
-import {ShaderID} from "./ShaderID";
-import {BufferedShader} from "./shaders/BufferedShader";
-import {Matrix3D} from "../flash/geom/Matrix3D";
-import {CopyImageShader} from "./shaders/CopyImageShader";
-import {Primitive2Shader} from "./shaders/Primitive2Shader";
-import {PrimitiveShader} from "./shaders/PrimitiveShader";
-import {VirtualDom} from "../mic/VirtualDom";
-import {CommonUtil} from "../mic/CommonUtil";
-import {BitmapTargetBase} from "./BitmapTargetBase";
-import {BufferedBitmapTarget} from "./targets/BufferedBitmapTarget";
+import PackedArrayBuffer from "./PackedArrayBuffer";
+import WebGLRenderer from "./WebGLRenderer";
+import ReplicateShader from "./shaders/ReplicateShader";
+import ShaderID from "./ShaderID";
+import BufferedShader from "./shaders/BufferedShader";
+import Matrix3D from "../flash/geom/Matrix3D";
+import CopyImageShader from "./shaders/CopyImageShader";
+import Primitive2Shader from "./shaders/Primitive2Shader";
+import PrimitiveShader from "./shaders/PrimitiveShader";
+import VirtualDom from "../mic/VirtualDom";
+import BitmapTargetBase from "./BitmapTargetBase";
+import BufferedBitmapTarget from "./targets/BufferedBitmapTarget";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
-export abstract class RenderHelper {
+abstract class RenderHelper {
 
     static renderPrimitives(renderer: WebGLRenderer, renderTo: BitmapTargetBase, vertices: PackedArrayBuffer, colors: PackedArrayBuffer, indices: PackedArrayBuffer, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE);
 
-        var shader = <PrimitiveShader>renderer.shaderManager.currentShader;
-        var glc = renderer.context;
-        var attributeLocation: number;
+        const shader = <PrimitiveShader>renderer.shaderManager.currentShader;
+        const glc = renderer.context;
+        let attributeLocation: number;
 
         renderTo.activate();
         shader.syncUniforms();
@@ -53,9 +51,9 @@ export abstract class RenderHelper {
                              flipX: boolean, flipY: boolean, clearOutput: boolean): void {
         renderer.shaderManager.selectShader(ShaderID.PRIMITIVE2);
 
-        var shader = <Primitive2Shader>renderer.shaderManager.currentShader;
-        var glc = renderer.context;
-        var attributeLocation: number;
+        const shader = <Primitive2Shader>renderer.shaderManager.currentShader;
+        const glc = renderer.context;
+        let attributeLocation: number;
 
         renderTo.activate();
         shader.setOriginalSize([renderTo.originalWidth, renderTo.originalHeight]);
@@ -85,7 +83,7 @@ export abstract class RenderHelper {
 
     static copyTargetContent(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, flipX: boolean, flipY: boolean, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.REPLICATE, clearOutput, (r: WebGLRenderer): void => {
-            var shader = <ReplicateShader>r.shaderManager.currentShader;
+            const shader = <ReplicateShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
             shader.setFlipY(flipY);
             if (flipX || flipY) {
@@ -97,7 +95,7 @@ export abstract class RenderHelper {
 
     static copyImageContent(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, flipX: boolean, flipY: boolean, transform: Matrix3D, alpha: number, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
-            var shader = <CopyImageShader>r.shaderManager.currentShader;
+            const shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(flipX);
             shader.setFlipY(flipY);
             shader.setAlpha(alpha);
@@ -111,7 +109,7 @@ export abstract class RenderHelper {
 
     static renderImage(renderer: WebGLRenderer, source: BufferedBitmapTarget, destination: BitmapTargetBase, clearOutput: boolean): void {
         RenderHelper.renderBuffered(renderer, source, destination, ShaderID.COPY_IMAGE, clearOutput, (r: WebGLRenderer): void => {
-            var shader = <CopyImageShader>r.shaderManager.currentShader;
+            const shader = <CopyImageShader>r.shaderManager.currentShader;
             shader.setFlipX(false);
             shader.setFlipY(false);
         });
@@ -123,16 +121,16 @@ export abstract class RenderHelper {
             return;
         }
 
-        var glc = renderer.context;
+        const glc = renderer.context;
         renderer.shaderManager.selectShader(shaderID);
         shaderInit(renderer);
-        var shader = <BufferedShader>renderer.shaderManager.currentShader;
+        const shader = <BufferedShader>renderer.shaderManager.currentShader;
         // Target must have a 'uSampler' sample2D uniform
         shader.setTexture(source.texture);
         shader.syncUniforms();
 
         if (RenderHelper._glVertexPositionBuffer === null) {
-            var vertexPositions = [
+            const vertexPositions = [
                 0, source.fitHeight, 0,
                 source.fitWidth, source.fitHeight, 0,
                 0, 0, 0,
@@ -141,11 +139,11 @@ export abstract class RenderHelper {
             RenderHelper._glVertexPositionBuffer = PackedArrayBuffer.create(glc, vertexPositions, gl.FLOAT, gl.ARRAY_BUFFER);
         }
 
-        var attributeLocation: number;
+        let attributeLocation: number;
 
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
         if (attributeLocation >= 0) {
-            var glVertexPositionBuffer = RenderHelper._glVertexPositionBuffer;
+            const glVertexPositionBuffer = RenderHelper._glVertexPositionBuffer;
             glVertexPositionBuffer.syncBufferData();
             glc.vertexAttribPointer(attributeLocation, 3, glVertexPositionBuffer.elementGLType, false, glVertexPositionBuffer.elementSize * 3, 0);
             glc.enableVertexAttribArray(attributeLocation);
@@ -154,13 +152,13 @@ export abstract class RenderHelper {
         // Some shaders, e.g. the blur-2 shader, have no texture coordinates.
         attributeLocation = shader.getAttributeLocation("aTextureCoord");
         if (attributeLocation >= 0) {
-            var textureCoords = BufferedBitmapTarget.textureCoords;
+            const textureCoords = BufferedBitmapTarget.textureCoords;
             textureCoords.syncBufferData();
             glc.vertexAttribPointer(attributeLocation, 2, textureCoords.elementGLType, false, textureCoords.elementSize * 2, 0);
             glc.enableVertexAttribArray(attributeLocation);
         }
 
-        var textureIndices = BufferedBitmapTarget.textureIndices;
+        const textureIndices = BufferedBitmapTarget.textureIndices;
         textureIndices.syncBufferData();
 
         destination.activate();
@@ -180,7 +178,7 @@ export abstract class RenderHelper {
 }
 
 function checkRenderTargets(source: BufferedBitmapTarget, destination: BitmapTargetBase): boolean {
-    if (!CommonUtil.ptr(source)) {
+    if (!source) {
         console.warn("Cannot render a null BitmapTargetBase onto another BitmapTargetBase.");
         return false;
     }
@@ -198,3 +196,5 @@ function checkRenderTargets(source: BufferedBitmapTarget, destination: BitmapTar
     }
     return true;
 }
+
+export default RenderHelper;

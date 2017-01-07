@@ -12,41 +12,11 @@ interface FragmentShadersObject {
     copyImage?: string;
 }
 
-var Values: FragmentShadersObject = Object.create(null);
+const FragmentShaders: FragmentShadersObject = Object.create(null);
 
-export abstract class FragmentShaders {
+export default FragmentShaders;
 
-    static get buffered(): string {
-        return Values.buffered;
-    }
-
-    static get blur(): string {
-        return Values.blur;
-    }
-
-    static get primitive(): string {
-        return Values.primitive;
-    }
-
-    static get colorTransform(): string {
-        return Values.colorTransform;
-    }
-
-    static get fxaa(): string {
-        return Values.fxaa;
-    }
-
-    static get blur2(): string {
-        return Values.blur2;
-    }
-
-    static get copyImage(): string {
-        return Values.copyImage;
-    }
-
-}
-
-Values.buffered = `
+FragmentShaders.buffered = `
 precision mediump float;
 
 uniform sampler2D uSampler;
@@ -63,7 +33,7 @@ void main() {
     }
 }`;
 
-Values.blur = `
+FragmentShaders.blur = `
 precision lowp float;
 
 varying vec2 vTextureCoord;
@@ -89,7 +59,7 @@ void main()
     }
 }`;
 
-Values.primitive = `
+FragmentShaders.primitive = `
 precision mediump float;
 
 uniform float uAlpha;
@@ -106,7 +76,7 @@ void main() {
     }
 }`;
 
-Values.colorTransform = `
+FragmentShaders.colorTransform = `
 precision mediump float;
 
 varying vec2 vTextureCoord;
@@ -152,7 +122,7 @@ void main(void)
 }`;
 
 // For the full license, please refer to shaders/glsl/fxaa.frag
-Values.fxaa = `
+FragmentShaders.fxaa = `
 precision lowp float;
 
 #ifndef FXAA_REDUCE_MIN
@@ -234,7 +204,7 @@ void main() {
     }
 }`;
 
-Values.blur2 = `
+FragmentShaders.blur2 = `
 precision lowp float;
 
 varying vec2 vTextureCoord;
@@ -267,7 +237,7 @@ void main()
     }
 }`;
 
-Values.copyImage = `
+FragmentShaders.copyImage = `
 precision mediump float;
 
 uniform sampler2D uSampler;

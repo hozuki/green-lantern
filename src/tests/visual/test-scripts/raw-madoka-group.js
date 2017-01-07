@@ -1,5 +1,5 @@
-(function () {
-    var s, g;
+(() => {
+    let s, g;
 
     g = Display.createShape(0.5);
     g.graphics.beginFill(0xffffff);
