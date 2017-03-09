@@ -97,6 +97,17 @@ abstract class MathUtil {
         return value !== value;
     }
 
+    static distance(x1: number, y1: number, x2: number, y2: number): number {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    }
+
+    // http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
+    static estimateBezierSegmentCount(length: number): number {
+        const base = 10;
+        const segs = length / 30;
+        return Math.ceil(Math.sqrt(segs * segs * 0.6 + base * base));
+    }
+
 }
 
 export default MathUtil;

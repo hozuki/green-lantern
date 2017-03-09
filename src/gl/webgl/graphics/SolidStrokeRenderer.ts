@@ -23,8 +23,10 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         if (this._w > 0) {
             const fromX = this.currentX, fromY = this.currentY;
-            for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
-                const j = i / GraphicsConst.CurveAccuracy;
+            const estimatedLength = MathUtil.distance(fromX, fromY, cx1, cy1) + MathUtil.distance(cx1, cy1, cx2, cy2) + MathUtil.distance(cx2, cy2, x, y);
+            const segmentCount = MathUtil.estimateBezierSegmentCount(estimatedLength);
+            for (let i = 1; i <= segmentCount; i++) {
+                const j = i / segmentCount;
                 const dt1 = 1 - j;
                 const dt2 = dt1 * dt1;
                 const dt3 = dt2 * dt1;
@@ -43,8 +45,10 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
     curveTo(cx: number, cy: number, x: number, y: number): void {
         if (this._w > 0) {
             const fromX = this.currentX, fromY = this.currentY;
-            for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
-                const j = i / GraphicsConst.CurveAccuracy;
+            const estimatedLength = MathUtil.distance(fromX, fromY, cx, cy) + MathUtil.distance(cx, cy, x, y);
+            const segmentCount = MathUtil.estimateBezierSegmentCount(estimatedLength);
+            for (let i = 1; i <= segmentCount; i++) {
+                const j = i / segmentCount;
                 let xa = fromX + (cx - fromX) * j;
                 let ya = fromY + (cy - fromY) * j;
                 xa = xa + (cx + (x - cx) * j - xa) * j;
@@ -62,10 +66,12 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
         if (this._w > 0) {
             const halfPi = Math.PI / 2;
             let thetaBegin = Math.PI;
+            const estimatedLength = Math.PI * radius / 2;
+            const segmentCount = MathUtil.estimateBezierSegmentCount(estimatedLength);
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
             for (let k = 0; k < 4; k++) {
-                for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
-                    const thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
+                for (let i = 1; i <= segmentCount; i++) {
+                    const thetaNext = thetaBegin - i / segmentCount * halfPi;
                     const x2 = x + radius * Math.cos(thetaNext);
                     const y2 = y + radius * Math.sin(thetaNext);
                     this.lineTo(x2, y2);
@@ -86,11 +92,13 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
             const centerX = x + width / 2, centerY = y + height / 2;
             const halfPi = Math.PI / 2;
             let thetaBegin = Math.PI;
+            const estimatedLength = Math.PI * width * height / 4 / 4;
+            const segmentCount = MathUtil.estimateBezierSegmentCount(estimatedLength);
             // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
             // Brute, huh? Luckily there are 20 segments per PI/2...
             for (let k = 0; k < 4; k++) {
-                for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
-                    const thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
+                for (let i = 1; i <= segmentCount; i++) {
+                    const thetaNext = thetaBegin - i / segmentCount * halfPi;
                     const x2 = centerX + width / 2 * Math.cos(thetaNext);
                     const y2 = centerY + height / 2 * Math.sin(thetaNext);
                     this.lineTo(x2, y2);
