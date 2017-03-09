@@ -13,6 +13,7 @@ import PrimitiveShader from "./shaders/PrimitiveShader";
 import VirtualDom from "../mic/VirtualDom";
 import BitmapTargetBase from "./BitmapTargetBase";
 import BufferedBitmapTarget from "./targets/BufferedBitmapTarget";
+import GraphicsConst from "./graphics/GraphicsConst";
 
 const gl = VirtualDom.WebGLRenderingContext;
 
@@ -30,7 +31,7 @@ abstract class RenderHelper {
 
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
-        glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
+        glc.vertexAttribPointer(attributeLocation, GraphicsConst.VertexComponentCount, vertices.elementGLType, false, vertices.elementSize * GraphicsConst.VertexComponentCount, 0);
         glc.enableVertexAttribArray(attributeLocation);
 
         colors.syncBufferData();
@@ -63,7 +64,7 @@ abstract class RenderHelper {
 
         vertices.syncBufferData();
         attributeLocation = shader.getAttributeLocation("aVertexPosition");
-        glc.vertexAttribPointer(attributeLocation, 3, vertices.elementGLType, false, vertices.elementSize * 3, 0);
+        glc.vertexAttribPointer(attributeLocation, GraphicsConst.VertexComponentCount, vertices.elementGLType, false, vertices.elementSize * GraphicsConst.VertexComponentCount, 0);
         glc.enableVertexAttribArray(attributeLocation);
 
         colors.syncBufferData();

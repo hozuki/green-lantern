@@ -94,14 +94,6 @@ export default class WebGLRenderer implements IDisposable {
         return this._isStencilTestEnabled;
     }
 
-    // get currentTarget(): BufferedBitmapTarget {
-    //     return this._currentTarget;
-    // }
-    //
-    // set currentTarget(v: BufferedBitmapTarget) {
-    //     this._currentTarget = v;
-    // }
-
     /**
      * Returns current $render target of the {@link WebGLRenderer}.
      * @returns {RenderTarget2D} Current $render target of the {@link WebGLRenderer}.
@@ -309,7 +301,7 @@ export default class WebGLRenderer implements IDisposable {
         const tess = this._tessellator;
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_VERTEX_DATA,
             (data: number[], polyVertArray: number[][]): void => {
-                polyVertArray[polyVertArray.length - 1].push(data[0], data[1], data[2]);
+                polyVertArray[polyVertArray.length - 1].push(data[0], data[1]);
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_BEGIN_DATA,
             (type: number, vertexArrays: number[][]): void => {
@@ -324,7 +316,7 @@ export default class WebGLRenderer implements IDisposable {
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_COMBINE,
             (coords: number[], data: any, weight: number): number[] => {
-                return [coords[0], coords[1], coords[2]];
+                return [coords[0], coords[1]];
             });
         tess.gluTessCallback(libtess.gluEnum.GLU_TESS_EDGE_FLAG,
             (flag: any): void => {

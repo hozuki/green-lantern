@@ -21,6 +21,6 @@ void main() {
     if (uFlipY) {
         newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;
     }
-    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
+    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xy, 0.0, 1.0);
     vVertexColor = aVertexColor;
 }

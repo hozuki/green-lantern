@@ -1,7 +1,6 @@
 /**
  * Created by MIC on 2015/11/20.
  */
-
 import GraphicsDataRendererBase from "./GraphicsDataRendererBase";
 import Graphics from "../../flash/display/Graphics";
 import IStrokeDataRenderer from "./IStrokeDataRenderer";
@@ -24,7 +23,7 @@ abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IS
         this.lastPathStartY = y;
     }
 
-    protected _$getSimLineVertices(x1: number, y1: number, x2: number, y2: number, z: number, width: number): number[] {
+    protected _$getSimLineVertices(x1: number, y1: number, x2: number, y2: number, width: number): number[] {
         if (width < 0) {
             return [];
         }
@@ -86,8 +85,8 @@ abstract class StrokeRendererBase extends GraphicsDataRendererBase implements IS
             }
         }
         return [
-            vert1[0], vert1[1], z, vert2[0], vert2[1], z,
-            vert3[0], vert3[1], z, vert4[0], vert4[1], z
+            vert1[0], vert1[1], vert2[0], vert2[1],
+            vert3[0], vert3[1], vert4[0], vert4[1]
         ];
     }
 

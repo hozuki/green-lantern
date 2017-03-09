@@ -5,7 +5,7 @@
 interface GraphicsConstObject {
 
     CurveAccuracy: number;
-    Z0: number;
+    VertexComponentCount: number;
 
 }
 
@@ -14,5 +14,4 @@ const GraphicsConst: GraphicsConstObject = Object.create(null);
 export default GraphicsConst;
 
 GraphicsConst.CurveAccuracy = 20;
-
-GraphicsConst.Z0 = 0;
+GraphicsConst.VertexComponentCount = 2;

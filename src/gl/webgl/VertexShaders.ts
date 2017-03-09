@@ -93,7 +93,7 @@ uniform mat4 uTransformMatrix;
 varying vec4 vVertexColor;
 
 void main() {
-   gl_Position = uProjectionMatrix * uTransformMatrix * vec4(aVertexPosition.xyz, 1.0);
+   gl_Position = uProjectionMatrix * uTransformMatrix * vec4(aVertexPosition.xy, 0.0, 1.0);
    vVertexColor = aVertexColor;
 }`;
 
@@ -229,6 +229,6 @@ void main() {
     if (uFlipY) {
         newVertexPostion.y = uOriginalSize.y - newVertexPostion.y;
     }
-    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xyz, 1.0);
+    gl_Position = uProjectionMatrix * uTransformMatrix * vec4(newVertexPostion.xy, 0.0, 1.0);
     vVertexColor = aVertexColor;
 }`;

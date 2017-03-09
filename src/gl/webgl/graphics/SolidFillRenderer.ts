@@ -23,7 +23,7 @@ export default class SolidFillRenderer extends FillRendererBase {
     bezierCurveTo(cx1: number, cy1: number, cx2: number, cy2: number, x: number, y: number): void {
         const currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
+            currentContour.push(this.currentX, this.currentY);
         }
         const fromX = this.currentX, fromY = this.currentY;
         for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
@@ -35,7 +35,7 @@ export default class SolidFillRenderer extends FillRendererBase {
             const t3 = t2 * j;
             const xa = dt3 * fromX + 3 * dt2 * j * cx1 + 3 * dt1 * t2 * cx2 + t3 * x;
             const ya = dt3 * fromY + 3 * dt2 * j * cy1 + 3 * dt1 * t2 * cy2 + t3 * y;
-            currentContour.push(xa, ya, GraphicsConst.Z0);
+            currentContour.push(xa, ya);
         }
         this.currentX = x;
         this.currentY = y;
@@ -46,7 +46,7 @@ export default class SolidFillRenderer extends FillRendererBase {
     curveTo(cx: number, cy: number, x: number, y: number): void {
         const currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
+            currentContour.push(this.currentX, this.currentY);
         }
         const fromX = this.currentX, fromY = this.currentY;
         for (let i = 1; i <= GraphicsConst.CurveAccuracy; i++) {
@@ -55,7 +55,7 @@ export default class SolidFillRenderer extends FillRendererBase {
             let ya = fromY + (cy - fromY) * j;
             xa = xa + (cx + (x - cx) * j - xa) * j;
             ya = ya + (cy + (y - cy) * j - ya) * j;
-            currentContour.push(xa, ya, GraphicsConst.Z0);
+            currentContour.push(xa, ya);
         }
         this.currentX = x;
         this.currentY = y;
@@ -67,7 +67,7 @@ export default class SolidFillRenderer extends FillRendererBase {
         this.moveTo(x, y);
         const currentContour = this._$getContourForClosedShapes();
         const halfPi = Math.PI / 2;
-        currentContour.push(this.currentX + radius, this.currentY, GraphicsConst.Z0);
+        currentContour.push(this.currentX + radius, this.currentY);
         let thetaBegin = 0;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         for (let k = 0; k < 4; k++) {
@@ -75,7 +75,7 @@ export default class SolidFillRenderer extends FillRendererBase {
                 const thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                 const x2 = x + radius * Math.cos(thetaNext);
                 const y2 = y + radius * Math.sin(thetaNext);
-                currentContour.push(x2, y2, GraphicsConst.Z0);
+                currentContour.push(x2, y2);
             }
             thetaBegin -= halfPi;
         }
@@ -92,7 +92,7 @@ export default class SolidFillRenderer extends FillRendererBase {
         const currentContour = this._$getContourForClosedShapes();
         const centerX = x + width / 2, centerY = y + height / 2;
         const halfPi = Math.PI / 2;
-        currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
+        currentContour.push(this.currentX, this.currentY);
         let thetaBegin = Math.PI;
         // Draw 4 segments of arcs, [-PI, -PI/2] [-PI/2, 0] [0, PI/2] [PI/2 PI]
         // Brute, huh? Luckily there are 20 segments per PI/2...
@@ -101,7 +101,7 @@ export default class SolidFillRenderer extends FillRendererBase {
                 const thetaNext = thetaBegin - i / GraphicsConst.CurveAccuracy * halfPi;
                 const x2 = centerX + width / 2 * Math.cos(thetaNext);
                 const y2 = centerY + height / 2 * Math.sin(thetaNext);
-                currentContour.push(x2, y2, GraphicsConst.Z0);
+                currentContour.push(x2, y2);
             }
             thetaBegin -= halfPi;
         }
@@ -117,10 +117,10 @@ export default class SolidFillRenderer extends FillRendererBase {
         this.moveTo(x, y);
         // Create a new contour and draw a independent rectangle, should not use lineTo().
         const currentContour = this._$getContourForClosedShapes();
-        currentContour.push(x, y, GraphicsConst.Z0);
-        currentContour.push(x + width, y, GraphicsConst.Z0);
-        currentContour.push(x + width, y + height, GraphicsConst.Z0);
-        currentContour.push(x, y + height, GraphicsConst.Z0);
+        currentContour.push(x, y);
+        currentContour.push(x + width, y);
+        currentContour.push(x + width, y + height);
+        currentContour.push(x, y + height);
         this.currentX = x;
         this.currentY = y;
         this.becomeDirty();
@@ -134,9 +134,9 @@ export default class SolidFillRenderer extends FillRendererBase {
     lineTo(x: number, y: number): void {
         const currentContour = this._$getContourForLines();
         if (!this.hasDrawnAnything || this._startingNewContour) {
-            currentContour.push(this.currentX, this.currentY, GraphicsConst.Z0);
+            currentContour.push(this.currentX, this.currentY);
         }
-        currentContour.push(x, y, GraphicsConst.Z0);
+        currentContour.push(x, y);
         this.currentX = x;
         this.currentY = y;
         this.becomeDirty();
@@ -158,8 +158,8 @@ export default class SolidFillRenderer extends FillRendererBase {
             const contour = this._contours[i];
             if (contour.length > 0) {
                 tess.gluTessBeginContour();
-                for (let j = 0; j < contour.length; j += 3) {
-                    const coords = [contour[j], contour[j + 1], contour[j + 2]];
+                for (let j = 0; j < contour.length; j += GraphicsConst.VertexComponentCount) {
+                    const coords = [contour[j], contour[j + 1]];
                     tess.gluTessVertex(coords, coords);
                 }
                 tess.gluTessEndContour();
@@ -173,7 +173,7 @@ export default class SolidFillRenderer extends FillRendererBase {
             vertexNumberCount += resultArray[i].length;
         }
         // Number of vertices.
-        const vertexCount = vertexNumberCount / 3;
+        const vertexCount = vertexNumberCount / GraphicsConst.VertexComponentCount;
 
         const vertices = this.vertices = new Array<number>(vertexNumberCount);
         const colors = this.colors = new Array<number>(4 * vertexCount);

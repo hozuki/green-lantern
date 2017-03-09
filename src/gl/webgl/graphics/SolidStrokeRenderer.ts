@@ -120,10 +120,10 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
 
     lineTo(x: number, y: number): void {
         if (this._w > 0) {
-            const vertices = this._$getSimLineVertices(this.currentX, this.currentY, x, y, GraphicsConst.Z0, this._w);
+            const vertices = this._$getSimLineVertices(this.currentX, this.currentY, x, y, this._w);
             if (vertices.length > 0) {
                 // Generated 4 vertices, matching with 6 indices (2 triangles)
-                const cur = this.vertices.length / 3;
+                const curIndex = this.vertices.length / GraphicsConst.VertexComponentCount;
                 // Count: 12
                 Array.prototype.push.apply(this.vertices, vertices);
                 const r = this._r, g = this._g, b = this._b, a = this._a;
@@ -136,7 +136,7 @@ export default class SolidStrokeRenderer extends StrokeRendererBase {
                 // Faster push()
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
                 Array.prototype.push.apply(this.colors, colors);
-                this.indices.push(cur, cur + 1, cur + 2, cur + 1, cur + 2, cur + 3);
+                this.indices.push(curIndex, curIndex + 1, curIndex + 2, curIndex + 1, curIndex + 2, curIndex + 3);
                 this.becomeDirty();
             }
         }
