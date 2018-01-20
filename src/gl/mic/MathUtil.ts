@@ -101,11 +101,23 @@ abstract class MathUtil {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
+    static distanceSquared(x1: number, y1: number, x2: number, y2: number): number {
+        return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+    }
+
     // http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
     static estimateBezierSegmentCount(length: number): number {
         const base = 10;
         const segs = length / 30;
         return Math.ceil(Math.sqrt(segs * segs * 0.6 + base * base));
+    }
+
+    static toRadians(degrees: number): number {
+        return degrees * Math.PI / 180;
+    }
+
+    static toDegrees(radians: number): number {
+        return radians * 180 / Math.PI;
     }
 
 }

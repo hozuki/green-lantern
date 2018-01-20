@@ -1,10 +1,10 @@
-# GLantern
+# Green-Lantern
 
-[![Travis](https://img.shields.io/travis/hozuki/GLantern.svg)](https://travis-ci.org/hozuki/GLantern)
+[![Travis](https://img.shields.io/travis/hozuki/green-lantern.svg)](https://travis-ci.org/hozuki/GLantern)
 [![npm](https://img.shields.io/npm/v/glantern.svg)](https://npmjs.com/package/glantern)
 
 GLantern is a library intended for a Flash-HTML5 shim layer. Enjoy the live preview
-from <http://hozuki.github.io/GLantern>.
+from <http://hozuki.github.io/green-lantern>.
 
 Screenshots of test cases can be found [here](res/images).
 
@@ -57,7 +57,7 @@ The first one is importing by `<script>` tag. Use its `src` attribute and point 
 In environments that support Node.js, like NW.js or Electron, you can also use the `require` syntax:
 
 ```javascript
-var GLantern = require("glantern");
+const GLantern = require("glantern");
 ```
 
 After importing with either the former or the latter style, the `GLantern` object is globally available.
@@ -71,8 +71,8 @@ to inject the "packages" to the global scope.
 ```javascript
 // Check if GLantern is supported
 if (GLantern.isSupported()) {
-    var lantern = new GLantern.EngineBase();
-    var canvas = document.createElement("canvas");
+    const lantern = new GLantern.EngineBase();
+    const canvas = document.createElement("canvas");
     lantern.initialize(canvas, 682, 438);
     document.body.appendChild(lantern.view);
     window.addEventListener("unload", function () {
@@ -80,24 +80,22 @@ if (GLantern.isSupported()) {
     });
     draw(true, this);
 } else {
-    var prompt = document.createElement("span");
+    const prompt = document.createElement("span");
     prompt.textContent = "Oops, GLantern is not supported on your browser.";
     document.body.appendChild(prompt);
 }
 
 /**
 * Draws a rectangle.
-* @param asGlobal {Boolean} Whether to inject Flash packages to global scope or not.
-* @param g {*} The global object, usually {@link window}.
 */
 function draw() {
     function createShape(alpha) {
-        var s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
+        const s = new GLantern.flash.display.Shape(lantern.stage, lantern.stage);
         lantern.stage.addChild(s);
         s.alpha = alpha;
         return s;
     }
-    var shape1 = createShape(1);
+    const shape1 = createShape(1);
     shape1.graphics.beginFill(0xffffff);
     shape1.graphics.drawRect(0, 0, 540, 383);
     shape1.graphics.endFill();
@@ -125,8 +123,11 @@ provide Flash-like support by using HTML 5 features on Firefox.
 
 ## Credits
 
-Part of GLantern uses modifications based on [`webgl-utils.js`](//github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js). Its license file
+Part of Green-Lantern uses modifications based on [`webgl-utils.js`](//github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js). Its license file
 can be found [here](docs/license/webgl-utils.txt).
 
-Part of GLantern uses modifications based on [`AwayJS.Core.geom`](//github.com/awayjs/core/blob/master/lib/geom/). Its license file can be found
+Part of Green-Lantern uses modifications based on [`AwayJS.Core.geom`](//github.com/awayjs/core/blob/master/lib/geom/). Its license file can be found
 [here](docs/license/awayjs-core.txt).
+
+Part of Green-Lantern uses adaptations from [Anti-Grain Geometry](https://sourceforge.net/projects/agg/),
+originally by Maxim Shemanarev in C++. Its license file can be found [here](docs/license/agg.txt).
