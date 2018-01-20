@@ -72,7 +72,7 @@ export default class SolidFillRenderer extends FillRendererBase {
 
         const approxScale = 1.0;
         // noinspection JSSuspiciousNameCombination
-        const ra = (width + height) / 2;
+        const ra = (width + height) / 4; // (=(rx+ry)/2)
         const da = Math.acos(ra / (ra + 0.125 / approxScale));
         const steps = Math.round(Math.PI * 2 / da);
 
